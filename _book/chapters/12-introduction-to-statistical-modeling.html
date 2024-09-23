@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.52">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; An introduction to linear models – Statistics for the Experimental Biologist</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/22-continuous_X.html" rel="next">
+<link href="../chapters/06-data-reading_writing.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/12-introduction-to-statistical-modeling.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistics for the Experimental Biologist</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-data-reading_writing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-introduction-to-statistical-modeling.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-continuous_X.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-categorical_X.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#lm-specifications" id="toc-lm-specifications" class="nav-link active" data-scroll-target="#lm-specifications"><span class="header-section-number">4.1</span> Two specifications of a linear model</a>
+  <ul class="collapse">
+  <li><a href="#the-error-draw-specification" id="toc-the-error-draw-specification" class="nav-link" data-scroll-target="#the-error-draw-specification"><span class="header-section-number">4.1.1</span> The “error draw” specification</a></li>
+  <li><a href="#the-conditional-draw-specification" id="toc-the-conditional-draw-specification" class="nav-link" data-scroll-target="#the-conditional-draw-specification"><span class="header-section-number">4.1.2</span> The “conditional draw” specification</a></li>
+  <li><a href="#comparing-the-error-draw-and-conditional-draw-ways-of-specifying-the-linear-model" id="toc-comparing-the-error-draw-and-conditional-draw-ways-of-specifying-the-linear-model" class="nav-link" data-scroll-target="#comparing-the-error-draw-and-conditional-draw-ways-of-specifying-the-linear-model"><span class="header-section-number">4.1.3</span> Comparing the error-draw and conditional-draw ways of specifying the linear model</a></li>
+  <li><a href="#anova-notation-of-a-linear-model" id="toc-anova-notation-of-a-linear-model" class="nav-link" data-scroll-target="#anova-notation-of-a-linear-model"><span class="header-section-number">4.1.4</span> ANOVA notation of a linear model</a></li>
+  </ul></li>
+  <li><a href="#a-linear-model-can-be-fit-to-data-with-continuous-discrete-or-categorical-x-variables" id="toc-a-linear-model-can-be-fit-to-data-with-continuous-discrete-or-categorical-x-variables" class="nav-link" data-scroll-target="#a-linear-model-can-be-fit-to-data-with-continuous-discrete-or-categorical-x-variables"><span class="header-section-number">4.2</span> A linear model can be fit to data with continuous, discrete, or categorical <span class="math inline">\(X\)</span> variables</a>
+  <ul class="collapse">
+  <li><a href="#fitting-linear-models-to-experimental-data-in-which-the-x-variable-is-continuous-or-discrete" id="toc-fitting-linear-models-to-experimental-data-in-which-the-x-variable-is-continuous-or-discrete" class="nav-link" data-scroll-target="#fitting-linear-models-to-experimental-data-in-which-the-x-variable-is-continuous-or-discrete"><span class="header-section-number">4.2.1</span> Fitting linear models to experimental data in which the <span class="math inline">\(X\)</span> variable is continuous or discrete</a></li>
+  <li><a href="#slope" id="toc-slope" class="nav-link" data-scroll-target="#slope"><span class="header-section-number">4.2.2</span> Fitting linear models to experimental data in which the <span class="math inline">\(X\)</span> variable is categorical</a></li>
+  </ul></li>
+  <li><a href="#statistical-models-are-used-for-prediction-explanation-and-description" id="toc-statistical-models-are-used-for-prediction-explanation-and-description" class="nav-link" data-scroll-target="#statistical-models-are-used-for-prediction-explanation-and-description"><span class="header-section-number">4.3</span> Statistical models are used for prediction, explanation, and description</a></li>
+  <li><a href="#what-is-the-interpretation-of-a-regression-coefficient" id="toc-what-is-the-interpretation-of-a-regression-coefficient" class="nav-link" data-scroll-target="#what-is-the-interpretation-of-a-regression-coefficient"><span class="header-section-number">4.4</span> What is the interpretation of a regression coefficient?</a></li>
+  <li><a href="#what-do-we-call-the-x-and-y-variables" id="toc-what-do-we-call-the-x-and-y-variables" class="nav-link" data-scroll-target="#what-do-we-call-the-x-and-y-variables"><span class="header-section-number">4.5</span> What do we call the <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> variables?</a></li>
+  <li><a href="#modeling-strategy" id="toc-modeling-strategy" class="nav-link" data-scroll-target="#modeling-strategy"><span class="header-section-number">4.6</span> Modeling strategy</a></li>
+  <li><a href="#predictions-from-the-model" id="toc-predictions-from-the-model" class="nav-link" data-scroll-target="#predictions-from-the-model"><span class="header-section-number">4.7</span> Predictions from the model</a></li>
+  <li><a href="#inference-from-the-model" id="toc-inference-from-the-model" class="nav-link" data-scroll-target="#inference-from-the-model"><span class="header-section-number">4.8</span> Inference from the model</a>
+  <ul class="collapse">
+  <li><a href="#assumptions-for-inference-with-a-statistical-model" id="toc-assumptions-for-inference-with-a-statistical-model" class="nav-link" data-scroll-target="#assumptions-for-inference-with-a-statistical-model"><span class="header-section-number">4.8.1</span> Assumptions for inference with a statistical model</a></li>
+  <li><a href="#specific-assumptions-for-inference-with-a-linear-model" id="toc-specific-assumptions-for-inference-with-a-linear-model" class="nav-link" data-scroll-target="#specific-assumptions-for-inference-with-a-linear-model"><span class="header-section-number">4.8.2</span> Specific assumptions for inference with a linear model</a></li>
+  </ul></li>
+  <li><a href="#linear-modelregression-model-or-statistical-model" id="toc-linear-modelregression-model-or-statistical-model" class="nav-link" data-scroll-target="#linear-modelregression-model-or-statistical-model"><span class="header-section-number">4.9</span> “linear model,”regression model”, or “statistical model”?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="intro-linear-models" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>All students are familiar with the idea of a linear model from learning the equation of a line, which is</p>
+<p><span id="eq-line"><span class="math display">\[
+Y = mX + b
+\tag{4.1}\]</span></span></p>
+<p>where <span class="math inline">\(m\)</span> is the slope of the line and <span class="math inline">\(b\)</span> is the <span class="math inline">\(Y\)</span>-intercept. It is useful to think of equation (<a href="#eq-line" class="quarto-xref">Equation&nbsp;<span>4.1</span></a>) as a function that maps values of <span class="math inline">\(X\)</span> to values of <span class="math inline">\(Y\)</span>. Using this function, if we input some value of <span class="math inline">\(X\)</span>, we always get the same value of Y as the output.</p>
+<p>A linear model is a function, like that in equation (<a href="#eq-line" class="quarto-xref">Equation&nbsp;<span>4.1</span></a>), that is fit to a set of data, often to model a process that generated the data or something like the data. The line in Figure (<span class="quarto-unresolved-ref">?fig-line</span>)A is just that, a line, but the line in Figure (<span class="quarto-unresolved-ref">?fig-line</span>)B is a linear model fit to the data in Figure (<span class="quarto-unresolved-ref">?fig-line</span>)B.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12-introduction-to-statistical-modeling_files/figure-html/line-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="lm-specifications" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="lm-specifications"><span class="header-section-number">4.1</span> Two specifications of a linear model</h2>
+<section id="the-error-draw-specification" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="the-error-draw-specification"><span class="header-section-number">4.1.1</span> The “error draw” specification</h3>
+<p>In introductory textbooks, a linear model is typically specified using an error-draw scheme.</p>
+<p><span id="eq-error-spec"><span class="math display">\[
+\begin{align}
+Y &amp;= \beta_0 + \beta_1 X + \varepsilon \\
+\varepsilon &amp;\sim N(0, \sigma^2)
+\end{align}
+\tag{4.2}\]</span></span></p>
+<p>The first line of this specification has two components: the <strong>linear predictor</strong> <span class="math inline">\(Y = \beta_0 + \beta_1 X\)</span> and the <strong>error</strong> <span class="math inline">\(\varepsilon\)</span>. The linear predictor component looks like the equation for a line except that 1) <span class="math inline">\(\beta_0\)</span> is used for the intercept and <span class="math inline">\(\beta_1\)</span> for the slope and 2) the intercept term precedes the slope term. This re-labeling and re-arrangement make the notation for a linear model more flexible for more complicated linear models. For example <span class="math inline">\(Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon\)</span> is a model where <span class="math inline">\(Y\)</span> is a function of two <span class="math inline">\(X\)</span> variables.</p>
+<p>The linear predictor is the deterministic or <strong>systematic</strong> part of the specification. As with the equation for a line, the linear predictor component of a linear model is a function that maps a specific value of <span class="math inline">\(X\)</span> to a <em>unique</em> value of <span class="math inline">\(Y\)</span>. This mapped value is the <strong>expected value</strong>, or expectation, given a specific input value of <span class="math inline">\(X\)</span>. The expectation is often written as <span class="math inline">\(\mathrm{E}[Y|X]\)</span>, which is read as “the expected value of <span class="math inline">\(Y\)</span> given <span class="math inline">\(X\)</span>”, where “given X” means a specific value of X. This text will often use the word <strong>conditional</strong> in place of “given”. For example, I would read <span class="math inline">\(\mathrm{E}[Y|X]\)</span> as “the expected value of <span class="math inline">\(Y\)</span> conditional on <span class="math inline">\(X\)</span>”. It is important to recognize that <span class="math inline">\(\mathrm{E}[Y|X]\)</span> is a <strong>conditional mean</strong> – it is the mean value of <span class="math inline">\(Y\)</span> when we observe that <span class="math inline">\(X\)</span> has some specific value <span class="math inline">\(x\)</span> (that is <span class="math inline">\(X = x\)</span>).</p>
+<p>The second line of the specification (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>) is read as “epsilon is distributed as Normal with mean zero and variance sigma squared”. This line explicitly specifies the distribution of the error component of line 1. The error component of a linear model is a random “draw” from a normal distribution with mean zero and variance <span class="math inline">\(\sigma^2\)</span>. The second line shows that the error component of the first line is <strong>stochastic</strong>. Using the error-model specification, we can think of any measurement of <span class="math inline">\(Y\)</span> as an expected value plus some random value sampled from a normal distribution with a specified variance. Because the stochastic part of this specification draws an “error” from a population, I refer to this as the <strong>error-draw</strong> specification of the linear model.</p>
+</section>
+<section id="the-conditional-draw-specification" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="the-conditional-draw-specification"><span class="header-section-number">4.1.2</span> The “conditional draw” specification</h3>
+<p>A second way of specifying a linear model is using a conditional-draw scheme.</p>
+<p><span id="eq-draw-spec"><span class="math display">\[
+\begin{align}
+y_i &amp;\sim N(\mu_i, \sigma^2)\\
+\mathrm{E}(Y|X) &amp;= \mu\\
+\mu_i &amp;= \beta_0 + \beta_1 x_i
+\end{align}
+\tag{4.3}\]</span></span></p>
+<p>The first line states that the response variable <span class="math inline">\(Y\)</span> is a random variable independently drawn from a normal distribution with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>. This first line is the <strong>stochastic</strong> part of the statistical model. The second line simply states that <span class="math inline">\(\mu\)</span> (the greek letter “mu”) from the first line is the conditional mean (or expectation). The third line is the liner predictor, which states how <span class="math inline">\(\mu_i\)</span> is generated given that <span class="math inline">\(X=x_i\)</span>. Again, the linear predictor is the <strong>systematic</strong> (or deterministic) part of the statistical model. It is systematic because the same value of <span class="math inline">\(x_i\)</span> will always generate the same <span class="math inline">\(\mu_i\)</span>. With the conditional-draw specification, we can think of <em>a measurement</em> (<span class="math inline">\(y_i\)</span>) as a random draw from the specified distribution. Because it is <span class="math inline">\(Y\)</span> and not some “error” that is drawn from the specified distribution, I refer to this as the <strong>conditional-draw</strong> specification of the linear model.</p>
+</section>
+<section id="comparing-the-error-draw-and-conditional-draw-ways-of-specifying-the-linear-model" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="comparing-the-error-draw-and-conditional-draw-ways-of-specifying-the-linear-model"><span class="header-section-number">4.1.3</span> Comparing the error-draw and conditional-draw ways of specifying the linear model</h3>
+<p>These two ways of specifying the model encourage slightly different ways of thinking about how the data (the response varible <span class="math inline">\(Y\)</span>) were generated. The error-draw specification “generates” data by 1) constructing what <span class="math inline">\(y_i\)</span> “should be” given <span class="math inline">\(x_i\)</span> (this is the conditional expection), then 2) adding some error <span class="math inline">\(e_i\)</span> drawn from a normal distribution with mean zero and some specified variance. The conditional-draw specification “generates” data by 1) constructing what <span class="math inline">\(y_i\)</span> “should be” given <span class="math inline">\(x_i\)</span>, then 2) drawing a random variable from some specified distribution <em>whose mean is this expectation</em>. This random draw is not “error” but the measured value <span class="math inline">\(y_i\)</span>. For the error draw generation, we need only one hat of random numbers, but for the conditional draw generation, we need a hat for each value of <span class="math inline">\(x_i\)</span>.</p>
+<p>Here is a short script that generates data by implementing both the error-draw and conditional-draw specifications. See if you can follow the logic of the code and match it to the meaning of these two ways of specifying a linear model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">10.0</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">1.2</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>y_expected <span class="ot">&lt;-</span> b_0 <span class="sc">+</span> b_1<span class="sc">*</span>x</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># error-draw. Note that the n draws are all from the same distribution</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>y_error_draw <span class="ot">&lt;-</span> y_expected <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># conditional-draw. Note that the n draws are each from a different</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># distribution because each has a different mean.</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>y_conditional_draw <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> y_expected, <span class="at">sd =</span> sigma)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">data.table</span>(<span class="at">X =</span> x,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Y (error draw)"</span> <span class="ot">=</span> y_error_draw,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Y (conditional draw)"</span> <span class="ot">=</span> y_conditional_draw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       X Y (error draw) Y (conditional draw)
+   &lt;int&gt;          &lt;num&gt;                &lt;num&gt;
+1:     1       10.94942             10.94942
+2:     2       12.47346             12.47346
+3:     3       13.26575             13.26575
+4:     4       15.43811             15.43811
+5:     5       16.13180             16.13180</code></pre>
+</div>
+</div>
+<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
+<p>What’s that code? <code>rnorm()</code> is a pseudorandom number generator that simulates random draws from a normal distribution with the specified mean and variance. The algorithm to generate the numbers is entirely deterministic – the numbers are not truly random but are “pseudorandom”. The list of numbers returned closely approximates a set of true, random numbers. The sequence of numbers returned is determined by the “seed”, which can be set with the <code>set.seed()</code> function (R will use an internal seed if not set by the user).</p>
+</div>
+<p>The error-draw specification is not very useful for thinking about data generation for data analyzed by generalized linear models, which are models that allow one to specify distribution families other than Normal (such as the binomial, Poisson, and Gamma families). In fact, thinking about a model as a predictor plus error can lead to the misconception that, in a generalized linear model, the error (or residuals from the fit) has a distribution from the non-Normal distribution modeled. This cannot be true because the distributions modeled using generalized linear models (other than the Normal) do not have negative values (some residuals must have negative values since the mean of the residuals is zero). Introductory biostatistics textbooks typically only introduce the error-draw specification because introductory textbooks recommend data transformation or non-parametric tests if the data are not approximately normal. This is unfortunate because generalized linear models are extremely useful for real biological data.</p>
+<p>Although a linear model (or statistical model more generally) is a model of a data-generating process, linear models are not typically used to actually generate any data. Instead, when we use a linear model to understand something about a real dataset, we think of our data as one realization of a process that generates data like ours. A linear model is a model of that process. That said, it is incredibly useful to use linear models to create fake datasets for at least two reasons: to probe our understanding of statistical modeling generally and, more specifically, to check that a model actually creates data like that in the real dataset that we are analyzing.</p>
+</section>
+<section id="anova-notation-of-a-linear-model" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="anova-notation-of-a-linear-model"><span class="header-section-number">4.1.4</span> ANOVA notation of a linear model</h3>
+<p>Many textbooks treat ANOVA differently from regression and express a linear model as an ANOVA model (and generally do not use the phrase “linear model”). ANOVA models are all variations of</p>
+<p><span id="eq-anova-spec"><span class="math display">\[
+\begin{equation}
+y_{ij} = \mu + \tau_{i} + \varepsilon_{ij}
+\end{equation}
+\tag{4.4}\]</span></span></p>
+<p>Unlike the error and conditional draw specifications above, the ANOVA model doesn’t have a linear predictor in the form of a regression equation (or the equation for a line) – that is, there are neither <span class="math inline">\(X\)</span> variables nor coefficients (<span class="math inline">\(\beta\)</span>). Instead, the ANOVA model is made up of a linear combination of means and deviations from means. In (<a href="#eq-anova-spec" class="quarto-xref">Equation&nbsp;<span>4.4</span></a>), <span class="math inline">\(\mu\)</span> is the grand mean (the mean of the means of the groups), <span class="math inline">\(\tau_i\)</span> is the deviation of the mean of group <span class="math inline">\(i\)</span> from the grand mean (these are the effects), and <span class="math inline">\(\varepsilon_{ij}\)</span> is the deviation (or error) of individual <span class="math inline">\(j\)</span> from the mean of group <span class="math inline">\(i\)</span>. Traditional ANOVA computes effects and the statistics for inference by computing means and deviations from means. Modern linear models compute effects and the statistics for inference by solving for the coefficients of a regression model.</p>
+</section>
+</section>
+<section id="a-linear-model-can-be-fit-to-data-with-continuous-discrete-or-categorical-x-variables" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="a-linear-model-can-be-fit-to-data-with-continuous-discrete-or-categorical-x-variables"><span class="header-section-number">4.2</span> A linear model can be fit to data with continuous, discrete, or categorical <span class="math inline">\(X\)</span> variables</h2>
+<p>In the linear model fit to the data in Figure (<span class="quarto-unresolved-ref">?fig-line</span>)B, the <span class="math inline">\(X\)</span> variable is <strong>continuous</strong>, which can take any real number between the minimum <span class="math inline">\(X\)</span> and maximum <span class="math inline">\(X\)</span> in the data. For biological data, most variables that are continuous are positive, real numbers (a zero is not physically possible but could be recorded in the data if the true value is less than the minimum measurable amount). One exception is a <strong>composition</strong> (the fraction of a total), which can be zero. Negative values can occur with variables in which negative represent a direction (work, electrical potential) or a rate. <strong>Discrete</strong> variables are numeric but limited to certain real numbers. Most biological variables that are discrete are counts, and can be zero, but not negative. <strong>Categorical variables</strong> are non-numeric descriptions of a measure. Many of the categorical variables in this text will be the experimentally controlled treatment variable of interest (the variable <span class="math inline">\(treatment\)</span> containing the values “wild type” and “knockout”) but some are measured covariates (the variable <span class="math inline">\(sex\)</span> containing the values “female” and “male”).</p>
+<section id="fitting-linear-models-to-experimental-data-in-which-the-x-variable-is-continuous-or-discrete" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="fitting-linear-models-to-experimental-data-in-which-the-x-variable-is-continuous-or-discrete"><span class="header-section-number">4.2.1</span> Fitting linear models to experimental data in which the <span class="math inline">\(X\)</span> variable is continuous or discrete</h3>
+<p>A linear model fit to data with a numeric (continous or discrete) <span class="math inline">\(X\)</span> is classical <strong>regression</strong> and the result is typically communicated by a regression line. The experiment introduced in Chapter (<span class="citation" data-cites="linear-models-with-a-single-continuous-x">(<a href="../references.html#ref-linear-models-with-a-single-continuous-x" role="doc-biblioref"><strong>linear-models-with-a-single-continuous-x?</strong></a>)</span>) [Linear models with a single, continuous <em>X</em>] is a good example. In this experiment, the researchers designed an experiment to measure the effect of warming on the timing of photosynthetic activity. Temperature was experimentally controlled at one of five settings (0, 2.25, 4.5, 6.75, or 9 °C above ambient temperature) within twelve, large enclosures. The response variable in the illustrated example is Autumn “green-down”, which is the day of year (DOY) of the transition to loss of photosynthesis. The intercept and slope parameters of the regression line (Figure (<span class="quarto-unresolved-ref">?fig-intro-linear-models-cont-slope</span>)) are the coefficients of the linear model. The slope (4.98 days per 1 °C added warmth) estimates the <strong>effect</strong> of warming on green-down DOY. What is not often appreciated at the introductory biostatistics level is that <strong>the slope is a difference in conditional means</strong>. Any point on a regression line is the expected value of <span class="math inline">\(Y\)</span> at a specified value of <span class="math inline">\(X\)</span>, that is, the conditional mean <span class="math inline">\(\mathrm{E}(Y|X)\)</span>. <strong>The slope is the difference in expected values for a pair of points that differ in <span class="math inline">\(X\)</span> by one unit</strong>.</p>
+<p><span class="math display">\[
+b_1 = \mathrm{E}(Y|X=x+1) - \mathrm{E}(Y|X=x+1)
+\]</span></p>
+<p>I show this in Figure (<span class="quarto-unresolved-ref">?fig-intro-linear-models-cont-slope</span>) using the points on the regression line at <span class="math inline">\(x = 5\)</span> and <span class="math inline">\(x = 6\)</span>. Thinking about a regression coefficient as a difference in conditional means is especially useful for understanding the coefficients of a categorical <span class="math inline">\(X\)</span> variable, as described below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/fig_2c_explainer.png" class="img-fluid figure-img"></p>
+<figcaption>Illustration of the slope in a linear model with a numeric X. The slope (the coefficient of X) is the difference in expected value for any two X that are one unit apart. This is illustrated for the points on the line at x = 5 and x = 6.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="slope" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="slope"><span class="header-section-number">4.2.2</span> Fitting linear models to experimental data in which the <span class="math inline">\(X\)</span> variable is categorical</h3>
+<p>Linear models can be fit to experimental data in which the <span class="math inline">\(X\)</span> variable is categorical – this is the focus of this text! For the model fit to the data in Figure (<span class="quarto-unresolved-ref">?fig-line</span>)B, the coefficient of <span class="math inline">\(X\)</span> is the slope of the line. Perhaps surprisingly, 1) we can fit a model like equation (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>) to data in which the <span class="math inline">\(X\)</span> variable is categorical and 2) the coefficient of <span class="math inline">\(X\)</span> <em>is</em> a slope. How is this possible? The slope of a line is <span class="math inline">\(\frac{y_2 - y_1}{x_2 - x_1}\)</span> where <span class="math inline">\((x_1, y_1)\)</span> and <span class="math inline">\((x_2, y_2)\)</span> are the graph coordinates of any two points on the line. What is the denominator of the slope function <span class="math inline">\((x_2 - x_1)\)</span> when <span class="math inline">\(X\)</span> is categorical?</p>
+<p>The solution to using a linear model with categorical <span class="math inline">\(X\)</span> is to recode the factor levels into numbers. An example of this was outlined in Chapter (<span class="citation" data-cites="analyzing-experimental-data-with-a-linear-model">(<a href="../references.html#ref-analyzing-experimental-data-with-a-linear-model" role="doc-biblioref"><strong>analyzing-experimental-data-with-a-linear-model?</strong></a>)</span>) ([Analyzing experimental data with a linear model]). The value of <span class="math inline">\(X\)</span> for individual mouse <em>i</em> is a number that indicates the treatment assignment – a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (Figure (<span class="quarto-unresolved-ref">?fig-intro-linear-models-cat-slope</span>)). With the (0, 1) coding, <span class="math inline">\(\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1\)</span>, so the denominator of the slope is equal to one and the slope is simply equal to the numerator <span class="math inline">\(\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}\)</span>. The coefficient (which is a slope!) <em>is</em> the difference in conditional means.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/intro-linear-models-cat-slope-1.png" class="img-fluid figure-img"></p>
+<figcaption>Illustration of the slope in a linear model with categorical X. The slope (the coefficient of X) is the difference in conditional means.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="statistical-models-are-used-for-prediction-explanation-and-description" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="statistical-models-are-used-for-prediction-explanation-and-description"><span class="header-section-number">4.3</span> Statistical models are used for prediction, explanation, and description</h2>
+<p>Researchers typically use statistical models to understand relationships between one or more <span class="math inline">\(Y\)</span> variables and one or more <span class="math inline">\(X\)</span> variables. These relationships include</p>
+<ol type="1">
+<li><p>Descriptive modeling. Sometimes a researcher merely wants to describe the relationship between <span class="math inline">\(Y\)</span> and a set of <span class="math inline">\(X\)</span> variables, perhaps to discover patterns. For example, the arrival of a spring migrant bird (<span class="math inline">\(Y\)</span>) as a function of sex (<span class="math inline">\(X_1\)</span>) and age (<span class="math inline">\(X_2\)</span>) might show that males and younger individuals arrive earlier. Importantly, if another <span class="math inline">\(X\)</span> variable is added to the model (or one dropped), the coefficients, and therefore, the precise description, will change. That is, the interpretation of a coefficient as a descriptor is <em>conditional</em> on the other covariates (<span class="math inline">\(X\)</span> variables) in the model. In a descriptive model, there is no implication of causal effects and the goal is not prediction. Nevertheless, it is very hard for humans to discuss a descriptive model without using causal language, which probably means that it is hard for us to think of these models as <em>mere description</em>. Like natural history, descriptive models are useful as patterns in want of an explanation, using more explicit causal models including experiments.</p></li>
+<li><p>Predictive modeling. Predictive modeling is very common in applied research. For example, fisheries researchers might model the relationship between population density and habitat variables to predict which subset of ponds in a region are most suitable for brook trout (<em>Salvelinus fontinalis</em>) reintroduction. The goal is to build a model with minimal prediction error, which is the error between predicted and actual values for a future sample. In predictive modeling, the <span class="math inline">\(X\)</span> (“predictor”) variables are largely instrumental – how these are related to <span class="math inline">\(Y\)</span> is not a goal of the modeling, although sometimes an investigator may be interested in the relative importance among the <span class="math inline">\(X\)</span> for predicting <span class="math inline">\(Y\)</span> (for example, collecting the data may be time consuming, or expensive, or enviromentally destructive, so know which subset of <span class="math inline">\(X\)</span> are most important for predicting <span class="math inline">\(Y\)</span> is a useful strategy).</p></li>
+<li><p>Explanatory (causal) modeling. Very often, researchers are explicitly interested in <em>how</em> the <span class="math inline">\(X\)</span> variables are causally related to <span class="math inline">\(Y\)</span>. The fisheries researchers that want to reintroduce trout may want to develop and manage a set of ponds to maintain healthy trout populations. This active management requires intervention to change habitat traits in a direction, and with a magnitude, to cause the desired response. This model is predictive – a specific change in <span class="math inline">\(X\)</span> predicts a specific response in <span class="math inline">\(Y\)</span> – because the coefficients of the model provide knowledge on how the system functions – how changes in the inputs <em>cause</em> change in the output. Causal interpretation of model coefficients requires a set of strong assumptions about the <span class="math inline">\(X\)</span> variables in the model. These assumptions are typically met in <strong>experimental designs</strong> but not <strong>observational designs</strong>.</p></li>
+</ol>
+<p>With observational designs, biologists are often not very explicit about which of these is the goal of the modeling and use a combination of descriptive, predictive, and causal language to describe and discuss results. Many papers read as if the researchers intend explanatory inference but because of norms within the biology community, mask this intention with “predictive” language. Here, I advocate embracing explicit, explanatory modeling by being very transparent about the model’s goal and assumptions.</p>
+</section>
+<section id="what-is-the-interpretation-of-a-regression-coefficient" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="what-is-the-interpretation-of-a-regression-coefficient"><span class="header-section-number">4.4</span> What is the interpretation of a regression coefficient?</h2>
+<p>A regression coefficient is the difference in <span class="math inline">\(Y\)</span> that we expect to see if we see a one unit difference in X, but we see no difference in any other covariate (the other X).</p>
+</section>
+<section id="what-do-we-call-the-x-and-y-variables" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="what-do-we-call-the-x-and-y-variables"><span class="header-section-number">4.5</span> What do we call the <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> variables?</h2>
+<p>The inputs to a linear model (the <span class="math inline">\(X\)</span> variables) have many names. In this text, the <span class="math inline">\(X\)</span> variables are typically</p>
+<ul>
+<li><strong>treatment variables</strong> – this term makes sense only for categorical variables and is often used for variables that are a <strong>factor</strong> containing the treatment assignment (for example “control” and “knockout”)</li>
+<li><strong>factor variables</strong> (or simply, <strong>factors</strong>) – again, this term makes sense only for categorical variables</li>
+<li><strong>covariates</strong> – this term is usually used for the non-focal <span class="math inline">\(X\)</span> variables in a statistical model.</li>
+</ul>
+<p>A linear model is a regression model and in regression modeling, the <span class="math inline">\(X\)</span> variables are typically called</p>
+<ul>
+<li><strong>independent variables</strong> (often shortened to IV) – “independent” in the sense that in a statistical model at least, the <span class="math inline">\(X\)</span> are not a function of <span class="math inline">\(Y\)</span>.</li>
+<li><strong>predictor variables</strong> (or simply, “predictors”) – this makes the most sense in prediction models.</li>
+<li><strong>explanatory variables</strong> – this term is usually applied in observational designs and is best used if the explicit goal is causal modeling.</li>
+</ul>
+<p>In this text, the output of a linear model (the <span class="math inline">\(Y\)</span> variable or variables if the model is multivariate) will most often be calle either of</p>
+<ul>
+<li><strong>response variable</strong> (or simply, “response”)</li>
+<li><strong>outcome variable</strong> (or simply, “outcome”)</li>
+</ul>
+<p>These terms have a causal connotation in everyday english. These terms are often used in regression modeling with observational data, even if the model is not explicitly causal. One other term, common in introductory textbooks, is</p>
+<ul>
+<li><strong>dependent variable</strong> – “dependent” in the sense that in a statistical model at least, the <span class="math inline">\(Y\)</span> is a function of the <span class="math inline">\(X\)</span>.</li>
+</ul>
+</section>
+<section id="modeling-strategy" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="modeling-strategy"><span class="header-section-number">4.6</span> Modeling strategy</h2>
+<p>A “best practice” sequence of steps used throughout this text to analyze experimental data is</p>
+<ol type="1">
+<li><strong>examine the data</strong> using <strong>exploratory plots</strong> to</li>
+</ol>
+<ul>
+<li>examine individual points and identify outliers that are likely due to data transcription errors or measurement blunders</li>
+<li>examine <strong>outlier</strong> points that are biologically plausible, but raise ref flags about undue influe on fit models. This information is used to inform the researcher on the strategy to handle outliers in the statistical analysis, including algorithms for excluding data or implementation of <strong>robust</strong> methods.</li>
+<li>provide useful information for initial model filtering (narrowing the list of potential models that are relevant to the question and data). Statistical modeling includes a diverse array of models, yet almost all methods used by researchers in biology, and all models in this book, are generalizations of the linear model specified in (<a href="#eq-draw-spec" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>). For some experiments, there may be multiple models that are relevant to the question and data. Model checking (step 3) can help decide which model to ultimately use.</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>fit the model</strong>, in order to estimate the model parameters and the uncertainty in these estimates.</li>
+<li><strong>check the model</strong>, which means to use a series of diagnostic plots and computations of model output to check that the fit model reasonably approximates the data. If the diagnostic plots suggest a poor approximation, then choose a different model and go back to step 2.</li>
+<li><strong>inference from the model</strong>, which means to use the fit parameters to learn, with uncertainty, about the system, or to predict future observations, with uncertainty.</li>
+<li><strong>plot the model</strong>, which means to plot the data, which may be adjusted, and the estimated parameters (or other results dervived from the estimates) with their uncertainty.</li>
+</ol>
+<p>Note that step 1 (exploratory plots) is <em>not</em> data mining, or exploring the data for patterns to test.</p>
+</section>
+<section id="predictions-from-the-model" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="predictions-from-the-model"><span class="header-section-number">4.7</span> Predictions from the model</h2>
+<p>For the linear model specified in Model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>), the fit model is</p>
+<p><span id="eq-y-i"><span class="math display">\[
+y_i = b_0 + b_1 x_i + e_i
+\tag{4.5}\]</span></span></p>
+<p>where <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span> are the coefficients of the fit model and the <span class="math inline">\(e_i\)</span> are the residuals of the fit model. We can use the coefficients and residuals to recover the <span class="math inline">\(y_i\)</span>, although this would rarely be done. More commonly, we could use the coefficients to calculate conditional means (the mean conditional on a specified value of <span class="math inline">\(X\)</span>).</p>
+<p><span id="eq-yhat"><span class="math display">\[
+\hat{y}_i = b_0 + b_1 x_i
+\tag{4.6}\]</span></span></p>
+<p>The conditional means are typically called <strong>fitted values</strong>, if the <span class="math inline">\(X\)</span> are the <span class="math inline">\(X\)</span> used to fit the model, or <strong>predicted values</strong>, if the <span class="math inline">\(X\)</span> are new. “Predicted values” is often shortened to “the prediction”.</p>
+</section>
+<section id="inference-from-the-model" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="inference-from-the-model"><span class="header-section-number">4.8</span> Inference from the model</h2>
+<p>If our goal is inference, we want to use the fit parameters to learn, with uncertainty, about the system. Using equation (<a href="#eq-y-i" class="quarto-xref">Equation&nbsp;<span>4.5</span></a>), the coefficients <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span> are <strong>point estimates</strong> of the true, generating parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, the <span class="math inline">\(e_i\)</span> are estimates of <span class="math inline">\(\varepsilon_i\)</span> (the true, biological “noise”), and <span class="math inline">\(\frac{\sum{e_i^2}}{N-2}\)</span> is an estimate of the true, population variance <span class="math inline">\(\sigma^2\)</span> (this will be covered more in chapter xxx but you may recognize that <span class="math inline">\(\frac{\sum{e_i^2}}{N-2}\)</span> is the formula for a variance). And, using equation (<a href="#eq-yhat" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>), <span class="math inline">\(\hat{y}_i\)</span> is the point estimate of the parameter <span class="math inline">\(\mu_i\)</span> (the true mean conditional on <span class="math inline">\(X=x_i\)</span>). Throughout this text, Greek letters refer to a theoretical parameter and Roman letters refer to point estimates.</p>
+<p>Our uncertainty in the estimates of the parameters due to sampling is the standard error of the estimate. It is routine to report standard errors of means and coefficients of the model. While a standard error of the estimate of <span class="math inline">\(\sigma\)</span> is available, this is effectively never reported, at least in the experimental biology literature, presumably because the variance is thought of as a nuisance parameter (noise) and not something worthy of study. This is a pity. Certainly treatments can effect the variance in addition to the mean.</p>
+<p><strong>Parametric</strong> inference assumes that the response is drawn from some probability distribution (Normal, or Poisson, or Bernouli, etc.). Throughout this text, I emphasize reporting and interpreting point estimates and <strong>interval estimates</strong> of the point estimate. A <strong>confidence interval</strong> is a type of interval estimate. A confidence interval of a parameter is a measure of the uncertainty in the estimate. A 95% confidence interval has a 95% probability (in the sense of long-run frequency) of containing the parameter. This probability is a property of the population of intervals that could be computed using the same sampling and measuring procedure. It is not correct, without further assumptions, to state that there is a 95% probability that the parameter lies within the interval. Perhaps a more useful interpretation is that the interval is a <strong>compatability interval</strong> in that it contains the range of estimates that are compatible with the data, in the sense that a <span class="math inline">\(t\)</span>-test would not reject the null hypothesis of a difference between the estimate and any value within the interval (this interpretation does not imply anything about the true value).</p>
+<p>Another kind of inference is a <strong>significance test</strong>, which is the computation of the probability of “seeing the data” or something more extreme than the data, given a specified null hypothesis. This probability is the <strong>p-value</strong>, which can be reported with the point estimate and confidence interval. There are some reasonable arguments made by very influential statisticians that <em>p</em>-values are not useful and lead researchers into a quagmire of misconceptions that impede good science. Nevertheless, the current methodology in most fields of Biology have developed in a way to become completely dependent on <em>p</em>-values. I think at this point, a <em>p</em>-value can be a useful, if imperfect tool in inference, and will show how to compute <em>p</em>-values throughout this text.</p>
+<p>Somewhat related to a significance test is a hypothesis test, or a <strong>Null-Hypothesis Signficance Test</strong> (NHST), in which the <span class="math inline">\(p\)</span>-value from a significance test is compared to a pre-specified error rate called <span class="math inline">\(\alpha\)</span>. Hypothesis testing was developed as a formal means of decision making but this is rarely the use of NHST in experimental biology. For almost all applications of <em>p</em>-values that I see in the literature that I read in ecology, evolution, physiology, and wet-bench biology, comparing a <span class="math inline">\(p\)</span>-value to <span class="math inline">\(\alpha\)</span> adds no value to the communication of the results.</p>
+<section id="assumptions-for-inference-with-a-statistical-model" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="assumptions-for-inference-with-a-statistical-model"><span class="header-section-number">4.8.1</span> Assumptions for inference with a statistical model</h3>
+<ol type="1">
+<li>The data were generated by a process that is “linear in the parameters”, which means that the different components of the model are added together. This additive part of the model containing the parameters is the linear predictor in specifications (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>) and (<a href="#eq-draw-spec" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>) above. For example, a cubic polynomial model</li>
+</ol>
+<p><span class="math display">\[
+\mathrm{E}(Y|X) = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3
+\]</span></p>
+<p>is a linear model, even though the function is non-linear, because the different components are added. Because a linear predictor is additive, it can be compactly defined using matrix algebra</p>
+<p><span class="math display">\[
+\mathrm{E}(Y|X) = \mathbf{X}\boldsymbol{\beta}
+\]</span></p>
+<p>where <span class="math inline">\(mathbf{X}\)</span> is the <strong>model matrix</strong> and <span class="math inline">\(\boldsymbol{\beta}\)</span> is the vector of parameters. We discuss these more in chapter xxx.</p>
+<p>A <strong>Generalized Linear Model</strong> (GLM) has the form <span class="math inline">\(g(\mu_i) = \eta_i\)</span> where <span class="math inline">\(\eta\)</span> (the Greek letter “eta”) is the linear predictor</p>
+<p><span class="math display">\[\begin{equation}
+\eta = \mathbf{X}\boldsymbol{\beta}
+\end{equation}\]</span></p>
+<p>GLMs are extensions of linear models. There are non-linear models that are not linear in the parameters, that is, the predictor is not a simple dot product of the model matrix and a vector of parameters. For example, the Michaelis-Menten model is a non-linear model</p>
+<p><span class="math display">\[
+\mathrm{E}(Y|X)  = \frac{\beta_1 X}{\beta_2 + X}
+\]</span></p>
+<p>that is non-linear in the parameters because the parts are not added together. This text covers linear models and generalized linear models, but not non-linear models that are also non-linear in the parameters.</p>
+<ol start="2" type="1">
+<li>The draws from the probability distribution are <strong>independent</strong>. Independence implies <strong>uncorrelated</strong> <span class="math inline">\(Y\)</span> conditional on the <span class="math inline">\(X\)</span>, that is, for any two <span class="math inline">\(Y\)</span> with the same value of <span class="math inline">\(X\)</span>, we cannot predict the value of one given the value of the other. For example, in the ASK1 data above, “uncorrelated” implies that we cannot predict the glucose level of one mouse within a specific treatment combination given the glucose level of another mouse in that combination. For linear models, this assumption is often stated as “independent errors” (the <span class="math inline">\(\varepsilon\)</span> in model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>)) instead of independent observations.</li>
+</ol>
+<p>There are lots of reasons that conditional responses might be correlated. In the mouse example, correlation within treatment group could arise if subsets of mice in a treatment group are siblings or are housed in the same cage. More generally, if there are measures both within and among experimental units (field sites or humans or rats) then we’d expect the measures within the same unit to err from the model in the same direction. Multiple measures within experimental units (a site or individual) creates “clustered” observations. Lack of independence or clustered observations can be modeled using models with <strong>random effects</strong>. These models go by many names including linear mixed models (common in Ecology), hierarchical models, multilevel models, and random effects models. A linear mixed model is a variation of model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>). This text introduces linear mixed models in chapter xxx.</p>
+<p>Measures that are taken from sites that are closer together or measures taken closer in time or measures from more closely related biological species will tend to have more similar values than measures taken from sites that are further apart or from times that are further apart or from species that are less closely related. Space and time and phylogeny create <strong>spatial and temporal and phylogenetic autocorrelation</strong>. Correlated error due to space or time or phylogeny can be modeled with <strong>Generalized Least Squares</strong> (GLS) models. A GLS model is a variation of model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>).</p>
+</section>
+<section id="specific-assumptions-for-inference-with-a-linear-model" class="level3" data-number="4.8.2">
+<h3 data-number="4.8.2" class="anchored" data-anchor-id="specific-assumptions-for-inference-with-a-linear-model"><span class="header-section-number">4.8.2</span> Specific assumptions for inference with a linear model</h3>
+<ol type="1">
+<li><strong>Constant variance</strong> or <strong>homoskedasticity</strong>. The most common way of thinking about this is the error term <span class="math inline">\(\varepsilon\)</span> has constant variance, which is a short way of saying that random draws of <span class="math inline">\(\varepsilon\)</span> in model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>) are all from the same (or <strong>identical</strong>) distribution. This is explicitly stated in the second line of model specification (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>). If we were to think about this using model specification (<a href="#eq-draw-spec" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>), then homoskedasticity means that <span class="math inline">\(\sigma\)</span> in <span class="math inline">\(N(\mu, \sigma)\)</span> is constant for all observations (or that the <em>conditional</em> probability distributions are identical, where <em>conditional</em> would mean adjusted for <span class="math inline">\(\mu\)</span>)</li>
+</ol>
+<p>Many biological processes generate data in which the error is a function of the mean. For example, measures of biological variables that grow, such as lengths of body parts or population size, have variances that “grow” with the mean. Or, measures of counts, such as the number of cells damaged by toxin, the number of eggs in a nest, or the number of mRNA transcripts per cell have variances that are a function of the mean. Heteroskedastic error can be modeled with <strong>Generalized Least Squares</strong>, a generalization of the linear model, and with <strong>Generalized Linear Models</strong> (GLM), which are “extensions” of the classical linear model.</p>
+<ol start="2" type="1">
+<li>Normal or <strong>Gaussian</strong> probability distribution. As above, the most common way of thinking about this is the error term <span class="math inline">\(\varepsilon\)</span> is Normal. Using model specification (<a href="#eq-draw-spec" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>), we’d say the conditional probablity distribution of the response is normal. A normal probability distribution implies that 1) the response is continuous and 2) the conditional probability is symmetric around <span class="math inline">\(mu_i\)</span>. If the conditional probability distribution has a long left or right tail it is <strong>skewed</strong> left or right. Counts (number of cells, number of eggs, number of mRNA transcripts) and binary responses (sucessful escape or sucessful infestation of host) are not continuous and often often have asymmetric probablity distributions that are skewed to the right and while sometimes both can be reasonably modeled using a linear model they are more often modeled using generalized linear models, which, again, is an extension of the linear model in equation (<a href="#eq-draw-spec" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>). A classical linear model is a specific case of a GLM.</li>
+</ol>
+<p>A common misconception is that inference from a linear model assumes that the raw response variable is normally distributed. Both the error-draw and conditional-draw specifications of a linear model show precisely why this conception is wrong. Model (<span class="quarto-unresolved-ref">?eq-lm</span>) states explicitly that it is the error that has the normal distribution – the distribution of <span class="math inline">\(Y\)</span> is a mix of the distribution of <span class="math inline">\(X\)</span> and the error. Model (<a href="#eq-draw-spec" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>) states that the conditional outcome has a normal distribution, that is, the distribution after adjusting for variation in <span class="math inline">\(X\)</span>.</p>
+</section>
+</section>
+<section id="linear-modelregression-model-or-statistical-model" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="linear-modelregression-model-or-statistical-model"><span class="header-section-number">4.9</span> “linear model,”regression model”, or “statistical model”?</h2>
+<p>Statistical modeling terminology can be confusing. The <span class="math inline">\(X\)</span> variables in a statistical model may be quantitative (continuous or integers) or categorical (names or qualitative amounts) or some mix of the two. Linear models with all quantitative independent variables are often called “regression models.” Linear models with all categorical independent variables are often called “ANOVA models.” Linear models with a mix of quantitative and categorical variables are often called “ANCOVA models” if the focus is on one of the categorical <span class="math inline">\(X\)</span> or “regression models” if there tend to be many independent variables.</p>
+<p>This confusion partly results from the history of the development of regression for the analysis of observational data and ANOVA for the analysis of experimental data. The math underneath classical regression (without categorical variables) is the linear model. The math underneath classical ANOVA is the computation of sums of squared deviations from a group mean, or “sums of squares”. The basic output from a regression is a table of coefficients with standard errors. The basic ouput from ANOVA is an ANOVA table, containing the sums of squares along with mean-squares, <em>F</em>-ratios, and <em>p</em>-values. Because of these historical differences in usage, underlying math, and output, many textbooks in biostatistics are organized around regression “vs.” ANOVA, presenting regression as if it is “for” observational studies and ANOVA as if it is “for” experiments.</p>
+<p>It has been recognized for many decades that experiments can be analyzed using the technique of classical regression if the categorical variables are coded as numbers (again, this will be explained later) and that both regression and ANOVA are variations of a more general, linear model. Despite this, the “regression vs.&nbsp;ANOVA” way-of-thinking dominates the teaching of biostatistics.</p>
+<p>To avoid misconceptions that arise from thinking of statistical analysis as “regression vs.&nbsp;ANOVA”, I will use the term “linear model” as the general, umbrella term to cover everything in this book. By linear model, I mean any model that is linear in the parameters, including classical regression models, marginal models, linear mixed models, and generalized linear models. To avoid repetition, I’ll also use “statistical model”.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/06-data-reading_writing.html" class="pagination-link" aria-label="Data -- Reading, Wrangling, and Writing">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/22-continuous_X.html" class="pagination-link" aria-label="Linear models with a single, continuous *X* (&quot;linear regression&quot;)">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

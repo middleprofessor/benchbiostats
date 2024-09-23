@@ -1,0 +1,209 @@
+---
+title: "Models for a single continuous x variable -- Classical Linear Regression"
+---
+
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+# wrangling packages
+library(here) # here makes a project transportable
+library(janitor) # clean_names
+library(readxl) # read excel, duh!
+library(data.table) # magical data frames
+
+# graphing packages
+library(ggsci) # color palettes
+library(ggpubr) # publication quality plots
+library(ggforce) # better jitter
+library(cowplot) # combine plots
+library(knitr) # kable tables
+library(kableExtra) # kable_styling tables
+
+# ggplot_the_model.R packages not loaded above
+library(insight)
+
+# use here from the here package
+here <- here::here
+# use clean_names from the janitor package
+clean_names <- janitor::clean_names
+
+# load functions used by this text written by me
+# ggplot_the_model.R needs to be in the folder "R"
+# if you didn't download this and add to your R folder in your
+# project, then this line will cause an error
+source_path <- here("R", "ggplot_the_model.R")
+source(source_path)
+
+data_folder <- "data"
+image_folder <- "images"
+output_folder <- "output"
+
+```
+
+## A linear model with a single, continuous *X* is classical "regression"
+
+In experimental bench biology, most uses of classical linear regression are for simply showing that two variables have some positive or negative association. For this use, researchers could simply compute a **correlation** coefficient, since the *p*-value of a correlation and simple linear regression are the same and the coefficients of the regression model are not used.
+
+Less commonly in bench biology, regression is used as a way of comparing the means among treatments adjusted for some measure of size, such as body mass. This is known as an ANCOVA model, which is covered in Chapter xxx.
+
+Much less common uses of regression in bench biology, but common outside of it, include
+
+1.  **Inferring the causal effect of** $X$ on $Y$, often adjusted for a set of covariates using **multiple regression**. This is precisely the focus of this book, except the $X$ variables in this book (other than this chapter) are categorical variables (factors) and we rarely adjust for covariates.
+2.  **Predicting** $Y$, given $X$, or more commonly, a set of $X$ variables, again using multiple regression.
+3.  **Measuring the scaling relationship between two variables**, that is, how the size of one variable grows relative to the size of a second variable.
+
+### Analysis of myonuclear scaling data
+
+To introduce some principles of modeling with a single continuous $X$ variable, I'll use a dataset used to investigate the scaling of nuclear number in skeletal muscle cells (a muscle cell is typically called a "fiber"). Skeletal muscle cells grow by signaling muscle satellite cells to fuse with the muscle cell. As a consequence, skeletal muscle cells are multinucleate, which allows them to synthesize more contractile protein. The researchers want to know if the increase in nuclear number keeps up with cell growth -- that is maintain the same density.
+
+The researchers use a standard scaling model
+
+$$Number = aSize^b$$ If we log transform both sides, we get
+
+$$\log(Number) = \log(a) + b \log(Size)$$
+
+This is simply a linear regression on the log transformed variables. For nuclear number to keep up (maintain the same density) with size, the slope (or "scaling") coefficient $b$ must equal one; if $b < 1$ then the nuclear density decreases with size increase and if $b > 1$ then nuclear number increases with size increase.
+
+An interesting issue here is that there are three measures of cell size -- length, area, and volume, and the scaling coefficient cannot be the same for each since area (which is length squared) grows at a faster rate than length and volume (which is length cubed) grows at a faster rate than area. The authors estimate the scaling coefficient with both surface area and cell volume. We use the data for surface area here (the cell volume data were not available in the original archived dataset).
+
+Article source: [Hansson, KA., Eftestøl, E., Bruusgaard, J.C. et al. Myonuclear content regulates cell size with similar scaling properties in mice and humans. Nat Commun 11, 6288 (2020). https://doi.org/10.1038/s41467-020-20057-8](https://www.nature.com/articles/s41467-020-20057-8){target="_blank"}
+
+Data figure: Fig 1r
+
+[Source data](https://www.nature.com/articles/s41467-020-20057-8#Sec19){target="_blank"}
+
+$X$ variable: $\texttt{surface_area}$
+
+$Y$ variable: $\texttt{nuclear_number}$
+
+1.  **Import and wrangle the data**
+
+Add log10 transform of the *X* ($\texttt{nuclear_number}$) and *Y* ($\texttt{surface_area}$) variables.
+
+```{r import-fig1r, warning=FALSE}
+data_from <- "Myonuclear content regulates cell size with similar scaling properties in mice and humans"
+file_name <- "fig1.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+
+fig1r <- read_excel(file_path,
+                    sheet = "Figure 1p-r",
+                    range = "b4:g100",
+                    col_names = TRUE) |>
+  data.table() |>
+  clean_names()
+
+fig1r[, nuclear_number_log_10 := log10(nuclear_number)]
+fig1r[, surface_area_log_10 := log10(surface_area)]
+```
+
+2.  **Examine the data**
+
+```{r}
+ggscatter(data = fig1r,
+          x = "nuclear_number",
+          y = "surface_area")
+```
+
+The plot doesn't show any obvious outliers that might be due to measurement blunders or curation error.
+
+3.  **Choose a model**. We will use a linear model equivalent to classical linear regression of log transformed variables to estimate the scaling parameter.
+
+4.  **Fit the model**
+
+```{r fig1r-model-fit}
+m1 <- lm(nuclear_number_log_10 ~ surface_area_log_10, data = fig1r)
+```
+
+5.  **Inference from the model**
+
+```{r continuous-x-inference}
+m1_coef <- cbind(coef(summary(m1)), confint(m1))
+colnames(m1_coef)[4] <- "p value"
+m1_coef |>
+  kable(digits = c(2, 3, 2, 4, 3, 3))|>
+  kable_styling()
+```
+
+The effect of added temperature on the day of green-down is `r round(m1_coeff["temperature", "Estimate"],2)` d per 1 °C (95% CI: `r round(m1_coeff["temperature", "2.5 %"],1)`, `r round(m1_coeff["temperature", "97.5 %"],1)`; p `r pvalString(m1_coeff["temperature", "Pr(>|t|)"])`).
+
+```{r fig1r-analysis}
+m1_coef <- cbind(coef(summary(m1)), confint(m1))
+m1_coef |>
+  kable(digits = c(2, 3, 2, 4, 3, 3))|>
+  kable_styling()
+
+# the p-value in the table above is testing against beta = 0
+# to test for specific value beta_exp
+b0 <- m1_coef[1, 1] # intercept
+b1 <- m1_coef[2, 1] # slope
+b1_se <- m1_coef[2, 2]
+beta_exp <- 1
+
+# method 1
+t <- (b1 - beta_exp) / b1_se
+df <- m1$df.residual
+pval <- 2 * pt(abs(t), df, lower.tail = FALSE)
+m1_coef[2, 4] <- pval
+m1_coef |>
+  kable(digits = c(2, 3, 2, 4, 3, 3))|>
+  kable_styling()
+
+# method 2
+# y - beta x ~ b0 + (b1 - beta)x
+# a regression p-value test b1 = 0
+# if b1 = beta then a regression tests this because we expect b1 - beta = 0
+m2 <- lm((nuclear_number_log_10 - beta_exp * surface_area_log_10) ~ surface_area_log_10,
+         data = fig1r)
+m2_coef <- coef(summary(m2))
+#colnames(m2_coef)[4] <- "P-value"
+m2_coef |>
+  kable(digits = c(2, 3, 2, 4, 3, 3))|>
+  kable_styling()
+
+
+```
+
+```{r}
+beta_exp = 1 # this is the slope that we want to test
+m2 <- lm((nuclear_number_log_10 - beta_exp * surface_area_log_10) ~ surface_area_log_10,
+         data = fig1r)
+```
+
+```{r}
+# extract value in the row labled "surface_area_log_10" and column labeled "Pr(>|t|)"
+pval <- coef(summary(m2))["surface_area_log_10", "Pr(>|t|)"]
+```
+
+Now replace the old p-value in your m1 coefficient table with this new value, something like this
+
+```{r}
+m1_coef["surface_area_log_10", "Pr(>|t|)"] <- pval
+```
+
+# Some code for replicating the plot (actually making it better)
+
+```{r plotit}
+# get points of line
+# pval computed above
+b0 <- coef(m1)[1]
+b1 <- coef(m1)[2]
+xmin <- min(fig1r$surface_area_log_10)
+ymin <- b0 + b1 * xmin
+xmax <- max(fig1r$surface_area_log_10)
+ymax <- b0 + b1 * xmax
+
+gg1 <- ggplot(data = fig1r,
+              aes(x = surface_area_log_10,
+                  y = nuclear_number_log_10)) +
+#  geom_abline(intercept = coef(m1)[1], slope = coef(m1)[2]) +
+  geom_segment(x = xmin, y = ymin, xend = xmax, yend = ymax) +
+#  geom_point(color = pal_okabe_ito[1], size = 3) +
+  geom_point(shape = 21, fill = pal_okabe_ito[1], size = 3) +
+  ylab(expression(Log[10]*"(Nucler Number)")) +
+  xlab(expression(Log[10]*"(Surface Area ("*µm^2*"))")) +
+  annotate(geom = "text",
+           label = paste0("slope = ", round(b1, 2), "\np = ", round(pval, 4)),
+           x = 4.5, y = 1.7,
+           hjust = 0) +
+  theme_pubr()
+
+gg1
+```
