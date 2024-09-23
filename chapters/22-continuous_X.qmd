@@ -124,6 +124,8 @@ To introduce some principles of modeling with a single continuous $X$ variable, 
 
 [Richardson, A.D., Hufkens, K., Milliman, T. et al. Ecosystem warming extends vegetation activity but heightens vulnerability to cold temperatures. Nature 560, 368–371 (2018).](https://doi.org/10.1038/s41586-018-0399-1){target="_blank"}
 
+which has nothing to do with experimental bench biology using mouse models but does have a really really nice dataset for understanding classical linear regression.
+
 [Source data](https://www.nature.com/articles/s41586-018-0399-1#Sec15){target="_blank"}
 
 The data are from a [long-term experiment on the effects of warming and CO2 on a high-carbon northern temperate peatland](https://mnspruce.ornl.gov){target="_blank"} and is the focal dataset of the study. The experiment involves 10 large, temperature and CO2 controlled enclosures. CO2 is set to 400 ppm in five enclosures and 900 ppm in five enclosures. Temperature of the five enclosures within each CO2 level is set to 0, 2.25, 4.5, 6.75, or 9 °C above ambient temperature. The multiple temperature levels is a **regression design**, which allows a researcher to measure non-linear effects. Read more about the experimental design and the [beautiful implementation](https://mnspruce.ornl.gov/design){target="_blank"}.
