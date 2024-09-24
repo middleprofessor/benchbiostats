@@ -8,14 +8,14 @@ Classical linear regression, *t*-tests and ANOVA are all special cases of a **li
 
 $$
 \mathrm{E}(Y | X) = \beta_0 + \beta_1 X
-$$ {#eq:index-regression-model}
+$$ {#eq-index-regression-model}
 
 The chapter [An introduction to linear models](#intro-linear-models) explains the meaning of this notation. Here, just recognize that this is a **regression model**, but in modern statistics, we use this to not only estimate the effects of a continuous $X$ variable on some response (classical regression) but also for the estimation of effects of a categorical treatment variable on some response (as in classical *t*-tests and ANOVA). A regression model with a categorical treatment variable is possible because the treatment variable is recoded into a numeric **indicator variable** indicating group membership ("wildtype" or "knockout"). Classical *t*-tests and ANOVA are equivalent to special cases of regression models but the linear model is usually presented in a different way, one that allows simple "paper and pencil math" (addition, subtraction, multiplication, division). The linear model underneath a classical *t*-tests/ANOVA is some variation of
 
 $$
 \overline{Y}_k = \mu + \alpha_k
-$$ {#eq:index-anova-model}
+$$ {#eq-index-anova-model}
 
 where $\mu$ is the grand mean and $\alpha_k$ is the difference between the mean of treatment *k* and the grand mean.
 
-In this text, I use **linear model** for any model that looks like Equation @eq:index-regression-model and **ANOVA model** for any model that looks like Equation @eq:index-anova-model (many statistics textbooks call these "cell-mean models"). It would be more correct to call models that look like Equation @eq:index-regression-model a **regression model** but the word "regression" has a lot of baggage because of how it is taught -- as a method for data with continuous $X$ ("independent") variables. If I said, "this is a book of regression models for analyzing your experimental data", you might quite reasonably, but incorrectly, assume that the book wasn't really relevant to your experiments because your independent variables are categorical ("WT" vs."KO") and not continuous.
+In this text, I use **linear model** for any model that looks like Equation @eq-index-regression-model and **ANOVA model** for any model that looks like Equation @eq-index-anova-model (many statistics textbooks call these "cell-mean models"). It would be more correct to call models that look like Equation @eq-index-regression-model a **regression model** but the word "regression" has a lot of baggage because of how it is taught -- as a method for data with continuous $X$ ("independent") variables. If I said, "this is a book of regression models for analyzing your experimental data", you might quite reasonably, but incorrectly, assume that the book wasn't really relevant to your experiments because your independent variables are categorical ("WT" vs."KO") and not continuous.
