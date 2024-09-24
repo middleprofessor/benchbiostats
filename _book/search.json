@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Statistics for the Experimental Bench Biologist",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "text": "Preface\nThis book is an introduction to the statistical analysis of data from biological experiments with a focus on the estimation of treatment effects and measures of the uncertainty of theses estimates. Instead of a flowchart of “which statistical test”, this book emphasizes a regression modeling approach using linear models and extensions of linear models.\n“What what? I learned from the post-doc in my lab that regression was for data with a continuous independent variable and that t-tests and ANOVA were for data with categorical independent variables.” No! This misconception has roots in the history of regression vs. ANOVA and is reinforced by how introductory biostatistics textbooks, and their instructors, choose to teach statistics.",
     "crumbs": [
       "Preface"
     ]
