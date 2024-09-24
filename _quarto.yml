@@ -1,5 +1,6 @@
 project:
   type: book
+  output-dir: docs
 
 book:
   title: "Statistics for the Experimental Bench Biologist"
@@ -22,5 +23,5 @@ format:
     theme: cosmo
   pdf:
     documentclass: scrreprt
-editor: visual
+editor: source
 

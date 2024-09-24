@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -207,6 +236,18 @@ ul.task-list li input[type="checkbox"] {
 <h1 class="unnumbered">Preface</h1>
 <p>This book is an introduction to the statistical analysis of data from biological experiments with a focus on the estimation of treatment effects and measures of the uncertainty of theses estimates. Instead of a flowchart of “which statistical test”, this book emphasizes a <strong>regression modeling</strong> approach using <strong>linear models</strong> and extensions of linear models.</p>
 <p>“What what? I learned from the post-doc in my lab that regression was for data with a continuous independent variable and that <em>t</em>-tests and ANOVA were for data with categorical independent variables.” No! This misconception has roots in the history of regression vs.&nbsp;ANOVA and is reinforced by how introductory biostatistics textbooks, and their instructors, <em>choose</em> to teach statistics.</p>
+<p>Classical linear regression, <em>t</em>-tests and ANOVA are all special cases of a <strong>linear model</strong>. The different linear models in this text are all variations of the equation for a line <span class="math inline">\(Y = mX + b\)</span> using slightly different notation:</p>
+<p><span class="math display">\[\begin{equation}
+\mathrm{E}(Y | X) = \beta_0 + \beta_1 X
+(\#eq:index-regression-model)
+\end{equation}\]</span></p>
+<p>The chapter <a href="chapters/12-introduction-to-statistical-modeling.html">An introduction to linear models</a> explains the meaning of this notation. Here, just recognize that this is a <strong>regression model</strong>, but in modern statistics, we use this to not only estimate the effects of a continuous <span class="math inline">\(X\)</span> variable on some response (classical regression) but also for the estimation of effects of a categorical treatment variable on some response (as in classical <em>t</em>-tests and ANOVA). A regression model with a categorical treatment variable is possible because the treatment variable is recoded into a numeric <strong>indicator variable</strong> indicating group membership (“wildtype” or “knockout”). Classical <em>t</em>-tests and ANOVA are equivalent to special cases of regression models but the linear model is usually presented in a different way, one that allows simple “paper and pencil math” (addition, subtraction, multiplication, division). The linear model underneath a classical <em>t</em>-tests/ANOVA is some variation of</p>
+<p><span class="math display">\[\begin{equation}
+\overline{Y}_k = \mu + \alpha_k
+(\#eq:index-anova-model)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mu\)</span> is the grand mean and <span class="math inline">\(\alpha_k\)</span> is the difference between the mean of treatment <em>k</em> and the grand mean.</p>
+<p>In this text, I use <strong>linear model</strong> for any model that looks like Equation @ref(eq:index-regression-model) and <strong>ANOVA model</strong> for any model that looks like Equation @ref(eq:index-anova-model) (many statistics textbooks call these “cell-mean models”). It would be more correct to call models that look like Equation @ref(eq:index-regression-model) a <strong>regression model</strong> but the word “regression” has a lot of baggage because of how it is taught – as a method for data with continuous <span class="math inline">\(X\)</span> (“independent”) variables. If I said, “this is a book of regression models for analyzing your experimental data”, you might quite reasonably, but incorrectly, assume that the book wasn’t really relevant to your experiments because your independent variables are categorical (“WT” vs.”KO”) and not continuous.</p>
 
 
 </section>
