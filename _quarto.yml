@@ -9,12 +9,15 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - summary.qmd
-    - chapters/06-data-reading_writing.qmd
-    - chapters/12-introduction-to-statistical-modeling.qmd
-    - chapters/22-continuous_X.qmd
-    - chapters/24-categorical_X.qmd
-    - references.qmd
+    - chapters/setup.qmd
+    - chapters/reading-writing-wrangling.qmd
+    - chapters/plotting-models.qmd
+    - chapters/uncertainty-sd-and-se.qmd
+    - chapters/p-values.qmd
+    - chapters/inference-errors.qmd
+    - chapters/intro-stat-modeling.qmd
+    - chapters/continuous_x.qmd
+    - chapters/categorical_x.qmd
 
 bibliography: references.bib
 

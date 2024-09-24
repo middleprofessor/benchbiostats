@@ -145,43 +145,61 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="./chapters/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/06-data-reading_writing.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/reading-writing-wrangling.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/12-introduction-to-statistical-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  <a href="./chapters/plotting-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/22-continuous_X.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  <a href="./chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/24-categorical_X.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
+  <a href="./chapters/p-values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">P-values</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./chapters/inference-errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Errors in inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/intro-stat-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/continuous_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/categorical_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
   </div>
 </li>
     </ul>
@@ -240,7 +258,7 @@ window.Quarto = {
 <p><span id="eq-index-regression-model"><span class="math display">\[
 \mathrm{E}(Y | X) = \beta_0 + \beta_1 X
 \tag{1}\]</span></span></p>
-<p>The chapter <a href="chapters/12-introduction-to-statistical-modeling.html">An introduction to linear models</a> explains the meaning of this notation. Here, just recognize that this is a <strong>regression model</strong>, but in modern statistics, we use this to not only estimate the effects of a continuous <span class="math inline">\(X\)</span> variable on some response (classical regression) but also for the estimation of effects of a categorical treatment variable on some response (as in classical <em>t</em>-tests and ANOVA). A regression model with a categorical treatment variable is possible because the treatment variable is recoded into a numeric <strong>indicator variable</strong> indicating group membership (“wildtype” or “knockout”). Classical <em>t</em>-tests and ANOVA are equivalent to special cases of regression models but the linear model is usually presented in a different way, one that allows simple “paper and pencil math” (addition, subtraction, multiplication, division). The linear model underneath a classical ANOVA is some variation of</p>
+<p>The chapter <a href="chapters/intro-stat-modeling.html">An introduction to linear models</a> explains the meaning of this notation. Here, just recognize that this is a <strong>regression model</strong>, but in modern statistics, we use this to not only estimate the effects of a continuous <span class="math inline">\(X\)</span> variable on some response (classical regression) but also for the estimation of effects of a categorical treatment variable on some response (as in classical <em>t</em>-tests and ANOVA). A regression model with a categorical treatment variable is possible because the treatment variable is recoded into a numeric <strong>indicator variable</strong> indicating group membership (“wildtype” or “knockout”). Classical <em>t</em>-tests and ANOVA are equivalent to special cases of regression models but the linear model is usually presented in a different way, one that allows simple “paper and pencil math” (addition, subtraction, multiplication, division). The linear model underneath a classical ANOVA is some variation of</p>
 <p><span id="eq-index-anova-model"><span class="math display">\[
 \overline{Y}_k = \mu + \alpha_k
 \tag{2}\]</span></span></p>
@@ -675,8 +693,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./intro.html" class="pagination-link" aria-label="Analyzing experimental data with a linear model">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.52">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Getting Started – R Projects and R Markdown – Statistics for the Experimental Bench Biologist</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/reading-writing-wrangling.html" rel="next">
+<link href="../intro.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/setup.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistics for the Experimental Bench Biologist</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/setup.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/reading-writing-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/plotting-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/p-values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">P-values</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/inference-errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Errors in inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/intro-stat-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/continuous_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/categorical_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#r-vs-r-studio" id="toc-r-vs-r-studio" class="nav-link active" data-scroll-target="#r-vs-r-studio"><span class="header-section-number">2.1</span> R vs R Studio</a></li>
+  <li><a href="#download-and-install-r-and-r-studio" id="toc-download-and-install-r-and-r-studio" class="nav-link" data-scroll-target="#download-and-install-r-and-r-studio"><span class="header-section-number">2.2</span> Download and install R and R studio</a></li>
+  <li><a href="#open-r-studio-and-modify-the-workspace-preference" id="toc-open-r-studio-and-modify-the-workspace-preference" class="nav-link" data-scroll-target="#open-r-studio-and-modify-the-workspace-preference"><span class="header-section-number">2.3</span> Open R Studio and modify the workspace preference</a></li>
+  <li><a href="#if-you-didnt-modify-the-workspace-preferences-from-the-previous-section-go-back-and-do-it" id="toc-if-you-didnt-modify-the-workspace-preferences-from-the-previous-section-go-back-and-do-it" class="nav-link" data-scroll-target="#if-you-didnt-modify-the-workspace-preferences-from-the-previous-section-go-back-and-do-it"><span class="header-section-number">2.4</span> If you didn’t modify the workspace preferences from the previous section, go back and do it</a></li>
+  <li><a href="#r-markdown-in-a-nutshell" id="toc-r-markdown-in-a-nutshell" class="nav-link" data-scroll-target="#r-markdown-in-a-nutshell"><span class="header-section-number">2.5</span> R Markdown in a nutshell</a></li>
+  <li><a href="#install-r-markdown" id="toc-install-r-markdown" class="nav-link" data-scroll-target="#install-r-markdown"><span class="header-section-number">2.6</span> Install R Markdown</a></li>
+  <li><a href="#importing-packages" id="toc-importing-packages" class="nav-link" data-scroll-target="#importing-packages"><span class="header-section-number">2.7</span> Importing Packages</a></li>
+  <li><a href="#setup-create-project" id="toc-setup-create-project" class="nav-link" data-scroll-target="#setup-create-project"><span class="header-section-number">2.8</span> Create an R Studio Project for this textbook</a></li>
+  <li><a href="#working-on-a-project-in-a-nutshell" id="toc-working-on-a-project-in-a-nutshell" class="nav-link" data-scroll-target="#working-on-a-project-in-a-nutshell"><span class="header-section-number">2.9</span> Working on a project, in a nutshell</a></li>
+  <li><a href="#setup-create-rmd" id="toc-setup-create-rmd" class="nav-link" data-scroll-target="#setup-create-rmd"><span class="header-section-number">2.10</span> Create and setup an R Markdown document (Rmd)</a>
+  <ul>
+  <li><a href="#modify-the-yaml-header" id="toc-modify-the-yaml-header" class="nav-link" data-scroll-target="#modify-the-yaml-header"><span class="header-section-number">2.10.1</span> Modify the yaml header</a></li>
+  <li><a href="#modify-the-setup-chunk" id="toc-modify-the-setup-chunk" class="nav-link" data-scroll-target="#modify-the-setup-chunk"><span class="header-section-number">2.10.2</span> Modify the “setup” chunk</a></li>
+  </ul></li>
+  <li><a href="#lets-play-around-with-an-r-markdown-file" id="toc-lets-play-around-with-an-r-markdown-file" class="nav-link" data-scroll-target="#lets-play-around-with-an-r-markdown-file"><span class="header-section-number">2.11</span> Let’s play around with an R Markdown file</a>
+  <ul>
+  <li><a href="#create-a-fake-data-chunk" id="toc-create-a-fake-data-chunk" class="nav-link" data-scroll-target="#create-a-fake-data-chunk"><span class="header-section-number">2.11.1</span> Create a “fake-data” chunk</a></li>
+  <li><a href="#create-a-plot-chunk" id="toc-create-a-plot-chunk" class="nav-link" data-scroll-target="#create-a-plot-chunk"><span class="header-section-number">2.11.2</span> Create a “plot” chunk</a></li>
+  <li><a href="#knit-the-rmd" id="toc-knit-the-rmd" class="nav-link" data-scroll-target="#knit-the-rmd"><span class="header-section-number">2.11.3</span> Knit the Rmd</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>A typical statistical modeling project will consist of:</p>
+<ol type="1">
+<li>importing data from Excel or text (.csv or .txt) files</li>
+<li>cleaning data</li>
+<li>initial exploratory plots</li>
+<li>analysis</li>
+<li>model checking</li>
+<li>generating plots</li>
+<li>generating tables</li>
+<li>writing text to describe the project, the methods, the analysis, and the interpretation of the results (plots and tables)</li>
+</ol>
+<p>The best practice for reproducible research is to use as few software tools for these steps as possible. Too many research projects are not reproducible because the data were cleaned in Excel, and then different parts of the data were separately imported into a GUI statistics software for analysis, and then output from the statistics software was transcribed to Excel to make a table. And other parts of the analysis are used to create a plot in some plotting software. And then the tables and plots are pasted into Microsoft Word to create a report. Any change at any step in this process will require the researcher to remember all the downstream parts that are dependent on the change and to re-do an analysis, or a table, or a plot. Or a team member on the project making asks about how a particular variable was transformed and</p>
+<p>R studio encourages best practices by creating a <strong>project folder</strong> that contains all project documents and implementing a version of markdown called R Markdown. An R Markdown document can explicitly link all parts of the workflow so that changes in earlier steps automatically flow into the later steps. At the completion of a project, a researcher can choose “run all” from the menu and the data are read, cleaned, analyzed, plotted, tabled, and put into a report with the text.</p>
+<section id="r-vs-r-studio" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="r-vs-r-studio"><span class="header-section-number">2.1</span> R vs R Studio</h2>
+<p>R is a programming language. It runs under the hood. You never see it. To use R, you need another piece of software that provides a <strong>user interface</strong>. The software we will use for this is R Studio. R Studio is a slick (very slick) <strong>graphical user interface</strong> (GUI) for developing R projects.</p>
+</section>
+<section id="download-and-install-r-and-r-studio" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="download-and-install-r-and-r-studio"><span class="header-section-number">2.2</span> Download and install R and R studio</h2>
+<p><a href="https://cran.r-project.org" target="_blank">Download R for your OS</a></p>
+<p><a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">Download R Studio Desktop</a></p>
+<p>If you need help installing R and R studio, here is <a href="https://www.youtube.com/watch?v=ZvPFKfNHBNQ" target="_blank">Andy Field’s Installing R and RStudio video tutorial</a>)</p>
+</section>
+<section id="open-r-studio-and-modify-the-workspace-preference" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="open-r-studio-and-modify-the-workspace-preference"><span class="header-section-number">2.3</span> Open R Studio and modify the workspace preference</h2>
+<ol type="1">
+<li>Open R Studio</li>
+<li>Click on R Studio &gt; Preferences to</li>
+<li>Click on General in the left menu</li>
+<li>diable “Restore .RData into workspace at startup”</li>
+<li>Click on the “Save workspace to .RData on exit” popup menu and choose “Never”</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="../images/workspace.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>What’s going on here? The workspace contains the values of all the objects created by the R code that you’ve run in the working R session. Nothing good comes from this. You want to start each R session with a clean slate, a blank workspace. This means that when you start a new R session, you will need to re-run all your code chunks to start where you left-off at the close of your last R session. This seems tedious but, be warned, bad things will happen if you save the workspace from the last session and re-load this at startup. Trust me. Just don’t do it.</p>
+</section>
+<section id="if-you-didnt-modify-the-workspace-preferences-from-the-previous-section-go-back-and-do-it" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="if-you-didnt-modify-the-workspace-preferences-from-the-previous-section-go-back-and-do-it"><span class="header-section-number">2.4</span> If you didn’t modify the workspace preferences from the previous section, go back and do it</h2>
+</section>
+<section id="r-markdown-in-a-nutshell" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="r-markdown-in-a-nutshell"><span class="header-section-number">2.5</span> R Markdown in a nutshell</h2>
+<p>In this text, we will write code to analyze data using R Markdown. R markdown is a version of Markdown. Markdown is tool for creating a document containing text (like microsoft Word), images, tables, and code that can be output, or <strong>knitted</strong>, to the three modern output formats: html (web pages), pdf (reports and documents), and microsoft word (okay, this isn’t modern but it is widely used).</p>
+<p>The R Markdown, or .Rmd, document contains three components:</p>
+<ol type="1">
+<li>a YAML header, which specifies formatting and styles for the knitted document</li>
+<li>the code “chunks”, which are blocks of code that do something</li>
+<li>the space before and after the code chunks which contains text and any output images or tables from the code chunks.</li>
+</ol>
+</section>
+<section id="install-r-markdown" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="install-r-markdown"><span class="header-section-number">2.6</span> Install R Markdown</h2>
+<p><a href="https://bookdown.org/yihui/rmarkdown/installation.html#installation" target="_blank">Directions for installing R Markdown</a></p>
+<p>R Markdown can output pdf files. The mechanism for this is to first create a LaTeX (“la-tek”) file. LaTeX is an amazing tool for creating professional pdf documents. You do not need PDF output for this text, but I encourage you to download and install the tinytex distribution, which was created especially for R Markdown in R Studio.</p>
+<p><a href="https://yihui.org/tinytex/">The tinytex distribution is here</a>.</p>
+</section>
+<section id="importing-packages" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="importing-packages"><span class="header-section-number">2.7</span> Importing Packages</h2>
+<p>The R scripts you write will include functions in packages that are not included in Base R. These packages need to be downloaded from an internet server to your computer. You only need to do this once (although you have to redo it each time you update R). But, each time you start a new R session, you will need to load a package using the <code>library()</code> function. Now is a good time to import packages that we will use</p>
+<p>Open R Studio and choose the menu item “Tools” &gt; “Install Packages”. In the “packages” input box, insert the names of packages to install the package. The names can be separated by spaces or commas, for example “data.table, emmeans, ggplot2”. Make sure that “install dependencies” is clicked before you click “Install”. Packages that we will use in this book are</p>
+<ol type="1">
+<li>Import and wrangling packages</li>
+</ol>
+<ul>
+<li>devtools – we use this to install packages that are not on CRAN</li>
+<li>here – we use this to read from and write to the correct folder</li>
+<li>janitor – we use the function clean_names from this package</li>
+<li>readxl – elegant importing from microsoft Excel spreadsheets</li>
+<li>data.table - we use the <em>data.table way</em> to wrangle data in this text.</li>
+<li>stringr – we use this to wrangle character variables</li>
+</ul>
+<ol start="2" type="1">
+<li>analysis packages</li>
+</ol>
+<ul>
+<li>emmeans – we use this to compute modeled means and contrasts</li>
+<li>nlme – we use this for gls models</li>
+<li>lme4 – we use this for linear mixed models</li>
+<li>lmerTest – we use this for inference with linear mixed models</li>
+<li>glmmTMB – we use this for generalized linear models</li>
+<li>MASS – we will use glm.nb from this package</li>
+<li>afex – we use this for classic ANOVA linear models</li>
+<li>car – we use this for model checking</li>
+<li>DHARMa – we use this for model checking generalized linear models</li>
+<li>insight – we use this to learn about models</li>
+</ul>
+<ol start="3" type="1">
+<li>graphing and tabling packages</li>
+</ol>
+<ul>
+<li>ggplot2 – we use this for plotting</li>
+<li>ggsci – we use this for the color palettes</li>
+<li>ggthemes – we use this for the colorblind palette</li>
+<li>ggpubr – we use this to make ggplots a bit easier</li>
+<li>ggforce – we use this for improved jitter plots</li>
+<li>dabestr – we use this to make several plot types</li>
+<li>cowplot – we use this to combine plots</li>
+<li>knitr – we use this to make kable tables</li>
+<li>kableExtra – we use this to improve kable tables</li>
+</ul>
+<p>Once these are installed, you don’t need to do this again although there will be additional packages that you might install. You simply need to use the <code>library()</code> function at the start of a markdown script.</p>
+</section>
+<section id="setup-create-project" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="setup-create-project"><span class="header-section-number">2.8</span> Create an R Studio Project for this textbook</h2>
+<ol type="1">
+<li>Create a project folder within the Documents folder (Mac OS) or My Documents folder (Windows OS). All files associated with this book will reside inside this folder. The name of the project folder should be something meaningful, such as “Applied Biostatistics” or the name of your class (for students in my Applied Biostatistics class, this folder could be named “BIO_413”).</li>
+<li>Within the project folder, create new folders named
+<ol type="1">
+<li>“Rmd” – this is where your R markdown files are stored</li>
+<li>“R” – this is where additional R script files are stored</li>
+<li>“data” – this is where data that we download from public archives are stored</li>
+<li>“output” – this is where you will store fake data generated in this class</li>
+<li>“images” – this is where image files are stored</li>
+</ol></li>
+<li>Open R Studio and click the menu item File &gt; New Project…</li>
+<li>Choose “Existing Directory” and navigate to your project folder</li>
+<li>Choose “Create Project”</li>
+<li>Check that a “.Rproj” file is in your project folder</li>
+<li>Download and move the file <a href="https://raw.githubusercontent.com/middleprofessor/applied-biostats/master/R/ggplot_the_model.R">ggplot_the_model.R</a> into the R folder.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/project_organization.png" class="img-fluid figure-img"></p>
+<figcaption>Project folder with the .Rproj file and all main folders located at the first level of the project</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The project directory should look like that in Figure @ref(fig:project-organization-image). Importantly, the project file (“Applied Biostatistics.Rproj”) and the main folders are all located at the first level within the project folder.</p>
+<p><strong>Bug alert</strong> If your .Rproj file is somewhere else (on the desktop, in the data folder, etc.), bad things will happen.</p>
+</section>
+<section id="working-on-a-project-in-a-nutshell" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="working-on-a-project-in-a-nutshell"><span class="header-section-number">2.9</span> Working on a project, in a nutshell</h2>
+<ol type="1">
+<li>Wake up, brush teeth, and open the project by double-clicking the .Rproj icon. Alternatively, open R Studio and then use the File &gt; Open Project to open the project. <strong>The name of the project will at the top-right of the R Studio window.</strong> We <em>always</em> want to work within an open project and the first workflow guarantees this. If we Open R Studio and then open a .Rmd file, we could be working within another project or no project at all. Bad things will happen.</li>
+<li>Run previous code chunks, in order (top to bottom). Write new code in code chunks and run. When we run code, we add R objects to the <strong>workspace</strong>. The workspace contains the values of all the objects created by the R code that has been run in the working session. When I save the .Rmd file, these values are not saved, only the text and code chunks in the R Markdown document. This is a feature, not a bug.</li>
+<li>When we are finished with the session, quit R Studio. If you get a popup window asking if you want to save the workspace, click “No”. Then immediately go back to the section “Open R Studio and modify the workspace preference” above and follow the directions.</li>
+</ol>
+</section>
+<section id="setup-create-rmd" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="setup-create-rmd"><span class="header-section-number">2.10</span> Create and setup an R Markdown document (Rmd)</h2>
+<ol type="1">
+<li>The top-left icon in R Studio is a little plus sign within a green circle. Click this and choose “R Markdown” from the pull-down menu.</li>
+<li>Give the file a meaningful title.</li>
+<li>Add your name in the Author text book. After the first time doing this, R Studio will default to your name.</li>
+<li>R Studio opens a demo document. Delete all text below the first code chunk, starting with the header “## R Markdown”</li>
+</ol>
+<section id="modify-the-yaml-header" class="level3" data-number="2.10.1">
+<h3 data-number="2.10.1" class="anchored" data-anchor-id="modify-the-yaml-header"><span class="header-section-number">2.10.1</span> Modify the yaml header</h3>
+<p>Replace “output: html_document” in the yaml header with the following in order to create a table of content (toc) on the left side of the page and to enable code folding</p>
+<pre><code>output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide</code></pre>
+</section>
+<section id="modify-the-setup-chunk" class="level3" data-number="2.10.2">
+<h3 data-number="2.10.2" class="anchored" data-anchor-id="modify-the-setup-chunk"><span class="header-section-number">2.10.2</span> Modify the “setup” chunk</h3>
+<p>All R Markdown documents should start with a setup chunk that loads the packages containing R functions that are not in Base R and defines a few key R objects, such as the name of the data folder. A good practice is to load only the packages used by the chunks in the the document. For a student or researcher new to R and R studio, this can be confusing because they are unlikely to be aware of which functions belong to which package and, therefore, which packages should be loaded.</p>
+<p>Here, I disregard this best practice and offer a general, all-purpose setup chunk for users of this text.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># wrangling packages</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co"># here makes a project transportable</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># clean_names</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) <span class="co"># read excel, duh!</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table) <span class="co"># magical data frames</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># string functions</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># analysis packages</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans) <span class="co"># the workhorse for inference</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme) <span class="co"># gls and some lmm</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4) <span class="co"># linear mixed models</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest) <span class="co"># linear mixed model inference</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(afex) <span class="co"># ANOVA linear models</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmmTMB) <span class="co"># generalized linear models</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># negative binomial and some other functions</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) <span class="co"># model checking and ANOVA</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DHARMa) <span class="co"># model checking</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># graphing packages</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggsci) <span class="co"># color palettes</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr) <span class="co"># publication quality plots</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggforce) <span class="co"># better jitter</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot) <span class="co"># combine plots</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr) <span class="co"># kable tables</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra) <span class="co"># kable_styling tables</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot_the_model.R packages not loaded above</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(insight)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># use here from the here package</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>here <span class="ot">&lt;-</span> here<span class="sc">::</span>here</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># use clean_names from the janitor package</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>clean_names <span class="ot">&lt;-</span> janitor<span class="sc">::</span>clean_names</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co"># use transpose from data.table</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>transpose <span class="ot">&lt;-</span> data.table<span class="sc">::</span>transpose</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co"># load functions used by this text written by me</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot_the_model.R needs to be in the folder "R"</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co"># if you didn't download this and add to your R folder in your</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co"># project, then this line will cause an error</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>source_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"R"</span>, <span class="st">"ggplot_the_model.R"</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(source_path)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>image_folder <span class="ot">&lt;-</span> <span class="st">"images"</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>output_folder <span class="ot">&lt;-</span> <span class="st">"output"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>echo = TRUE</code> tells knitr to display the code within a code chunk when the R markdown file is knitted. <code>knitr::opts_chunk$set(echo = TRUE)</code> sets <code>echo = TRUE</code> for all code chunks in the containing .Rmd file (not all R markdown files in the project!).</p>
+<p><code>here &lt;- here::here</code> makes sure that <code>here</code> uses the function from the here package and not some other package. Huh? Let’s back up – R is an open source project and packages are written by independent programmers and scientists and not employees of some central company. When someone develops a package, they create functions that do stuff. Sometimes developers of different packages create functions that have the same name. There is a function name conflict if we load two packages with the same name. Our R session will use the function of the last loaded package as the function assigned to the name. If we want the name to be used with the function in the previously loaded package, then we need to either re-order the library() statements, or simply re-assign the name to the function that we want. This is what <code>here &lt;- here::here</code> does. This script takes the function <code>here</code> from the package “here” and assigns it to the object <code>here</code>.</p>
+</section>
+</section>
+<section id="lets-play-around-with-an-r-markdown-file" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="lets-play-around-with-an-r-markdown-file"><span class="header-section-number">2.11</span> Let’s play around with an R Markdown file</h2>
+<section id="create-a-fake-data-chunk" class="level3" data-number="2.11.1">
+<h3 data-number="2.11.1" class="anchored" data-anchor-id="create-a-fake-data-chunk"><span class="header-section-number">2.11.1</span> Create a “fake-data” chunk</h3>
+<ol start="4" type="1">
+<li>Create a new chunk and label it “fake-data”. Insert the following R script and then click the chunk’s run button</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fake_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">neutrophil_count_exp1 =</span> <span class="fu">rnegbin</span>(n<span class="sc">*</span><span class="dv">2</span>, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">mu =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>), <span class="at">each =</span> n),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">theta =</span> <span class="dv">1</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">neutrophil_count_exp2 =</span> <span class="fu">rnegbin</span>(n<span class="sc">*</span><span class="dv">2</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">mu =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>), <span class="at">each =</span> n),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># View(fake_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This chunk creates fake neutrophil counts in two different experiments. The comment (#) sign before <code>View(fake_data)</code> “comments out” the line of code, so it is not run. View the data by highlighting <code>View(fake_data)</code> and choosing “Run selected line(s)” from the Run menu.</p>
+</section>
+<section id="create-a-plot-chunk" class="level3" data-number="2.11.2">
+<h3 data-number="2.11.2" class="anchored" data-anchor-id="create-a-plot-chunk"><span class="header-section-number">2.11.2</span> Create a “plot” chunk</h3>
+<ol start="5" type="1">
+<li>Create a new chunk and label it “plot”. Insert the following R script and then click the chunk’s run button</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gg_1 <span class="ot">&lt;-</span> <span class="fu">ggstripchart</span>(<span class="at">data =</span> fake_data,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> <span class="st">"neutrophil_count_exp1"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">palette =</span> <span class="st">"jco"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">add =</span> <span class="st">"mean_se"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Neutrophil Count (Exp. 1)"</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_compare_means</span>(<span class="at">method =</span> <span class="st">"t.test"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label.y =</span> <span class="dv">50</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="st">"p.format"</span>) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>gg_2<span class="ot">&lt;-</span> <span class="fu">ggstripchart</span>(<span class="at">data =</span> fake_data,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> <span class="st">"neutrophil_count_exp2"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">palette =</span> <span class="st">"jco"</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">add =</span> <span class="st">"mean_se"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Neutrophil Count (Exp 2)"</span>) <span class="sc">+</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_compare_means</span>(<span class="at">method =</span> <span class="st">"t.test"</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label.y =</span> <span class="dv">65</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="st">"p.format"</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="cn">NULL</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(gg_1, gg_2, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="setup_files/figure-html/intro-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Each plot shows the mean count for each group, the standard error of the mean count, and the <em>p</em>-value from a <em>t</em>-test. This statistical analysis and plot are typical of those found in experimental biology journals. This text will teach alterntatives that implement better practices.</p>
+</section>
+<section id="knit-the-rmd" class="level3" data-number="2.11.3">
+<h3 data-number="2.11.3" class="anchored" data-anchor-id="knit-the-rmd"><span class="header-section-number">2.11.3</span> Knit the Rmd</h3>
+<ol start="6" type="1">
+<li>Knit to an html file</li>
+<li>Knit to a word document</li>
+<li>If you’ve installed tinytex (or some other LaTeX distribution), knit to a pdf file</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../intro.html" class="pagination-link" aria-label="Analyzing experimental data with a linear model">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/reading-writing-wrangling.html" class="pagination-link" aria-label="Data -- Reading, Wrangling, and Writing">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

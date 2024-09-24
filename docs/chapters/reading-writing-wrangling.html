@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/12-introduction-to-statistical-modeling.html" rel="next">
-<link href="../summary.html" rel="prev">
+<link href="../chapters/plotting-models.html" rel="next">
+<link href="../chapters/setup.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -146,7 +146,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/06-data-reading_writing.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/reading-writing-wrangling.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -180,43 +180,61 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="../chapters/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-data-reading_writing.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/reading-writing-wrangling.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/12-introduction-to-statistical-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  <a href="../chapters/plotting-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/22-continuous_X.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  <a href="../chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/24-categorical_X.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
+  <a href="../chapters/p-values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">P-values</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../chapters/inference-errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Errors in inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/intro-stat-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/continuous_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/categorical_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
   </div>
 </li>
     </ul>
@@ -441,10 +459,10 @@ window.Quarto = {
 </section>
 <section id="learning-from-this-chapter" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="learning-from-this-chapter"><span class="header-section-number">3.3</span> Learning from this chapter</h2>
-<p>It will be easiest to learn from this chapter by starting with a clean R Markdown document for this chapter. Create a new R Markdown file and save it to the “Rmd” folder of your project. To create and setup the Rmd, follow the steps in <a href="#setup-create-rmd">Create and setup an R Markdown document (Rmd)</a></p>
+<p>It will be easiest to learn from this chapter by starting with a clean R Markdown document for this chapter. Create a new R Markdown file and save it to the “Rmd” folder of your project. To create and setup the Rmd, follow the steps in <a href="setup.html#setup-create-rmd">Create and setup an R Markdown document (Rmd)</a></p>
 <p><strong>Important:</strong> The import method given here will not work properly until the Rmd file is saved! Get in the habit of creating the file, saving it immediately, and saving it often.</p>
 <p><strong>Important:</strong> The import method will not work properly unless you are working within your R studio project. If you don’t see the name of the project in the upper right of the R Studio toolbar, then you are not in the project. Open the project before moving forward. A good habit is to open R studio by double clicking the project file icon (and not the R Studio icon or the Rmd document that you are working on).</p>
-<p>Notes on the setup chunk from <a href="#setup-create-rmd">Create and setup an R Markdown document (Rmd)</a></p>
+<p>Notes on the setup chunk from <a href="setup.html#setup-create-rmd">Create and setup an R Markdown document (Rmd)</a></p>
 <ol type="1">
 <li>As you become a better R programmer, be kind to the future you by loading only the packages necessary for the code in the R Markdown file that you are working on. If your default is to load everything, the future you will be confused why something was installed. Again, we’ve disregarded this best practice in this textbook to make sure that chunks don’t fail because of a missing function.</li>
 <li>Be kind to the future you by commenting on why a package is loaded; usually this is a specific function from the package</li>
@@ -610,7 +628,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/data-plot-fig1h-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/data-plot-fig1h-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -663,7 +681,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -769,7 +787,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1182,7 +1200,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1220,7 +1238,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1235,7 +1253,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1250,7 +1268,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1265,7 +1283,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1280,7 +1298,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1296,7 +1314,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1312,7 +1330,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1716,7 +1734,7 @@ The following characters are in the names to clean but are not replaced: \u00b5<
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1836,7 +1854,7 @@ not a multiple of shorter object length</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1853,7 +1871,7 @@ not a multiple of shorter object length</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-data-reading_writing_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="reading-writing-wrangling_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -2292,13 +2310,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../summary.html" class="pagination-link" aria-label="Summary">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span>
+      <a href="../chapters/setup.html" class="pagination-link" aria-label="Getting Started -- R Projects and R Markdown">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/12-introduction-to-statistical-modeling.html" class="pagination-link" aria-label="An introduction to linear models">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/plotting-models.html" class="pagination-link" aria-label="Plotting models">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

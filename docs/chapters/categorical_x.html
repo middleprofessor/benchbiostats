@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Linear models with a single, categorical X (“t-tests” and “ANOVA”) – Statistics for the Experimental Bench Biologist</title>
+<title>10&nbsp; Linear models with a single, categorical X (“t-tests” and “ANOVA”) – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../references.html" rel="next">
-<link href="../chapters/22-continuous_X.html" rel="prev">
+<link href="../chapters/continuous_x.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -146,7 +145,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/24-categorical_X.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/categorical_x.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -180,43 +179,61 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="../chapters/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-data-reading_writing.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/reading-writing-wrangling.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data – Reading, Wrangling, and Writing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/12-introduction-to-statistical-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  <a href="../chapters/plotting-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/22-continuous_X.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  <a href="../chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/24-categorical_X.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
+  <a href="../chapters/p-values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">P-values</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../chapters/inference-errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Errors in inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/intro-stat-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/continuous_x.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/categorical_x.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></a>
   </div>
 </li>
     </ul>
@@ -229,68 +246,68 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#oneway-data" id="toc-oneway-data" class="nav-link active" data-scroll-target="#oneway-data"><span class="header-section-number">6.1</span> A linear model with a single factor (categorical <em>X</em>variable) estimates the effects of the levels of factor on the response</a>
+  <li><a href="#oneway-data" id="toc-oneway-data" class="nav-link active" data-scroll-target="#oneway-data"><span class="header-section-number">10.1</span> A linear model with a single factor (categorical <em>X</em>variable) estimates the effects of the levels of factor on the response</a>
   <ul>
-  <li><a href="#oneway-example1" id="toc-oneway-example1" class="nav-link" data-scroll-target="#oneway-example1"><span class="header-section-number">6.1.1</span> Example 1 (fig3d) – two treatment levels (“groups”)</a>
+  <li><a href="#oneway-example1" id="toc-oneway-example1" class="nav-link" data-scroll-target="#oneway-example1"><span class="header-section-number">10.1.1</span> Example 1 (fig3d) – two treatment levels (“groups”)</a>
   <ul class="collapse">
-  <li><a href="#step-1-understand-the-experiment-design-and-the-focal-comparisons" id="toc-step-1-understand-the-experiment-design-and-the-focal-comparisons" class="nav-link" data-scroll-target="#step-1-understand-the-experiment-design-and-the-focal-comparisons"><span class="header-section-number">6.1.1.1</span> Step 1 – Understand the experiment design and the focal comparisons</a></li>
-  <li><a href="#step-2-import" id="toc-step-2-import" class="nav-link" data-scroll-target="#step-2-import"><span class="header-section-number">6.1.1.2</span> Step 2 – import</a></li>
-  <li><a href="#step-3-inspect-the-data" id="toc-step-3-inspect-the-data" class="nav-link" data-scroll-target="#step-3-inspect-the-data"><span class="header-section-number">6.1.1.3</span> Step 3 – inspect the data</a></li>
-  <li><a href="#step-4-fit-the-model" id="toc-step-4-fit-the-model" class="nav-link" data-scroll-target="#step-4-fit-the-model"><span class="header-section-number">6.1.1.4</span> Step 4 – fit the model</a></li>
-  <li><a href="#step-5-check-the-model" id="toc-step-5-check-the-model" class="nav-link" data-scroll-target="#step-5-check-the-model"><span class="header-section-number">6.1.1.5</span> Step 5 – check the model</a></li>
-  <li><a href="#step-6-inference" id="toc-step-6-inference" class="nav-link" data-scroll-target="#step-6-inference"><span class="header-section-number">6.1.1.6</span> Step 6 – inference</a></li>
-  <li><a href="#step-6-plot-the-model" id="toc-step-6-plot-the-model" class="nav-link" data-scroll-target="#step-6-plot-the-model"><span class="header-section-number">6.1.1.7</span> Step 6 – plot the model</a></li>
-  <li><a href="#step-7-report-the-model-results" id="toc-step-7-report-the-model-results" class="nav-link" data-scroll-target="#step-7-report-the-model-results"><span class="header-section-number">6.1.1.8</span> Step 7 – report the model results</a></li>
+  <li><a href="#step-1-understand-the-experiment-design-and-the-focal-comparisons" id="toc-step-1-understand-the-experiment-design-and-the-focal-comparisons" class="nav-link" data-scroll-target="#step-1-understand-the-experiment-design-and-the-focal-comparisons"><span class="header-section-number">10.1.1.1</span> Step 1 – Understand the experiment design and the focal comparisons</a></li>
+  <li><a href="#step-2-import" id="toc-step-2-import" class="nav-link" data-scroll-target="#step-2-import"><span class="header-section-number">10.1.1.2</span> Step 2 – import</a></li>
+  <li><a href="#step-3-inspect-the-data" id="toc-step-3-inspect-the-data" class="nav-link" data-scroll-target="#step-3-inspect-the-data"><span class="header-section-number">10.1.1.3</span> Step 3 – inspect the data</a></li>
+  <li><a href="#step-4-fit-the-model" id="toc-step-4-fit-the-model" class="nav-link" data-scroll-target="#step-4-fit-the-model"><span class="header-section-number">10.1.1.4</span> Step 4 – fit the model</a></li>
+  <li><a href="#step-5-check-the-model" id="toc-step-5-check-the-model" class="nav-link" data-scroll-target="#step-5-check-the-model"><span class="header-section-number">10.1.1.5</span> Step 5 – check the model</a></li>
+  <li><a href="#step-6-inference" id="toc-step-6-inference" class="nav-link" data-scroll-target="#step-6-inference"><span class="header-section-number">10.1.1.6</span> Step 6 – inference</a></li>
+  <li><a href="#step-6-plot-the-model" id="toc-step-6-plot-the-model" class="nav-link" data-scroll-target="#step-6-plot-the-model"><span class="header-section-number">10.1.1.7</span> Step 6 – plot the model</a></li>
+  <li><a href="#step-7-report-the-model-results" id="toc-step-7-report-the-model-results" class="nav-link" data-scroll-target="#step-7-report-the-model-results"><span class="header-section-number">10.1.1.8</span> Step 7 – report the model results</a></li>
   </ul></li>
-  <li><a href="#understanding-the-analysis-with-two-treatment-levels" id="toc-understanding-the-analysis-with-two-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-two-treatment-levels"><span class="header-section-number">6.1.2</span> Understanding the analysis with two treatment levels</a>
+  <li><a href="#understanding-the-analysis-with-two-treatment-levels" id="toc-understanding-the-analysis-with-two-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-two-treatment-levels"><span class="header-section-number">10.1.2</span> Understanding the analysis with two treatment levels</a>
   <ul class="collapse">
-  <li><a href="#linear-models-are-regression-models" id="toc-linear-models-are-regression-models" class="nav-link" data-scroll-target="#linear-models-are-regression-models"><span class="header-section-number">6.1.2.1</span> Linear models are regression models</a></li>
-  <li><a href="#the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." id="toc-the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." class="nav-link" data-scroll-target="#the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data."><span class="header-section-number">6.1.2.2</span> The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.</a></li>
-  <li><a href="#oneway-what-coefs-are" id="toc-oneway-what-coefs-are" class="nav-link" data-scroll-target="#oneway-what-coefs-are"><span class="header-section-number">6.1.2.3</span> The coefficients of a linear model using dummy coding have a useful interpretation</a></li>
-  <li><a href="#better-know-the-coefficient-table" id="toc-better-know-the-coefficient-table" class="nav-link" data-scroll-target="#better-know-the-coefficient-table"><span class="header-section-number">6.1.2.4</span> Better know the coefficient table</a></li>
-  <li><a href="#the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" id="toc-the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" class="nav-link" data-scroll-target="#the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics"><span class="header-section-number">6.1.2.5</span> The emmeans table is a table of modeled means and inferential statistics</a></li>
-  <li><a href="#estimates-of-the-effects-are-in-the-contrasts-table" id="toc-estimates-of-the-effects-are-in-the-contrasts-table" class="nav-link" data-scroll-target="#estimates-of-the-effects-are-in-the-contrasts-table"><span class="header-section-number">6.1.2.6</span> Estimates of the effects are in the contrasts table</a></li>
-  <li><a href="#t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" id="toc-t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" class="nav-link" data-scroll-target="#t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test"><span class="header-section-number">6.1.2.7</span> <em>t</em> and <em>p</em> from the contrasts table – when there are only two levels in <span class="math inline">\(X\)</span> – are the same as <em>t</em> and <em>p</em> from a <em>t</em>-test</a></li>
+  <li><a href="#linear-models-are-regression-models" id="toc-linear-models-are-regression-models" class="nav-link" data-scroll-target="#linear-models-are-regression-models"><span class="header-section-number">10.1.2.1</span> Linear models are regression models</a></li>
+  <li><a href="#the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." id="toc-the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." class="nav-link" data-scroll-target="#the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data."><span class="header-section-number">10.1.2.2</span> The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.</a></li>
+  <li><a href="#oneway-what-coefs-are" id="toc-oneway-what-coefs-are" class="nav-link" data-scroll-target="#oneway-what-coefs-are"><span class="header-section-number">10.1.2.3</span> The coefficients of a linear model using dummy coding have a useful interpretation</a></li>
+  <li><a href="#better-know-the-coefficient-table" id="toc-better-know-the-coefficient-table" class="nav-link" data-scroll-target="#better-know-the-coefficient-table"><span class="header-section-number">10.1.2.4</span> Better know the coefficient table</a></li>
+  <li><a href="#the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" id="toc-the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" class="nav-link" data-scroll-target="#the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics"><span class="header-section-number">10.1.2.5</span> The emmeans table is a table of modeled means and inferential statistics</a></li>
+  <li><a href="#estimates-of-the-effects-are-in-the-contrasts-table" id="toc-estimates-of-the-effects-are-in-the-contrasts-table" class="nav-link" data-scroll-target="#estimates-of-the-effects-are-in-the-contrasts-table"><span class="header-section-number">10.1.2.6</span> Estimates of the effects are in the contrasts table</a></li>
+  <li><a href="#t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" id="toc-t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" class="nav-link" data-scroll-target="#t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test"><span class="header-section-number">10.1.2.7</span> <em>t</em> and <em>p</em> from the contrasts table – when there are only two levels in <span class="math inline">\(X\)</span> – are the same as <em>t</em> and <em>p</em> from a <em>t</em>-test</a></li>
   </ul></li>
-  <li><a href="#oneway-example2" id="toc-oneway-example2" class="nav-link" data-scroll-target="#oneway-example2"><span class="header-section-number">6.1.3</span> Example 2 – three treatment levels (“groups”)</a>
+  <li><a href="#oneway-example2" id="toc-oneway-example2" class="nav-link" data-scroll-target="#oneway-example2"><span class="header-section-number">10.1.3</span> Example 2 – three treatment levels (“groups”)</a>
   <ul class="collapse">
-  <li><a href="#understand-the-experiment-design" id="toc-understand-the-experiment-design" class="nav-link" data-scroll-target="#understand-the-experiment-design"><span class="header-section-number">6.1.3.1</span> Understand the experiment design</a></li>
-  <li><a href="#fig2a-m1" id="toc-fig2a-m1" class="nav-link" data-scroll-target="#fig2a-m1"><span class="header-section-number">6.1.3.2</span> fit the model</a></li>
-  <li><a href="#check-the-model" id="toc-check-the-model" class="nav-link" data-scroll-target="#check-the-model"><span class="header-section-number">6.1.3.3</span> check the model</a></li>
-  <li><a href="#inference-from-the-model" id="toc-inference-from-the-model" class="nav-link" data-scroll-target="#inference-from-the-model"><span class="header-section-number">6.1.3.4</span> Inference from the model</a></li>
-  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">6.1.3.5</span> plot the model</a></li>
-  <li><a href="#report-the-model-results" id="toc-report-the-model-results" class="nav-link" data-scroll-target="#report-the-model-results"><span class="header-section-number">6.1.3.6</span> Report the model results</a></li>
+  <li><a href="#understand-the-experiment-design" id="toc-understand-the-experiment-design" class="nav-link" data-scroll-target="#understand-the-experiment-design"><span class="header-section-number">10.1.3.1</span> Understand the experiment design</a></li>
+  <li><a href="#fig2a-m1" id="toc-fig2a-m1" class="nav-link" data-scroll-target="#fig2a-m1"><span class="header-section-number">10.1.3.2</span> fit the model</a></li>
+  <li><a href="#check-the-model" id="toc-check-the-model" class="nav-link" data-scroll-target="#check-the-model"><span class="header-section-number">10.1.3.3</span> check the model</a></li>
+  <li><a href="#inference-from-the-model" id="toc-inference-from-the-model" class="nav-link" data-scroll-target="#inference-from-the-model"><span class="header-section-number">10.1.3.4</span> Inference from the model</a></li>
+  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">10.1.3.5</span> plot the model</a></li>
+  <li><a href="#report-the-model-results" id="toc-report-the-model-results" class="nav-link" data-scroll-target="#report-the-model-results"><span class="header-section-number">10.1.3.6</span> Report the model results</a></li>
   </ul></li>
-  <li><a href="#understanding-the-analysis-with-three-or-more-treatment-levels" id="toc-understanding-the-analysis-with-three-or-more-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-three-or-more-treatment-levels"><span class="header-section-number">6.1.4</span> Understanding the analysis with three (or more) treatment levels</a>
+  <li><a href="#understanding-the-analysis-with-three-or-more-treatment-levels" id="toc-understanding-the-analysis-with-three-or-more-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-three-or-more-treatment-levels"><span class="header-section-number">10.1.4</span> Understanding the analysis with three (or more) treatment levels</a>
   <ul class="collapse">
-  <li><a href="#better-know-the-coefficient-table-1" id="toc-better-know-the-coefficient-table-1" class="nav-link" data-scroll-target="#better-know-the-coefficient-table-1"><span class="header-section-number">6.1.4.1</span> Better know the coefficient table</a></li>
-  <li><a href="#the-emmeans-table" id="toc-the-emmeans-table" class="nav-link" data-scroll-target="#the-emmeans-table"><span class="header-section-number">6.1.4.2</span> The emmeans table</a></li>
-  <li><a href="#the-contrasts-table" id="toc-the-contrasts-table" class="nav-link" data-scroll-target="#the-contrasts-table"><span class="header-section-number">6.1.4.3</span> The contrasts table</a></li>
-  <li><a href="#oneway-ttest" id="toc-oneway-ttest" class="nav-link" data-scroll-target="#oneway-ttest"><span class="header-section-number">6.1.4.4</span> <em>t</em> and <em>p</em> from the contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – are not the same as those from pairwise <em>t</em>-tests among pairs of groups</a></li>
-  <li><a href="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" id="toc-the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="nav-link" data-scroll-target="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">6.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</a></li>
+  <li><a href="#better-know-the-coefficient-table-1" id="toc-better-know-the-coefficient-table-1" class="nav-link" data-scroll-target="#better-know-the-coefficient-table-1"><span class="header-section-number">10.1.4.1</span> Better know the coefficient table</a></li>
+  <li><a href="#the-emmeans-table" id="toc-the-emmeans-table" class="nav-link" data-scroll-target="#the-emmeans-table"><span class="header-section-number">10.1.4.2</span> The emmeans table</a></li>
+  <li><a href="#the-contrasts-table" id="toc-the-contrasts-table" class="nav-link" data-scroll-target="#the-contrasts-table"><span class="header-section-number">10.1.4.3</span> The contrasts table</a></li>
+  <li><a href="#oneway-ttest" id="toc-oneway-ttest" class="nav-link" data-scroll-target="#oneway-ttest"><span class="header-section-number">10.1.4.4</span> <em>t</em> and <em>p</em> from the contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – are not the same as those from pairwise <em>t</em>-tests among pairs of groups</a></li>
+  <li><a href="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" id="toc-the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="nav-link" data-scroll-target="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">10.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">6.2</span> Working in R</a>
+  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">10.2</span> Working in R</a>
   <ul>
-  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">6.2.1</span> Fit the model</a></li>
-  <li><a href="#controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" id="toc-controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" class="nav-link" data-scroll-target="#controlling-the-output-in-tables-using-the-coefficient-table-as-an-example"><span class="header-section-number">6.2.2</span> Controlling the output in tables using the coefficient table as an example</a></li>
-  <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">6.2.3</span> Using the emmeans function</a></li>
-  <li><a href="#using-the-contrast-function" id="toc-using-the-contrast-function" class="nav-link" data-scroll-target="#using-the-contrast-function"><span class="header-section-number">6.2.4</span> Using the contrast function</a>
+  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">10.2.1</span> Fit the model</a></li>
+  <li><a href="#controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" id="toc-controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" class="nav-link" data-scroll-target="#controlling-the-output-in-tables-using-the-coefficient-table-as-an-example"><span class="header-section-number">10.2.2</span> Controlling the output in tables using the coefficient table as an example</a></li>
+  <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">10.2.3</span> Using the emmeans function</a></li>
+  <li><a href="#using-the-contrast-function" id="toc-using-the-contrast-function" class="nav-link" data-scroll-target="#using-the-contrast-function"><span class="header-section-number">10.2.4</span> Using the contrast function</a>
   <ul class="collapse">
-  <li><a href="#method-argument" id="toc-method-argument" class="nav-link" data-scroll-target="#method-argument"><span class="header-section-number">6.2.4.1</span> method argument</a></li>
-  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">6.2.4.2</span> Adjustment for multiple tests</a></li>
-  <li><a href="#planned-comparisons-using-custom-contrasts" id="toc-planned-comparisons-using-custom-contrasts" class="nav-link" data-scroll-target="#planned-comparisons-using-custom-contrasts"><span class="header-section-number">6.2.4.3</span> Planned comparisons using custom contrasts</a></li>
+  <li><a href="#method-argument" id="toc-method-argument" class="nav-link" data-scroll-target="#method-argument"><span class="header-section-number">10.2.4.1</span> method argument</a></li>
+  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.2</span> Adjustment for multiple tests</a></li>
+  <li><a href="#planned-comparisons-using-custom-contrasts" id="toc-planned-comparisons-using-custom-contrasts" class="nav-link" data-scroll-target="#planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.3</span> Planned comparisons using custom contrasts</a></li>
   </ul></li>
-  <li><a href="#how-to-generate-anova-tables" id="toc-how-to-generate-anova-tables" class="nav-link" data-scroll-target="#how-to-generate-anova-tables"><span class="header-section-number">6.2.5</span> How to generate ANOVA tables</a>
+  <li><a href="#how-to-generate-anova-tables" id="toc-how-to-generate-anova-tables" class="nav-link" data-scroll-target="#how-to-generate-anova-tables"><span class="header-section-number">10.2.5</span> How to generate ANOVA tables</a>
   <ul class="collapse">
-  <li><a href="#the-afex-aov_4-function" id="toc-the-afex-aov_4-function" class="nav-link" data-scroll-target="#the-afex-aov_4-function"><span class="header-section-number">6.2.5.1</span> The afex aov_4 function</a></li>
-  <li><a href="#the-car-anova-function" id="toc-the-car-anova-function" class="nav-link" data-scroll-target="#the-car-anova-function"><span class="header-section-number">6.2.5.2</span> The car Anova function</a></li>
+  <li><a href="#the-afex-aov_4-function" id="toc-the-afex-aov_4-function" class="nav-link" data-scroll-target="#the-afex-aov_4-function"><span class="header-section-number">10.2.5.1</span> The afex aov_4 function</a></li>
+  <li><a href="#the-car-anova-function" id="toc-the-car-anova-function" class="nav-link" data-scroll-target="#the-car-anova-function"><span class="header-section-number">10.2.5.2</span> The car Anova function</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">6.3</span> Hidden Code</a>
+  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">10.3</span> Hidden Code</a>
   <ul>
-  <li><a href="#importing-and-wrangling-the-fig3d-data-for-example-1" id="toc-importing-and-wrangling-the-fig3d-data-for-example-1" class="nav-link" data-scroll-target="#importing-and-wrangling-the-fig3d-data-for-example-1"><span class="header-section-number">6.3.1</span> Importing and wrangling the fig3d data for example 1</a></li>
-  <li><a href="#importing-and-wrangling-the-fig2a-data-for-example-2" id="toc-importing-and-wrangling-the-fig2a-data-for-example-2" class="nav-link" data-scroll-target="#importing-and-wrangling-the-fig2a-data-for-example-2"><span class="header-section-number">6.3.2</span> Importing and wrangling the fig2a data for example 2</a></li>
+  <li><a href="#importing-and-wrangling-the-fig3d-data-for-example-1" id="toc-importing-and-wrangling-the-fig3d-data-for-example-1" class="nav-link" data-scroll-target="#importing-and-wrangling-the-fig3d-data-for-example-1"><span class="header-section-number">10.3.1</span> Importing and wrangling the fig3d data for example 1</a></li>
+  <li><a href="#importing-and-wrangling-the-fig2a-data-for-example-2" id="toc-importing-and-wrangling-the-fig2a-data-for-example-2" class="nav-link" data-scroll-target="#importing-and-wrangling-the-fig2a-data-for-example-2"><span class="header-section-number">10.3.2</span> Importing and wrangling the fig2a data for example 2</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -300,7 +317,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="oneway" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></h1>
+<h1 class="title"><span id="oneway" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear models with a single, categorical <em>X</em> (“t-tests” and “ANOVA”)</span></span></h1>
 </div>
 
 
@@ -318,19 +335,19 @@ window.Quarto = {
 
 
 <p>In the traditional hypothesis-testing strategy, researchers use a <em>t</em>-test if the factor variable has only two groups, or an ANOVA followed by <strong>post-hoc</strong> tests if the factor variable has more than two groups. In the linear-modeling strategy, we fit the same model, regardless of the number of groups.</p>
-<section id="oneway-data" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="oneway-data"><span class="header-section-number">6.1</span> A linear model with a single factor (categorical <em>X</em>variable) estimates the effects of the levels of factor on the response</h2>
+<section id="oneway-data" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="oneway-data"><span class="header-section-number">10.1</span> A linear model with a single factor (categorical <em>X</em>variable) estimates the effects of the levels of factor on the response</h2>
 <p>To introduce a linear model with a single factor (categorical <span class="math inline">\(X\)</span> variable), I’ll use data from a set of experiments designed to measure the effect of the lipid 12,13-diHOME on brown adipose tissue (BAT) thermoregulation and the mechanism of this effect.</p>
 <p><a href="https://www.nature.com/articles/nm.4297" target="_blank">Lynes, M.D., Leiria, L.O., Lundh, M., Bartelt, A., Shamsi, F., Huang, T.L., Takahashi, H., Hirshman, M.F., Schlein, C., Lee, A. and Baer, L.A., 2017. The cold-induced lipokine 12, 13-diHOME promotes fatty acid transport into brown adipose tissue. Nature medicine, 23(5), pp.631-637.</a></p>
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5699924/pdf/nihms916046.pdf" target="_blank">Public source</a></p>
 <p><a href="https://www.nature.com/articles/nm.4297#Sec14" target="_blank">Data source</a></p>
 <p>Download the source data files and move to a new folder named “The cold-induced lipokine 12,13-diHOME promotes fatty acid transport into brown adipose tissue”.</p>
 <p>Cold temperature and the neurotransmitter/hormone norepinephrine are known to stimulate increased thermogenesis in BAT cells. In this project, the researchers probed the question “what is the pathway that mediates the effect of cold-exposure on BAT thermogenesis?”. In the “discovery” component of this project, the researchers measured plasma levels of 88 lipids with known signaling properties in humans exposed to one hour of both normal (20 °C) and cold temperature (14 °C) temperature. Of the 88 lipids, 12,13-diHOME had the largest response to the cold treatment. The researchers followed this up with experiments on mice.</p>
-<section id="oneway-example1" class="level3" data-number="6.1.1">
-<h3 data-number="6.1.1" class="anchored" data-anchor-id="oneway-example1"><span class="header-section-number">6.1.1</span> Example 1 (fig3d) – two treatment levels (“groups”)</h3>
+<section id="oneway-example1" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="oneway-example1"><span class="header-section-number">10.1.1</span> Example 1 (fig3d) – two treatment levels (“groups”)</h3>
 <p>Let’s start with the experiment in Figure 3d, which was designed to measure the effect of 12,13-diHOME on plasma triglyceride level. If 12,13-diHOME stimulates BAT activity, then levels in the 12,13-diHOME mice should be less than levels in the control mice.</p>
-<section id="step-1-understand-the-experiment-design-and-the-focal-comparisons" class="level4" data-number="6.1.1.1">
-<h4 data-number="6.1.1.1" class="anchored" data-anchor-id="step-1-understand-the-experiment-design-and-the-focal-comparisons"><span class="header-section-number">6.1.1.1</span> Step 1 – Understand the experiment design and the focal comparisons</h4>
+<section id="step-1-understand-the-experiment-design-and-the-focal-comparisons" class="level4" data-number="10.1.1.1">
+<h4 data-number="10.1.1.1" class="anchored" data-anchor-id="step-1-understand-the-experiment-design-and-the-focal-comparisons"><span class="header-section-number">10.1.1.1</span> Step 1 – Understand the experiment design and the focal comparisons</h4>
 <p><strong>Design</strong>: single, categorical <em>X</em></p>
 <p><strong>Response variable</strong>: <span class="math inline">\(\texttt{serum_tg}\)</span>, A measure of serum triglycerides (mg/dl). <span class="math inline">\(\texttt{serum_tg}\)</span> is a continuous variable.</p>
 <p><strong>Factor variable</strong>: <span class="math inline">\(\texttt{treatment}\)</span>, with levels:</p>
@@ -341,12 +358,12 @@ window.Quarto = {
 <p><strong>Contrasts of interest</strong></p>
 <p>12,13-diHOME - Vehicle. Estimates the effect of 12,13-diHOME treatment. This is the focal contrast (and the only contrast).</p>
 </section>
-<section id="step-2-import" class="level4" data-number="6.1.1.2">
-<h4 data-number="6.1.1.2" class="anchored" data-anchor-id="step-2-import"><span class="header-section-number">6.1.1.2</span> Step 2 – import</h4>
+<section id="step-2-import" class="level4" data-number="10.1.1.2">
+<h4 data-number="10.1.1.2" class="anchored" data-anchor-id="step-2-import"><span class="header-section-number">10.1.1.2</span> Step 2 – import</h4>
 <p>Open the data and, if necessary, wrangle into an analyzable format. The script to import these data is in the section Hidden code below.</p>
 </section>
-<section id="step-3-inspect-the-data" class="level4" data-number="6.1.1.3">
-<h4 data-number="6.1.1.3" class="anchored" data-anchor-id="step-3-inspect-the-data"><span class="header-section-number">6.1.1.3</span> Step 3 – inspect the data</h4>
+<section id="step-3-inspect-the-data" class="level4" data-number="10.1.1.3">
+<h4 data-number="10.1.1.3" class="anchored" data-anchor-id="step-3-inspect-the-data"><span class="header-section-number">10.1.1.3</span> Step 3 – inspect the data</h4>
 <p>The second step is to examine the data to</p>
 <ol type="1">
 <li>get a sense of sample size and balance</li>
@@ -363,21 +380,21 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>There are no obviously implausible data points. A normal distribution model is a good, reasonable start. This can be checked more thoroughly after fitting the model.</p>
 </section>
-<section id="step-4-fit-the-model" class="level4" data-number="6.1.1.4">
-<h4 data-number="6.1.1.4" class="anchored" data-anchor-id="step-4-fit-the-model"><span class="header-section-number">6.1.1.4</span> Step 4 – fit the model</h4>
+<section id="step-4-fit-the-model" class="level4" data-number="10.1.1.4">
+<h4 data-number="10.1.1.4" class="anchored" data-anchor-id="step-4-fit-the-model"><span class="header-section-number">10.1.1.4</span> Step 4 – fit the model</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fig3d_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(serum_tg <span class="sc">~</span> treatment, <span class="at">data =</span> fig3d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-5-check-the-model" class="level4" data-number="6.1.1.5">
-<h4 data-number="6.1.1.5" class="anchored" data-anchor-id="step-5-check-the-model"><span class="header-section-number">6.1.1.5</span> Step 5 – check the model</h4>
+<section id="step-5-check-the-model" class="level4" data-number="10.1.1.5">
+<h4 data-number="10.1.1.5" class="anchored" data-anchor-id="step-5-check-the-model"><span class="header-section-number">10.1.1.5</span> Step 5 – check the model</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># qqPlot(fig3d_m1, id=FALSE)</span></span>
@@ -386,7 +403,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/ggcheck-fig3d-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/ggcheck-fig3d-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -395,10 +412,10 @@ window.Quarto = {
 <p>Write something like this in your .Rmd file following the model check code chunk:</p>
 <p>“The residuals are well within the range expected from sampling from a Normal distribution. The heterogeneity of the residuals is well within the range expected from sampling from a single distribution.”</p>
 </section>
-<section id="step-6-inference" class="level4" data-number="6.1.1.6">
-<h4 data-number="6.1.1.6" class="anchored" data-anchor-id="step-6-inference"><span class="header-section-number">6.1.1.6</span> Step 6 – inference</h4>
-<section id="coefficient-table" class="level5" data-number="6.1.1.6.1">
-<h5 data-number="6.1.1.6.1" class="anchored" data-anchor-id="coefficient-table"><span class="header-section-number">6.1.1.6.1</span> coefficient table</h5>
+<section id="step-6-inference" class="level4" data-number="10.1.1.6">
+<h4 data-number="10.1.1.6" class="anchored" data-anchor-id="step-6-inference"><span class="header-section-number">10.1.1.6</span> Step 6 – inference</h4>
+<section id="coefficient-table" class="level5" data-number="10.1.1.6.1">
+<h5 data-number="10.1.1.6.1" class="anchored" data-anchor-id="coefficient-table"><span class="header-section-number">10.1.1.6.1</span> coefficient table</h5>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig3d_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig3d_m1)),</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">confint</span>(fig3d_m1))</span>
@@ -444,8 +461,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="emmeans-table" class="level5" data-number="6.1.1.6.2">
-<h5 data-number="6.1.1.6.2" class="anchored" data-anchor-id="emmeans-table"><span class="header-section-number">6.1.1.6.2</span> emmeans table</h5>
+<section id="emmeans-table" class="level5" data-number="10.1.1.6.2">
+<h5 data-number="10.1.1.6.2" class="anchored" data-anchor-id="emmeans-table"><span class="header-section-number">10.1.1.6.2</span> emmeans table</h5>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig3d_m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(fig3d_m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fig3d_m1_emm, <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
@@ -486,8 +503,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="contrasts-table" class="level5" data-number="6.1.1.6.3">
-<h5 data-number="6.1.1.6.3" class="anchored" data-anchor-id="contrasts-table"><span class="header-section-number">6.1.1.6.3</span> contrasts table</h5>
+<section id="contrasts-table" class="level5" data-number="10.1.1.6.3">
+<h5 data-number="10.1.1.6.3" class="anchored" data-anchor-id="contrasts-table"><span class="header-section-number">10.1.1.6.3</span> contrasts table</h5>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig3d_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(fig3d_m1_emm,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">method =</span> <span class="st">"revpairwise"</span>) <span class="sc">|&gt;</span></span>
@@ -528,8 +545,8 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="step-6-plot-the-model" class="level4" data-number="6.1.1.7">
-<h4 data-number="6.1.1.7" class="anchored" data-anchor-id="step-6-plot-the-model"><span class="header-section-number">6.1.1.7</span> Step 6 – plot the model</h4>
+<section id="step-6-plot-the-model" class="level4" data-number="10.1.1.7">
+<h4 data-number="10.1.1.7" class="anchored" data-anchor-id="step-6-plot-the-model"><span class="header-section-number">10.1.1.7</span> Step 6 – plot the model</h4>
 <p>The norm in bench biology research is a response plot.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gg1 <span class="ot">&lt;-</span> <span class="fu">ggplot_the_response</span>(</span>
@@ -544,7 +561,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/fig3d_m1-plot-the-response-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/fig3d_m1-plot-the-response-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -565,14 +582,14 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/fig3d_m1-plot-the-model-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/fig3d_m1-plot-the-model-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="step-7-report-the-model-results" class="level4" data-number="6.1.1.8">
-<h4 data-number="6.1.1.8" class="anchored" data-anchor-id="step-7-report-the-model-results"><span class="header-section-number">6.1.1.8</span> Step 7 – report the model results</h4>
+<section id="step-7-report-the-model-results" class="level4" data-number="10.1.1.8">
+<h4 data-number="10.1.1.8" class="anchored" data-anchor-id="step-7-report-the-model-results"><span class="header-section-number">10.1.1.8</span> Step 7 – report the model results</h4>
 <ol type="1">
 <li>Different ways of reporting the results in increasing order of not making claims that are not evidenced by the statistical analysis,</li>
 </ol>
@@ -590,11 +607,11 @@ window.Quarto = {
 <p>Why this is problematic: Significance applies to a <em>p</em>-value and not the effect. In English usage, “significant” means “large” or “important” and the <em>p</em>-value is not good evidence for either the size of an effect or the importance of an effect (see the p-value chapter). We interpret the size of effect from the estimated effect size and CI and the importance of an effect from knowledge of the physiological consequences of TG reduction over the range of the CI.</p>
 </section>
 </section>
-<section id="understanding-the-analysis-with-two-treatment-levels" class="level3" data-number="6.1.2">
-<h3 data-number="6.1.2" class="anchored" data-anchor-id="understanding-the-analysis-with-two-treatment-levels"><span class="header-section-number">6.1.2</span> Understanding the analysis with two treatment levels</h3>
+<section id="understanding-the-analysis-with-two-treatment-levels" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="understanding-the-analysis-with-two-treatment-levels"><span class="header-section-number">10.1.2</span> Understanding the analysis with two treatment levels</h3>
 <p>The variable <span class="math inline">\(\texttt{treatment}\)</span> in the Figure 3d mouse experiment, is a single, categorical <span class="math inline">\(X\)</span> variable. In a linear model, categorical variables are called <strong>factors</strong>. <span class="math inline">\(\texttt{treatment}\)</span> can take two different values, “Vehicle” and “12,13-diHOME”. The different values in a factor are the <strong>factor levels</strong> (or just “levels”). “Levels” is a strange usage of this word; a less formal name for levels is “groups”. In a <strong>Nominal</strong> categorical factor, the levels have no units and are unordered, even if the variable is based on a numeric measurement. For example, I might design an experiment in which mice are randomly assigned to one of three treatments: one hour at 14 °C, one hour at 18 °C, or one hour at 26 °C. If I model this treatment as a nominal categorical factor, then I simply have three levels. While I would certainly choose to arrange these levels in a meaningful way in a plot, for the analysis itself, these levels have no units and there is no order. <strong>Ordinal</strong> categorical factors have levels that are ordered but there is no information on relative distance. The treatment at 18 °C is not more similar to 14 °C than to 26 °C. Nominal categorical factors is the default in R and how all factors are analyzed in this text.</p>
-<section id="linear-models-are-regression-models" class="level4" data-number="6.1.2.1">
-<h4 data-number="6.1.2.1" class="anchored" data-anchor-id="linear-models-are-regression-models"><span class="header-section-number">6.1.2.1</span> Linear models are regression models</h4>
+<section id="linear-models-are-regression-models" class="level4" data-number="10.1.2.1">
+<h4 data-number="10.1.2.1" class="anchored" data-anchor-id="linear-models-are-regression-models"><span class="header-section-number">10.1.2.1</span> Linear models are regression models</h4>
 <p>The linear model fit to the serum TG data is</p>
 <p><span class="math display">\[\begin{align}
 serum\_tg &amp;= treatment + \varepsilon\\
@@ -651,8 +668,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <p><code>coef(summary(m2))</code></p>
 </div>
 </section>
-<section id="the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." class="level4" data-number="6.1.2.2">
-<h4 data-number="6.1.2.2" class="anchored" data-anchor-id="the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data."><span class="header-section-number">6.1.2.2</span> The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.</h4>
+<section id="the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." class="level4" data-number="10.1.2.2">
+<h4 data-number="10.1.2.2" class="anchored" data-anchor-id="the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data."><span class="header-section-number">10.1.2.2</span> The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.</h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -694,8 +711,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 </div>
 <p>The row names of the coefficient table are the column names of the model matrix. These are the model terms. There are two terms (two rows) because there are two parameters in the regression model @ref(eq:reg-model-example-1). The values in the column <span class="math inline">\(\texttt{Estimate}\)</span> in the coefficient table are the estimates of the regression parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. These estimates are the coefficients of the fit model, <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span>.</p>
 </section>
-<section id="oneway-what-coefs-are" class="level4" data-number="6.1.2.3">
-<h4 data-number="6.1.2.3" class="anchored" data-anchor-id="oneway-what-coefs-are"><span class="header-section-number">6.1.2.3</span> The coefficients of a linear model using dummy coding have a useful interpretation</h4>
+<section id="oneway-what-coefs-are" class="level4" data-number="10.1.2.3">
+<h4 data-number="10.1.2.3" class="anchored" data-anchor-id="oneway-what-coefs-are"><span class="header-section-number">10.1.2.3</span> The coefficients of a linear model using dummy coding have a useful interpretation</h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -762,7 +779,7 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/cat-x-coef-fig-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/cat-x-coef-fig-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>What the coefficients of a linear model with a single categorical X mean. The means of the two treatment levels for the serum TG data are shown with the large, filled circles and the dashed lines. The intercept (<span class="math inline">\(b_0\)</span>) is the mean of the reference treatment level (“Vehicle”). The coefficient <span class="math inline">\(b_1\)</span> is the difference between the treatment level’s mean and the reference mean. As with a linear model with a continuous <span class="math inline">\(X\)</span>, the coefficient <span class="math inline">\(b_1\)</span> is an effect.</figcaption>
 </figure>
 </div>
@@ -773,8 +790,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <p>tl;dr. What is a population? In the experimental biology examples in this text, we might consider the population as a very idealized, infinitely large set of mice, or fish, or fruit flies, or communities from which our sample is a reasonably representative subset. For the experiments in the 12,13-diHOME study, the population might be conceived of as the hypothetical, infinitely large set of 12-week-old, male, C57BL/6J mice, raised in the mouse facility at Joslin Diabetes Center. An even more abstract way to way to think about what the population could be is the infinitely large set of values that could generated by the linear model.</p>
 </div>
 </section>
-<section id="better-know-the-coefficient-table" class="level4" data-number="6.1.2.4">
-<h4 data-number="6.1.2.4" class="anchored" data-anchor-id="better-know-the-coefficient-table"><span class="header-section-number">6.1.2.4</span> Better know the coefficient table</h4>
+<section id="better-know-the-coefficient-table" class="level4" data-number="10.1.2.4">
+<h4 data-number="10.1.2.4" class="anchored" data-anchor-id="better-know-the-coefficient-table"><span class="header-section-number">10.1.2.4</span> Better know the coefficient table</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fig3d_m1_coef<span class="sc">|&gt;</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
@@ -827,8 +844,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <li>The columns <span class="math inline">\(\texttt{2.5 %}\)</span> and <span class="math inline">\(\texttt{97.5 %}\)</span> contain the lower and upper limits of the 95% confidence interval of the estimate.</li>
 </ol>
 </section>
-<section id="the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" class="level4" data-number="6.1.2.5">
-<h4 data-number="6.1.2.5" class="anchored" data-anchor-id="the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics"><span class="header-section-number">6.1.2.5</span> The emmeans table is a table of modeled means and inferential statistics</h4>
+<section id="the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" class="level4" data-number="10.1.2.5">
+<h4 data-number="10.1.2.5" class="anchored" data-anchor-id="the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics"><span class="header-section-number">10.1.2.5</span> The emmeans table is a table of modeled means and inferential statistics</h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -962,8 +979,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <p>Create a code chunk that computes this. Recall that <span class="math inline">\((y_i - \hat{y}_i)\)</span> is the set of residuals from the model, which can be extracted using <code>residuals(fit)</code> where “fit” is the fit model object. <span class="math inline">\(df\)</span> is the model degrees of freedom, which is <span class="math inline">\(N-k\)</span>, where <span class="math inline">\(N\)</span> is the total sample size and <span class="math inline">\(k\)</span> is the number of parameters that are fit. This makes sense – for the sample variance there is one parameter that is fit, the mean of the group. In model fig3d_m1, there are two parameters that are fit, the intercept and the coefficient of treatment12,13-diHOME.</p>
 </div>
 </section>
-<section id="estimates-of-the-effects-are-in-the-contrasts-table" class="level4" data-number="6.1.2.6">
-<h4 data-number="6.1.2.6" class="anchored" data-anchor-id="estimates-of-the-effects-are-in-the-contrasts-table"><span class="header-section-number">6.1.2.6</span> Estimates of the effects are in the contrasts table</h4>
+<section id="estimates-of-the-effects-are-in-the-contrasts-table" class="level4" data-number="10.1.2.6">
+<h4 data-number="10.1.2.6" class="anchored" data-anchor-id="estimates-of-the-effects-are-in-the-contrasts-table"><span class="header-section-number">10.1.2.6</span> Estimates of the effects are in the contrasts table</h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -1004,8 +1021,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <li>The columns “t.ratio” and “p.value” contains the <em>t</em> and <em>p</em> values of the significance (not hypothesis!) test of the estimate. The <em>t</em>-statistic is the ratio of the estimate to the SE of the estimate (use the console to confirm this given the values in the table). It is a signal (the estimate) to noise (SE of the estimate) ratio. The <em>p</em>-value is the probability of sampling from normal distribution with the observed standard deviation, randomly assigning the sampled values to either “Vehicle” or “12,13-diHOME”, fitting the linear model, and observing a <em>t</em>-value as or more extreme than the observed <em>t</em>. A very small <em>p</em>-value is consistent with the experiment “not sampling from distributions with the same mean” – meaning that adding a treatment affects the mean of the distribution. This is the logic used to infer a treatment effect. Unfortunately, it is also consistent with the experiment not approximating other conditions of the model, including non-random assignment, non-independence, non-normal conditional responses, and variance heterogeneity. It is up to the rigorous researcher to be sure that these other model conditions are approximated or “good enough” to use the <em>p</em>-value to infer a treatment effect on the mean.</li>
 </ol>
 </section>
-<section id="t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" class="level4" data-number="6.1.2.7">
-<h4 data-number="6.1.2.7" class="anchored" data-anchor-id="t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test"><span class="header-section-number">6.1.2.7</span> <em>t</em> and <em>p</em> from the contrasts table – when there are only two levels in <span class="math inline">\(X\)</span> – are the same as <em>t</em> and <em>p</em> from a <em>t</em>-test</h4>
+<section id="t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" class="level4" data-number="10.1.2.7">
+<h4 data-number="10.1.2.7" class="anchored" data-anchor-id="t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test"><span class="header-section-number">10.1.2.7</span> <em>t</em> and <em>p</em> from the contrasts table – when there are only two levels in <span class="math inline">\(X\)</span> – are the same as <em>t</em> and <em>p</em> from a <em>t</em>-test</h4>
 <p>Compare</p>
 <p>coefficient table:</p>
 <div class="cell">
@@ -1135,10 +1152,10 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <p>There is rarely a reason to ever use the <code>t.test()</code> function. Throw the function away. Ignore web pages that teach you to use it. The <em>t</em>-test is easy to learn, which encourages its overuse. If your only tool is a t-test, every problem looks like a comparison between two-means.</p>
 </section>
 </section>
-<section id="oneway-example2" class="level3" data-number="6.1.3">
-<h3 data-number="6.1.3" class="anchored" data-anchor-id="oneway-example2"><span class="header-section-number">6.1.3</span> Example 2 – three treatment levels (“groups”)</h3>
-<section id="understand-the-experiment-design" class="level4" data-number="6.1.3.1">
-<h4 data-number="6.1.3.1" class="anchored" data-anchor-id="understand-the-experiment-design"><span class="header-section-number">6.1.3.1</span> Understand the experiment design</h4>
+<section id="oneway-example2" class="level3" data-number="10.1.3">
+<h3 data-number="10.1.3" class="anchored" data-anchor-id="oneway-example2"><span class="header-section-number">10.1.3</span> Example 2 – three treatment levels (“groups”)</h3>
+<section id="understand-the-experiment-design" class="level4" data-number="10.1.3.1">
+<h4 data-number="10.1.3.1" class="anchored" data-anchor-id="understand-the-experiment-design"><span class="header-section-number">10.1.3.1</span> Understand the experiment design</h4>
 <p>The data come from the experiment reported in Figure 2a of the 12,13-diHOME article described above. This experiment was designed to probe the hypothesis that 12,13-diHOME is a mediator of known stimulators of increased BAT activity (exposure to cold temperature and sympathetic nervous system activation). Mice were assigned to control (30 °C), one-hour exposure to 4 °C, or 30 minute norepinephrine (NE) treatment level (NE is the neurotransmitter of the sympathetic neurons targeting peripheral tissues).</p>
 <p><strong>design</strong>: single, categorical <em>X</em> with three levels.</p>
 <p><strong>response variable</strong>: <span class="math inline">\(\texttt{diHOME}\)</span>, the serum concentration of 12,13-diHOME. a continuous variable.</p>
@@ -1155,14 +1172,14 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 </ol>
 <p>The contrast Cold - NE is not of interest.</p>
 </section>
-<section id="fig2a-m1" class="level4" data-number="6.1.3.2">
-<h4 data-number="6.1.3.2" class="anchored" data-anchor-id="fig2a-m1"><span class="header-section-number">6.1.3.2</span> fit the model</h4>
+<section id="fig2a-m1" class="level4" data-number="10.1.3.2">
+<h4 data-number="10.1.3.2" class="anchored" data-anchor-id="fig2a-m1"><span class="header-section-number">10.1.3.2</span> fit the model</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fig2a_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="check-the-model" class="level4" data-number="6.1.3.3">
-<h4 data-number="6.1.3.3" class="anchored" data-anchor-id="check-the-model"><span class="header-section-number">6.1.3.3</span> check the model</h4>
+<section id="check-the-model" class="level4" data-number="10.1.3.3">
+<h4 data-number="10.1.3.3" class="anchored" data-anchor-id="check-the-model"><span class="header-section-number">10.1.3.3</span> check the model</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_model</span>(fig2a_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1176,7 +1193,7 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1185,10 +1202,10 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <p>Write something like this in your .Rmd file following the model check code chunk:</p>
 <p>“The residuals are within the range expected from sampling from a Normal distribution. The heterogeneity of the residuals is well within the range expected from sampling from a single distribution.”</p>
 </section>
-<section id="inference-from-the-model" class="level4" data-number="6.1.3.4">
-<h4 data-number="6.1.3.4" class="anchored" data-anchor-id="inference-from-the-model"><span class="header-section-number">6.1.3.4</span> Inference from the model</h4>
-<section id="coefficient-table-1" class="level5" data-number="6.1.3.4.1">
-<h5 data-number="6.1.3.4.1" class="anchored" data-anchor-id="coefficient-table-1"><span class="header-section-number">6.1.3.4.1</span> coefficient table</h5>
+<section id="inference-from-the-model" class="level4" data-number="10.1.3.4">
+<h4 data-number="10.1.3.4" class="anchored" data-anchor-id="inference-from-the-model"><span class="header-section-number">10.1.3.4</span> Inference from the model</h4>
+<section id="coefficient-table-1" class="level5" data-number="10.1.3.4.1">
+<h5 data-number="10.1.3.4.1" class="anchored" data-anchor-id="coefficient-table-1"><span class="header-section-number">10.1.3.4.1</span> coefficient table</h5>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fig2a_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig2a_m1)),</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">confint</span>(fig2a_m1))</span>
@@ -1243,8 +1260,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 </div>
 </div>
 </section>
-<section id="emmeans-table-1" class="level5" data-number="6.1.3.4.2">
-<h5 data-number="6.1.3.4.2" class="anchored" data-anchor-id="emmeans-table-1"><span class="header-section-number">6.1.3.4.2</span> emmeans table</h5>
+<section id="emmeans-table-1" class="level5" data-number="10.1.3.4.2">
+<h5 data-number="10.1.3.4.2" class="anchored" data-anchor-id="emmeans-table-1"><span class="header-section-number">10.1.3.4.2</span> emmeans table</h5>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fig2a_m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(fig2a_m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1295,8 +1312,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 </div>
 </div>
 </section>
-<section id="contrasts-table-1" class="level5" data-number="6.1.3.4.3">
-<h5 data-number="6.1.3.4.3" class="anchored" data-anchor-id="contrasts-table-1"><span class="header-section-number">6.1.3.4.3</span> contrasts table</h5>
+<section id="contrasts-table-1" class="level5" data-number="10.1.3.4.3">
+<h5 data-number="10.1.3.4.3" class="anchored" data-anchor-id="contrasts-table-1"><span class="header-section-number">10.1.3.4.3</span> contrasts table</h5>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fig2a_m1_planned <span class="ot">&lt;-</span> <span class="fu">contrast</span>(fig2a_m1_emm,</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"trt.vs.ctrl"</span>,</span>
@@ -1350,8 +1367,8 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 </div>
 </section>
 </section>
-<section id="plot-the-model" class="level4" data-number="6.1.3.5">
-<h4 data-number="6.1.3.5" class="anchored" data-anchor-id="plot-the-model"><span class="header-section-number">6.1.3.5</span> plot the model</h4>
+<section id="plot-the-model" class="level4" data-number="10.1.3.5">
+<h4 data-number="10.1.3.5" class="anchored" data-anchor-id="plot-the-model"><span class="header-section-number">10.1.3.5</span> plot the model</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_the_model</span>(</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  fig2a_m1,</span>
@@ -1366,14 +1383,14 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-categorical_X_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="categorical_x_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="report-the-model-results" class="level4" data-number="6.1.3.6">
-<h4 data-number="6.1.3.6" class="anchored" data-anchor-id="report-the-model-results"><span class="header-section-number">6.1.3.6</span> Report the model results</h4>
+<section id="report-the-model-results" class="level4" data-number="10.1.3.6">
+<h4 data-number="10.1.3.6" class="anchored" data-anchor-id="report-the-model-results"><span class="header-section-number">10.1.3.6</span> Report the model results</h4>
 <ol type="1">
 <li>Different ways of reporting the results in increasing order of making claims that are evidenced by the statistical analysis,</li>
 </ol>
@@ -1394,10 +1411,10 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 <p>Why the second statement is problematic: <em>p &gt; 0.05</em>, or a high p-value more generally, is not evidence of no effect because a <em>p</em>-value (or <em>1 - p</em>) does not give the probability that a treatment effect is zero. One could use an <strong>equivalence test</strong> to give [the probability that an effect is less than some physiologically meaningful magnitude][https://journals.sagepub.com/doi/abs/10.1177/1948550617697177]</p>
 </section>
 </section>
-<section id="understanding-the-analysis-with-three-or-more-treatment-levels" class="level3" data-number="6.1.4">
-<h3 data-number="6.1.4" class="anchored" data-anchor-id="understanding-the-analysis-with-three-or-more-treatment-levels"><span class="header-section-number">6.1.4</span> Understanding the analysis with three (or more) treatment levels</h3>
-<section id="better-know-the-coefficient-table-1" class="level4" data-number="6.1.4.1">
-<h4 data-number="6.1.4.1" class="anchored" data-anchor-id="better-know-the-coefficient-table-1"><span class="header-section-number">6.1.4.1</span> Better know the coefficient table</h4>
+<section id="understanding-the-analysis-with-three-or-more-treatment-levels" class="level3" data-number="10.1.4">
+<h3 data-number="10.1.4" class="anchored" data-anchor-id="understanding-the-analysis-with-three-or-more-treatment-levels"><span class="header-section-number">10.1.4</span> Understanding the analysis with three (or more) treatment levels</h3>
+<section id="better-know-the-coefficient-table-1" class="level4" data-number="10.1.4.1">
+<h4 data-number="10.1.4.1" class="anchored" data-anchor-id="better-know-the-coefficient-table-1"><span class="header-section-number">10.1.4.1</span> Better know the coefficient table</h4>
 <p>The fit regression model for the data in Figure 2a is</p>
 <p><span class="math display">\[\begin{equation}
 diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
@@ -1521,8 +1538,8 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 </div>
 </div>
 </section>
-<section id="the-emmeans-table" class="level4" data-number="6.1.4.2">
-<h4 data-number="6.1.4.2" class="anchored" data-anchor-id="the-emmeans-table"><span class="header-section-number">6.1.4.2</span> The emmeans table</h4>
+<section id="the-emmeans-table" class="level4" data-number="10.1.4.2">
+<h4 data-number="10.1.4.2" class="anchored" data-anchor-id="the-emmeans-table"><span class="header-section-number">10.1.4.2</span> The emmeans table</h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -1570,8 +1587,8 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 <p>This table is important for reporting means and CIs and for plotting the model. As in example 1, the modeled means in the column “emmean” are the sample means of each group (what you would compute if you simply computed the mean for that group). Again, this is true for this model, but is not generally true.</p>
 <p>And again, as in example 1, the SE for each mean is <em>not</em> the sample SE but the modeled SE – the numerator is the estimate of <span class="math inline">\(\sigma\)</span> from the fit model, which includes residuals from all groups combined. <em>These are the SEs that you should report</em> because it is these SEs that are used to compute the <em>p</em>-value and CI that you report, that is, they tell the same “story”. The SE for the “Cold” group is a bit higher because the sample size <span class="math inline">\(n\)</span> for this group is smaller by 1.</p>
 </section>
-<section id="the-contrasts-table" class="level4" data-number="6.1.4.3">
-<h4 data-number="6.1.4.3" class="anchored" data-anchor-id="the-contrasts-table"><span class="header-section-number">6.1.4.3</span> The contrasts table</h4>
+<section id="the-contrasts-table" class="level4" data-number="10.1.4.3">
+<h4 data-number="10.1.4.3" class="anchored" data-anchor-id="the-contrasts-table"><span class="header-section-number">10.1.4.3</span> The contrasts table</h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -1624,8 +1641,8 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 <li>The columns “t.ratio” and “p.value” contains the <em>t</em> and <em>p</em> values of the significance (not hypothesis!) test of the estimate. The <em>t</em>-statistic is the ratio of the estimate to the SE of the estimate (use the console to confirm this given the values in the table). It is a signal (the estimate) to noise (SE of the estimate) ratio. The <em>p</em>-value is the probability of sampling from normal distribution with the observed standard deviation, randomly assigning the sampled values to the three groups (using the original sample sizes for each), fitting the linear model, and observing a <em>t</em>-value as or more extreme than the observed <em>t</em>. A very small <em>p</em>-value is consistent with the experiment “not sampling from distributions with the same mean” – meaning that adding a treatment affects the mean of the distribution. This is the logic used to infer a treatment effect. Unfortunately, it is also consistent with the experiment not approximating other conditions of the model, including non-random assignment, non-independence, non-normal conditional responses, and variance heterogeneity. It is up to the rigorous researcher to be sure that these other model conditions are approximated or “good enough” to use the <em>p</em>-value to infer a treatment effect on the mean.</li>
 </ol>
 </section>
-<section id="oneway-ttest" class="level4" data-number="6.1.4.4">
-<h4 data-number="6.1.4.4" class="anchored" data-anchor-id="oneway-ttest"><span class="header-section-number">6.1.4.4</span> <em>t</em> and <em>p</em> from the contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – are not the same as those from pairwise <em>t</em>-tests among pairs of groups</h4>
+<section id="oneway-ttest" class="level4" data-number="10.1.4.4">
+<h4 data-number="10.1.4.4" class="anchored" data-anchor-id="oneway-ttest"><span class="header-section-number">10.1.4.4</span> <em>t</em> and <em>p</em> from the contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – are not the same as those from pairwise <em>t</em>-tests among pairs of groups</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fig2a_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(fig2a_m1_emm,</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
@@ -1701,16 +1718,16 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 <li>We can drop the homogeneity of variance assumption with either the linear model or the three, separate <em>t</em>-tests. This is outlined below in “Heterogeneity of variance”. In this case, the <em>t</em> and <em>p</em>-values for the three comparisons are the same. Still, the linear model (that models heterogenity) is better practice than the separate <em>t</em>-tests because the linear model is much more flexible and expandable.</li>
 </ol>
 </section>
-<section id="the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="level4" data-number="6.1.4.5">
-<h4 data-number="6.1.4.5" class="anchored" data-anchor-id="the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">6.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</h4>
+<section id="the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="level4" data-number="10.1.4.5">
+<h4 data-number="10.1.4.5" class="anchored" data-anchor-id="the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">10.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</h4>
 <p><strong>Multiple testing</strong> is the practice of adjusting <em>p</em>-values and confidence intervals to account for the expected increase in the frequency of Type I error in a batch, or <em>family</em>, of tests. Multiple testing is a concept that exists because of Neyman-Pearson hypothesis testing strategy. If multiple tests are used to answer the same question then, these are in the same family. Issues surrounding multiple testing are fleshed out in more detail in Chapter xxx “Best Practices”. Computing adjusted values is covered below in the “Working in R” section.</p>
 </section>
 </section>
 </section>
-<section id="working-in-r" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">6.2</span> Working in R</h2>
-<section id="fit-the-model" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">6.2.1</span> Fit the model</h3>
+<section id="working-in-r" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">10.2</span> Working in R</h2>
+<section id="fit-the-model" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">10.2.1</span> Fit the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1719,8 +1736,8 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 <li><span class="math inline">\(\texttt{treatment}\)</span> was specifically coded as a factor variable in the import and wrangle chunk and R will automatically create the correct indicator variables. If categorical variables on the RHS of the formula have not be converted to factors by the user, then R will treat character variables as factors and create the indicator variables. If the categorical variable is numeric (for example, the variable <code>time</code> might have levels 1, 2, 3 instead of “1 hour”, “2 hours”, “three hours”), R will treat the variable as numeric and not create the indicator variables. A user could use the formula <code>y ~ factor(time)</code> to force R to create the indicator variable. I prefer to explicitly create a version of the variable that is recoded as factor using something like <code>dt[, time_fac := factor(time, levels = c("1", "2", "3"))]</code>.</li>
 </ol>
 </section>
-<section id="controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" class="level3" data-number="6.2.2">
-<h3 data-number="6.2.2" class="anchored" data-anchor-id="controlling-the-output-in-tables-using-the-coefficient-table-as-an-example"><span class="header-section-number">6.2.2</span> Controlling the output in tables using the coefficient table as an example</h3>
+<section id="controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="controlling-the-output-in-tables-using-the-coefficient-table-as-an-example"><span class="header-section-number">10.2.2</span> Controlling the output in tables using the coefficient table as an example</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(m1)),</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">confint</span>(m1))</span>
@@ -1789,8 +1806,8 @@ treatmentNE   14.794354   4.357669 3.395015 0.004355868  5.448083 24.14063</code
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># explore other styles in the kableExtra package</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="using-the-emmeans-function" class="level3" data-number="6.2.3">
-<h3 data-number="6.2.3" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">6.2.3</span> Using the emmeans function</h3>
+<section id="using-the-emmeans-function" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">10.2.3</span> Using the emmeans function</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1812,8 +1829,8 @@ Confidence level used: 0.95 </code></pre>
 <li>You can pass numeric and integer covariates to <code>specs</code> to control the value of the covariates used compute the modeled means. This is outlined in <a href="chapter-covariates">Adding covariates to a linear model</a></li>
 </ol>
 </section>
-<section id="using-the-contrast-function" class="level3" data-number="6.2.4">
-<h3 data-number="6.2.4" class="anchored" data-anchor-id="using-the-contrast-function"><span class="header-section-number">6.2.4</span> Using the contrast function</h3>
+<section id="using-the-contrast-function" class="level3" data-number="10.2.4">
+<h3 data-number="10.2.4" class="anchored" data-anchor-id="using-the-contrast-function"><span class="header-section-number">10.2.4</span> Using the contrast function</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>m1_planned <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"trt.vs.ctrl"</span>,</span>
@@ -1837,8 +1854,8 @@ Confidence level used: 0.95 </code></pre>
 <li>The <code>adjust</code> argument controls if and how to adjust for multiple tests. Each <code>method</code> has a default adjustment method. See below.</li>
 <li>The <code>level</code> argument controls the percentile boundaries of the confidence interval. The default is 0.95. Including this argument with this value makes this level transparent.</li>
 </ol>
-<section id="method-argument" class="level4" data-number="6.2.4.1">
-<h4 data-number="6.2.4.1" class="anchored" data-anchor-id="method-argument"><span class="header-section-number">6.2.4.1</span> method argument</h4>
+<section id="method-argument" class="level4" data-number="10.2.4.1">
+<h4 data-number="10.2.4.1" class="anchored" data-anchor-id="method-argument"><span class="header-section-number">10.2.4.1</span> method argument</h4>
 <p>The <code>method =</code> argument is used to control the set of contrasts that are computed. Type <code>help("contrast-methods")</code> into the console to see the list of available methods. Also, read the <a href="https://cran.r-project.org/web/packages/emmeans/vignettes/comparisons.html" target="_blank">comparisons and contrasts vignette</a> for more on <code>emmeans::contrast()</code></p>
 <ol type="1">
 <li><code>method = "trt.vs.ctrl"</code> computes all non-reference minus reference contrasts. This method was used in the “Inference” section because it gives the two contrasts of the planned comparisons identified in the “understand the experimental design” step.</li>
@@ -1867,8 +1884,8 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 <li>The default adjustment for multiple tests is “tukey”, which is the <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a>.</li>
 </ol>
 </section>
-<section id="adjustment-for-multiple-tests" class="level4" data-number="6.2.4.2">
-<h4 data-number="6.2.4.2" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">6.2.4.2</span> Adjustment for multiple tests</h4>
+<section id="adjustment-for-multiple-tests" class="level4" data-number="10.2.4.2">
+<h4 data-number="10.2.4.2" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.2</span> Adjustment for multiple tests</h4>
 <p>See the Section @ref(twoway-multiple-tests) in the chapter “Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models” for a more thorough explanation of the <em>p</em>-value adjustment for multiple tests that arise if an experiment has more than two treatment groups. Here, I just outline choices available in the <code>emmeans::contrast</code> function.</p>
 <ol type="1">
 <li>“none” – no adjustment</li>
@@ -1880,8 +1897,8 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 <li>“mvt” – based on the multivariate <em>t</em> distribution and using covariance structure of the variables.</li>
 </ol>
 </section>
-<section id="planned-comparisons-using-custom-contrasts" class="level4" data-number="6.2.4.3">
-<h4 data-number="6.2.4.3" class="anchored" data-anchor-id="planned-comparisons-using-custom-contrasts"><span class="header-section-number">6.2.4.3</span> Planned comparisons using custom contrasts</h4>
+<section id="planned-comparisons-using-custom-contrasts" class="level4" data-number="10.2.4.3">
+<h4 data-number="10.2.4.3" class="anchored" data-anchor-id="planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.3</span> Planned comparisons using custom contrasts</h4>
 <p>With any but purely exploratory experiment, we have certain contrasts that test the focal hypotheses. We care little to none about other contrasts. We can limit the contrasts computed using <code>emmeans::contrast()</code> by passing custom contrasts to <code>method</code>.</p>
 <ol type="1">
 <li>create a set of vectors with as many elements as there are rows in the emmeans table. Name each vector using the (or a) group name for the row in the emmeans table. For the vector created for row <em>j</em>, set the value of the <em>j</em>th element to 1 and set all other values to zero.</li>
@@ -1956,8 +1973,8 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 </div>
 </section>
 </section>
-<section id="how-to-generate-anova-tables" class="level3" data-number="6.2.5">
-<h3 data-number="6.2.5" class="anchored" data-anchor-id="how-to-generate-anova-tables"><span class="header-section-number">6.2.5</span> How to generate ANOVA tables</h3>
+<section id="how-to-generate-anova-tables" class="level3" data-number="10.2.5">
+<h3 data-number="10.2.5" class="anchored" data-anchor-id="how-to-generate-anova-tables"><span class="header-section-number">10.2.5</span> How to generate ANOVA tables</h3>
 <p>ANOVA is Analysis of Variance. Researchers frequently use the term “ANOVA” as the name for an analysis of an experiment with single-factor with more than two groups. However, ANOVA is a general method of inference for complex experimental designs. ANOVA models and regression models are different ways of expressing the same underlying linear model.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -2006,8 +2023,8 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 </ol>
 <p>An ANOVA table for a single factor with more than two groups has a single <em>p</em>-value for the treatment term. The single <em>p</em>-value is the probability of sampling a value of <em>F</em> as large or larger than the observed <em>F</em> under the null (no true effects of either treatment and all specifications of the generating model are true). There is not much we can do with this number - we want to estimate the effect sizes and their uncertainty and we don’t get this from an ANOVA table. Many textbooks, websites, and colleagues suggest to 1) fit the ANOVA, 2) check the <em>F</em>, and, if <span class="math inline">\(F &lt; 0.05\)</span>, 3) do “tests after an ANOVA”. These tests after an ANOVA are the planned comparisons and post-hoc tests described above using the linear model. In classical ANOVA, the initial computation of the cell means (means of treatment combinations) and sums of squares was a logical first step to the decomposition of these sums of squares to compute the contrasts. With modern linear models using regression, the ANOVA first step is unnecessary and not recommended.</p>
 <p>If your PI, manager, thesis committee, or journal editor insists that you do ANOVA, and you cannot convince them otherwise, here is how to generate an ANOVA table in R. Note that even though we are generating that table, the computation of the contrast table and all inference from that is not part of the ANOVA.</p>
-<section id="the-afex-aov_4-function" class="level4" data-number="6.2.5.1">
-<h4 data-number="6.2.5.1" class="anchored" data-anchor-id="the-afex-aov_4-function"><span class="header-section-number">6.2.5.1</span> The afex aov_4 function</h4>
+<section id="the-afex-aov_4-function" class="level4" data-number="10.2.5.1">
+<h4 data-number="10.2.5.1" class="anchored" data-anchor-id="the-afex-aov_4-function"><span class="header-section-number">10.2.5.1</span> The afex aov_4 function</h4>
 <p>The package afex was developed to make it much easier for researchers to generate ANOVA tables that look like those from other statistics packages including SAS, SPSS, JMP, and Graphpad Prism.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .I is a data.table function that returns the row number</span></span>
@@ -2035,8 +2052,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>What do I mean by “an ANOVA table that you don’t want”? With factorial ANOVA with unbalanced data, there are three ways to compute the sums of squares for the different terms of the ANOVA table. SAS termed these Type I, II, and III sums of squares and these names have stuck. Following SAS, almost all statistics packages use Type III as the default (or only) method for computing ANOVA tables. R uses Type I as the default. There are very good arguments for using Type II. This distinction is moot for single factor ANOVA or multi-factor ANOVA for balanced designs but is not moot for unbalanced multi-factor ANOVA or any ANOVA with covariates. If you want an ANOVA table from R to match what would be generated by Graphpad Prism or JMP (Type III), then the afex package is the best practice.</li>
 </ol>
 </section>
-<section id="the-car-anova-function" class="level4" data-number="6.2.5.2">
-<h4 data-number="6.2.5.2" class="anchored" data-anchor-id="the-car-anova-function"><span class="header-section-number">6.2.5.2</span> The car Anova function</h4>
+<section id="the-car-anova-function" class="level4" data-number="10.2.5.2">
+<h4 data-number="10.2.5.2" class="anchored" data-anchor-id="the-car-anova-function"><span class="header-section-number">10.2.5.2</span> The car Anova function</h4>
 <p>The car package has the extremely useful <code>Anova</code> function although using it is a bit like doing brain surgery having only watched a youtube video.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>type3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">treatment =</span> contr.sum)</span>
@@ -2105,10 +2122,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 </section>
 </section>
-<section id="hidden-code" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">6.3</span> Hidden Code</h2>
-<section id="importing-and-wrangling-the-fig3d-data-for-example-1" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="importing-and-wrangling-the-fig3d-data-for-example-1"><span class="header-section-number">6.3.1</span> Importing and wrangling the fig3d data for example 1</h3>
+<section id="hidden-code" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">10.3</span> Hidden Code</h2>
+<section id="importing-and-wrangling-the-fig3d-data-for-example-1" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="importing-and-wrangling-the-fig3d-data-for-example-1"><span class="header-section-number">10.3.1</span> Importing and wrangling the fig3d data for example 1</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"The cold-induced lipokine 12,13-diHOME promotes fatty acid transport into brown adipose tissue"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2141,8 +2158,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a><span class="co">#View(fig3d)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="importing-and-wrangling-the-fig2a-data-for-example-2" class="level3" data-number="6.3.2">
-<h3 data-number="6.3.2" class="anchored" data-anchor-id="importing-and-wrangling-the-fig2a-data-for-example-2"><span class="header-section-number">6.3.2</span> Importing and wrangling the fig2a data for example 2</h3>
+<section id="importing-and-wrangling-the-fig2a-data-for-example-2" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="importing-and-wrangling-the-fig2a-data-for-example-2"><span class="header-section-number">10.3.2</span> Importing and wrangling the fig2a data for example 2</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need data_folder and data_from from earlier chunk</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41591_2017_BFnm4297_MOESM2_ESM.xlsx"</span></span>
@@ -2593,14 +2610,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/22-continuous_X.html" class="pagination-link" aria-label="Linear models with a single, continuous *X* (&quot;linear regression&quot;)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span>
+      <a href="../chapters/continuous_x.html" class="pagination-link" aria-label="Linear models with a single, continuous *X* (&quot;linear regression&quot;)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear models with a single, continuous <em>X</em> (“linear regression”)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
