@@ -229,35 +229,55 @@ window.Quarto = {
   <ul>
   <li><a href="#stats-101-what-is-classical-linear-regression" id="toc-stats-101-what-is-classical-linear-regression" class="nav-link active" data-scroll-target="#stats-101-what-is-classical-linear-regression"><span class="header-section-number">5.1</span> Stats 101 What is classical linear regression?</a></li>
   <li><a href="#a-linear-model-with-a-single-continuous-x-is-classical-regression" id="toc-a-linear-model-with-a-single-continuous-x-is-classical-regression" class="nav-link" data-scroll-target="#a-linear-model-with-a-single-continuous-x-is-classical-regression"><span class="header-section-number">5.2</span> A linear model with a single, continuous <em>X</em> is classical “regression”</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#analysis-of-green-down-data" id="toc-analysis-of-green-down-data" class="nav-link" data-scroll-target="#analysis-of-green-down-data"><span class="header-section-number">5.2.1</span> Analysis of “green-down” data</a></li>
   <li><a href="#learning-from-the-green-down-example" id="toc-learning-from-the-green-down-example" class="nav-link" data-scroll-target="#learning-from-the-green-down-example"><span class="header-section-number">5.2.2</span> Learning from the green-down example</a></li>
-  <li><a href="#using-a-regression-model-for-explanation-causal-models" id="toc-using-a-regression-model-for-explanation-causal-models" class="nav-link" data-scroll-target="#using-a-regression-model-for-explanation-causal-models"><span class="header-section-number">5.2.3</span> Using a regression model for “explanation” – causal models</a></li>
-  <li><a href="#using-a-regression-model-for-prediction-prediction-models" id="toc-using-a-regression-model-for-prediction-prediction-models" class="nav-link" data-scroll-target="#using-a-regression-model-for-prediction-prediction-models"><span class="header-section-number">5.2.4</span> Using a regression model for prediction – prediction models</a></li>
+  <li><a href="#using-a-regression-model-for-explanation-causal-models" id="toc-using-a-regression-model-for-explanation-causal-models" class="nav-link" data-scroll-target="#using-a-regression-model-for-explanation-causal-models"><span class="header-section-number">5.2.3</span> Using a regression model for “explanation” – causal models</a>
+  <ul class="collapse">
+  <li><a href="#what-a-regression-coefficient-means" id="toc-what-a-regression-coefficient-means" class="nav-link" data-scroll-target="#what-a-regression-coefficient-means"><span class="header-section-number">5.2.3.1</span> What a regression coefficient means</a></li>
+  <li><a href="#causal-interpretation-conditional-on-doing-x-x" id="toc-causal-interpretation-conditional-on-doing-x-x" class="nav-link" data-scroll-target="#causal-interpretation-conditional-on-doing-x-x"><span class="header-section-number">5.2.3.2</span> Causal interpretation – conditional on “doing” X = x</a></li>
+  <li><a href="#observational-interpretation-conditional-on-seeing-x-x." id="toc-observational-interpretation-conditional-on-seeing-x-x." class="nav-link" data-scroll-target="#observational-interpretation-conditional-on-seeing-x-x."><span class="header-section-number">5.2.3.3</span> Observational interpretation – conditional on “seeing” X = x.</a></li>
+  <li><a href="#omitted-variable-bias" id="toc-omitted-variable-bias" class="nav-link" data-scroll-target="#omitted-variable-bias"><span class="header-section-number">5.2.3.4</span> Omitted variable bias</a></li>
+  <li><a href="#causal-modeling-with-experimental-versus-observational-data" id="toc-causal-modeling-with-experimental-versus-observational-data" class="nav-link" data-scroll-target="#causal-modeling-with-experimental-versus-observational-data"><span class="header-section-number">5.2.3.5</span> Causal modeling with experimental versus observational data</a></li>
+  </ul></li>
+  <li><a href="#using-a-regression-model-for-prediction-prediction-models" id="toc-using-a-regression-model-for-prediction-prediction-models" class="nav-link" data-scroll-target="#using-a-regression-model-for-prediction-prediction-models"><span class="header-section-number">5.2.4</span> Using a regression model for prediction – prediction models</a>
+  <ul class="collapse">
+  <li><a href="#ci-and-p-value" id="toc-ci-and-p-value" class="nav-link" data-scroll-target="#ci-and-p-value"><span class="header-section-number">5.2.4.1</span> 95% CI and <em>p</em>-value</a></li>
+  <li><a href="#prediction-interval-and-r2" id="toc-prediction-interval-and-r2" class="nav-link" data-scroll-target="#prediction-interval-and-r2"><span class="header-section-number">5.2.4.2</span> 95% prediction interval and <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#r2" id="toc-r2" class="nav-link" data-scroll-target="#r2"><span class="header-section-number">5.2.4.3</span> <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#prediction-interval" id="toc-prediction-interval" class="nav-link" data-scroll-target="#prediction-interval"><span class="header-section-number">5.2.4.4</span> Prediction interval</a></li>
+  <li><a href="#median-absolute-error-and-root-mean-square-error-are-absolute-measures-of-predictability" id="toc-median-absolute-error-and-root-mean-square-error-are-absolute-measures-of-predictability" class="nav-link" data-scroll-target="#median-absolute-error-and-root-mean-square-error-are-absolute-measures-of-predictability"><span class="header-section-number">5.2.4.5</span> Median Absolute Error and Root Mean Square Error are absolute measures of predictability</a></li>
+  <li><a href="#prediction-modeling-is-more-sophisticated-than-presented-here" id="toc-prediction-modeling-is-more-sophisticated-than-presented-here" class="nav-link" data-scroll-target="#prediction-modeling-is-more-sophisticated-than-presented-here"><span class="header-section-number">5.2.4.6</span> Prediction modeling is more sophisticated than presented here</a></li>
+  </ul></li>
   <li><a href="#using-a-regression-model-for-creating-a-new-response-variable-comparing-slopes-of-longitudinal-data" id="toc-using-a-regression-model-for-creating-a-new-response-variable-comparing-slopes-of-longitudinal-data" class="nav-link" data-scroll-target="#using-a-regression-model-for-creating-a-new-response-variable-comparing-slopes-of-longitudinal-data"><span class="header-section-number">5.2.5</span> Using a regression model for creating a new response variable – comparing slopes of longitudinal data</a></li>
   <li><a href="#using-a-regression-model-for-for-calibration" id="toc-using-a-regression-model-for-for-calibration" class="nav-link" data-scroll-target="#using-a-regression-model-for-for-calibration"><span class="header-section-number">5.2.6</span> Using a regression model for for calibration</a></li>
   </ul></li>
   <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">5.3</span> Working in R</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">5.3.1</span> Fitting the linear model</a></li>
   <li><a href="#getting-to-know-the-linear-model-the-summary-function" id="toc-getting-to-know-the-linear-model-the-summary-function" class="nav-link" data-scroll-target="#getting-to-know-the-linear-model-the-summary-function"><span class="header-section-number">5.3.2</span> Getting to know the linear model: the <code>summary</code> function</a></li>
   <li><a href="#inference-the-coefficient-table" id="toc-inference-the-coefficient-table" class="nav-link" data-scroll-target="#inference-the-coefficient-table"><span class="header-section-number">5.3.3</span> Inference – the coefficient table</a></li>
   <li><a href="#how-good-is-our-model-model-checking" id="toc-how-good-is-our-model-model-checking" class="nav-link" data-scroll-target="#how-good-is-our-model-model-checking"><span class="header-section-number">5.3.4</span> How good is our model? – Model checking</a></li>
-  <li><a href="#plotting-models-with-continuous-x" id="toc-plotting-models-with-continuous-x" class="nav-link" data-scroll-target="#plotting-models-with-continuous-x"><span class="header-section-number">5.3.5</span> Plotting models with continuous <em>X</em></a></li>
+  <li><a href="#plotting-models-with-continuous-x" id="toc-plotting-models-with-continuous-x" class="nav-link" data-scroll-target="#plotting-models-with-continuous-x"><span class="header-section-number">5.3.5</span> Plotting models with continuous <em>X</em></a>
+  <ul class="collapse">
+  <li><a href="#quick-plot" id="toc-quick-plot" class="nav-link" data-scroll-target="#quick-plot"><span class="header-section-number">5.3.5.1</span> Quick plot</a></li>
+  <li><a href="#ggpubr-plots" id="toc-ggpubr-plots" class="nav-link" data-scroll-target="#ggpubr-plots"><span class="header-section-number">5.3.5.2</span> ggpubr plots</a></li>
+  <li><a href="#ggplots" id="toc-ggplots" class="nav-link" data-scroll-target="#ggplots"><span class="header-section-number">5.3.5.3</span> ggplots</a></li>
+  </ul></li>
   <li><a href="#creating-a-table-of-predicted-values-and-95-prediction-intervals" id="toc-creating-a-table-of-predicted-values-and-95-prediction-intervals" class="nav-link" data-scroll-target="#creating-a-table-of-predicted-values-and-95-prediction-intervals"><span class="header-section-number">5.3.6</span> Creating a table of predicted values and 95% prediction intervals</a></li>
   </ul></li>
   <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">5.4</span> Hidden code</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#import-and-plot-of-fig2c-ecosystem-warming-experimental-data" id="toc-import-and-plot-of-fig2c-ecosystem-warming-experimental-data" class="nav-link" data-scroll-target="#import-and-plot-of-fig2c-ecosystem-warming-experimental-data"><span class="header-section-number">5.4.1</span> Import and plot of fig2c (ecosystem warming experimental) data</a></li>
   <li><a href="#import-and-plot-efig_3d-ecosysem-warming-observational-data" id="toc-import-and-plot-efig_3d-ecosysem-warming-observational-data" class="nav-link" data-scroll-target="#import-and-plot-efig_3d-ecosysem-warming-observational-data"><span class="header-section-number">5.4.2</span> Import and plot efig_3d (Ecosysem warming observational) data</a></li>
   <li><a href="#import-and-plot-of-fig1f-methionine-restriction-data" id="toc-import-and-plot-of-fig1f-methionine-restriction-data" class="nav-link" data-scroll-target="#import-and-plot-of-fig1f-methionine-restriction-data"><span class="header-section-number">5.4.3</span> Import and plot of fig1f (methionine restriction) data</a></li>
   </ul></li>
   <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">5.5</span> Try it</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#a-prediction-model-from-the-literature" id="toc-a-prediction-model-from-the-literature" class="nav-link" data-scroll-target="#a-prediction-model-from-the-literature"><span class="header-section-number">5.5.1</span> A prediction model from the literature</a></li>
   </ul></li>
   <li><a href="#intuition-pumps" id="toc-intuition-pumps" class="nav-link" data-scroll-target="#intuition-pumps"><span class="header-section-number">5.6</span> Intuition pumps</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#correlation-and-r2" id="toc-correlation-and-r2" class="nav-link" data-scroll-target="#correlation-and-r2"><span class="header-section-number">5.6.1</span> Correlation and $R^2</a></li>
   </ul></li>
   </ul>

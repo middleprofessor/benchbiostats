@@ -230,22 +230,65 @@ window.Quarto = {
    
   <ul>
   <li><a href="#oneway-data" id="toc-oneway-data" class="nav-link active" data-scroll-target="#oneway-data"><span class="header-section-number">6.1</span> A linear model with a single factor (categorical <em>X</em>variable) estimates the effects of the levels of factor on the response</a>
+  <ul>
+  <li><a href="#oneway-example1" id="toc-oneway-example1" class="nav-link" data-scroll-target="#oneway-example1"><span class="header-section-number">6.1.1</span> Example 1 (fig3d) – two treatment levels (“groups”)</a>
   <ul class="collapse">
-  <li><a href="#oneway-example1" id="toc-oneway-example1" class="nav-link" data-scroll-target="#oneway-example1"><span class="header-section-number">6.1.1</span> Example 1 (fig3d) – two treatment levels (“groups”)</a></li>
-  <li><a href="#understanding-the-analysis-with-two-treatment-levels" id="toc-understanding-the-analysis-with-two-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-two-treatment-levels"><span class="header-section-number">6.1.2</span> Understanding the analysis with two treatment levels</a></li>
-  <li><a href="#oneway-example2" id="toc-oneway-example2" class="nav-link" data-scroll-target="#oneway-example2"><span class="header-section-number">6.1.3</span> Example 2 – three treatment levels (“groups”)</a></li>
-  <li><a href="#understanding-the-analysis-with-three-or-more-treatment-levels" id="toc-understanding-the-analysis-with-three-or-more-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-three-or-more-treatment-levels"><span class="header-section-number">6.1.4</span> Understanding the analysis with three (or more) treatment levels</a></li>
+  <li><a href="#step-1-understand-the-experiment-design-and-the-focal-comparisons" id="toc-step-1-understand-the-experiment-design-and-the-focal-comparisons" class="nav-link" data-scroll-target="#step-1-understand-the-experiment-design-and-the-focal-comparisons"><span class="header-section-number">6.1.1.1</span> Step 1 – Understand the experiment design and the focal comparisons</a></li>
+  <li><a href="#step-2-import" id="toc-step-2-import" class="nav-link" data-scroll-target="#step-2-import"><span class="header-section-number">6.1.1.2</span> Step 2 – import</a></li>
+  <li><a href="#step-3-inspect-the-data" id="toc-step-3-inspect-the-data" class="nav-link" data-scroll-target="#step-3-inspect-the-data"><span class="header-section-number">6.1.1.3</span> Step 3 – inspect the data</a></li>
+  <li><a href="#step-4-fit-the-model" id="toc-step-4-fit-the-model" class="nav-link" data-scroll-target="#step-4-fit-the-model"><span class="header-section-number">6.1.1.4</span> Step 4 – fit the model</a></li>
+  <li><a href="#step-5-check-the-model" id="toc-step-5-check-the-model" class="nav-link" data-scroll-target="#step-5-check-the-model"><span class="header-section-number">6.1.1.5</span> Step 5 – check the model</a></li>
+  <li><a href="#step-6-inference" id="toc-step-6-inference" class="nav-link" data-scroll-target="#step-6-inference"><span class="header-section-number">6.1.1.6</span> Step 6 – inference</a></li>
+  <li><a href="#step-6-plot-the-model" id="toc-step-6-plot-the-model" class="nav-link" data-scroll-target="#step-6-plot-the-model"><span class="header-section-number">6.1.1.7</span> Step 6 – plot the model</a></li>
+  <li><a href="#step-7-report-the-model-results" id="toc-step-7-report-the-model-results" class="nav-link" data-scroll-target="#step-7-report-the-model-results"><span class="header-section-number">6.1.1.8</span> Step 7 – report the model results</a></li>
+  </ul></li>
+  <li><a href="#understanding-the-analysis-with-two-treatment-levels" id="toc-understanding-the-analysis-with-two-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-two-treatment-levels"><span class="header-section-number">6.1.2</span> Understanding the analysis with two treatment levels</a>
+  <ul class="collapse">
+  <li><a href="#linear-models-are-regression-models" id="toc-linear-models-are-regression-models" class="nav-link" data-scroll-target="#linear-models-are-regression-models"><span class="header-section-number">6.1.2.1</span> Linear models are regression models</a></li>
+  <li><a href="#the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." id="toc-the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data." class="nav-link" data-scroll-target="#the-estimates-in-the-coefficient-table-are-estimates-of-the-parameters-of-the-linear-model-fit-to-the-data."><span class="header-section-number">6.1.2.2</span> The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.</a></li>
+  <li><a href="#oneway-what-coefs-are" id="toc-oneway-what-coefs-are" class="nav-link" data-scroll-target="#oneway-what-coefs-are"><span class="header-section-number">6.1.2.3</span> The coefficients of a linear model using dummy coding have a useful interpretation</a></li>
+  <li><a href="#better-know-the-coefficient-table" id="toc-better-know-the-coefficient-table" class="nav-link" data-scroll-target="#better-know-the-coefficient-table"><span class="header-section-number">6.1.2.4</span> Better know the coefficient table</a></li>
+  <li><a href="#the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" id="toc-the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics" class="nav-link" data-scroll-target="#the-emmeans-table-is-a-table-of-modeled-means-and-inferential-statistics"><span class="header-section-number">6.1.2.5</span> The emmeans table is a table of modeled means and inferential statistics</a></li>
+  <li><a href="#estimates-of-the-effects-are-in-the-contrasts-table" id="toc-estimates-of-the-effects-are-in-the-contrasts-table" class="nav-link" data-scroll-target="#estimates-of-the-effects-are-in-the-contrasts-table"><span class="header-section-number">6.1.2.6</span> Estimates of the effects are in the contrasts table</a></li>
+  <li><a href="#t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" id="toc-t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test" class="nav-link" data-scroll-target="#t-and-p-from-the-contrasts-table-when-there-are-only-two-levels-in-x-are-the-same-as-t-and-p-from-a-t-test"><span class="header-section-number">6.1.2.7</span> <em>t</em> and <em>p</em> from the contrasts table – when there are only two levels in <span class="math inline">\(X\)</span> – are the same as <em>t</em> and <em>p</em> from a <em>t</em>-test</a></li>
+  </ul></li>
+  <li><a href="#oneway-example2" id="toc-oneway-example2" class="nav-link" data-scroll-target="#oneway-example2"><span class="header-section-number">6.1.3</span> Example 2 – three treatment levels (“groups”)</a>
+  <ul class="collapse">
+  <li><a href="#understand-the-experiment-design" id="toc-understand-the-experiment-design" class="nav-link" data-scroll-target="#understand-the-experiment-design"><span class="header-section-number">6.1.3.1</span> Understand the experiment design</a></li>
+  <li><a href="#fig2a-m1" id="toc-fig2a-m1" class="nav-link" data-scroll-target="#fig2a-m1"><span class="header-section-number">6.1.3.2</span> fit the model</a></li>
+  <li><a href="#check-the-model" id="toc-check-the-model" class="nav-link" data-scroll-target="#check-the-model"><span class="header-section-number">6.1.3.3</span> check the model</a></li>
+  <li><a href="#inference-from-the-model" id="toc-inference-from-the-model" class="nav-link" data-scroll-target="#inference-from-the-model"><span class="header-section-number">6.1.3.4</span> Inference from the model</a></li>
+  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">6.1.3.5</span> plot the model</a></li>
+  <li><a href="#report-the-model-results" id="toc-report-the-model-results" class="nav-link" data-scroll-target="#report-the-model-results"><span class="header-section-number">6.1.3.6</span> Report the model results</a></li>
+  </ul></li>
+  <li><a href="#understanding-the-analysis-with-three-or-more-treatment-levels" id="toc-understanding-the-analysis-with-three-or-more-treatment-levels" class="nav-link" data-scroll-target="#understanding-the-analysis-with-three-or-more-treatment-levels"><span class="header-section-number">6.1.4</span> Understanding the analysis with three (or more) treatment levels</a>
+  <ul class="collapse">
+  <li><a href="#better-know-the-coefficient-table-1" id="toc-better-know-the-coefficient-table-1" class="nav-link" data-scroll-target="#better-know-the-coefficient-table-1"><span class="header-section-number">6.1.4.1</span> Better know the coefficient table</a></li>
+  <li><a href="#the-emmeans-table" id="toc-the-emmeans-table" class="nav-link" data-scroll-target="#the-emmeans-table"><span class="header-section-number">6.1.4.2</span> The emmeans table</a></li>
+  <li><a href="#the-contrasts-table" id="toc-the-contrasts-table" class="nav-link" data-scroll-target="#the-contrasts-table"><span class="header-section-number">6.1.4.3</span> The contrasts table</a></li>
+  <li><a href="#oneway-ttest" id="toc-oneway-ttest" class="nav-link" data-scroll-target="#oneway-ttest"><span class="header-section-number">6.1.4.4</span> <em>t</em> and <em>p</em> from the contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – are not the same as those from pairwise <em>t</em>-tests among pairs of groups</a></li>
+  <li><a href="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" id="toc-the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="nav-link" data-scroll-target="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">6.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">6.2</span> Working in R</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">6.2.1</span> Fit the model</a></li>
   <li><a href="#controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" id="toc-controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" class="nav-link" data-scroll-target="#controlling-the-output-in-tables-using-the-coefficient-table-as-an-example"><span class="header-section-number">6.2.2</span> Controlling the output in tables using the coefficient table as an example</a></li>
   <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">6.2.3</span> Using the emmeans function</a></li>
-  <li><a href="#using-the-contrast-function" id="toc-using-the-contrast-function" class="nav-link" data-scroll-target="#using-the-contrast-function"><span class="header-section-number">6.2.4</span> Using the contrast function</a></li>
-  <li><a href="#how-to-generate-anova-tables" id="toc-how-to-generate-anova-tables" class="nav-link" data-scroll-target="#how-to-generate-anova-tables"><span class="header-section-number">6.2.5</span> How to generate ANOVA tables</a></li>
+  <li><a href="#using-the-contrast-function" id="toc-using-the-contrast-function" class="nav-link" data-scroll-target="#using-the-contrast-function"><span class="header-section-number">6.2.4</span> Using the contrast function</a>
+  <ul class="collapse">
+  <li><a href="#method-argument" id="toc-method-argument" class="nav-link" data-scroll-target="#method-argument"><span class="header-section-number">6.2.4.1</span> method argument</a></li>
+  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">6.2.4.2</span> Adjustment for multiple tests</a></li>
+  <li><a href="#planned-comparisons-using-custom-contrasts" id="toc-planned-comparisons-using-custom-contrasts" class="nav-link" data-scroll-target="#planned-comparisons-using-custom-contrasts"><span class="header-section-number">6.2.4.3</span> Planned comparisons using custom contrasts</a></li>
+  </ul></li>
+  <li><a href="#how-to-generate-anova-tables" id="toc-how-to-generate-anova-tables" class="nav-link" data-scroll-target="#how-to-generate-anova-tables"><span class="header-section-number">6.2.5</span> How to generate ANOVA tables</a>
+  <ul class="collapse">
+  <li><a href="#the-afex-aov_4-function" id="toc-the-afex-aov_4-function" class="nav-link" data-scroll-target="#the-afex-aov_4-function"><span class="header-section-number">6.2.5.1</span> The afex aov_4 function</a></li>
+  <li><a href="#the-car-anova-function" id="toc-the-car-anova-function" class="nav-link" data-scroll-target="#the-car-anova-function"><span class="header-section-number">6.2.5.2</span> The car Anova function</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">6.3</span> Hidden Code</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#importing-and-wrangling-the-fig3d-data-for-example-1" id="toc-importing-and-wrangling-the-fig3d-data-for-example-1" class="nav-link" data-scroll-target="#importing-and-wrangling-the-fig3d-data-for-example-1"><span class="header-section-number">6.3.1</span> Importing and wrangling the fig3d data for example 1</a></li>
   <li><a href="#importing-and-wrangling-the-fig2a-data-for-example-2" id="toc-importing-and-wrangling-the-fig2a-data-for-example-2" class="nav-link" data-scroll-target="#importing-and-wrangling-the-fig2a-data-for-example-2"><span class="header-section-number">6.3.2</span> Importing and wrangling the fig2a data for example 2</a></li>
   </ul></li>

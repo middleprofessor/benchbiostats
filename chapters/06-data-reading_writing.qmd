@@ -42,21 +42,24 @@ This text avoids canned data sets from R packages because importing and wranglin
 
 Importing data is difficult for new R learners for two reasons
 
-1. Many experimental biology researchers archive the data in a format that might make sense for analysis in Excel, but doesn't work for analysis in most other statistical software, including R, without significant post-import processing (or **wrangling**) the data. This includes
-* data in **wide format**, where the measures of the response variable for each treatment level is in a different column
-* data in **transposed format**, where the measures of the response variable are in a row instead of a column (or the measures for each treatment level are in a separate row)
-* missing values that are represented by different things, sometimes in the same table. These things include blank cells, periods, hyphens, the word "NA", or numbers such as -9999.
-* column headers that have multiple words separated by spaces
-* sheets with a variable number of empty cells that separate values within different groups
-* sheets that contain information about the data using colored blocks of cells or other formats
+1.  Many experimental biology researchers archive the data in a format that might make sense for analysis in Excel, but doesn't work for analysis in most other statistical software, including R, without significant post-import processing (or **wrangling**) the data. This includes
+
+-   data in **wide format**, where the measures of the response variable for each treatment level is in a different column
+-   data in **transposed format**, where the measures of the response variable are in a row instead of a column (or the measures for each treatment level are in a separate row)
+-   missing values that are represented by different things, sometimes in the same table. These things include blank cells, periods, hyphens, the word "NA", or numbers such as -9999.
+-   column headers that have multiple words separated by spaces
+-   sheets with a variable number of empty cells that separate values within different groups
+-   sheets that contain information about the data using colored blocks of cells or other formats
 
 These issues are solved by archiving data in (tidy data format)[https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html]{target="_blank"}. The hallmark of tidy data is data in **long format**, which is introduced in the next section (Section \@data-long). Nevertheless, most students and researchers will have colleagues that share non-tidy data and a critical skill for R users is the ability to tidy data.
 
-2. A file on a hard drive has an address, or **file path** that is specific to both place (the specific computer) and time (the file organization of the computer). If we move a data file to another computer, or even to another directory within the same computer, the address changes. Modern computer users are at least vaguely familiar with the hierarchical organization of file storage (most students in my classes seem to store everything they create on the desktop) but are unaware of the concept of a file path and confused by what this path is. When we use a menu-driven system to open a file, the OS is constructing the file path under the hood. But when coding, we need to give R the file path. There are several imperfect methods for coding the path the the data file. There is one perfect method -- the function `here` from the here package. This is discussed in [Use the here function to construct the file path](#data-here})
+2.  A file on a hard drive has an address, or **file path** that is specific to both place (the specific computer) and time (the file organization of the computer). If we move a data file to another computer, or even to another directory within the same computer, the address changes. Modern computer users are at least vaguely familiar with the hierarchical organization of file storage (most students in my classes seem to store everything they create on the desktop) but are unaware of the concept of a file path and confused by what this path is. When we use a menu-driven system to open a file, the OS is constructing the file path under the hood. But when coding, we need to give R the file path. There are several imperfect methods for coding the path the the data file. There is one perfect method -- the function `here` from the here package. This is discussed in [Use the here function to construct the file path](#data-here%7D)
 
 ## Long data format -- the way data should be {#data-long}
 
-Some best practices for archiving data tables, including archived data at journal websites, are illustrated by the format of the data in Table \@ref(tab:data-diet-table).^[[Corrigan, June K., et al. "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice." Elife 9 (2020): e53560.](https://elifesciences.org/articles/53560){target="_blank"})]
+Some best practices for archiving data tables, including archived data at journal websites, are illustrated by the format of the data in Table \@ref(tab:data-diet-table).[^06-data-reading_writing-1]
+
+[^06-data-reading_writing-1]: [Corrigan, June K., et al. "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice." Elife 9 (2020): e53560.](https://elifesciences.org/articles/53560){target="_blank"})
 
 ```{r data-import-diet, echo=FALSE, message=FALSE}
 # https://github.com/banks-lab/Cal-Repository
@@ -83,52 +86,53 @@ fig1[1:6, .SD, .SDcols = ycols] |>
 
 The best practices included in the archived data include
 
-1. The data table contains all measures on each individual. In most of the archived Excel files that I download from journal websites, the researchers have separated each variable into separate tables and exclude all information from these tables other than the treatment group. For example, researchers would typically archive the vo2 values in Table \@ref(tab:data-diet-table) in a separate table within an Excel sheet and with the values split by diet group (high fat "HF" and low fat "LF")(Figure \@ref(fig:data-vo2-table-wide)). Don't do this.
+1.  The data table contains all measures on each individual. In most of the archived Excel files that I download from journal websites, the researchers have separated each variable into separate tables and exclude all information from these tables other than the treatment group. For example, researchers would typically archive the vo2 values in Table \@ref(tab:data-diet-table) in a separate table within an Excel sheet and with the values split by diet group (high fat "HF" and low fat "LF")(Figure \@ref(fig:data-vo2-table-wide)). Don't do this.
 
 ```{r data-vo2-table-wide, echo=FALSE, fig.cap="The vo2 values separated from the rest of the data and split into separate diet groups."}
 image_path <- here("images", "data-vo2_wide.png")
 include_graphics(image_path)
 ```
 
-* We don't want to separate each variable into separate tables because we often want to use information from other measures of the same individual in our analysis. For example, for the comparison of $\texttt{vo2}$ among treatment levels, we would want to add the measure of $\texttt{lean\_mass}$ to the model as a covariate (what is often called an ANCOVA model). To do this, we'd need to know which values of $\texttt{vo2}$ and values of $\texttt{lean\_mass}$ belong to the same individual.
-* Even if you think you have analyzed the data using a best practice, don't separate each variable into separate tables. Researchers sometimes fail to recognize best practices. Any re-analysis of published data using best practices often require information from other measures of the same individual. For example, many researchers would compare the ratio of $\texttt{vo2}$ to $\texttt{total\_mass}$ among treatment levels. This isn't a best practice and if I want to check the researchers conclusions, I'd need a table like Table \@ref(tab:data-diet-table) to re-analyze the data.
-* Even if you have used what is considered a best practice, don't separate each variable into separate tables. Sometimes a researcher wants to use data from published data sets to parameterize a mechanistic model. Or, use data from published data sets to explore patterns of relationships among variables, for example how fat mass scales with lean mass (or total mass). For these, we need a table like Table \@ref(tab:data-diet-table) to re-analyze the data.
-2. The researchers organized the table with individuals in rows. A data table with all measures for each individual could organize the data with each row or each column belonging to one individual. The best practice for most analysis in R (and most other statistical software) is to organize individuals to rows (there are exceptions in some R packages that analyze genomics datasets).
-3. The researchers organized the data in **long format** -- that is, each column contains *all* measures of a single variable. In general, do not organize the data in **wide format**, by splitting the values of a variable into multiple columns, with each column representing the values for a different group. An example of wide format is in Figure \@ref(fig:data-vo2-table-wide), which is the $\texttt{vo2}$ subset of data split by the groups in the columne $\texttt{diet}$. By contrast, the $\texttt{vo2}$ data are in long format in the original table (Table \@ref(tab:data-diet-table)). It might be useful to think of long format for a variable as a single column with the values for each group **stacked** on top of each other. 
+-   We don't want to separate each variable into separate tables because we often want to use information from other measures of the same individual in our analysis. For example, for the comparison of $\texttt{vo2}$ among treatment levels, we would want to add the measure of $\texttt{lean\_mass}$ to the model as a covariate (what is often called an ANCOVA model). To do this, we'd need to know which values of $\texttt{vo2}$ and values of $\texttt{lean\_mass}$ belong to the same individual.
+-   Even if you think you have analyzed the data using a best practice, don't separate each variable into separate tables. Researchers sometimes fail to recognize best practices. Any re-analysis of published data using best practices often require information from other measures of the same individual. For example, many researchers would compare the ratio of $\texttt{vo2}$ to $\texttt{total\_mass}$ among treatment levels. This isn't a best practice and if I want to check the researchers conclusions, I'd need a table like Table \@ref(tab:data-diet-table) to re-analyze the data.
+-   Even if you have used what is considered a best practice, don't separate each variable into separate tables. Sometimes a researcher wants to use data from published data sets to parameterize a mechanistic model. Or, use data from published data sets to explore patterns of relationships among variables, for example how fat mass scales with lean mass (or total mass). For these, we need a table like Table \@ref(tab:data-diet-table) to re-analyze the data.
+
+2.  The researchers organized the table with individuals in rows. A data table with all measures for each individual could organize the data with each row or each column belonging to one individual. The best practice for most analysis in R (and most other statistical software) is to organize individuals to rows (there are exceptions in some R packages that analyze genomics datasets).
+3.  The researchers organized the data in **long format** -- that is, each column contains *all* measures of a single variable. In general, do not organize the data in **wide format**, by splitting the values of a variable into multiple columns, with each column representing the values for a different group. An example of wide format is in Figure \@ref(fig:data-vo2-table-wide), which is the $\texttt{vo2}$ subset of data split by the groups in the columne $\texttt{diet}$. By contrast, the $\texttt{vo2}$ data are in long format in the original table (Table \@ref(tab:data-diet-table)). It might be useful to think of long format for a variable as a single column with the values for each group **stacked** on top of each other.
 
 In general, R and almost all other statistical software (one exception is Graphpad Prism) require the data to be in long format.
 
-* A reason for this is because the long format is consistent with the math underneath the statistical modeling of data. For example, the least squares solution of the linear model is
+-   A reason for this is because the long format is consistent with the math underneath the statistical modeling of data. For example, the least squares solution of the linear model is
 
 $$
 \mathbf{b} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}
 $$
 
-where $\mathbf{X}$ is the **model matrix**, a table of numeric values with each row containing the values of the $X$ variables for an individual (categorical variables such as $\texttt{diet}$ are recoded into one or more numeric **indicator variables** indicating group membership). The model matrix is in long format.
-* A second reason is organizational simplicity. Statistical models often include multiple variables measured on the same individual -- the example above with $\texttt{lean\_mass}$ added as a covariate is an example. With data in wide format, there is no non-awkward way to match values of $\texttt{lean\_mass}$ with values of $\texttt{vo2}$ from the same individual. Or, in models with [crossed factor variables](#factorial), for example, an experiment with four groups repesenting all four combinations of the variables $\texttt{genotype}$ (with levels "WT" and "KO") and $\texttt{treatment}$ (with levels "Control" and "HFD"), there is no non-awkward way (at least in a table with a single header row) to indicate that the design is two crossed factors. In wide format, the design appears to be a single factor with four groups.
+where $\mathbf{X}$ is the **model matrix**, a table of numeric values with each row containing the values of the $X$ variables for an individual (categorical variables such as $\texttt{diet}$ are recoded into one or more numeric **indicator variables** indicating group membership). The model matrix is in long format. \* A second reason is organizational simplicity. Statistical models often include multiple variables measured on the same individual -- the example above with $\texttt{lean\_mass}$ added as a covariate is an example. With data in wide format, there is no non-awkward way to match values of $\texttt{lean\_mass}$ with values of $\texttt{vo2}$ from the same individual. Or, in models with [crossed factor variables](#factorial), for example, an experiment with four groups repesenting all four combinations of the variables $\texttt{genotype}$ (with levels "WT" and "KO") and $\texttt{treatment}$ (with levels "Control" and "HFD"), there is no non-awkward way (at least in a table with a single header row) to indicate that the design is two crossed factors. In wide format, the design appears to be a single factor with four groups.
 
-Don't confuse a data table with multiple columns of *different* variables with a data table in wide format. Long and wide are relevant to how a single variable is organized -- if split into multiple columns the table is wide, if stacked into a single column, the table is long. 
+Don't confuse a data table with multiple columns of *different* variables with a data table in wide format. Long and wide are relevant to how a single variable is organized -- if split into multiple columns the table is wide, if stacked into a single column, the table is long.
 
 One exception to long format is a **longitudinal** or a **repeated measures** data set (Chapter \@ref(pre-post)), in which the response variable is measured multiple times on each individual. An example might be a *pre-post* design where a variable is measured both before and after a treatment is applied or an experiment where the response is measured each week for multiple weeks. In **univariate** models for the analyses of these data, the multiple measures for an individual are stacked into long format. As a consequence, there are now multiple rows of data for each individual (one for each measure of the variable). In **multivariate** models for the analyses of these data, the multiple measures for an individual are treated as if they are different variables and are spread out into wide format.
 
-4. The table includes the raw values. Many researchers normalize or standarize the values of a variable by constructing a ratio of the raw value divided by some standardizing value. Almost always, the best practice is to leave the response variable alone (do not make a ratio) and include the standardizing value as a covariate (or offset) in the model. But, if I want to check th conclusions of a particular result in which the researchers used a ratio as the response variable, then I would need the raw measures and the standardizing values.
+4.  The table includes the raw values. Many researchers normalize or standarize the values of a variable by constructing a ratio of the raw value divided by some standardizing value. Almost always, the best practice is to leave the response variable alone (do not make a ratio) and include the standardizing value as a covariate (or offset) in the model. But, if I want to check th conclusions of a particular result in which the researchers used a ratio as the response variable, then I would need the raw measures and the standardizing values.
 
 ## Use the here function to construct the file path {#data-here}
+
 Importing data into R can be a struggle for new R users and, unfortunately, most online "how to import" sources give easy but superficial methods that don't follow best practices for increasing reproducibility or do not allow flexible organization of files within a project.
 
 (TL;DR -- use `here()` from the here package)
 
-1. `df <- read.table(file="clipboard")` imports data copied to the clipboard, from an Excel/Sheets file or from an open text file. For this to be semi-reproducible, a comment specifying the filename, worksheet and range that was copied is necessary. More problematic (catastrophically so for reproducibility), is, how does a researcher know that they highlighted and copied the correct range in the Excel sheet? 
-2. `df <- read.csv(file.choose())` opens the familiar "open file" dialog box, which lets the user navigate to the file of choice. For this to be semi-reproducible, a comment specifying the filename to import is necessary. The catastrophic problem (for reproducibility) is, how does a researcher know which file was actually opened during an R session? The researcher might think they opened "walker_maine_bee_data_clean_androscoggin.csv" but mistakenly opened "walker_maine_bee_data_clean_aroostook.csv".
-3. `df <- read.table(file="my_data.txt")` and `df <- read_excel(file="my_data.xlsx")` are reproducible because the filename is explicitly specified. But, this method requires that "my_data" is physically located in the same folder as the file containing the R script (the .Rmd file in our case) and this violates the best practice of clean project organization with different folders for the different kinds of files (data, R scripts, images, manuscript text, etc.).
-4. R Studio has an elegant import tool in the environment pane that opens a custom dialog box that allows the researcher to navigate to the file, and to specify what part of the file to import, such as the specific sheet and range for an Excel file. This has the same reproducibility issues as #1 and #2 but R Studio includes the equivalent script, which adds all relevant information for reproducility. One then simply copies and pastes this script into a code chunk and voila! The next time the script is run, the data can be imported from the script without using menus and dialog boxes. Except that..the script does not seem to take into account that the **working directory** of an R Markdown file is not the project folder but the folder containing the R Markdown file and so this two-step method fails. More personally, I'd prefer to run a chunk that quickly opens the data file instead of re-navigating through my file system and re-specifying the sheet and range every time I re-start the project in a new R session.
+1.  `df <- read.table(file="clipboard")` imports data copied to the clipboard, from an Excel/Sheets file or from an open text file. For this to be semi-reproducible, a comment specifying the filename, worksheet and range that was copied is necessary. More problematic (catastrophically so for reproducibility), is, how does a researcher know that they highlighted and copied the correct range in the Excel sheet?
+2.  `df <- read.csv(file.choose())` opens the familiar "open file" dialog box, which lets the user navigate to the file of choice. For this to be semi-reproducible, a comment specifying the filename to import is necessary. The catastrophic problem (for reproducibility) is, how does a researcher know which file was actually opened during an R session? The researcher might think they opened "walker_maine_bee_data_clean_androscoggin.csv" but mistakenly opened "walker_maine_bee_data_clean_aroostook.csv".
+3.  `df <- read.table(file="my_data.txt")` and `df <- read_excel(file="my_data.xlsx")` are reproducible because the filename is explicitly specified. But, this method requires that "my_data" is physically located in the same folder as the file containing the R script (the .Rmd file in our case) and this violates the best practice of clean project organization with different folders for the different kinds of files (data, R scripts, images, manuscript text, etc.).
+4.  R Studio has an elegant import tool in the environment pane that opens a custom dialog box that allows the researcher to navigate to the file, and to specify what part of the file to import, such as the specific sheet and range for an Excel file. This has the same reproducibility issues as #1 and #2 but R Studio includes the equivalent script, which adds all relevant information for reproducility. One then simply copies and pastes this script into a code chunk and voila! The next time the script is run, the data can be imported from the script without using menus and dialog boxes. Except that..the script does not seem to take into account that the **working directory** of an R Markdown file is not the project folder but the folder containing the R Markdown file and so this two-step method fails. More personally, I'd prefer to run a chunk that quickly opens the data file instead of re-navigating through my file system and re-specifying the sheet and range every time I re-start the project in a new R session.
 
 There are at least three solutions to the issues raised above, all requiring some understanding of **file paths** and directory structure in an operating system. A file such as "my_data.xlsx" has an **absolute** file path, which is the full address of the file (the filename is something like your house street number). The absolute file path of "my_data.xlsx" might be "/Users/jwalker/Documents/applied-biostatistics/data/my_data.xlsx". A **relative** file path is the file path from the **working directory**. In an R Studio project, the working directory is the project directory, which is the directory containing the .Rproj file. This will be the working directory of the console. *Importantly*, the working directory of an R Markdown code chunk is the folder containing the saved R Markdown file. An R Studio Notebook is an R Markdown file so the working directory of a notebook code chunk is the folder containing the saved notebook file. If an R Markdown file is located within the *rmd* folder, which is located within the project folder, then the relative file path to "my_file.xlsx" is "../data/my_file.xlsx". The ".." tells the file OS to move "up" into the parent directory (which is the project folder) and the "data" tells the file OS to move "down" into the data folder. These are put together into a single address using "/". The beauty of relative paths is that they remain the same -- and so do not break one's script -- if the project folder, and all of its contents including the *data* folder and the *rmd* folder, is moved to another location on the hard drive (say into a new "Research" folder). By contrast, the absolute file path changes, which breaks any old script.
 
 The three solutions are
 
-1. Create a **relative path** to the file using something like `file_path <- "../data/my_data.xlsx"`. This should *always* work but it fails on some computers. For example, if the project folder is on a Windows OS (but not Mac OS) desktop, the assigned relative address doesn't seem to look in the folder containing the file.
-2. Create a setup chunk that reroutes the working directory to the project folder using the script
+1.  Create a **relative path** to the file using something like `file_path <- "../data/my_data.xlsx"`. This should *always* work but it fails on some computers. For example, if the project folder is on a Windows OS (but not Mac OS) desktop, the assigned relative address doesn't seem to look in the folder containing the file.
+2.  Create a setup chunk that reroutes the working directory to the project folder using the script
 
 ```{r, eval=FALSE}
 # use this in a chuck called "setup" to force the working directory to be
@@ -138,7 +142,7 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 
 For this to work, the chunk has to be named “setup”, that is, the text inside the curly brackets at the top of the chunk should be “r setup”. Then, with this chunk, the relative file path is `file_path <- "../data/my_data.xlsx"` if "my_data.xlsx" is immediately inside the data folder which is immediately inside the project folder. This should work on any machine, and should work even if a project folder is moved.
 
-3. Use the function `here()`. The most robust solution seems to be using the function `here()` from the here package. The function works something like this
+3.  Use the function `here()`. The most robust solution seems to be using the function `here()` from the here package. The function works something like this
 
 ```{r, eval=FALSE, message=FALSE}
 data_folder <- "data" # path to data that are imported
@@ -159,12 +163,14 @@ It will be easiest to learn from this chapter by starting with a clean R Markdow
 
 Notes on the setup chunk from [Create and setup an R Markdown document (Rmd)](#setup-create-rmd)
 
-1. As you become a better R programmer, be kind to the future you by loading only the packages necessary for the code in the R Markdown file that you are working on. If your default is to load everything, the future you will be confused why something was installed. Again, we've disregarded this best practice in this textbook to make sure that chunks don't fail because of a missing function.
-2. Be kind to the future you by commenting on why a package is loaded; usually this is a specific function from the package
-3. `here <- here::here` is my favorite script ever. What is it doing? One can read this as "assign the function here from the here package to the object here" (this is reading the script right to left). Why do this? It turns out the multiple packages define a function called "here". If any of these packages are loaded after the here package, then `here` from here won't work -- it will be replaced by `here` from the more recently loaded package. To make sure that `here` uses the function from the here package, I simply reassign `here` from the here package to the object "here" *after* loading in all packages.
+1.  As you become a better R programmer, be kind to the future you by loading only the packages necessary for the code in the R Markdown file that you are working on. If your default is to load everything, the future you will be confused why something was installed. Again, we've disregarded this best practice in this textbook to make sure that chunks don't fail because of a missing function.
+2.  Be kind to the future you by commenting on why a package is loaded; usually this is a specific function from the package
+3.  `here <- here::here` is my favorite script ever. What is it doing? One can read this as "assign the function here from the here package to the object here" (this is reading the script right to left). Why do this? It turns out the multiple packages define a function called "here". If any of these packages are loaded after the here package, then `here` from here won't work -- it will be replaced by `here` from the more recently loaded package. To make sure that `here` uses the function from the here package, I simply reassign `here` from the here package to the object "here" *after* loading in all packages.
 
 ## Working in R {#data-working-in-r}
+
 ### Importing data
+
 #### Importing Excel files
 
 **Source article**: [Lyu, Yang, et al. "Drosophila serotonin 2A receptor signaling coordinates central metabolic processes to modulate aging in response to nutrient choice." Elife 10 (2021): e59399.](https://elifesciences.org/articles/59399){target="_blank"}
@@ -175,9 +181,9 @@ Let's open the data for Fig. 1H.
 
 Steps
 
-1. Highlight and copy the title of the article, which is "Drosophila serotonin 2A receptor signaling coordinates central metabolic processes to modulate aging in response to nutrient choice"
-2. Create a new folder within the "data" folder. Name the folder the title of the paper by pasting the name from the clipboard. This is the "data from" folder, since it contains the data from the publication with the title of the folder.
-3. Download the .xlsx file and move it into this folder
+1.  Highlight and copy the title of the article, which is "Drosophila serotonin 2A receptor signaling coordinates central metabolic processes to modulate aging in response to nutrient choice"
+2.  Create a new folder within the "data" folder. Name the folder the title of the paper by pasting the name from the clipboard. This is the "data from" folder, since it contains the data from the publication with the title of the folder.
+3.  Download the .xlsx file and move it into this folder
 
 The code below uses the function `read_excel()` from the package readxl. More about the amazing power of this package is the [tidyverse page](https://readxl.tidyverse.org){target="_blank"} and [chapter 11](http://r4ds.had.co.nz/data-import.html){target="_blank"} in the *R for Data Science* book.
 
@@ -187,57 +193,68 @@ file_name <- "elife-59399-fig1-data1-v2.xlsx"
 file_path <- here(data_folder, data_from, file_name)
 
 fig1h <- read_excel(file_path, 
-                    sheet = "H")
-fig1h <- clean_names(fig1h) # clean column names
-fig1h <- data.table(fig1h) # convert to data.table
+                    sheet = "H") |> # pipe the result to next line
+  clean_names() |> # clean column names and pipe the result to next line
+  data.table() # convert to data.table
 
 # View(fig1h)
 ```
 
-This book will consistently uses this protocol for importing downloaded Excel files. For *any* tidy archived data in Excel, a user would simply copy this chunk, paste it into their Rmd, and modify the stuff inside the quotes to import the data. But this is mindless programming. Don't do this. Understand what each line in the chunk does.
+This book will consistently uses this protocol for importing downloaded Excel files. For *any* tidy archived data in Excel, a user would simply copy this chunk, paste it into their Rmd, and modify the stuff inside the quotes to import the data. But this is mindless programming. Don't do *just* this. Understand what each line in the chunk does.
 
 ##### View the data
 
-Let's start with the last line, which is commented out
+The very first thing that you should do after importing data, without exception, is to View the imported data. The last line in the code chunk above is a reminder of this, and one of several ways to View the data.
 
 ```{r}
 # View(fig1h)
 ```
 
-The **comment** (or hashtag) symbol (#) tells R to ignore everything in the line following the symbol. Usually a comment symbol is followed by a brief comment on the code. This comment if mostly for the future you -- when you come back after a six month hiatus and wonder what a line or block of code is doing, the comment gives you this information. Sometimes a comment is used in front of R code to keep the R code from running. That is the purpose of the comment symbol here.
+The **comment** (or hashtag) symbol (#) tells R to ignore everything in the line following the symbol. Usually a comment symbol is followed by a brief comment on the code and is mostly for the future you -- when you come back after a six month hiatus and wonder what a line or block of code is doing, the comment gives you this information. Sometimes a comment is used in front of R code to keep the R code from running. That is the purpose of the comment symbol here.
 
 `View(fig1h)` tells R to open a window showing a spreadsheet view of the data.table `fig1h`. In R studio, this window is opened as a new tab in the Source editor pane (the pane with your Rmd content). To run this code, highlight "View(fig1h)" but not the comment symbol and click the "Run selected line(s)" item in the Run pop-up menu (right side of pane's tool bar). We don't include the comment sign in the highlight because this would tell R to ignore everything after it.
 
-We can view the data in `fig1h` more easily by holding the command key (Mac OS) or the control key (Windows) and clicking the mouse in "fig1h" in any of the lines. Even though I use the mouse click method, I like to have the `View(fig1h)` at the end of my import chunk to remind me to View the data to make sure everthing imported correctly.
+We can View the data in `fig1h` more easily by holding the command key (Mac OS) or the control key (Windows) and clicking the mouse in "fig1h" in any of the lines. Even though I use the mouse click method, I like to have the `View(fig1h)` at the end of my import chunk to remind me to View the data to make sure everthing imported correctly.
+
+A third, and probably easiest way to View the data is to click on the name of the object in the Enviroment pain (typically upper right pane in the default R Studio layout).
 
 ##### What does each line in the chunk do?
 
 The first three lines in the chunk create the directory path to the file. This path includes three variables
 
-1. `data_folder` -- assigned to "data" in the setup chunk. "data" is a folder within the project folder that contains (or will contain) all datasets for this text. The data come from many different published papers, so the data for each publication gets its own folder within "data".
-2. `data_from` -- the name of the "data from" folder within "data" containing the data files. In this text, these folder names will always be the name of the published paper.
-3. `filename` -- the name of the file to read. There may be multiple data files within the publication's data folder.
+1.  `data_folder` -- assigned to "data" in the setup chunk. "data" is a folder within the project folder that contains (or will contain) all datasets for this text. The data come from many different published papers, so the data for each publication gets its own folder within "data".
+2.  `data_from` -- the name of the "data from" folder within "data" containing the data files. In this text, these folder names will always be the name of the published paper.
+3.  `filename` -- the name of the file to read. There may be multiple data files within the publication's data folder.
 
 These are all put together into the absolute path using the function `here()` from the here package. Take a look at the value of file_path to confirm.
 
-The next three lines (starting with `fig1h <- read_excel`)
+The next four numbered lines (starting with `fig1h <- read_excel`) is composed of three functions that are linked together by the pipe operator `|>`. Separately, the code would look like this
 
-1. `read_excel` imports the data and names it "fig1h". More technically, the code assigns the imported object to a data.frame object named `fig1h`. Throughout, this text uses the "figXXX" convention for imported data. Examples online often use conventions like "dat" or "my_data" but these are not very meaningful names in the sense that the name doesn't convey any information on what the data is.
-2. `clean_names` cleans the column names of `fig1h`. This is explained more below.
-3. `data.table` converts `fig1h` to a data.table object. A data.table is a data.frame with magical properties.
+```{r, message=FALSE, eval=FALSE}
 
-In steps 2 and 3, the functions take the data.frame and process it in some way and then assign the processed data.frame to an object that has the same name (`fig1h`). This script can be made slightly more "elegant" using the "pipe" operator `|>`.
+fig1h <- read_excel(file_path, 
+                    sheet = "H")
+fig1h <- clean_names(fig1h) # clean column names
+fig1h <- data.table(fig1h) # convert to data.table
 
-```{r, message=FALSE}
-fig1h <- read_excel(file_path,
-                    sheet = "H") |>
-  clean_names() |>
-  data.table()
 ```
 
-This is a single line of code containing three separate operations all "piped" together. A pipe operator takes output from one function and sends this to a second function. A way to think about this is
+1.  `read_excel` imports the data and names it "fig1h". More technically, the code assigns the imported object to a data.frame object named `fig1h`. Throughout, this text uses the "figXXX" convention for imported data. Examples online often use conventions like "dat" or "my_data" but these are not very meaningful names in the sense that the name doesn't convey any information on what the data is.
+2.  `clean_names` cleans the column names of `fig1h`. This is explained more below.
+3.  `data.table` converts `fig1h` to a data.table object. A data.table is a data.frame with magical properties. Everyone should know data.table.
 
-A 3rd way to do this is with nested functions.
+Again, here is the version with the three separate functions piped together with the pipe operator `|>`
+
+```{r, message=FALSE, eval=FALSE}
+fig1h <- read_excel(file_path, 
+                    sheet = "H") |> # pipe the result to next line
+  clean_names() |> # clean column names and pipe the result to next line
+  data.table() # convert to data.table
+```
+
+The pipe operator takes output from one function and sends this to another function. The output from the last function is assigned the name `fig1h`. Note that we don't put "fig1h" in the parentheses of the `clean_names()` and `data.table()` functions -- the pipe operator does this for us.
+
+A 3rd way to do write these three functions is to nest them like this
 
 ```{r, message=FALSE}
 fig1h <- data.table(clean_names(read_excel(file_path,
@@ -245,6 +262,8 @@ fig1h <- data.table(clean_names(read_excel(file_path,
 ```
 
 Prior to the creation of the pipe operator, I nested functions to make code more compact. However, nested functions are often less readable, and I now mostly avoid these and use the pipe operator instead.
+
+#### More on clean_names()
 
 Let's back up to understand the steps, and especially the `clean_names` step. Here is the first line, which is the line that imports the file.
 
@@ -259,7 +278,7 @@ Look at the column names (or column headers in Excel lingo) of the imported data
 names(fig1h)
 ```
 
-In general, it is bad practice to include spaces, parentheses, and special characters such as /, -, $, or ^, in the column names of a data frame because these symbols have specific meanings in R functions. The best practice for spaces is to replace the space with an underscore, for example the column header ""Weight (mg/fly)" could be `weight_mg_per_fly`. Some coders separate words with a period (`weight.mg.per.fly`). Others mash words together into a single word like this `weightmgperfly` but this should generally be avoided because the result can be hard to read. Finally, some coders use Caps to separate  words like this `WeightMgPerFly`. This is easier to read than simple concatenation but the underscore is the easiest to read.
+In general, it is bad practice to include spaces, parentheses, and special characters such as /, -, \$, or \^, in the column names of a data frame because these symbols have specific meanings in R functions. The best practice for spaces is to replace the space with an underscore, for example the column header ""Weight (mg/fly)" could be `weight_mg_per_fly`. Some coders separate words with a period (`weight.mg.per.fly`). Others mash words together into a single word like this `weightmgperfly` but this should generally be avoided because the result can be hard to read. Finally, some coders use Caps to separate words like this `WeightMgPerFly`. This is easier to read than simple concatenation but the underscore is the easiest to read.
 
 `clean_names` from the janitor package is a beautiful function to clean the column names of a data frame including replacing spaces with an underscore and stripping parentheses. The default format is [snake_case](https://en.wikipedia.org/wiki/Snake_case){target="_blank"}, which replaces all spaces with underscores and changes any uppercase letter with lowercase. Many coders like to work with all lowercase variable names to avoid having to hit the shift key. I am one of these.
 
@@ -278,19 +297,19 @@ fig1h <- data.table(fig1h)
 
 You won't see any difference if you View the data or peak at the column names. But you've transformed the data frame to a data.table and given it magical properties.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
+::: {style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;"}
 **Worst Practices** -- resist the temptation to change the column names in the data file, which reduces reproducibility. Leave original data files original. Always increase reproducibility!
-</div>
+:::
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
+::: {style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;"}
 **colleague blues** -- Most researchers live in an Excel world and save data in a way that is efficient for computing stuff in Excel but not efficient for statistical analysis using R or other statistical computing software packages (with the exception of Graphpad Prism). Analyzing data will be much less frustrating if the data are saved in a format that facilitates analysis. Best practices for creating data files
 
-1. https://www.youtube.com/watch?time_continue=309&v=Ry2xjTBtNFE -- An excellent video introduction to best practices for organizing data in a spreadsheet that will subsequently be analyzed by statistics software. 
+1.  https://www.youtube.com/watch?time_continue=309&v=Ry2xjTBtNFE -- An excellent video introduction to best practices for organizing data in a spreadsheet that will subsequently be analyzed by statistics software.
 
-2. Broman, K. W., & Woo, K. H. (2017). Data organization in spreadsheets (No. e3183v1). https://doi.org/10.7287/peerj.preprints.3183v1 -- An excelllent review of best practices for organizing data in a spreadsheet.
-</div>
+2.  Broman, K. W., & Woo, K. H. (2017). Data organization in spreadsheets (No. e3183v1). https://doi.org/10.7287/peerj.preprints.3183v1 -- An excelllent review of best practices for organizing data in a spreadsheet.
+:::
 
-##### The read_excel function
+#### More on read_excel()
 
 `read_excel` is a beautifully flexible function because Excel. Data can be in different sheets and there can be different datasets within a single sheet. And, researchers tend to use Excel like a blackboard in that an Excel sheet often contains calculations such as means, standard deviations and t-tests. When using `read_excel` it is important to send the function enough information to read the correct data. For the fig1h data, if we simply used
 
@@ -342,7 +361,7 @@ ggboxplot(data = fig1h,
 
 Notes on the code to make this plot
 
-1. the names of the columns to use as the x and y axes were passed inside quotes. In some R functions, column names are passed inside quotes and in other R functions, the column names are passed as-is. There is little rhyme or reason for this.
+1.  the names of the columns to use as the x and y axes were passed inside quotes. In some R functions, column names are passed inside quotes and in other R functions, the column names are passed as-is. There is little rhyme or reason for this.
 
 #### Importing text files
 
@@ -354,11 +373,11 @@ Let's open the data for Fig. 1.
 
 Steps
 
-1. Copy the title of the paper title, which is "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice"
-2. Create a new folder within "data". Name the folder the title of the paper by pasting from the clipboard. This is the "data from" folder, since it contains the data from the publication with the title of the folder.
-3. Click on the link to the file above, highlight all values in the window by clicking inside the window and typing command-a (Mac os) or control-a (Windows) and copy.
-4. Paste into a an open, blank text document and save it as "mmpc_all_phases.csv". If saved elsewhere, move this file into the "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice" folder within the "data" folder.
-5. If you don't have a dedicated text editor such as BBEdit on MacOS, then open a new R (not Rmd!) document in R studio. This will open as a new tab in the Script Editor pane. Paste the data into the R document window. Save it as "mmpc_all_phases.csv". R Studio will ask to be sure you want the extension to be .csv and not .R. Yes you are sure. If saved elsewhere, move this file into the "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice" folder within the "data" folder.
+1.  Copy the title of the paper title, which is "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice"
+2.  Create a new folder within "data". Name the folder the title of the paper by pasting from the clipboard. This is the "data from" folder, since it contains the data from the publication with the title of the folder.
+3.  Click on the link to the file above, highlight all values in the window by clicking inside the window and typing command-a (Mac os) or control-a (Windows) and copy.
+4.  Paste into a an open, blank text document and save it as "mmpc_all_phases.csv". If saved elsewhere, move this file into the "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice" folder within the "data" folder.
+5.  If you don't have a dedicated text editor such as BBEdit on MacOS, then open a new R (not Rmd!) document in R studio. This will open as a new tab in the Script Editor pane. Paste the data into the R document window. Save it as "mmpc_all_phases.csv". R Studio will ask to be sure you want the extension to be .csv and not .R. Yes you are sure. If saved elsewhere, move this file into the "A big-data approach to understanding metabolic rate and response to obesity in laboratory mice" folder within the "data" folder.
 
 A .csv file is a **comma-delimited** text file, which means that the entries of a row are separated by commas. A text file is readable by any text editor software and most other kinds of software. Datasets that are stored as text files are typically saved as either .csv (where the entries of a row are separated by commas) or .txt (where the entries are separated by tabs). The base R way to read a .csv file is using `read.csv`. The `read.table` function is more versatile, as the delimiter can be specified. The function `fread()` from the data.table package is fast, smart, and flexible. It is smart in the sense that it guesses what the delimter is.
 
@@ -378,6 +397,7 @@ fig1 <- fread(file_path) |>
 Be sure to read the section on importing Excel files above to understand this code. Here, as with the import of the Excel file, the first three lines create the directory path to the file. There is no need to pipe `fig1` to the `data.table` function because `fread` automatically opens the data as a data.table. As with the imported Excel file above, this code sends the data object to `clean_names` to change the column labels to snake_case.
 
 ##### A quick plot of the fig1 data
+
 Let's use the `ggscatter` function from the ggpubr package to reproduce something close to Fig. 1D. We could make a plot that looks exactly like Fig. 1D but this would require some additional plot arguments.
 
 ```{r, message=FALSE}
@@ -397,16 +417,16 @@ ggscatter(data = fig1[diet == "HF" &
 
 If you get an error that starts with "Error: `path` does not exist:" then R is not "seeing" your specified file given the path you've given it.
 
-1. Make sure that you are working within the project by checking the project name on the right side of the R Studio tool bar. If the project is "None" or you are working within a different project, then open the new project.
-2. Make sure you loaded the package `here` in a "setup" chunk and that you have run the setup chunk
-3. Make sure you have assigned `data_folder <- "data"` in the setup chunk and have run the chunk.
-4. Make sure your "data" folder is *one level* inside your project folder. "one level" means it is not buried deeper inside other folders within the project folder.
-5. Make sure your "data from" folder (the folder with the title of the publication) is one level inside your "data" folder
-6. Make sure your data file is one level inside the correct "data from" folder.
-7. **Bug alert** Make sure you have the name of the "data from ..." folder correct in your script. Do not type the name of the folder. Instead, go to the finder and highlight the folder containing the data file, copy the name, return to the R markdown script, type `folder <- ""` and then paste the clipboard (the name of the folder) in between the quote marks.
-8. **Bug alert** Make sure the file name is correct in the script. As with the folder name, I go to the finder and copy the file name and paste it in place. In Windows use ctrl-a instead of ctrl-c to copy the full filename including the extension.
+1.  Make sure that you are working within the project by checking the project name on the right side of the R Studio tool bar. If the project is "None" or you are working within a different project, then open the new project.
+2.  Make sure you loaded the package `here` in a "setup" chunk and that you have run the setup chunk
+3.  Make sure you have assigned `data_folder <- "data"` in the setup chunk and have run the chunk.
+4.  Make sure your "data" folder is *one level* inside your project folder. "one level" means it is not buried deeper inside other folders within the project folder.
+5.  Make sure your "data from" folder (the folder with the title of the publication) is one level inside your "data" folder
+6.  Make sure your data file is one level inside the correct "data from" folder.
+7.  **Bug alert** Make sure you have the name of the "data from ..." folder correct in your script. Do not type the name of the folder. Instead, go to the finder and highlight the folder containing the data file, copy the name, return to the R markdown script, type `folder <- ""` and then paste the clipboard (the name of the folder) in between the quote marks.
+8.  **Bug alert** Make sure the file name is correct in the script. As with the folder name, I go to the finder and copy the file name and paste it in place. In Windows use ctrl-a instead of ctrl-c to copy the full filename including the extension.
 
-More generally, Humans are very good at understanding misspelld and OdDLy capitalized words but the R language (or any computer language) is very literal. R is **case sensitive** (some programming languages are not). "Prenatal acoustic communication", "Prenatal Acoustic Communication", and "prenatal acoustic communication" are all different values. Spelling AND capitalization have to be perfect, not simply close. Spelling includes *spaces*. A frequent bug is a file name typed as "Prenatal acoustic communication" when the actual name is "Prenatal acoustic  communication". Can you spot the bug? The original (what we need to copy) has two spaces between "acoustic" and "communication" while the incorrect copy has only one.
+More generally, Humans are very good at understanding misspelld and OdDLy capitalized words but the R language (or any computer language) is very literal. R is **case sensitive** (some programming languages are not). "Prenatal acoustic communication", "Prenatal Acoustic Communication", and "prenatal acoustic communication" are all different values. Spelling AND capitalization have to be perfect, not simply close. Spelling includes *spaces*. A frequent bug is a file name typed as "Prenatal acoustic communication" when the actual name is "Prenatal acoustic communication". Can you spot the bug? The original (what we need to copy) has two spaces between "acoustic" and "communication" while the incorrect copy has only one.
 
 Spelling bugs are avoided by simply copying and pasting names of folders, names of files, column names of data frames, and level names of factors, which leads to a general rule of R scripting...
 
@@ -416,12 +436,13 @@ Spelling bugs are avoided by simply copying and pasting names of folders, names 
 
 Do not try to type it out. You have been warned.
 
-## Data wrangling
+### Data wrangling
 
 Data archived in Excel spreadsheets, at least in wet-bench experimental biology projects, are generally not in a format this is readily analyzed in R, or any statistical software other than perhaps Graphpad Prism. Use these examples as templates for how to import and wrangle Excel-archived data in your project.
 
-### Reshaping data -- Wide to long
-#### Wide to long -- Adipsin data
+#### Reshaping data -- Wide to long
+
+##### Wide to long -- Adipsin data
 
 Source: [Adipsin preserves beta cells in diabetic mice and associates with protection from type 2 diabetes in humans](https://www.nature.com/articles/s41591-019-0610-4){target="_blank"}
 
@@ -499,10 +520,9 @@ gg <- ggstripchart(x = "treatment",
 gg
 ```
 
+##### Wide to long -- Enteric nervous system data
 
-#### Wide to long -- Enteric nervous system data
-
-Source: [Rolig, A. S., Mittge, E. K., Ganz, J., Troll, J. V., Melancon, E., Wiles, T. J., … Guillemin, K. (2017). The enteric nervous system promotes intestinal health by constraining microbiota composition. PLOS Biology, 15(2), e2000689. ](https://doi.org/10.1371/journal.pbio.2000689){target="_blank"}
+Source: [Rolig, A. S., Mittge, E. K., Ganz, J., Troll, J. V., Melancon, E., Wiles, T. J., … Guillemin, K. (2017). The enteric nervous system promotes intestinal health by constraining microbiota composition. PLOS Biology, 15(2), e2000689.](https://doi.org/10.1371/journal.pbio.2000689){target="_blank"}
 
 [Source data](https://doi.org/10.1371/journal.pbio.2000689.s008){target="_blank"}
 
@@ -551,14 +571,15 @@ fig_2d[, treatment := factor(treatment,
 
 To learn (instead of just copy and modify), it's best to do this in steps and not run the whole chunk. At each step, look at the result using View. The script above includes three extra wrangling steps.
 
-1. Changing column names in fig_2d_wide. The column names in wide format will become the treatment level names of the *treatment* factor after reshaping. It will be easier down the road if these names are shorter and the "_donor" in each name is redundant. The `setnames` function renames the column names.
+1.  Changing column names in fig_2d_wide. The column names in wide format will become the treatment level names of the *treatment* factor after reshaping. It will be easier down the road if these names are shorter and the "\_donor" in each name is redundant. The `setnames` function renames the column names.
 
-2. For these data, the number of measures within the different treatments differs and, as a consequence, there are multiple cells with `NA` which indicates a missing value. `View(fig_2d_wide)` (this can be typed in the console) to see this. After reshaping to long format (fig_2d), the rows with missing values become empty rows -- there is no useful information in them (View this). To see this, re-run the lines of the chunk up to the line "# omit empty rows". The `na.omit` function deletes any row with missing values. Here, this deletes these information-less rows. Be very careful with `na.omit`. You do not want to delete rows of data that contain information you want.
-3. For both analysis and plots, we want to compare values to the control level, which is named "wt" for the fig_2d data. That is, we want "wt" to be the *reference* level. To achieve this, the levels of the factor *treatment* need to be re-ordered using the `levels` argument. (note, I typically do not add "levels = ", but simply pass the list of levels)
+2.  For these data, the number of measures within the different treatments differs and, as a consequence, there are multiple cells with `NA` which indicates a missing value. `View(fig_2d_wide)` (this can be typed in the console) to see this. After reshaping to long format (fig_2d), the rows with missing values become empty rows -- there is no useful information in them (View this). To see this, re-run the lines of the chunk up to the line "\# omit empty rows". The `na.omit` function deletes any row with missing values. Here, this deletes these information-less rows. Be very careful with `na.omit`. You do not want to delete rows of data that contain information you want.
 
-#### Wide to long -- bee data
+3.  For both analysis and plots, we want to compare values to the control level, which is named "wt" for the fig_2d data. That is, we want "wt" to be the *reference* level. To achieve this, the levels of the factor *treatment* need to be re-ordered using the `levels` argument. (note, I typically do not add "levels = ", but simply pass the list of levels)
 
-The example above is pretty easy, because the all columns in the original data frame are melted (stacked). Here is an example in which only a subset of columns are stacked. In addition, only a subset of the remaining columns are retained in the long format data frame. The data are from Panel A of supplement Fig. 8 (https://journals.plos.org/plosbiology/article/file?type=supplementary&id=info:doi/10.1371/journal.pbio.2003467.s019){target="_blank"} from
+##### Wide to long -- bee data
+
+The example above is pretty easy, because the all columns in the original data frame are melted (stacked). Here is an example in which only a subset of columns are stacked. In addition, only a subset of the remaining columns are retained in the long format data frame. The data are from Panel A of supplement Fig. 8 (https://journals.plos.org/plosbiology/article/file?type=supplementary&id=info:doi/10.1371/journal.pbio.2003467.s019){target="\_blank"} from
 
 Source: [Kešnerová, L., Mars, R.A., Ellegaard, K.M., Troilo, M., Sauer, U. and Engel, P., 2017. Disentangling metabolic functions of bacteria in the honey bee gut. PLoS biology, 15(12), p.e2003467.](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2003467){target="_blank"}
 
@@ -587,7 +608,7 @@ fig_s8a <- melt(fig_s8a_wide,
               value.name = "OD600") # measure of absorbance at 600nm
 ```
 
-#### Wide to long -- stacking multiple sets of columns
+##### Wide to long -- stacking multiple sets of columns
 
 Article: [GPR109A mediates the effects of hippuric acid on regulating osteoclastogenesis and bone resorption in mice](https://www.nature.com/articles/s42003-020-01564-2#MOESM4){target="_blank"}
 
@@ -651,9 +672,9 @@ fig1b[1:5, ] |>
   kable_styling()
 ```
 
+#### Reshaping data -- Transpose (turning the columns into rows)
 
-### Reshaping data -- Transpose (turning the columns into rows)
-#### Transpose -- PI3K inhibitors data
+##### Transpose -- PI3K inhibitors data
 
 Source: [Suppression of insulin feedback enhances the efficacy of PI3K inhibitors](https://www.nature.com/articles/s41586-018-0343-4)
 
@@ -708,10 +729,11 @@ pi3k_long <- melt(pi3k_wide,
                   variable.name = "time",
                   value.name = "glucose")
 ```
+
 Notes
 
-1. Read the comments on the usage of the `keep.names` and `make.names` arguments of `transpose`. These are powerful.
-2. pi3k_wide has column names that are times (in minutes). This presents wrangling problems (column names shouldn't be numbers. Here it is useful to create the long format data.table with a time column of numbers). For example, the code above creates copies the column "0" into a new column "glucose_0" using `glucose_0 := get("0")`. Had the code been `glucose_0 := "0"`, all values would be the character "0". Had the code been `glucose_0 := 0`, all values would be the number 0. `get` looks for the column with the name of whatever is inside the parentheses.
+1.  Read the comments on the usage of the `keep.names` and `make.names` arguments of `transpose`. These are powerful.
+2.  pi3k_wide has column names that are times (in minutes). This presents wrangling problems (column names shouldn't be numbers. Here it is useful to create the long format data.table with a time column of numbers). For example, the code above creates copies the column "0" into a new column "glucose_0" using `glucose_0 := get("0")`. Had the code been `glucose_0 := "0"`, all values would be the character "0". Had the code been `glucose_0 := 0`, all values would be the number 0. `get` looks for the column with the name of whatever is inside the parentheses.
 
 Let's do a quick plot to examine the data
 
@@ -723,7 +745,7 @@ qplot(x = time,
   geom_line(aes(group = id))
 ```
 
-### Combining data
+#### Combining data
 
 Source [Bak, A.M., Vendelbo, M.H., Christensen, B., Viggers, R., Bibby, B.M., Rungby, J., Jørgensen, J.O.L., Møller, N. and Jessen, N., 2018. Prolonged fasting-induced metabolic signatures in human skeletal muscle of lean and obese men. PloS one, 13(9), p.e0200817.](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0200817)
 
@@ -751,22 +773,22 @@ table2 <- clean_names(table2)
 fasting <- merge(table2, table1, by="id")
 ```
 
-### Subsetting data {#data-subset}
+#### Subsetting data {#data-subset}
 
 It is common to see researchers create multiple subsets of data for further processing. This practice should be be discouraged because the same variables will be in multiple data frames and it can be hard to keep track of any processing of variables in the different datasets. Instead, subset the data at the level of analysis.
 
 There are many ways to subset data in R. Experienced users tend to divide up into those using base R, those using the tidyverse packages, or those using data.table. Learn one well. This book uses data.table. Before outlining usage in data.table, let's back up a bit and review different *indexing* systems.
 
-* In Excel, rows are specified (or "indexed") by numbers and columns by letters. Every cell has an address, for example C2 is the cell in the 2nd row and 3rd column. Notice that in Excel, the column part of the address comes before the row part.
-* In statistics, it is extremely common to use a system where $x_{ij}$ is the value of the element in the *i*th row and *j*th column of the matrix **X**. Notice that in this notatin, the row index (*i*) comes before the column index (*j*).
-* In programming languages, including R, it is extremely common to use a system where my_data[i, j] is the value of the element in the *i*th row and *j*th column of the matrix-like object named "my_data" (such as a data frame in R).
-* data.table explicitly refers to the row index and column index as *i* and *j*.
+-   In Excel, rows are specified (or "indexed") by numbers and columns by letters. Every cell has an address, for example C2 is the cell in the 2nd row and 3rd column. Notice that in Excel, the column part of the address comes before the row part.
+-   In statistics, it is extremely common to use a system where $x_{ij}$ is the value of the element in the *i*th row and *j*th column of the matrix **X**. Notice that in this notatin, the row index (*i*) comes before the column index (*j*).
+-   In programming languages, including R, it is extremely common to use a system where my_data\[i, j\] is the value of the element in the *i*th row and *j*th column of the matrix-like object named "my_data" (such as a data frame in R).
+-   data.table explicitly refers to the row index and column index as *i* and *j*.
 
-#### Specifying a subset of rows ("observations" or "cases")
+##### Specifying a subset of rows ("observations" or "cases")
 
-A subset of rows is specified using either a list of row numbers or 
+A subset of rows is specified using either a list of row numbers or
 
-In a data.table, a subset of rows is specified using either a list of row numbers or a combination of comparison operators (==, !=, >, <, >=, <=, %in%) and Boolean logic operators (&, |, ! -- these are "and", "or", "not") as *i*.
+In a data.table, a subset of rows is specified using either a list of row numbers or a combination of comparison operators (==, !=, \>, \<, \>=, \<=, %in%) and Boolean logic operators (&, \|, ! -- these are "and", "or", "not") as *i*.
 
 Let's use the pi3k_long data from above to explore this. First, the plot of plasma glucose for all individuals in each treatment group across all time points.
 
@@ -790,7 +812,7 @@ qplot(x = time,
 ```
 
 And the subset of rows in which entries in the column "treatment" take any value but "Chow" using the "not equal" operator ("!=").
- 
+
 ```{r}
 qplot(x = time,
       y = glucose,
@@ -800,7 +822,7 @@ qplot(x = time,
 
 ```
 
-The subset of rows in which entries in the column "treatment" take either the value "Chow" or the value "SGLT2i" by combining two "is equal" ("==") operators using the OR ("|") boolean operator
+The subset of rows in which entries in the column "treatment" take either the value "Chow" or the value "SGLT2i" by combining two "is equal" ("==") operators using the OR ("\|") boolean operator
 
 ```{r}
 qplot(x = time,
@@ -822,7 +844,7 @@ qplot(x = time,
 
 ```
 
-The subset of rows in which entries in the column "time_c" are less than or equal to 60 using the "less than or equal to" operator AND the value in the treatment column is in the list ("Chow", "SGLT2i"). The two comparisons are combined with the AND ("&") Boolean operator. 
+The subset of rows in which entries in the column "time_c" are less than or equal to 60 using the "less than or equal to" operator AND the value in the treatment column is in the list ("Chow", "SGLT2i"). The two comparisons are combined with the AND ("&") Boolean operator.
 
 ```{r}
 pi3k_long[, time_c := as.numeric(as.character(time))]
@@ -846,10 +868,9 @@ qplot(x = time,
 
 ```
 
+#### Wrangling columns
 
-### Wrangling columns
-
-#### Creating new columns that are functions of values in existing columnes
+##### Creating new columns that are functions of values in existing columnes
 
 data.table allows math within the index arguments.
 
@@ -864,8 +885,8 @@ figx[, marked_cells_perc := marked_cells/total_cells * 100]
 
 Notes
 
-1. $\texttt{marked\_cells}$ and $\texttt{total\_cells}$ are columns in the data.table `figx`
-2. You almost certainly want to analyze the original count column and use $\texttt{total\_cells}$ as an offset in the model. See the section [Use a GLM with an offset instead of a ratio of some measurement per total](#glm_offset)
+1.  $\texttt{marked\_cells}$ and $\texttt{total\_cells}$ are columns in the data.table `figx`
+2.  You almost certainly want to analyze the original count column and use $\texttt{total\_cells}$ as an offset in the model. See the section [Use a GLM with an offset instead of a ratio of some measurement per total](#glm_offset)
 
 **Example 2: create a new column whose value is a function of values in other columns**
 
@@ -902,8 +923,7 @@ figx_wide[, glucose_auc := apply(Y, 1, auc, x = times)]
 
 ```
 
-
-#### Change the reference level of a factor
+##### Change the reference level of a factor
 
 Factor levels should always be arranged in a sensible order both for model fitting and for plotting. The first level in the vector is the reference level, which is an important concept for understanding the coefficients of the statistical models fit in this book.
 
@@ -913,10 +933,9 @@ figx[, treatment := factor(treatment,
                            levels = treatment_levels)]
 ```
 
+##### Converting a single column with all combinations of a 2 x 2 factorial experiment into two columns, each containing the two levels of a factor
 
-#### Converting a single column with all combinations of a 2 x 2 factorial experiment into two columns, each containing the two levels of a factor
-
-##### Example 1 (tstrspl)
+###### Example 1 (tstrspl)
 
 The example data are analyzed in the chapter [Linear models with two categorical $X$ -- Factorial linear models ("two-way ANOVA")](#factorial)
 
@@ -964,13 +983,14 @@ fig2j[, stimulation := factor(stimulation,
 # View(fig2j)
 ```
 
-1. Melting the wide data creates a column $\texttt{treatment}$ containing the column names of the wide data. The column type is character (often called "string" because each the variable is a string of characters). We want to split the string at the space, and put the first part into one new column and the second part into a second new column.
-2. The `tstrsplit()` function from the data.table package does this split for us. The first argument is the name of the column that contains the strings that we want to split. The second argument is the character that we want to split on. `c("genotype", "stimulation")` before `:=` sets the names of the new columns containing. This is a really elegant solution.
-3. I replaced the original column names of initial import for several reasons:
-* "Electrical Stimulation" is too long and will make the coefficient names unwieldy. This could be shortened to "Stimulation", but...
-* I don't want a factor name to include a level with the same name. I like the factor name $\texttt{stimulation}$, so I I renamed the level "Electrical Stimulation" to "Active".
-* We are splitting the column names using the space character " " and two of the original column names have two spaces, the 2nd inside what should be a single level ("Electrical Stimulation")
-* The read_excel function removed a space in the last column name, which is read as "Tlr9-/-Electrical Stimulation".
+1.  Melting the wide data creates a column $\texttt{treatment}$ containing the column names of the wide data. The column type is character (often called "string" because each the variable is a string of characters). We want to split the string at the space, and put the first part into one new column and the second part into a second new column.
+2.  The `tstrsplit()` function from the data.table package does this split for us. The first argument is the name of the column that contains the strings that we want to split. The second argument is the character that we want to split on. `c("genotype", "stimulation")` before `:=` sets the names of the new columns containing. This is a really elegant solution.
+3.  I replaced the original column names of initial import for several reasons:
+
+-   "Electrical Stimulation" is too long and will make the coefficient names unwieldy. This could be shortened to "Stimulation", but...
+-   I don't want a factor name to include a level with the same name. I like the factor name $\texttt{stimulation}$, so I I renamed the level "Electrical Stimulation" to "Active".
+-   We are splitting the column names using the space character " " and two of the original column names have two spaces, the 2nd inside what should be a single level ("Electrical Stimulation")
+-   The read_excel function removed a space in the last column name, which is read as "Tlr9-/-Electrical Stimulation".
 
 Here is a peek at the data prior to melting wide to long
 
@@ -988,7 +1008,7 @@ fig2j[c(1:3,27:29),] |>
   kable_styling()
 ```
 
-##### Example 2
+###### Example 2
 
 Source: [Tauriello, D., Palomo-Ponce, S., Stork, D. et al. TGFβ drives immune evasion in genetically reconstituted colon cancer metastasis. Nature 554, 538–543](2018) doi:10.1038/nature25492
 
@@ -1009,7 +1029,7 @@ tumor[, name := factor(name)]
 
 ```
 
-The analysis of the data in Fig. 4h specifies a single $X$ variable "Treatment" with four levels (or groups): "Con", "Gal", "aPD-L1", and "Gal+aPD-L1". These levels indicate that the design is actually **factorial** with two factors, each with two levels. The first factor has levels "no Gal" and "Gal". The second factor has levels "no aPD-L1", "aPD-L1". The single column Treatment "flattens" the  2 X 2 factorial design to a 4 x 1 design. In general, we would want to analyze an experiment like this as factorial model, because this allows us to make inferences about the *interaction effect* between the two factors. For these inferences, we need a standard error, or a confidence interval, or a *p*-value of the estimate, which we can easily get from the factorial model. In order to analyze the data with a factorial model, we need to create two new columns -- one column is the factor variable containing the two levels of Gal and one column is the factor variable containing the two levels of aPD-L1.
+The analysis of the data in Fig. 4h specifies a single $X$ variable "Treatment" with four levels (or groups): "Con", "Gal", "aPD-L1", and "Gal+aPD-L1". These levels indicate that the design is actually **factorial** with two factors, each with two levels. The first factor has levels "no Gal" and "Gal". The second factor has levels "no aPD-L1", "aPD-L1". The single column Treatment "flattens" the 2 X 2 factorial design to a 4 x 1 design. In general, we would want to analyze an experiment like this as factorial model, because this allows us to make inferences about the *interaction effect* between the two factors. For these inferences, we need a standard error, or a confidence interval, or a *p*-value of the estimate, which we can easily get from the factorial model. In order to analyze the data with a factorial model, we need to create two new columns -- one column is the factor variable containing the two levels of Gal and one column is the factor variable containing the two levels of aPD-L1.
 
 ```{r}
 gal_levels <- c("no Gal", "Gal")
@@ -1059,18 +1079,17 @@ tumor2[!is.na(num_positive_per_mm), .(N=.N), by=.(treatment, gal, apdl1)]
 
 Remember Rule #1. Always copy and paste any text that will be inserted into quotes. This is easily done here by typing `unique(tumor$treatment)` into the console. This function returns the unique values of the column "treatment" of the data.table "tumor".
 
-> unique(tumor$treatment)
-[1] "Con"        "Gal"        "aPD-L1"     "Gal+aPD-L1"
+> unique(tumor\$treatment) \[1\] "Con" "Gal" "aPD-L1" "Gal+aPD-L1"
 
 Now, copy the name of a level and paste into your code. Repeat until done.
 
-### Missing data
+#### Missing data
 
 Source: [Deletion of Cdkn1b in ACI rats leads to increased proliferation and pregnancy-associated changes in the mammary gland due to perturbed systemic endocrine environment](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1008002)
 
 [Source data](https://doi.org/10.1371/journal.pgen.1008002.s008)
 
-Supplement Figure 1F of this paper shows weight as a function of age class and genotype for the whole body and 8 organs. There are some missing weights in the Excel-archived data. These missing data are designated with a minus "-" sign. To import these data in correctly, use the `na = ` argument in the `read_excel` function.
+Supplement Figure 1F of this paper shows weight as a function of age class and genotype for the whole body and 8 organs. There are some missing weights in the Excel-archived data. These missing data are designated with a minus "-" sign. To import these data in correctly, use the `na =` argument in the `read_excel` function.
 
 ```{r, message=FALSE}
 file_folder <- "Deletion of Cdkn1b in ACI rats leads to increased proliferation and pregnancy-associated changes in the mammary gland due to perturbed systemic endocrine environment"
@@ -1093,12 +1112,13 @@ fig_s1f[, age_class := ifelse(age_at_sac_wks <= 6.0, "4-6", "8+")]
 
 Notes
 
-1. In R, a value of "NA" represents missing.
-1. The default value for `na = ` is an empty (or blank) cell (not a space but a cell that is empty).
-2. `na = ` accepts a list of strings, for example `na = c("", "-99", "--")` that will all be read as na.
+1.  In R, a value of "NA" represents missing.
+2.  The default value for `na =` is an empty (or blank) cell (not a space but a cell that is empty).
+3.  `na =` accepts a list of strings, for example `na = c("", "-99", "--")` that will all be read as na.
 
-#### Handling missing data
-##### Many base R functions used for summary measures require NA handling 
+##### Handling missing data
+
+###### Many base R functions used for summary measures require NA handling
 
 ```{r}
 mean(fig_s1f[, ovary]) # returns "NA"
@@ -1111,17 +1131,19 @@ sum(fig_s1f[, ovary]) # returns "NA"
 sum(fig_s1f[, ovary], na.rm = TRUE) # returns the mean
 
 ```
+
 There are many ways to get the sample size for a particular variable. Be careful if using `length()` which counts NA as part of the vector of values.
 
-##### The !is.na function is useful
+###### The !is.na function is useful
 
 ```{r}
 length(fig_s1f[, ovary])
 length(fig_s1f[!is.na(ovary), ovary])
 ```
+
 Notes
 
-1. `!is.na(ovary)` is taking the subset of rows of fig_s1f for which the value of "ovary" is not NA (!is.na is read "not is.na")
+1.  `!is.na(ovary)` is taking the subset of rows of fig_s1f for which the value of "ovary" is not NA (!is.na is read "not is.na")
 
 This is especially useful if you are creating your own code uses counts. Here I create a table of means, standard error of the mean, and 95% CIs of the mean for each genotype group. But first, this script generates the wrong N for each group (since there are missing values), although the mean and SD are correct.
 
@@ -1146,7 +1168,7 @@ spleen_summary[, upper := mean + se*qt(.975, (n-1))]
 spleen_summary
 ```
 
-##### ggplot functions automatically handle missing values
+###### ggplot functions automatically handle missing values
 
 with a useful warning.
 
@@ -1157,9 +1179,9 @@ qplot(x = body_wt_g_sac,
       data = fig_s1f)
 ```
 
-##### Regression model functions (lm, glm, gls, etc.) handle missing values by default
+###### Regression model functions (lm, glm, gls, etc.) handle missing values by default
 
-Missing data in regression model functions such as `lm` are handled using the argument `na.action = ` and the default is "na.omit", which omits any rows that contain a missing value in one or more of the model variables (it includes rows if these contain missing values only in the columns not included in the model). It's as if the user took the subset of data including only the columns containing the model variables and then deleted any row with missing values.
+Missing data in regression model functions such as `lm` are handled using the argument `na.action =` and the default is "na.omit", which omits any rows that contain a missing value in one or more of the model variables (it includes rows if these contain missing values only in the columns not included in the model). It's as if the user took the subset of data including only the columns containing the model variables and then deleted any row with missing values.
 
 Here is the coefficient table of the fit model object that did not explictly tell the `lm` function how to handle missing data.
 
@@ -1168,6 +1190,7 @@ m1 <- lm(spleen ~ body_wt_g_sac + genotype,
          data = fig_s1f)
 coef(summary(m1))
 ```
+
 Here is the coefficient table of the fit model object that did explicitly tell `lm` how to handle missing data, using the argument `na.action = "na.exclude"`. These coefficient tables are the same.
 
 ```{r}
@@ -1177,7 +1200,7 @@ m2 <- lm(spleen ~ body_wt_g_sac + genotype,
 coef(summary(m2))
 ```
 
-#### But...beware of fitted, predicted, or residual values from regression model functions unless you've explictly told the function how to handle missing values
+##### But...beware of fitted, predicted, or residual values from regression model functions unless you've explictly told the function how to handle missing values
 
 **Use `na.action = "na.exclude"`** if you want to add the fitted (or predicted) values or residuals as new columns in the original data object (fig_sf1). Compare the length of the fitted values vector from models m1 (using the default "na.omit") and m2 (using the "na.exclude").
 
@@ -1186,10 +1209,11 @@ length(fitted(m1))
 length(fitted(m2))
 
 ```
+
 There are 55 observations (rows in the data) but only 42 complete rows with no missing values. The vector of fitted values from m1 has 42 fitted values. The vector of fitted values from m2 has 55 elements, the 42 fitted values plus 13 NA elements.
 
 This is important if we want to do something like add the fitted values (or residuals, or some function of these) to the original data object (fig_sf1). Here I compute the spleen weights adjusted to the mean body weight of the control ("+/+") group using the residuals from m1 and m2.
- 
+
 ```{r}
 mean_x_control <- mean(fig_s1f[genotype == "+/+", body_wt_g_sac])
 b <- coef(m1)
@@ -1206,7 +1230,7 @@ fig_s1f[, spleen_adj_m2 := b[1] +
 
 The computation of "spleen_adj_m1" returns a warning that the values of `residuals(m1)` were recycled (the first 42 elements of the new column were filled with the 42 residuals and the last 13 elements of the new column were filled with the first 13 residuals) -- after the first row of missing data, all of these computed adjusted values are wrong. Using `residuals(m2`), the adjusted values are matched to the correct row and the rows with missing variables do not have an adjusted value (because there is no residual to compute this).
 
-## Saving data
+### Saving data
 
 For many projects, it is uncommon to save data. I might save simulated data if it takes a long time (tens of minutes to hours or even days) to generate these and I simply want to work with the simulated data in the future and not have to regenerate it. Or I might save wrangled data if it takes a long time to import and wrangle and I want to analyze the wrangled data in the future and not have to re-import and re-wrangle it.
 
@@ -1242,9 +1266,9 @@ write.table(fig1h, save_file_path, sep = ",", quote = FALSE)
 
 Look at your project directory to make sure the file is where it should be! We used `write.table()` to create a tab-delimited text file using `sep = "\t"` to specify tabs to separate the row elements. "\t" is the standard character string for a tab. Check in your data_from folder (with the name "Drosophila serotonin 2A receptor signaling coordinates central metabolic processes to modulate aging in response to nutrient choice") and open the file in a text editor.
 
-## Exercises
+### Exercises
 
-1. Import and pretty-good-plot the data for Figure 2i of the Adipsin paper. You will need to download and archive the Excel file for "Figure 2". Store this within the "Adipsin preserves beta cells..." folder.
+1.  Import and pretty-good-plot the data for Figure 2i of the Adipsin paper. You will need to download and archive the Excel file for "Figure 2". Store this within the "Adipsin preserves beta cells..." folder.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 file_folder <- "Adipsin preserves beta cells in diabetic mice and associates with protection from type 2 diabetes in humans"
@@ -1263,10 +1287,9 @@ adipsin_fig2i <- read_excel(file_path,
 
 ```
 
-
-* The data are the percent of cells staining for [NKX6.1](https://en.wikipedia.org/wiki/NKX6-1), which is a transcription factor protein that regulates beta cell development in the pancreas. Beta cells sense glucose levels in the blood and secrete insulin. Disruption of the insulin signaling system results in Diabetes mellitus.
-* The data are in wide format, with each treatment group in a separate column. The data need to be melted into long format with a new column called "treatment".
-* This will give you a pretty good plot of the data (if the data object is named "adipsin_fig2i")
+-   The data are the percent of cells staining for [NKX6.1](https://en.wikipedia.org/wiki/NKX6-1), which is a transcription factor protein that regulates beta cell development in the pancreas. Beta cells sense glucose levels in the blood and secrete insulin. Disruption of the insulin signaling system results in Diabetes mellitus.
+-   The data are in wide format, with each treatment group in a separate column. The data need to be melted into long format with a new column called "treatment".
+-   This will give you a pretty good plot of the data (if the data object is named "adipsin_fig2i")
 
 ```{r, warning=FALSE, message=FALSE}
 ggstripchart(data = adipsin_fig2i,
@@ -1275,8 +1298,7 @@ ggstripchart(data = adipsin_fig2i,
              add = "mean_se")
 ```
 
-
-2. Import and quick pretty-good-plot the data for Figure 3b of the PI3K paper. You will need to download and archive the Excel file for "Figure 3". Store this within the "Suppression of insulin feedback enhances..." folder.
+2.  Import and quick pretty-good-plot the data for Figure 3b of the PI3K paper. You will need to download and archive the Excel file for "Figure 3". Store this within the "Suppression of insulin feedback enhances..." folder.
 
 ```{r, echo=FALSE, message=FALSE}
 folder <- "Suppression of insulin feedback enhances the efficacy of PI3K inhibitors"
@@ -1299,10 +1321,9 @@ pi3k_fig3b <- melt(data = pi3k_fig3b_wide,
 
 ```
 
-
-* The data are [c-peptide](https://en.wikipedia.org/wiki/C-peptide) levels in response to the treatments. C-peptide is cleaved from the pro-insulin polypeptide and circulates in the blood and is a marker of how much insulin is being produced by the beta cells of the pancreas. 
-* The data are in wide format, with each treatment group in a separate column. The data need to be melted into long format with a new column called "treatment".
-* Modify the code from exercise 1 to pretty-good-plot the data as in exercise 1.
+-   The data are [c-peptide](https://en.wikipedia.org/wiki/C-peptide) levels in response to the treatments. C-peptide is cleaved from the pro-insulin polypeptide and circulates in the blood and is a marker of how much insulin is being produced by the beta cells of the pancreas.
+-   The data are in wide format, with each treatment group in a separate column. The data need to be melted into long format with a new column called "treatment".
+-   Modify the code from exercise 1 to pretty-good-plot the data as in exercise 1.
 
 ```{r, echo=FALSE}
 ggstripchart(data = pi3k_fig3b,
@@ -1311,4 +1332,3 @@ ggstripchart(data = pi3k_fig3b,
              add = "mean_se")
 
 ```
-
