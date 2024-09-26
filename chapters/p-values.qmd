@@ -40,7 +40,7 @@ To deconstruct what this means, and the implications of the meaning, let's use t
 
 Data source: [ASK1 inhibits browning of white adipose tissue in obesity](https://www.nature.com/articles/s41467-020-15483-7){target="_blank"}
 
-```{r p-value-fig_2i, echo=FALSE, message=FALSE, warning=FALSE}
+```{r p-value-fig2i, echo=FALSE, message=FALSE, warning=FALSE}
 data_from <- "ASK1 inhibits browning of white adipose tissue in obesity"
 file_name <- "41467_2020_15483_MOESM4_ESM no_gels.xlsx"
 file_path <- here(data_folder, data_from, file_name)
@@ -49,7 +49,7 @@ fig_2_sheet <- "Source Date_Figure 2"
 
 range_2i <- "A265:G266"
 treatment_levels <- c("ASK1F/F", "ASK1Δadipo")
-fig_2i <- read_excel(file_path,
+fig2i <- read_excel(file_path,
                      sheet = fig_2_sheet,
                      range = range_2i,
                      col_names = FALSE) |>
@@ -60,32 +60,32 @@ fig_2i <- read_excel(file_path,
        value.name = "liver_tg") |>
   na.omit()
 
-fig_2i[, treatment := factor(treatment, treatment_levels)]
+fig2i[, treatment := factor(treatment, treatment_levels)]
 
-# View(fig_2i)
+# View(fig2i)
 
 ```
 
-```{r p-value-fig_2i_m1}
-fig_2i_m1 <- lm(liver_tg ~ treatment, data = fig_2i)
+```{r p-value-fig2i_m1}
+fig2i_m1 <- lm(liver_tg ~ treatment, data = fig2i)
 ```
 
-The chunk above fits a linear model with `liver_tg` as the response variable and `treatment` as the single $X$-varaiable. Figure @fig-fig2i is the plot of the modeled means, 95% confidence intervals of the mean, and *p*-value of the significance test of the effect of treatment on liver triacylglycerol.
+The chunk above fits a linear model with `liver_tg` as the response variable and `treatment` as the single $X$-varaiable. @fig-pvals-fig2i is the plot of the modeled means, 95% confidence intervals of the mean, and *p*-value of the significance test of the effect of treatment on liver triacylglycerol.
 
-```{r p-value-fig2i-fig, echo=FALSE, message=FALSE, warning=FALSE}
+```{r}
+#| echo: false
+#| label: fig-pvals-fig2i
+#| fig-cap: "UCP1 expression, relative to the mean level in the control group. Mean (circle) and 95% confidence interval (line) are shown. Unadjusted p-values are from linear model with sh-RNA treatment and LPS treatment fully crossed."
 
-#| label: fig-fig2i
-#| fig-cap: "UCP1 expression, relative to the mean level in the control group. Mean (circle) and 95 percent confidence interval (line) are shown. Unadjusted p-values are from linear model with sh-RNA treatment and LPS treatment fully crossed."
-
-fig_2i_m1_emm <- emmeans(fig_2i_m1, specs = "treatment")
-fig_2i_m1_pairs <- contrast(fig_2i_m1_emm,
+fig2i_m1_emm <- emmeans(fig2i_m1, specs = "treatment")
+fig2i_m1_pairs <- contrast(fig2i_m1_emm,
                             method = "revpairwise") |>
   summary(infer = TRUE)
 
 gg1 <- ggplot_the_response(
-  fig_2i_m1,
-  fig_2i_m1_emm,
-  fig_2i_m1_pairs,
+  fig2i_m1,
+  fig2i_m1_emm,
+  fig2i_m1_pairs,
   y_label = "Liver TG (µmol per g liver)",
   contrast_rows = "all",
   palette = pal_okabe_ito_4,
@@ -94,21 +94,21 @@ gg1 <- ggplot_the_response(
 gg1
 ```
 
-```{r pvalue-fig_2i_m1_coef, echo=FALSE}
-fig_2i_m1_coef_p1 <- summary(fig_2i_m1) |>
-  coef()
-fig_2i_m1_coef_p2  <- confint(fig_2i_m1)
-fig_2i_m1_coef <- cbind(fig_2i_m1_coef_p1,
-                        fig_2i_m1_coef_p2)
+```{r pvalue-fig2i_m1_coef, echo=FALSE}
+fig2i_m1_coef <- cbind(coef(summary(fig2i_m1)),
+                        confint(fig2i_m1))
+colnames(fig2i_m1_coef)[4] <- "p value"
 ```
 
-Figure @fig-fig2i.
-The coefficients of the model, and the standard error, 95% confidence interval, test-statistic, and *p*-value of each coefficient are shown in Table \@ref(tab:pvalue-coef-table) Recall from Chapter \@ref(analyzing-experimental-data-with-a-linear-model) that, with this model, the coefficient for the intercept term is the mean `liver_tg` for the control group, which is the estimate of the true mean for a mice with functional ASK1 protein. And the coefficient for the treatmentASK1Δadipo term is the difference in means between the knockout and control group, which is the estimate for the true effect of knocking out ASK1 in the adipose tissue. The *p*-value for this "effect" term is 0.012. How do we interpret this number?
+The coefficients of the model, and the standard error, 95% confidence interval, test-statistic, and *p*-value of each coefficient are shown in @tbl-pval-fig2i. Recall from @sec-intro that, with this model, the coefficient for the intercept term is the mean `liver_tg` for the control group, which is the estimate of the true mean for a mice with functional ASK1 protein. And the coefficient for the treatmentASK1Δadipo term is the difference in means between the knockout and control group, which is the estimate for the true effect of knocking out ASK1 in the adipose tissue. The *p*-value for the estimate of the effect is 0.012. How do we interpret this number?
 
-```{r pvalue-coef-table, echo=FALSE}
-#colnames(fig_2i_m1_coef) <- c("Estimate", "SE", "t", "p", "2.5 %", "97.5 %")
-knitr::kable(fig_2i_m1_coef,
-             digits = c(1, 2, 1, 3, 1, 1)) |>
+```{r}
+#| echo: false
+#| label: tbl-pval-fig2i
+#| tbl-cap: Coefficient table of fig2i_m1
+
+kable(fig2i_m1_coef,
+      digits = c(1, 2, 1, 3, 1, 1)) |>
   kable_styling()
 ```
 
@@ -122,23 +122,23 @@ A thought experiment: You open a google sheet and insert 12 standard, normal ran
 
 Some asides to the thought experiment: First, why "as big or bigger" and not just the probability of the value itself? The reason is that the probability of finding the exact *t* is 1/infinity, which doesn't do us much good. So instead we compute the probability of finding *t* as big, or bigger, than our observed *t*. Second, the *t*-test probability described above is a "one-tail probability". Because a difference can be both in the positive direction and the negative direction, we usually want to count all the $t \ge 0.72$ and the $t \le -0.72$ and then add these two counts to compute the frequency of *as extreme or more extreme* values. This is called a "two-tailed probability" because we find extremes at both tails of the distribution. Third, we don't really count $t \ge 0.72$ but take advantage of the beautiful mathematical properties of the theoretical *t* distribution, which allows us to compute the frequentist probability (expected long range frequency) given the *t*-value and the degrees of freedom using the *t*-distribution.
 
-Now what do I mean with the phrase "null is true"? Most people equate "null is true" with "no difference in means" but the phrase entails much more than this. Effectively, the phrase is short for "all assumptions used to compute" the *p*-value (see the Sander Greenland quote at the start of this chapter). A *p*-value is based on modeling the real data with a theoretical sample in which all the values were randomly sampled from the same distribution and the assignment of the individual values to treatment was random. Random sampling from the same distribution has three important consequences. First, random assignment to treatment group means that the expected means of each group are the same, or put differently, the expected difference in means between the assigned groups is zero. Second, random assignment to treatment *also* means that the expected variances of the two groups are equal. And third, random sampling means that the values of each point are independent -- we cannot predict the value of one point knowing information about any other point. **Here is what is super important about this**: a low *p*-value is more likely if *any* one of these consequences is untrue about our data. A low *p*-value could arise from a difference in true means, or it could arise from a difference in true variances, or it could arise if the $Y$ values are not independent of each other. This is why we need certain assumptions to make a *p*-value meaningful for empirical data. By assuming independent error and homogenous (equal) variances in our two samples, a low *p*-value is evidence of unequal means.
+Now what do I mean with the phrase "null is true"? Most people equate "null is true" with "no difference in means" but the phrase entails much more than this. Effectively, the phrase is short for "all assumptions used to compute" the *p*-value (see the Sander Greenland quote at the start of this chapter). A *p*-value is based on modeling the real data with a theoretical sample in which all the values were randomly sampled from the same distribution and the assignment of the individual values to treatment was random. Random sampling from the same distribution has three important consequences. First, random assignment to treatment group means that the expected means of each group are the same, or put differently, the expected difference in means between the assigned groups is zero. Second, random assignment to treatment *also* means that the expected variances of the two groups are equal. And third, random sampling means that the values of each point are independent -- we cannot predict the value of one point knowing information about any other point. **Here is what is super important about this**: a *p*-value is less reliable if *any* one of these consequences is untrue about our data. A low *p*-value could arise from a difference in true means, or it could arise from a difference in true variances, or it could arise if the $Y$ values are not independent of each other. This is why we need certain assumptions to make a *p*-value meaningful for empirical data. By assuming independent error and homogenous (equal) variances in our two samples, a low *p*-value is evidence of unequal means.
 
 Let's summarize: A pretty good definition of a *p*-value is: the long-run frequency of observing a test-statistic as large or larger than the observed statistic, if the null were true. A more succinct way to state this is
 
-\begin{equation}
+$$
 p = \mathrm{prob}(t \ge t_o | H_o)
-\end{equation}
+$$
 
 where *t* is a hypothetically sampled *t*-value from a null distribution, $t_o$ is the observed *t*-value, and $H_o$ is the null hypothesis. Part of the null hypothesis is the expected value of the parameter estimated is usually (but not always) zero -- this can be called the nil null. For example, if there is no ASK1 deletion effect on liver TG levels, then the expected difference between the means of the control and knockout mice is zero. Or, 
 
-\begin{equation}
+$$
 \mathrm{E}(\bar{Y}_{knockout} - \bar{Y}_{control} | H_o) = 0.0
-\end{equation}
+$$
 
 ## Pump your intuition -- Creating a null distribution
 
-The mean `liver_tg` in the knockout treatment is `r round(abs(fig_2i_m1_coef["treatmentASK1Δadipo","Estimate"]), 1)` µmol less than the mean `liver_tg` in the control treatment. This is the measured effect, or the **observed differences in means**. How confident are we in this effect? Certainly, if the researchers did the experiment comparing two control (ASK1F/F) groups, instead of a control and treatment group, they would measure some difference in their means simply because of sampling (that is which mice were sampled for the experiment). So let's reframe the question: are the observed differences unusually large compared to a distribution of differences that would occur if there were no effect? That is, if the "null were true". To answer this, we compare our observed difference to this **null distribution**. This comparison gives the probability (a long-run frequency) of "sampling" a random difference from the null distribution of differences that is as large, or larger, than the observed difference.
+The mean `liver_tg` in the knockout treatment is `r round(abs(fig2i_m1_coef["treatmentASK1Δadipo","Estimate"]), 1)` µmol less than the mean `liver_tg` in the control treatment. This is the measured effect, or the **observed differences in means**. How confident are we in this effect? Certainly, if the researchers did the experiment comparing two control (ASK1F/F) groups, instead of a control and treatment group, they would measure some difference in their means simply because of sampling (that is which mice were sampled for the experiment). So let's reframe the question: are the observed differences unusually large compared to a distribution of differences that would occur if there were no effect? That is, if the "null were true". To answer this, we compare our observed difference to this **null distribution**. This comparison gives the probability (a long-run frequency) of "sampling" a random difference from the null distribution of differences that is as large, or larger, than the observed difference.
 
 What is a null distribution? It is the distribution of a statistic (such as a difference in means, or better, a *t*-value) if the null were true. Here, I hope to pump your intuition by generating a null distribution that is relevant to the ASK1 liver TG data. See if you can understand the script before reading the explanation below.
 
@@ -146,10 +146,10 @@ What is a null distribution? It is the distribution of a statistic (such as a di
 seed <- 1
 n_rep <- 10^5 # number of replicate experiments
 
-mu <- mean(fig_2i[treatment == "ASK1F/F", liver_tg]) 
-sigma <- sd(fig_2i[treatment == "ASK1F/F", liver_tg])
+mu <- mean(fig2i[treatment == "ASK1F/F", liver_tg]) 
+sigma <- sd(fig2i[treatment == "ASK1F/F", liver_tg])
 
-n <- nrow(fig_2i[treatment == "ASK1F/F",])
+n <- nrow(fig2i[treatment == "ASK1F/F",])
 
 d_null <- numeric(n_rep)
 for(rep in 1:n_rep){
@@ -181,7 +181,7 @@ What have we done above? using the `rnorm` function, we've simulated an infinite
 The distribution of the differences is a null distribution. Notice that the mode of the null distribution is at zero, and the mean (`r round(mean(d_null), 5)`) is close to zero (if we had set $n$ to infinity, the mean would be precisely zero). *The expected difference between the means of two random samples from the same population is, of course, zero*. Don't gloss over this statement if that is not obvious. The tails extend out to a little more than +20 and -20. What this means is that it would be uncommon to randomly sample a value from this distribution of differences *as or more extreme* than our observed difference, -21.6. By "more extreme", I mean any value more negative than -21.6 or more postive than 21.6. So it would be uncommon to sample a value from this distribution whose *absolute value* is as or more extreme than 21.6. How uncommon would this be?
 
 ```{r pvalue-d-null-p}
-diff_obs <- fig_2i_m1_coef["treatmentASK1Δadipo", "Estimate"]
+diff_obs <- fig2i_m1_coef["treatmentASK1Δadipo", "Estimate"]
 null_diff_extreme <- which(abs(d_null) > abs(diff_obs))
 n_extreme <- length(null_diff_extreme)
 (p_d_null = n_extreme/n_rep)
@@ -227,12 +227,12 @@ if(do_it){
   seed <- 1
   n_rep <- 10^5 # number of iterations
   
-  mu <- mean(fig_2i[treatment == "ASK1F/F", liver_tg])
-  sd_control <- sd(fig_2i[treatment == "ASK1F/F", liver_tg])
-  sd_knockout <- sd(fig_2i[treatment == "ASK1Δadipo", liver_tg])
+  mu <- mean(fig2i[treatment == "ASK1F/F", liver_tg])
+  sd_control <- sd(fig2i[treatment == "ASK1F/F", liver_tg])
+  sd_knockout <- sd(fig2i[treatment == "ASK1Δadipo", liver_tg])
   sigma <- sqrt((sd_control^2 + sd_knockout^2)/2)
   
-  n <- nrow(fig_2i[treatment == "ASK1F/F",])
+  n <- nrow(fig2i[treatment == "ASK1F/F",])
   
   treatment <- rep(c("WT", "KO"), each = n) |>
     factor(levels = c("WT", "KO")) # need this for for-loop
@@ -284,7 +284,7 @@ Now let's use this null distribution of *t*-values to compute a *p*-value
 # this is a "two-tail test"
 
 # first assign the observed t-value
-t_obs <- fig_2i_m1_coef["treatmentASK1Δadipo", "t value"]
+t_obs <- fig2i_m1_coef["treatmentASK1Δadipo", "t value"]
 
 
 # now count the number of t-values in t_dis as big or bigger than this
@@ -319,8 +319,8 @@ Let's create a script for a permutation test
 set.seed(1)
 n_iter <- 5000 # number of random permutations
 
-y <- fig_2i[, liver_tg]
-x <- fig_2i[, treatment]
+y <- fig2i[, liver_tg]
+x <- fig2i[, treatment]
 
 perm_diff <- numeric(n_iter) # this is a vector to hold the difference in means each iteration
 

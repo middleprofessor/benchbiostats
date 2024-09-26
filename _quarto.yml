@@ -25,7 +25,5 @@ format:
   html:
     theme: cosmo
     toc-depth: 4
-  pdf:
-    documentclass: scrreprt
 editor: source
 
