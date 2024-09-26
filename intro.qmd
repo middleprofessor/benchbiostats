@@ -1,4 +1,4 @@
-# Analyzing experimental data with a linear model {sec-intro}
+# Analyzing experimental data with a linear model {#sec-intro}
 
 ## This text is about using linear models to estimate treatment effects and the uncertainty in our estimates. This, raises the question, what is "an effect"?
 

@@ -36,7 +36,7 @@ source(source_path)
 
 A *p*-value *is a measure of the compatibility between observed data and the null model*. Here, "compatibility" is a probability, specifically, the probability of sampling a test-statistic as or more extreme than the observed test statistic, if all the assumptions used to compute the *p*-value are true.
 
-To deconstruct what this means, and the implications of the meaning, let's use the fig2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter # [Analyzing experimental data with a linear model](#ask1-intro).
+To deconstruct what this means, and the implications of the meaning, let's use the fig2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter [Analyzing experimental data with a linear model](@sec-intro).
 
 Data source: [ASK1 inhibits browning of white adipose tissue in obesity](https://www.nature.com/articles/s41467-020-15483-7){target="_blank"}
 
