@@ -36,7 +36,7 @@ source(source_path)
 
 A *p*-value *is a measure of the compatibility between observed data and the null model*. Here, "compatibility" is a probability, specifically, the probability of sampling a test-statistic as or more extreme than the observed test statistic, if all the assumptions used to compute the *p*-value are true.
 
-To deconstruct what this means, and the implications of the meaning, let's use the exp2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter # [Analyzing experimental data with a linear model](#ask1-intro).
+To deconstruct what this means, and the implications of the meaning, let's use the fig2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter # [Analyzing experimental data with a linear model](#ask1-intro).
 
 Data source: [ASK1 inhibits browning of white adipose tissue in obesity](https://www.nature.com/articles/s41467-020-15483-7){target="_blank"}
 
@@ -206,42 +206,56 @@ Let's repeat the simulation of a null distribution of mean differences above but
 
 I show the script, but don't just cut and paste the code. Spend time thinking about what the each line does. Explore it by copying parts and pasting into console.
 
-```{r pvalue-t-null, echo=TRUE, message=FALSE, warning=FALSE, fig.cap="Null distribution of t-values. The simulation generated 10,000 t-tests with a true null."}
+```{r pvalue-t-null, message=FALSE, warning=FALSE, fig.cap="Null distribution of t-values. The simulation generated 10,000 t-tests with a true null."}
 
-seed <- 1
-n_rep <- 10^5 # number of iterations
-
-mu <- mean(fig_2i[treatment == "ASK1F/F", liver_tg])
-sd_control <- sd(fig_2i[treatment == "ASK1F/F", liver_tg])
-sd_knockout <- sd(fig_2i[treatment == "ASK1Δadipo", liver_tg])
-sigma <- sqrt((sd_control^2 + sd_knockout^2)/2)
-
-n <- nrow(fig_2i[treatment == "ASK1F/F",])
-
-treatment <- rep(c("WT", "KO"), each = n) |>
-  factor(levels = c("WT", "KO")) # need this for for-loop
-t_null <- numeric(n)
-t_null_manual <- numeric(n)
-for(rep in 1:n_rep){
-  wt_sample <- rnorm(n, mean = mu, sd = sigma)
-  ko_sample <- rnorm(n, mean = mu, sd = sigma)
-
-  # way no.1 - compute the t-tests using the linear model
-  y <- c(wt_sample, ko_sample)
-  m1 <- lm(y ~ treatment)
-  t_null[rep] <- coef(summary(m1))["treatmentKO", "t value"]
+out_path <- here("output","chap_pval-tnull.Rds")
+do_it <- FALSE # set this to TRUE to run and save to output folder
+if(do_it){
+  seed <- 1
+  n_rep <- 10^5 # number of iterations
   
-  # way no. 2 - compute the t-tests manually!
-  # check to make sure these are the same as t_null !!!
-  diff <- mean(ko_sample) - mean(wt_sample)
-  se_diff <- sqrt(sd(ko_sample)^2/n + sd(wt_sample)^2/n)
-  t_null_manual[rep] <- diff/se_diff
-
+  mu <- mean(fig_2i[treatment == "ASK1F/F", liver_tg])
+  sd_control <- sd(fig_2i[treatment == "ASK1F/F", liver_tg])
+  sd_knockout <- sd(fig_2i[treatment == "ASK1Δadipo", liver_tg])
+  sigma <- sqrt((sd_control^2 + sd_knockout^2)/2)
+  
+  n <- nrow(fig_2i[treatment == "ASK1F/F",])
+  
+  treatment <- rep(c("WT", "KO"), each = n) |>
+    factor(levels = c("WT", "KO")) # need this for for-loop
+  t_null <- numeric(n)
+  t_null_manual <- numeric(n)
+  for(rep in 1:n_rep){
+    wt_sample <- rnorm(n, mean = mu, sd = sigma)
+    ko_sample <- rnorm(n, mean = mu, sd = sigma)
+    
+    # way no.1 - compute the t-tests using the linear model
+    y <- c(wt_sample, ko_sample)
+    m1 <- lm(y ~ treatment)
+    t_null[rep] <- coef(summary(m1))["treatmentKO", "t value"]
+    
+    # way no. 2 - compute the t-tests manually!
+    # check to make sure these are the same as t_null !!!
+    diff <- mean(ko_sample) - mean(wt_sample)
+    se_diff <- sqrt(sd(ko_sample)^2/n + sd(wt_sample)^2/n)
+    t_null_manual[rep] <- diff/se_diff
+  }
+  saveRDS(t_null, out_path)
 }
 
+t_null <- readRDS(out_path)
 
-# plot the null distribution of t-values
-qplot(t_null)
+t_data <- data.table(
+  "t_null" = t_null
+)
+
+ggplot(data = t_data,
+       aes(x = t_null)) +
+  geom_histogram(bins = 30,
+                 fill = pal_okabe_ito[1],
+                 color = "black") +
+  ylab("Count") +
+  theme_pubr()
 
 ```
 
@@ -267,13 +281,13 @@ count <- sum(abs(t_null) >= abs(t_obs))
 # the p-value is the frequency of t_dis >= t_obs, so divide
 # count by the total number of t-values in the distribution.
 # Again add one since the observed value counts as a sample
-(p_ASK1Δadipo <- count/(n_rep))
+(p_ASK1 <- count/(n_rep))
 
 ```
 
 Hey that looks pretty good! Compare this to the *p*-value in the coefficient table above.
 
-A *p*-value can be computed by counting the number of simulated *t*-values, *including the observed value*, that are equal to or more extreme (in either the positive or negative direction) than the observed *t*. Including the observed *t*, there are `r as.integer(count)` values that are more extreme than that observed. An approximate measure of *p* is this count divided by 100,001 (why is 1 added to the denominator?), which is `r p_ASK1Δadipo`. This simulation-based *p*-value is very (very!) close to that computed from the observed *t*-test.
+A *p*-value can be computed by counting the number of simulated *t*-values, *including the observed value*, that are equal to or more extreme (in either the positive or negative direction) than the observed *t*. Including the observed *t*, there are `r as.integer(count)` values that are more extreme than that observed. An approximate measure of *p* is this count divided by 100,001 (why is 1 added to the denominator?), which is `r p_ASK1`. This simulation-based *p*-value is very (very!) close to that computed from the observed *t*-test.
 
 ## P-values from the perspective of permutation
 
@@ -287,7 +301,7 @@ A permutation is a random re-arrangement of values in a column. Consider the man
 
 Let's create a script for a permutation test
 
-```{r pvalue-d-dist-perm, warning=FALSE, message=FALSE}
+```{r pvalue-d-dist-perm, eval=TRUE, warning=FALSE, message=FALSE}
 
 set.seed(1)
 n_iter <- 5000 # number of random permutations
@@ -295,26 +309,37 @@ n_iter <- 5000 # number of random permutations
 y <- fig_2i[, liver_tg]
 x <- fig_2i[, treatment]
 
-d_dist_perm <- numeric(n_iter)
+perm_diff <- numeric(n_iter) # this is a vector to hold the difference in means each iteration
 
 for(iter in 1:n_iter){
   xbar1 <- mean(y[x == "ASK1F/F"])
   xbar2 <- mean(y[x == "ASK1Δadipo"])
   
-  d_dist_perm[iter] <- xbar2 - xbar1
+  perm_diff[iter] <- xbar2 - xbar1
   
   # permute y
   y <- sample(y, replace=FALSE)
   # note that, when i=1, the first "permutation" is the original arrangement
 }
 
-qplot(d_dist_perm)
+diff_data <- data.table(
+  Difference = perm_diff
+)
+
+ggplot(data = diff_data,
+       aes(x = Difference)) +
+  geom_histogram(bins = 30,
+                 fill = pal_okabe_ito[1],
+                 color = "black") +
+  ylab("Count") +
+  theme_pubr()
+
 ```
 
 From this distribution of distances generated by random permuation of the response, we can compute a permutation *p*-value.
 
-```{rpvalue-d-dist-perm-p }
-(p_permute <- sum(abs(d_dist_perm) >= abs(d_dist_perm[1]))/n_iter)
+```{r pvalue-d-dist-perm-p }
+(p_permute <- sum(abs(perm_diff) >= abs(perm_diff[1]))/n_iter)
 ```
 
 ## Parametric vs. non-parametric statistics
@@ -440,17 +465,32 @@ gg
 I often ask students, "if there is no true effect (no difference in means), and we were to repeat an experiment thousands of times, what is the most likely *p*-value?". A common answer (although answers are uncommon) is $p = 0.5$. Sometimes I rephrase the question, if there is no true effect (no difference in means), and we were to repeat an experiment thousands of times, what do you think the distribution of *p*-values would look like?" The typical answer to this is a the distribtion will look like a normal curve with the peak at 0.5, (presumably the tails abruptly stop at 0 and 1).
 
 ```{r uniform, echo=FALSE}
-set.seed(2)
+set.seed(1)
 beta <- 0.0
 n <- 10
 m <- 10^4
 x <- matrix(rnorm(n*2*m), nrow=n*2)
 x[(n+1):(n*2),] <- x[(n+1):(n*2),] + beta
-pvalue <- numeric(m)
+pvalue <- numeric(m) # vector to keep pvalues from each iteration
 for(j in 1:m){
-  pvalue[j] <- t.test(x[1:n, j], x[(n+1):(2*n), j], var.equal=TRUE)$p.value
+  pvalue[j] <- t.test(x[1:n, j], x[(n+1):(2*n), j], var.equal = TRUE)$p.value
 }
-qplot(pvalue, breaks=seq(0,1,by=0.05))
+
+# move result into a data.table for plotting
+pvalue_data <- data.table(
+  pval = pvalue
+)
+
+ggplot(data = pvalue_data,
+       aes(x = pval)) +
+  geom_histogram(bins = 20,
+                 boundary = 0,
+                 fill = pal_okabe_ito[1],
+                 color = "black") +
+  xlab("P value") +
+  ylab("Count") +
+  theme_pubr()
+
 ```
 
 ### Misconception: 0.05 is the lifetime rate of false discoveries

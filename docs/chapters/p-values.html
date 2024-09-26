@@ -310,7 +310,7 @@ window.Quarto = {
 
 <p><em>A general perception of a “replication crisis” may thus reflect failure to recognize that statistical tests not only test hypotheses, but countless assumptions and the entire environment in which research takes place. Because of all the uncertain and unknown assumptions that underpin statistical inferences, we should treat inferential statistics as highly unstable local descriptions of relations between assumptions and data, rather than as providing generalizable inferences about hypotheses or models. And that means we should treat statistical results as being much more incomplete and uncertain than is currently the norm.</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>A <em>p</em>-value <em>is a measure of the compatibility between observed data and the null model</em>. Here, “compatibility” is a probability, specifically, the probability of sampling a test-statistic as or more extreme than the observed test statistic, if all the assumptions used to compute the <em>p</em>-value are true.</p>
-<p>To deconstruct what this means, and the implications of the meaning, let’s use the exp2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter # <a href="#ask1-intro">Analyzing experimental data with a linear model</a>.</p>
+<p>To deconstruct what this means, and the implications of the meaning, let’s use the fig2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter # <a href="#ask1-intro">Analyzing experimental data with a linear model</a>.</p>
 <p>Data source: <a href="https://www.nature.com/articles/s41467-020-15483-7" target="_blank">ASK1 inhibits browning of white adipose tissue in obesity</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>fig_2i_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(liver_tg <span class="sc">~</span> treatment, <span class="at">data =</span> fig_2i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -420,17 +420,17 @@ p = \mathrm{prob}(t \ge t_o | H_o)
 <li>repeat 1-3 100,000 times, each time saving the difference in means.</li>
 <li>plot the distribution of the 100,000 differences using a histogram</li>
 </ol>
-<p>The distribution of the differences is a null distribution. Notice that the mode of the null distribution is at zero, and the mean (-0.03962) is close to zero (if we had set <span class="math inline">\(n\)</span> to infinity, the mean would be precisely zero). <em>The expected difference between the means of two random samples from the same population is, of course, zero</em>. Don’t gloss over this statement if that is not obvious. The tails extend out to a little more than +20 and -20. What this means is that it would be uncommon to randomly sample a value from this distribution of differences <em>as or more extreme</em> than our observed difference, -21.6. By “more extreme”, I mean any value more negative than -21.6 or more postive than 21.6. So it would be uncommon to sample a value from this distribution whose <em>absolute value</em> is as or more extreme than 21.6. How uncommon would this be?</p>
+<p>The distribution of the differences is a null distribution. Notice that the mode of the null distribution is at zero, and the mean (0.02092) is close to zero (if we had set <span class="math inline">\(n\)</span> to infinity, the mean would be precisely zero). <em>The expected difference between the means of two random samples from the same population is, of course, zero</em>. Don’t gloss over this statement if that is not obvious. The tails extend out to a little more than +20 and -20. What this means is that it would be uncommon to randomly sample a value from this distribution of differences <em>as or more extreme</em> than our observed difference, -21.6. By “more extreme”, I mean any value more negative than -21.6 or more postive than 21.6. So it would be uncommon to sample a value from this distribution whose <em>absolute value</em> is as or more extreme than 21.6. How uncommon would this be?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>diff_obs <span class="ot">&lt;-</span> fig_2i_m1_coef[<span class="st">"treatmentASK1Δadipo"</span>, <span class="st">"Estimate"</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>null_diff_extreme <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">abs</span>(d_null) <span class="sc">&gt;</span> <span class="fu">abs</span>(diff_obs))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>n_extreme <span class="ot">&lt;-</span> <span class="fu">length</span>(null_diff_extreme)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(<span class="at">p_d_null =</span> n_extreme<span class="sc">/</span>n_rep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.00569</code></pre>
+<pre><code>[1] 0.00541</code></pre>
 </div>
 </div>
-<p>In the 100,000 runs, only 569 generated data with an absolute difference as large or larger than 21.6 (an “absolute difference” is the absoute value of the difference). The frequency of differences as large or larger than our observed difference is 0.00569. This frequency is the <em>probability</em> of sampling a difference as or more extreme than the observed difference “under the null”. It is a <em>p</em>-value, but it is not the <em>p</em>-value in the coefficient table. This is because the <em>p</em>-value in the coefficient table is computed from a distribution of <em>t</em>-values, not raw differences. This raises the question, what is a <em>t</em>-distribution, and a <em>t</em>-value, more generally?</p>
+<p>In the 100,000 runs, only 541 generated data with an absolute difference as large or larger than 21.6 (an “absolute difference” is the absoute value of the difference). The frequency of differences as large or larger than our observed difference is 0.00541. This frequency is the <em>probability</em> of sampling a difference as or more extreme than the observed difference “under the null”. It is a <em>p</em>-value, but it is not the <em>p</em>-value in the coefficient table. This is because the <em>p</em>-value in the coefficient table is computed from a distribution of <em>t</em>-values, not raw differences. This raises the question, what is a <em>t</em>-distribution, and a <em>t</em>-value, more generally?</p>
 </section>
 <section id="a-null-distribution-of-t-values-the-t-distribution" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="a-null-distribution-of-t-values-the-t-distribution"><span class="header-section-number">6.3</span> A null distribution of <em>t</em>-values – the <em>t</em> distribution</h2>
@@ -457,40 +457,54 @@ t = \frac{\bar{y}_2 - \bar{y}_1}{SE_{\bar{y}_2 - \bar{y}_1}}
 </ol>
 <p>I show the script, but don’t just cut and paste the code. Spend time thinking about what the each line does. Explore it by copying parts and pasting into console.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">5</span> <span class="co"># number of iterations</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>, liver_tg])</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sd_control <span class="ot">&lt;-</span> <span class="fu">sd</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>, liver_tg])</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>sd_knockout <span class="ot">&lt;-</span> <span class="fu">sd</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1Δadipo"</span>, liver_tg])</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_control<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_knockout<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>,])</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>), <span class="at">each =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>)) <span class="co"># need this for for-loop</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>t_null <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>t_null_manual <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(rep <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_rep){</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  wt_sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  ko_sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># way no.1 - compute the t-tests using the linear model</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">c</span>(wt_sample, ko_sample)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  t_null[rep] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmentKO"</span>, <span class="st">"t value"</span>]</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># way no. 2 - compute the t-tests manually!</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># check to make sure these are the same as t_null !!!</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(ko_sample) <span class="sc">-</span> <span class="fu">mean</span>(wt_sample)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  se_diff <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sd</span>(ko_sample)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n <span class="sc">+</span> <span class="fu">sd</span>(wt_sample)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n)</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  t_null_manual[rep] <span class="ot">&lt;-</span> diff<span class="sc">/</span>se_diff</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the null distribution of t-values</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(t_null)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>,<span class="st">"chap_pval-tnull.Rds"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to output folder</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  seed <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  n_rep <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">5</span> <span class="co"># number of iterations</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>, liver_tg])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  sd_control <span class="ot">&lt;-</span> <span class="fu">sd</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>, liver_tg])</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  sd_knockout <span class="ot">&lt;-</span> <span class="fu">sd</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1Δadipo"</span>, liver_tg])</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_control<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_knockout<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(fig_2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>,])</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>), <span class="at">each =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">factor</span>(<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>)) <span class="co"># need this for for-loop</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  t_null <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  t_null_manual <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(rep <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_rep){</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    wt_sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    ko_sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># way no.1 - compute the t-tests using the linear model</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(wt_sample, ko_sample)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    t_null[rep] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmentKO"</span>, <span class="st">"t value"</span>]</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># way no. 2 - compute the t-tests manually!</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># check to make sure these are the same as t_null !!!</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(ko_sample) <span class="sc">-</span> <span class="fu">mean</span>(wt_sample)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    se_diff <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sd</span>(ko_sample)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n <span class="sc">+</span> <span class="fu">sd</span>(wt_sample)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    t_null_manual[rep] <span class="ot">&lt;-</span> diff<span class="sc">/</span>se_diff</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(t_null, out_path)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>t_null <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>t_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"t_null"</span> <span class="ot">=</span> t_null</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> t_data,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> t_null)) <span class="sc">+</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>,</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> pal_okabe_ito[<span class="dv">1</span>],</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -520,13 +534,13 @@ t = \frac{\bar{y}_2 - \bar{y}_1}{SE_{\bar{y}_2 - \bar{y}_1}}
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># the p-value is the frequency of t_dis &gt;= t_obs, so divide</span></span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># count by the total number of t-values in the distribution.</span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Again add one since the observed value counts as a sample</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>(p_ASK1Δadipo <span class="ot">&lt;-</span> count<span class="sc">/</span>(n_rep))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>(p_ASK1 <span class="ot">&lt;-</span> count<span class="sc">/</span>(n_rep))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.01172</code></pre>
+<pre><code>[1] 0.01146</code></pre>
 </div>
 </div>
 <p>Hey that looks pretty good! Compare this to the <em>p</em>-value in the coefficient table above.</p>
-<p>A <em>p</em>-value can be computed by counting the number of simulated <em>t</em>-values, <em>including the observed value</em>, that are equal to or more extreme (in either the positive or negative direction) than the observed <em>t</em>. Including the observed <em>t</em>, there are 1172 values that are more extreme than that observed. An approximate measure of <em>p</em> is this count divided by 100,001 (why is 1 added to the denominator?), which is 0.01172. This simulation-based <em>p</em>-value is very (very!) close to that computed from the observed <em>t</em>-test.</p>
+<p>A <em>p</em>-value can be computed by counting the number of simulated <em>t</em>-values, <em>including the observed value</em>, that are equal to or more extreme (in either the positive or negative direction) than the observed <em>t</em>. Including the observed <em>t</em>, there are 1146 values that are more extreme than that observed. An approximate measure of <em>p</em> is this count divided by 100,001 (why is 1 added to the denominator?), which is 0.01146. This simulation-based <em>p</em>-value is very (very!) close to that computed from the observed <em>t</em>-test.</p>
 </section>
 <section id="p-values-from-the-perspective-of-permutation" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="p-values-from-the-perspective-of-permutation"><span class="header-section-number">6.4</span> P-values from the perspective of permutation</h2>
@@ -542,20 +556,30 @@ t = \frac{\bar{y}_2 - \bar{y}_1}{SE_{\bar{y}_2 - \bar{y}_1}}
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> fig_2i[, liver_tg]</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> fig_2i[, treatment]</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>d_dist_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>perm_diff <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter) <span class="co"># this is a vector to hold the difference in means each iteration</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  xbar1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(y[x <span class="sc">==</span> <span class="st">"ASK1F/F"</span>])</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  xbar2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(y[x <span class="sc">==</span> <span class="st">"ASK1Δadipo"</span>])</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  d_dist_perm[iter] <span class="ot">&lt;-</span> xbar2 <span class="sc">-</span> xbar1</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  perm_diff[iter] <span class="ot">&lt;-</span> xbar2 <span class="sc">-</span> xbar1</span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># permute y</span></span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">sample</span>(y, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note that, when i=1, the first "permutation" is the original arrangement</span></span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(d_dist_perm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>diff_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">Difference =</span> perm_diff</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> diff_data,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Difference)) <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> pal_okabe_ito[<span class="dv">1</span>],</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -565,7 +589,12 @@ t = \frac{\bar{y}_2 - \bar{y}_1}{SE_{\bar{y}_2 - \bar{y}_1}}
 </div>
 </div>
 <p>From this distribution of distances generated by random permuation of the response, we can compute a permutation <em>p</em>-value.</p>
-<pre class="{rpvalue-d-dist-perm-p }"><code>(p_permute &lt;- sum(abs(d_dist_perm) &gt;= abs(d_dist_perm[1]))/n_iter)</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(p_permute <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(perm_diff) <span class="sc">&gt;=</span> <span class="fu">abs</span>(perm_diff[<span class="dv">1</span>]))<span class="sc">/</span>n_iter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0076</code></pre>
+</div>
+</div>
 </section>
 <section id="parametric-vs.-non-parametric-statistics" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="parametric-vs.-non-parametric-statistics"><span class="header-section-number">6.5</span> Parametric vs.&nbsp;non-parametric statistics</h2>
@@ -675,18 +704,18 @@ t = \frac{\bar{y}_2 - \bar{y}_1}{SE_{\bar{y}_2 - \bar{y}_1}}
 <p>Many researchers write results as if they believe that a small <em>p</em>-value means the effect is big or important. This may misconception may arise because of the ubiquitous use of “significant” to indicate a small p-value and “very” or “extremely” or “wicked” significant to indicate a really small p-value. Regardless, this is a misconception. A small p-value will usually result when there is high power (but can occur even if power is low) and power is a function of effect size, variability (the standard deviation), and sample size. A small <em>p</em> could result from a large effect size but can also result with a small effect size if the sample size is big enough.</p>
 <p>This is easy to simulate (see script below). Let’s model the effect of the genotype of a gene on height</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>genotype <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"+/+"</span>, <span class="st">"+/-"</span>, <span class="st">"-/-"</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">2</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> rho</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(n, <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma=</span>Sigma)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> X<span class="sc">%*%</span>beta <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(<span class="fu">summary</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>genotype <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"+/+"</span>, <span class="st">"+/-"</span>, <span class="st">"-/-"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">2</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> rho</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(n, <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma=</span>Sigma)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> X<span class="sc">%*%</span>beta <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(<span class="fu">summary</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate Std. Error   t value     Pr(&gt;|t|)
 (Intercept) 0.007472959 0.01007946 0.7414046 4.584656e-01
@@ -699,17 +728,17 @@ XX2         0.048228101 0.01170855 4.1190490 3.835033e-05</code></pre>
 <h3 data-number="6.7.5" class="anchored" data-anchor-id="misconception-a-low-p-value-indicates-high-model-fit-or-high-predictive-capacity"><span class="header-section-number">6.7.5</span> Misconception: a low <em>p</em>-value indicates high model fit or high predictive capacity</h3>
 <p>On page 606, of Lock et al “Statistics: Unlocking the Power of Data”, the authors state in item D “The p-value from the ANOVA table is 0.000 so the model as a whole is effective at predicting grade point averages.” This is incorrect. A p-value is not a measure of the predictive capability of a model because the p-value is a function of the signal, noise (unmodeled error), and <em>sample size</em> while predictive ability is a function of just the signal:noise ratio. If the signal:noise ratio is tiny, the predictive ability is small but the p-value can be tiny if the sample size is large. This is easy to simulate (see script below). The whole-model p-value is exceptionally small (0.00001002) but the relative predictive ability, measured by the <span class="math inline">\(R^2\)</span>, is near zero (0.002).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">2</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> rho</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(n, <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma=</span>Sigma)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.05</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> X<span class="sc">%*%</span>beta <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">2</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> rho</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(n, <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma=</span>Sigma)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="sc">-</span><span class="fl">0.05</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> X<span class="sc">%*%</span>beta <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:

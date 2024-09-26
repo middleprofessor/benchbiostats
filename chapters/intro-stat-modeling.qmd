@@ -1,4 +1,4 @@
-# An introduction to linear models {#intro-linear-models}
+# An introduction to linear models {#sec-intro-linear-models}
 
 ```{r setup-intro-lm-chapter, echo=FALSE, message=FALSE, warning=FALSE}
 # wrangling packages
@@ -190,7 +190,7 @@ fig_2c_explainer
 
 Linear models can be fit to experimental data in which the $X$ variable is categorical -- this is the focus of this text! For the model fit to the data in Figure (@fig-line)B, the coefficient of $X$ is the slope of the line. Perhaps surprisingly, 1) we can fit a model like equation (@eq-error-spec) to data in which the $X$ variable is categorical and 2) the coefficient of $X$ *is* a slope. How is this possible? The slope of a line is $\frac{y_2 - y_1}{x_2 - x_1}$ where $(x_1, y_1)$ and $(x_2, y_2)$ are the graph coordinates of any two points on the line. What is the denominator of the slope function $(x_2 - x_1)$ when $X$ is categorical?
 
-The solution to using a linear model with categorical $X$ is to recode the factor levels into numbers. An example of this was outlined in Chapter (@analyzing-experimental-data-with-a-linear-model) ([Analyzing experimental data with a linear model]). The value of $X$ for individual mouse *i* is a number that indicates the treatment assignment -- a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (Figure (@fig-intro-linear-models-cat-slope)). With the (0, 1) coding, $\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1$, so the denominator of the slope is equal to one and the slope is simply equal to the numerator $\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}$. The coefficient (which is a slope!) *is* the difference in conditional means.
+The solution to using a linear model with categorical $X$ is to recode the factor levels into numbers. An example of this was outlined in Chapter @sec-intro. The value of $X$ for individual mouse *i* is a number that indicates the treatment assignment -- a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (Figure (@fig-intro-linear-models-cat-slope)). With the (0, 1) coding, $\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1$, so the denominator of the slope is equal to one and the slope is simply equal to the numerator $\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}$. The coefficient (which is a slope!) *is* the difference in conditional means.
 
 ```{r intro-linear-models-cat-slope, echo=FALSE, warning = FALSE, message = FALSE, fig.cap="Illustration of the slope in a linear model with categorical X. The slope (the coefficient of X) is the difference in conditional means."}
 set.seed(3)

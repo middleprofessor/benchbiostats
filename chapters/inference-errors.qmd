@@ -19,6 +19,9 @@ library(ggsci)
 library(ggpubr)
 library(ggforce)
 library(cowplot)
+library(knitr)
+library(kableExtra)
+
 
 here <- here::here
 data_path <- "data"
@@ -42,93 +45,154 @@ It would probably come as a surprise to most researchers to learn that the size 
 #### Size example 1: the size of a *t*-test vs. a permutation test, when the data meet the assumptions
 
 ```{r, message=FALSE}
-set.seed(1)
-n <- 10
-n_iter <- 10000
-p_t <- numeric(n_iter)
-p_perm <- numeric(n_iter)
 
-treatment <- rep(c("cn", "tr"), each = n)
-for(iter in 1:n_iter){
-  sample_1 <- rnorm(n, mean = 10, sd = 1)
-  sample_2 <- rnorm(n, mean = 10, sd = 1)
-  y <- c(sample_1, sample_2)
-  m1 <- lm(y ~ treatment) # no data statement necessary because both variables in workspace
-  p_t[iter] <- coef(summary(m1))["treatmenttr", "Pr(>|t|)"]
+n_iter <- 10000
+out_path <- here("output", "chap_infer_error-p_data_1.Rds")
+do_it <- FALSE # set this to TRUE to run and save to the output folder
+if(do_it){
+  set.seed(1)
+  n <- 10
+  p_t <- numeric(n_iter)
+  p_perm <- numeric(n_iter)
   
-  m2 <- lmp(y ~ treatment,
-            perm = "Prob",
-            settings = FALSE)
-  p_perm[iter] <- coef(summary(m2))["treatment1", "Pr(Prob)"]
+  treatment <- rep(c("cn", "tr"), each = n)
+  for(iter in 1:n_iter){
+    sample_1 <- rnorm(n, mean = 10, sd = 1)
+    sample_2 <- rnorm(n, mean = 10, sd = 1)
+    y <- c(sample_1, sample_2)
+    m1 <- lm(y ~ treatment) # no data statement necessary because both variables in workspace
+    p_t[iter] <- coef(summary(m1))["treatmenttr", "Pr(>|t|)"]
+    
+    m2 <- lmp(y ~ treatment,
+              perm = "Prob",
+              settings = FALSE)
+    p_perm[iter] <- coef(summary(m2))["treatment1", "Pr(Prob)"]
+  }
+  p_data <- data.table(
+    t = p_t,
+    perm = p_perm
+  )
+  saveRDS(p_data, out_path)
 }
+
+p_data <- readRDS(out_path)
+p_t <- p_data[, t]
+p_perm <- p_data[, perm]
 size_t <- sum(p_t < 0.05)/n_iter
 size_perm <- sum(p_perm < 0.05)/n_iter
-size_table <- data.table(Method = c("lm", "perm"),
+size_table <- data.table(Method = c("t-test", "Permutation test"),
                          Size = c(size_t, size_perm))
-knitr::kable(size_table, digits = 4)
+size_table |>
+  kable(digits = 4) |>
+  kable_styling(full_width = FALSE)
+
 ```
 
 #### Size example 2: the size of a *t*-test vs. a permutation test, when the data have a right skewed distribution
 
 ```{r}
-set.seed(1)
-n <- 10
-n_iter <- 10000
-p_t <- numeric(n_iter)
-p_perm <- numeric(n_iter)
 
-treatment <- rep(c("cn", "tr"), each = n)
-for(iter in 1:n_iter){
-  #  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))
-  sample_1 <- rnegbin(n, mu = 100, theta = 1)
-  sample_2 <- rnegbin(n, mu = 100, theta = 1)
-  y <- c(sample_1, sample_2)
-  # qplot(x=treatment, y = y)
-  m1 <- lm(y ~ treatment) # no data statement necessary because both variables in workspace
-  p_t[iter] <- coef(summary(m1))["treatmenttr", "Pr(>|t|)"]
+out_path <- here("output", "chap_infer_error-p_data_2.Rds")
+n_iter <- 10000
+do_it <- FALSE # set this to TRUE to run and save to the output folder
+if(do_it){
+  set.seed(1)
+  n <- 10
+  p_t <- numeric(n_iter)
+  p_perm <- numeric(n_iter)
   
-  m2 <- lmp(y ~ treatment,
-            perm = "Prob",
-            settings = FALSE)
-  p_perm[iter] <- coef(summary(m2))["treatment1", "Pr(Prob)"]
+  treatment <- rep(c("cn", "tr"), each = n)
+  for(iter in 1:n_iter){
+    #  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))
+    sample_1 <- rnegbin(n, mu = 100, theta = 1)
+    sample_2 <- rnegbin(n, mu = 100, theta = 1)
+    y <- c(sample_1, sample_2)
+    # qplot(x=treatment, y = y)
+    m1 <- lm(y ~ treatment) # no data statement necessary because both variables in workspace
+    p_t[iter] <- coef(summary(m1))["treatmenttr", "Pr(>|t|)"]
+    
+    m2 <- lmp(y ~ treatment,
+              perm = "Prob",
+              settings = FALSE)
+    p_perm[iter] <- coef(summary(m2))["treatment1", "Pr(Prob)"]
+  }
+  p_data <- data.table(
+    t = p_t,
+    perm = p_perm
+  )
+  saveRDS(p_data, out_path)
 }
+
+p_data <- readRDS(out_path)
+p_t <- p_data[, t]
+p_perm <- p_data[, perm]
 size_t <- sum(p_t < 0.05)/n_iter
 size_perm <- sum(p_perm < 0.05)/n_iter
-size_table <- data.table(Method = c("lm", "perm"),
+size_table <- data.table(Method = c("t-test", "Permutation test"),
                          Size = c(size_t, size_perm))
-knitr::kable(size_table, digits = 4)
+size_table |>
+  kable(digits = 4) |>
+  kable_styling(full_width = FALSE)
+
 ```
 
 #### Size example 3: the size of a *t*-test vs. a permutation test, when the data have heterogenous variance and the sample size is unequal
 
 ```{r}
-set.seed(1)
-n1 <- 10
-n2 <- n1/2
-n_iter <- 10000
-p_t <- numeric(n_iter)
-p_perm <- numeric(n_iter)
 
-treatment <- rep(c("cn", "tr"), times = c(n1, n2))
-for(iter in 1:n_iter){
-  #  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))
-  sample_1 <- rnorm(n1, mean = 10, sd = 0.5)
-  sample_2 <- rnorm(n2, mean = 10, sd = 1)
-  y <- c(sample_1, sample_2)
-  # qplot(x=treatment, y = y)
-  m1 <- lm(y ~ treatment) # no data statement necessary because both variables in workspace
-  p_t[iter] <- coef(summary(m1))["treatmenttr", "Pr(>|t|)"]
-  
-  m2 <- lmp(y ~ treatment,
-            perm = "Prob",
-            settings = FALSE)
-  p_perm[iter] <- coef(summary(m2))["treatment1", "Pr(Prob)"]
+out_path <- here("output", "chap_infer_error-p_data_3.Rds")
+n_iter <- 10000
+set.seed(1)
+do_it <- FALSE # set this to TRUE to run and save to the output folder
+if(do_it){
+  n1 <- 10
+  n2 <- n1/2
+  n_perm <- 1000 # for the manual permutation test, otherwise, not used
+  p_t <- numeric(n_iter)
+  p_perm <- numeric(n_iter)
+  t_perm <- numeric(n_perm)
+  treatment <- rep(c("cn", "tr"), times = c(n1, n2))
+  for(iter in 1:n_iter){
+    #  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))
+    sample_1 <- rnorm(n1, mean = 10, sd = 0.5)
+    sample_2 <- rnorm(n2, mean = 10, sd = 1)
+    y <- c(sample_1, sample_2)
+    # qplot(x=treatment, y = y)
+    m1 <- lm(y ~ treatment) # no data statement necessary because both variables in workspace
+    p_t[iter] <- coef(summary(m1))["treatmenttr", "Pr(>|t|)"]
+    
+    # manual permutation test -- this is slooooo!
+    # y_samp <- y
+    # for(perm_iter in 1:n_perm){
+    #   m2 <- lm(y_samp ~ treatment)
+    #   t_perm[perm_iter] <- coef(summary(m2))[2, "t value"]
+    #   y_samp <- sample(y_samp, )
+    # }
+    # p_perm[iter] <- sum(abs(t_perm) >= abs(t_perm[1]))/n_perm
+    
+    m2 <- lmp(y ~ treatment,
+              perm = "Prob",
+              settings = FALSE)
+    p_perm[iter] <- coef(summary(m2))["treatment1", "Pr(Prob)"]
+  }
+  p_data <- data.table(
+    t = p_t,
+    perm = p_perm
+  )
+  saveRDS(p_data, out_path)
 }
+
+p_data <- readRDS(out_path)
+p_t <- p_data[, t]
+p_perm <- p_data[, perm]
 size_t <- sum(p_t < 0.05)/n_iter
 size_perm <- sum(p_perm < 0.05)/n_iter
-size_table <- data.table(Method = c("lm", "perm"),
+size_table <- data.table(Method = c("t-test", "Permutation test"),
                          Size = c(size_t, size_perm))
-knitr::kable(size_table, digits = 4)
+size_table |>
+  kable(digits = 4) |>
+  kable_styling(full_width = FALSE)
+
 ```
 
 ### Power

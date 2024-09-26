@@ -1,4 +1,4 @@
-# Analyzing experimental data with a linear model
+# Analyzing experimental data with a linear model {sec-intro}
 
 ## This text is about using linear models to estimate treatment effects and the uncertainty in our estimates. This, raises the question, what is "an effect"?
 
@@ -137,11 +137,12 @@ The measured means in each group are computed from a random **sample** of mice. 
 
 The model we are going to fit to the Figure 2i data is
 
+```{=tex}
 \begin{align}
 y &= \beta_0 + \beta_1 x + \varepsilon\\
 \varepsilon &\sim N(0, \sigma^2)
 \end{align}
-
+```
 This is *a model* of how the Figure 2i data were generated. In this model, $y$ is the liver TG level for some fictional, randomly generated mouse and $x$ is a variable that indicates the condition of the ask1 gene in randomly generated mouse -- a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene.
 
 $\beta_0$ is the "true" mean of TG in mice fed a high-fat diet and with a functional ASK1 gene. By "true", I mean the mean that would be computed if we were to measure TG on an infinite number of these mice (exactly what "these mice" means is a good topic for a campfire discussion). The observed mean of the ASK1F/F group is an estimate of $\beta_0$. The sum $\beta_0$ + $\beta_1$ is the true mean of TG in mice fed a high-fat diet but with a knocked out ASK1 gene. This means that $\beta_1$ is the true difference in the means, or the **true effect**. The observed difference in means between the ASK1Δadipo and ASK1F/F groups is an estimate of $\beta_1$. This difference is the estimated effect.
@@ -167,7 +168,7 @@ qqPlot(fig2i_m1, id=FALSE)
 
 95% of quantiles computed from fake samples from the generating model above are inside the two dashed lines in the plot. Our measured quantiles are the open circles. The quantiles from a sample that looks like it was sampled from a normal distribution, or "looks Normal", should be approximately linear and mostly lie within the dashed lines. Our sample looks good. Regardless, inference is pretty robust to moderate departure from Normal.
 
-Second, the "homogeneity check" -- we use a **spread level plot** to see if there is some pattern to the variance, for example if the spread of residuals is noticeably bigger in one group than another, or if the spread increases with the fitted value. 
+Second, the "homogeneity check" -- we use a **spread level plot** to see if there is some pattern to the variance, for example if the spread of residuals is noticeably bigger in one group than another, or if the spread increases with the fitted value.
 
 ```{r ask1-fig2i-spread, echo = TRUE, warning=FALSE}
 spreadLevelPlot(fig2i_m1, id=FALSE)
@@ -284,4 +285,3 @@ if(do_it == TRUE){
 }
 
 ```
-
