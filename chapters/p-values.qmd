@@ -36,7 +36,7 @@ source(source_path)
 
 A *p*-value *is a measure of the compatibility between observed data and the null model*. Here, "compatibility" is a probability, specifically, the probability of sampling a test-statistic as or more extreme than the observed test statistic, if all the assumptions used to compute the *p*-value are true.
 
-To deconstruct what this means, and the implications of the meaning, let's use the fig2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in the introductory chapter [Analyzing experimental data with a linear model](@sec-intro).
+To deconstruct what this means, and the implications of the meaning, let's use the fig2i data from Figure 2i in the study on the browning of white adipose tissue in mice that was introduced in @sec-intro
 
 Data source: [ASK1 inhibits browning of white adipose tissue in obesity](https://www.nature.com/articles/s41467-020-15483-7){target="_blank"}
 
@@ -70,9 +70,13 @@ fig_2i[, treatment := factor(treatment, treatment_levels)]
 fig_2i_m1 <- lm(liver_tg ~ treatment, data = fig_2i)
 ```
 
-The chunk above fits a linear model with `liver_tg` as the response variable and `treatment` as the single $X$-varaiable. Figure \@ref(fig:p-value-fig2i-fig) is the plot of the modeled means, 95% confidence intervals of the mean, and *p*-value of the significance test of the effect of treatment on liver triacylglycerol.
+The chunk above fits a linear model with `liver_tg` as the response variable and `treatment` as the single $X$-varaiable. Figure @fig-fig2i is the plot of the modeled means, 95% confidence intervals of the mean, and *p*-value of the significance test of the effect of treatment on liver triacylglycerol.
 
-```{r p-value-fig2i-fig, echo=FALSE, message=FALSE, warning=FALSE, fig.cap = "UCP1 expression, relative to the mean level in the control group. Mean (circle) and 95% confidence interval (line) are shown. Unadjusted p-values are from linear model with sh-RNA treatment and LPS treatment fully crossed."}
+```{r p-value-fig2i-fig, echo=FALSE, message=FALSE, warning=FALSE}
+
+#| label: fig-fig2i
+#| fig-cap: "UCP1 expression, relative to the mean level in the control group. Mean (circle) and 95 percent confidence interval (line) are shown. Unadjusted p-values are from linear model with sh-RNA treatment and LPS treatment fully crossed."
+
 fig_2i_m1_emm <- emmeans(fig_2i_m1, specs = "treatment")
 fig_2i_m1_pairs <- contrast(fig_2i_m1_emm,
                             method = "revpairwise") |>
@@ -98,6 +102,7 @@ fig_2i_m1_coef <- cbind(fig_2i_m1_coef_p1,
                         fig_2i_m1_coef_p2)
 ```
 
+Figure @fig-fig2i.
 The coefficients of the model, and the standard error, 95% confidence interval, test-statistic, and *p*-value of each coefficient are shown in Table \@ref(tab:pvalue-coef-table) Recall from Chapter \@ref(analyzing-experimental-data-with-a-linear-model) that, with this model, the coefficient for the intercept term is the mean `liver_tg` for the control group, which is the estimate of the true mean for a mice with functional ASK1 protein. And the coefficient for the treatmentASK1Δadipo term is the difference in means between the knockout and control group, which is the estimate for the true effect of knocking out ASK1 in the adipose tissue. The *p*-value for this "effect" term is 0.012. How do we interpret this number?
 
 ```{r pvalue-coef-table, echo=FALSE}
@@ -153,7 +158,16 @@ for(rep in 1:n_rep){
   d_null[rep] <- mean(sample_2) - mean(sample_1)
 }
 
-qplot(d_null)
+d_data <- data.table(
+  "d_null" = d_null
+)
+ggplot(data = d_data,
+       aes(x = d_null)) +
+  geom_histogram(bins = 30,
+                 fill = pal_okabe_ito[1],
+                 color = "black") +
+  ylab("Count") +
+  theme_pubr()
 ```
 
 What have we done above? using the `rnorm` function, we've simulated an infinitely large population of mice that have a distribution of liver TG values similar to that of the mice assigned to the control (ASK1F/F) group. The true mean ($\mu$) and standard deviation ($\sigma$) of the simulated TG level are equal to the observed mean and standard deviation of the TG levels of the control mice.
@@ -173,7 +187,7 @@ n_extreme <- length(null_diff_extreme)
 (p_d_null = n_extreme/n_rep)
 ```
 
-In the 100,000 runs, only `r n_extreme` generated data with an absolute difference as large or larger than 21.6 (an "absolute difference" is the absoute value of the difference). The frequency of differences as large or larger than our observed difference is `r p_d_null`. This frequency is the *probability* of sampling a difference as or more extreme than the observed difference "under the null". It is a *p*-value, but it is not the *p*-value in the coefficient table. This is because the *p*-value in the coefficient table is computed from a distribution of *t*-values, not raw differences. This raises the question, what is a *t*-distribution, and a *t*-value, more generally?
+In the 100,000 runs, only `r n_extreme` generated data with an absolute difference as large or larger than 21.6 (an "absolute difference" is the absolute value of the difference). The frequency of differences as large or larger than our observed difference is `r p_d_null`. This frequency is the *probability* of sampling a difference as or more extreme than the observed difference "under the null". It is a *p*-value, but it is not the *p*-value in the coefficient table. This is because the *p*-value in the coefficient table is computed from a distribution of *t*-values, not raw differences. This raises the question, what is a *t*-distribution, and a *t*-value, more generally?
 
 ## A null distribution of *t*-values -- the *t* distribution
 A *t*-test is a test of differences between two values. These could be
@@ -186,16 +200,15 @@ A *t*-test compares an observed *t*-value to a *t*-distribution. The null distri
 
 A *t*-distribution is a distribution of *t*-values under the null, where a *t*-value is a difference *standardized by its standard error*. For a two-sample *t*-test, this is
 
-\begin{equation}
+$$
 t = \frac{\bar{y}_2 - \bar{y}_1}{SE_{\bar{y}_2 - \bar{y}_1}}
-(\#eq:t)
-\end{equation}
+$$ {#eq-t}
 
 The numerator is **the effect** while the denominator is the precision of the estimate. Like many test statistics, a *t*-value is a signal-to-noise ratio -- the effect is the signal and the SE of the difference is the noise.
 
 A *t* distribution looks like a standard, normal distribution, except the tails are heavy, meaning there are more large-ish values than the normal. Like the standard normal distribution, large *t*-values are unlikely under the null and, therefore, a large *t* has a low probability -- or *p*-value -- under the null.
 
-Looking at the equation for the two-sample *t*-test above, it is easy to see that three features of an experiment are associated with large *t* and small *p*-values: 1) big effect size (the numerator of the equation), 2) small sample standard deviations (which results in small standard errors of the difference, the denominator of equation \@ref(eq:t), and 3) large sample size (which results in small standard errors of the difference). As a quick-and-dirty generalization, absolute t-values greater than 3 are uncommon if the null is true.
+Looking at the equation for the two-sample *t*-test above, it is easy to see that three features of an experiment are associated with large *t* and small *p*-values: 1) big effect size (the numerator of the equation), 2) small sample standard deviations (which results in small standard errors of the difference, the denominator of @eq-t, and 3) large sample size (which results in small standard errors of the difference). As a quick-and-dirty generalization, absolute t-values greater than 3 are uncommon if the null is true.
 
 The *p*-value for a *t*-test comes from comparing the observed *t* to a null *t* distribution and "counting" the values that are more extreme than the observed *t*. The *p*-value is the relative frequency of these more extreme values (relative to the total number of *t*-values in the distribution). I have "counting" in quotes because nothing is really counted -- there are an infinite number of *t*-values in the *t*-distribution. Instead, the t-distribution function is integrated to compute the fraction of the total area under the curve with *t*-values more extreme than the observed value. In a **two-tailed test**, this fraction includes both tails (positive *t*-values more positive than $|t|_{observed}$ and negative *t*-values more negative than $-|t|_{observed}$.
 
