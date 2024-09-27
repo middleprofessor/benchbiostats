@@ -157,7 +157,8 @@ Write something like this in your .Rmd file following the model check code chunk
 fig3d_m1_coef <- cbind(coef(summary(fig3d_m1)),
                         confint(fig3d_m1))
 colnames(fig3d_m1_coef)[4] <- "p value"
-kable(fig3d_m1_coef, digits = c(1,2,1,4,1,1)) |>
+kable(fig3d_m1_coef,
+      digits = c(1,2,1,4,1,1)) |>
   kable_styling()
 ```
 
@@ -316,6 +317,11 @@ The row names of the coefficient table are the column names of the model matrix.
 ```{r}
 #| echo: false
 #| label: tbl-example1-coef-understanding
+#| tbl-cap: Understanding model coefficients of a linear model with a single treatment variable with two groups. The means in the interpretation column are conditional means.
+#| fig-cap: "."
+#| filters:
+#| - parse-latex
+
 new_table <- data.table(
   coefficient = c("$b_0$", "$b_1$"),
   parameter = c("$\\beta_0$", "$\\beta_1$"),
@@ -323,9 +329,9 @@ new_table <- data.table(
   interpretation = c("$\\overline{Vehicle}$",
                      "$\\overline{12,13\\;diHOME} - \\overline{Vehicle}$")
 )
+
 new_table|>
-  kable(escape = FALSE,
-        caption = "Understanding model coefficients of a linear model with a single treatment variable with two groups. The means in the interpretation column are conditional means.") |>
+  kable(escape = FALSE) |>
   kable_styling()
 ```
 

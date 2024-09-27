@@ -420,8 +420,9 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig3d_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig3d_m1)),</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">confint</span>(fig3d_m1))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fig3d_m1_coef)[<span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="st">"p value"</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fig3d_m1_coef, <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fig3d_m1_coef,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -718,40 +719,63 @@ serum\_tg &amp;= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 </section>
 <section id="oneway-what-coefs-are" class="level4" data-number="10.1.2.3">
 <h4 data-number="10.1.2.3" class="anchored" data-anchor-id="oneway-what-coefs-are"><span class="header-section-number">10.1.2.3</span> The coefficients of a linear model using dummy coding have a useful interpretation</h4>
-<div class="cell">
-<div id="tbl-example1-coef-understanding" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell" data-filters="parse-latex">
+<div id="tbl-example1-coef-understanding" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-filters="parse-latex">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-example1-coef-understanding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;10.1: Understanding model coefficients of a linear model with a single treatment variable with two groups. The means in the interpretation column are conditional means.
 </figcaption>
 <div aria-describedby="tbl-example1-coef-understanding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">coefficient</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">parameter</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">model term</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">interpretation</th>
+<tr>
+<th style="text-align:left;">
+coefficient
+</th>
+<th style="text-align:left;">
+parameter
+</th>
+<th style="text-align:left;">
+model term
+</th>
+<th style="text-align:left;">
+interpretation
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">$b_0$</td>
-<td style="text-align: left;">$\beta_0$</td>
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: left;">$\overline{Vehicle}$</td>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(b_0\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\beta_0\)</span>
+</td>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\overline{Vehicle}\)</span>
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">$b_1$</td>
-<td style="text-align: left;">$\beta_1$</td>
-<td style="text-align: left;">treatment12,13-diHOME</td>
-<td style="text-align: left;">$\overline{12,13\;diHOME} - \overline{Vehicle}$</td>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(b_1\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\beta_1\)</span>
+</td>
+<td style="text-align:left;">
+treatment12,13-diHOME
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\overline{12,13\;diHOME} - \overline{Vehicle}\)</span>
+</td>
 </tr>
 </tbody>
 </table>
-
-
+<p>.</p>
 </div>
 </div>
 </figure>
