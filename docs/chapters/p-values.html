@@ -291,7 +291,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">P-values</span></h1>
+<h1 class="title"><span id="sec-pvalues" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">P-values</span></span></h1>
 </div>
 
 
@@ -442,17 +442,17 @@ p = \mathrm{prob}(t \ge t_o | H_o)
 <li>repeat 1-3 100,000 times, each time saving the difference in means.</li>
 <li>plot the distribution of the 100,000 differences using a histogram</li>
 </ol>
-<p>The distribution of the differences is a null distribution. Notice that the mode of the null distribution is at zero, and the mean (-0.04009) is close to zero (if we had set <span class="math inline">\(n\)</span> to infinity, the mean would be precisely zero). <em>The expected difference between the means of two random samples from the same population is, of course, zero</em>. Don’t gloss over this statement if that is not obvious. The tails extend out to a little more than +20 and -20. What this means is that it would be uncommon to randomly sample a value from this distribution of differences <em>as or more extreme</em> than our observed difference, -21.6. By “more extreme”, I mean any value more negative than -21.6 or more postive than 21.6. So it would be uncommon to sample a value from this distribution whose <em>absolute value</em> is as or more extreme than 21.6. How uncommon would this be?</p>
+<p>The distribution of the differences is a null distribution. Notice that the mode of the null distribution is at zero, and the mean (0.01239) is close to zero (if we had set <span class="math inline">\(n\)</span> to infinity, the mean would be precisely zero). <em>The expected difference between the means of two random samples from the same population is, of course, zero</em>. Don’t gloss over this statement if that is not obvious. The tails extend out to a little more than +20 and -20. What this means is that it would be uncommon to randomly sample a value from this distribution of differences <em>as or more extreme</em> than our observed difference, -21.6. By “more extreme”, I mean any value more negative than -21.6 or more postive than 21.6. So it would be uncommon to sample a value from this distribution whose <em>absolute value</em> is as or more extreme than 21.6. How uncommon would this be?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>diff_obs <span class="ot">&lt;-</span> fig2i_m1_coef[<span class="st">"treatmentASK1Δadipo"</span>, <span class="st">"Estimate"</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>null_diff_extreme <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">abs</span>(d_null) <span class="sc">&gt;</span> <span class="fu">abs</span>(diff_obs))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>n_extreme <span class="ot">&lt;-</span> <span class="fu">length</span>(null_diff_extreme)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(<span class="at">p_d_null =</span> n_extreme<span class="sc">/</span>n_rep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.00558</code></pre>
+<pre><code>[1] 0.00554</code></pre>
 </div>
 </div>
-<p>In the 100,000 runs, only 558 generated data with an absolute difference as large or larger than 21.6 (an “absolute difference” is the absolute value of the difference). The frequency of differences as large or larger than our observed difference is 0.00558. This frequency is the <em>probability</em> of sampling a difference as or more extreme than the observed difference “under the null”. It is a <em>p</em>-value, but it is not the <em>p</em>-value in the coefficient table. This is because the <em>p</em>-value in the coefficient table is computed from a distribution of <em>t</em>-values, not raw differences. This raises the question, what is a <em>t</em>-distribution, and a <em>t</em>-value, more generally?</p>
+<p>In the 100,000 runs, only 554 generated data with an absolute difference as large or larger than 21.6 (an “absolute difference” is the absolute value of the difference). The frequency of differences as large or larger than our observed difference is 0.00554. This frequency is the <em>probability</em> of sampling a difference as or more extreme than the observed difference “under the null”. It is a <em>p</em>-value, but it is not the <em>p</em>-value in the coefficient table. This is because the <em>p</em>-value in the coefficient table is computed from a distribution of <em>t</em>-values, not raw differences. This raises the question, what is a <em>t</em>-distribution, and a <em>t</em>-value, more generally?</p>
 </section>
 <section id="a-null-distribution-of-t-values-the-t-distribution" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="a-null-distribution-of-t-values-the-t-distribution"><span class="header-section-number">6.3</span> A null distribution of <em>t</em>-values – the <em>t</em> distribution</h2>

@@ -1,4 +1,4 @@
-# Linear models with a single, categorical *X* ("t-tests" and "ANOVA") {#oneway}
+# Linear models with a single, categorical *X* ("t-tests" and "ANOVA") {#sec-oneway}
 
 ```{r setup-categorical-x, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -65,7 +65,7 @@ Let's start with the experiment in Figure 3d, which was designed to measure the 
 
 **Design**: single, categorical *X*
 
-**Response variable**: $\texttt{serum_tg}$, A measure of serum triglycerides (mg/dl). $\texttt{serum_tg}$ is a continuous variable.
+**Response variable**: $\texttt{serum\_tg}$, A measure of serum triglycerides (mg/dl). $\texttt{serum\_tg}$ is a continuous variable.
 
 **Factor variable**: $\texttt{treatment}$, with levels:
 
@@ -184,7 +184,11 @@ kable(fig3d_m1_pairs, digits = c(1,1,1,0,1,1,2,4)) |>
 
 The norm in bench biology research is a response plot. 
 
-```{r fig3d_m1-plot-the-response, echo = TRUE}
+```{r}
+#| echo: true
+#| label: fig-oneway-fig3d_m1
+#| fig-cap: "12,13 diHOME reduced serum TG lvels. Six mice per group. P-value computed using lm(serum_tg ~ treatment) in R."
+
 gg1 <- ggplot_the_response(
   fig3d_m1,
   fig3d_m1_emm,
@@ -196,9 +200,12 @@ gg1 <- ggplot_the_response(
 gg1
 ```
 
-If the researchers want to explitly communicate more about the treatment effect, then they should "plot the model".
+If the researchers want to explicitly communicate more about the treatment effect, then they should "plot the model".
 
-```{r fig3d_m1-plot-the-model, echo = TRUE, caption = "xxx"}
+```{r}
+#| echo: true
+#| label: fig-oneway-fig3d_m1-plot-model
+#| fig-cap: "12,13 diHOME reduced serum TG lvels. Six mice per group. P-value computed using lm(serum_tg ~ treatment) in R."
 gg2 <- ggplot_the_model(
   fig3d_m1,
   fig3d_m1_emm,
@@ -214,9 +221,9 @@ gg2
 
 #### Step 7 -- report the model results
 
-1. Different ways of reporting the results in increasing order of not making claims that are not evidenced by the statistical analysis, 
+1. Different ways of reporting the results.
 
-* "12,13-diHOME reduced serum TG"
+* "12,13-diHOME reduced serum TG (p = 0.012)"
 * "12,13-diHOME reduced serum TG (Estimate = -7.17 µg/dL; 95% CI: -12.4, -1.9; p = 0.012)"
 * "The estimated effect of 12,13-diHOME on serum TG is -7.17 µg/dL (95% CI: -12.4, -1.9, $p = 0.012$)."
 
@@ -234,21 +241,14 @@ The variable $\texttt{treatment}$ in the Figure 3d mouse experiment, is a single
 
 The linear model fit to the serum TG data is
 
-\begin{align}
-serum\_tg &= treatment + \varepsilon\\
-\varepsilon &\sim N(0, \sigma^2)
-(\#eq:lm-model-example-1)
-\end{align}
-
-This notation is potentially confusing because the variable $\texttt{treatment}$ is a factor containing the words "Vehicle" and "12,13-diHOME" and not numbers. The linear model in \@ref(eq:lm-model-example-1) can be specified using notation for a regression model using
-
+$$
 \begin{align}
 serum\_tg &= \beta_0 + \beta_1 treatment_{12,13-diHOME} + \varepsilon\\
 \varepsilon &\sim N(0, \sigma^2)
-(\#eq:reg-model-example-1)
 \end{align}
+$$ {#eq-reg-model-example-1}
 
-Model \@ref(eq:reg-model-example-1) is a regression model where $treatment_{12,13-diHOME}$ is not the variable $\texttt{treatment}$, containing the words "Vehicle" or "12,13-diHOME" but a numeric variable that indicates membership in the group "12,13-diHOME". This variable contains the number 1 if the mouse belongs to "12,13-diHOME" and the number 0 if the mouse doesn't belong to "12,13-diHOME". $treatment_{12,13-diHOME}$ is known as an **indicator variable** because it indicates group membership. There are several ways of coding indicator variables and the way described here is called **dummy** or treatment coding. Dummy-coded indicator variables are sometimes called **dummy variables**.
+Model @eq-reg-model-example-1 is a regression model where $treatment_{12,13-diHOME}$ is not the variable $\texttt{treatment}$, containing the words "Vehicle" or "12,13-diHOME" but a numeric variable that indicates membership in the group "12,13-diHOME". This variable contains the number 1 if the mouse belongs to "12,13-diHOME" and the number 0 if the mouse doesn't belong to "12,13-diHOME". $treatment_{12,13-diHOME}$ is known as an **indicator variable** because it indicates group membership. There are several ways of coding indicator variables and the way described here is called **dummy** or treatment coding. Dummy-coded indicator variables are sometimes called **dummy variables**.
 
 The `lm` function creates indicator variables under the table, in something called the **model matrix**. 
 
@@ -258,7 +258,7 @@ N <- nrow(X)
 X[1:N,]
 ```
 
-The columns of the model matrix are the names of the **model terms** in the fit model. R names dummy variables by combining the names of the factor and the name of the level within the factor. So the $X$ variable that R creates in the model matrix for the fit linear model in model \@ref(eq:reg-model-example-1) is $treatment12,13-diHOME$. You can see these names as terms in the coefficient table of the fit model.
+The columns of the model matrix are the names of the **model terms** in the fit model. R names dummy variables by combining the names of the factor and the name of the level within the factor. So the $X$ variable that R creates in the model matrix for the fit linear model in model @eq-reg-model-example-1 is $treatment12,13-diHOME$. You can see these names as terms in the coefficient table of the fit model.
 
 <div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
 There are alternatives to dummy coding for creating indicator variables. Dummy coding is the default in R and it makes sense when thinking about experimental data with an obvious control level. I also like the interpretation of a "interaction effect" using Dummy coding. The classical coding for ANOVA is deviation effect coding, which creates coefficients that are deviations from the grand mean. In contrast to R, Deviation coding is the default in many statistical software packages including SAS, SPSS, and JMP. The method of coding can make a difference in an ANOVA table. Watch out for this -- I've found several published papers where the researchers used the default dummy coding but interpreted the ANOVA table as if they had used deviation coding. This is both getting ahead of ourselves and somewhat moot, because I don't advocate reporting ANOVA tables.
@@ -309,11 +309,13 @@ fig3d_m1_coef|>
   kable_styling()
 ```
 
-The row names of the coefficient table are the column names of the model matrix. These are the model terms. There are two terms (two rows) because there are two parameters in the regression model \@ref(eq:reg-model-example-1). The values in the column $\texttt{Estimate}$ in the coefficient table are the estimates of the regression parameters $\beta_0$ and $\beta_1$. These estimates are the coefficients of the fit model, $b_0$ and $b_1$.
+The row names of the coefficient table are the column names of the model matrix. These are the model terms. There are two terms (two rows) because there are two parameters in the regression model @eq-reg-model-example-1. The values in the column $\texttt{Estimate}$ in the coefficient table are the estimates of the regression parameters $\beta_0$ and $\beta_1$. These estimates are the coefficients of the fit model, $b_0$ and $b_1$.
 
 #### The coefficients of a linear model using dummy coding have a useful interpretation {#oneway-what-coefs-are}
 
-```{r example1-coef-understanding, echo=FALSE}
+```{r}
+#| echo: false
+#| label: tbl-example1-coef-understanding
 new_table <- data.table(
   coefficient = c("$b_0$", "$b_1$"),
   parameter = c("$\\beta_0$", "$\\beta_1$"),
@@ -327,22 +329,28 @@ new_table|>
   kable_styling()
 ```
 
-It is important to understand the interpretation of the coefficients of the fit linear model \@ref(eq:lm-model-example-1) (Table \@ref(tab:example1-coef-understanding)).
+It is important to understand the interpretation of the coefficients of the fit linear model @eq-reg-model-example-1 ( @tbl-example1-coef-understanding).
 
 1. The coefficient $b_0$ is the is the conditional mean of the response for the reference level, which is "Vehicle". Remember that a conditional mean is the mean of a group that all have the same value for one or more $X$ variables.
 2. The coefficient $b_1$ is the difference between the conditional means of the "12,13-diHOME" level and the reference ("Vehicle") level:
 
-\begin{equation}
+$$
 \mathrm{E}[serum\_tg|treatment = \texttt{"12,13-diHOME"}] - \mathrm{E}[serum\_tg|treatment = \texttt{"Vehicle"}]
-\end{equation}
+$$
 
 Because there are no additional covariates in model, this difference is equal to the difference between the sample means $\bar{Y}_{12,13-diHOME} - \bar{Y}_{Vehicle}$. The *direction* of this difference is important -- it is non-reference level minus the reference level.
 
 The estimate $b_1$ is the **effect** that we are interested in. Specifically, it is the measured effect of 12,13-diHOME on serum TG. When we inject 12,13-diHOME, we find the mean serum TG decreased by -7.2 µg/dL relative to the mean serum TG in the mice that were injected with saline. Importantly, the reference level is not a property of an experiment but is set by whomever is analyzing the data. Since the non-reference estimates are differences in means, it often makes sense to set the "control" treatment level as the reference level.
 
-Many beginners mistakenly memorize the coefficient $b_1$ to equal the mean of the non-reference group ("12,13-diHOME"). Don't do this. In a regression model, only $b_0$ is a mean. The coefficient $b_1$ in model \@ref(eq:reg-model-example-1) is a difference in means.
+Many beginners mistakenly memorize the coefficient $b_1$ to equal the mean of the non-reference group ("12,13-diHOME"). Don't do this. In a regression model, only $b_0$ is a mean. The coefficient $b_1$ in model @eq-reg-model-example-1 is a difference in means.
 
-```{r cat-x-coef-fig, echo=FALSE, fig.cap="What the coefficients of a linear model with a single categorical X mean. The means of the two treatment levels for the serum TG data are shown with the large, filled circles and the dashed lines. The intercept ($b_0$) is the mean of the reference treatment level (\"Vehicle\"). The coefficient $b_1$ is the difference between the treatment level's mean and the reference mean. As with a linear model with a continuous $X$, the coefficient $b_1$ is an effect."}
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: fig-oneway-coef-fig
+#| fig-cap: "What the coefficients of a linear model with a single categorical X mean. The means of the two treatment levels for the serum TG data are shown with the large, filled circles and the dashed lines. The intercept ($b_0$) is the mean of the reference treatment level (\"Vehicle\"). The coefficient $b_1$ is the difference between the treatment level's mean and the reference mean. As with a linear model with a continuous $X$, the coefficient $b_1$ is an effect."
+
 
 b <- fig3d_m1_coef[, "Estimate"]
 b0 <- b[1]
@@ -408,7 +416,7 @@ gg <- ggplot_the_response(
 gg
 ```
 
-A geometric interpretation of the coefficients is illustrated in Figure \@ref(fig:cat-x-coef-fig). $b_0$ is the conditional mean of the reference level ("Vehicle") and is an estimate of $\beta_0$, the true, conditional mean of the population. $b_1$ is the difference in the conditional means of the first non-reference level ("12,13-diHOME") and the reference level ("Vehicle") and is an estimate of $\beta_1$, the true difference in the conditional means of the population with and without the treatment 12,13-diHOME. 
+A geometric interpretation of the coefficients is illustrated in Figure @fig-oneway-coef-fig. $b_0$ is the conditional mean of the reference level ("Vehicle") and is an estimate of $\beta_0$, the true, conditional mean of the population. $b_1$ is the difference in the conditional means of the first non-reference level ("12,13-diHOME") and the reference level ("Vehicle") and is an estimate of $\beta_1$, the true difference in the conditional means of the population with and without the treatment 12,13-diHOME. 
 
 <div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
 tl;dr. What is a population? In the experimental biology examples in this text, we might consider the population as a very idealized, infinitely large set of mice, or fish, or fruit flies, or communities from which our sample is a reasonably representative subset. For the experiments in the 12,13-diHOME study, the population might be conceived of as the hypothetical, infinitely large set of 12-week-old, male, C57BL/6J mice, raised in the mouse facility at Joslin Diabetes Center. An even more abstract way to way to think about what the population could be is the infinitely large set of values that could generated by the linear model.
