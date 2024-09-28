@@ -261,46 +261,38 @@ X[1:N,]
 
 The columns of the model matrix are the names of the **model terms** in the fit model. R names dummy variables by combining the names of the factor and the name of the level within the factor. So the $X$ variable that R creates in the model matrix for the fit linear model in model @eq-reg-model-example-1 is $treatment12,13-diHOME$. You can see these names as terms in the coefficient table of the fit model.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-There are alternatives to dummy coding for creating indicator variables. Dummy coding is the default in R and it makes sense when thinking about experimental data with an obvious control level. I also like the interpretation of a "interaction effect" using Dummy coding. The classical coding for ANOVA is deviation effect coding, which creates coefficients that are deviations from the grand mean. In contrast to R, Deviation coding is the default in many statistical software packages including SAS, SPSS, and JMP. The method of coding can make a difference in an ANOVA table. Watch out for this -- I've found several published papers where the researchers used the default dummy coding but interpreted the ANOVA table as if they had used deviation coding. This is both getting ahead of ourselves and somewhat moot, because I don't advocate reporting ANOVA tables.
-</div>
+You should prove to yourself that `lm` fits the regression model `serum_tg ~ X` where X is the model matrix.
 
-<br>
-
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-Recall from stats 101 that the slope of $X$ in the model $Y = b_0 + b_1 X$ is $b_1 = \frac{\textrm{COV}(X,Y)}{\textrm{VAR}(X)}$. This can be generalized using the equation
-
-\begin{equation}
-\mathbf{b} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
-\end{equation}
-
-where $\mathbf{X}$ is the model matrix containing a column for an intercept, columns for all indicator variables, and columns for all numeric covariates. $\mathbf{b}$ is a vector containing the model coefficients, including the intercept in the first element. The first part of the RHS ($\mathbf{X}^\top \mathbf{X}$) is a matrix of the "sums of squares and cross-products" of the columns of $\mathbf{X}$. Dividing each element of this matrix by $N-1$ gives us the covariance matrix of the $\mathbf{X}$, which contains the variances of the $X$ columns along the diagonal, so this component has the role of the denominator in the stats 101 equation. Matrix algebra doesn't do division, so the inverse of this matrix is multiplied by the second part. The second part or the RHS ($\mathbf{X}^\top \mathbf{y}$) is a vector containing the cross-products of each column of $\mathbf{X}$ with $\mathbf{y}$. Dividing each element of this vector by $N-1$ gives us the covariances of each $X$ with $y$, so this component has the role of the numerator in the stats 101 equation.
-</div>
-
-<br>
-
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-Self-learning. `lm` fits the model `y ~ X` where X is the model matrix. Fit the model using the standard formula and the model using the model matrix. The coefficient table should be the same.
-
-`m1 <- lm(serum_tg ~ treatment, data = fig3d)`
-
-`X <- model.matrix(~ treatment, data = fig3d)`
-
-`m2 <- lm(serum_tg ~ X, data = fig3d)`
-
-`coef(summary(m1))`
-
-`coef(summary(m2))`
-
-</div>
- 
-```{r echo=FALSE, eval=FALSE}
+```{r echo=TRUE, eval=TRUE}
 m1 <- lm(serum_tg ~ treatment, data = fig3d)
+coef(summary(m1))
+```
+
+
+```{r echo=TRUE, eval=TRUE}
 X <- model.matrix(~ treatment, data = fig3d)
 m2 <- lm(serum_tg ~ X, data = fig3d)
-coef(summary(m1))
 coef(summary(m2))
 ```
+
+::: {.callout-caution collapse="true"}
+## Expand For Phenomenal Cosmic Power -- alternatives to dummy coding
+There are alternatives to dummy coding for creating indicator variables. Dummy coding is the default in R and it makes sense when thinking about experimental data with an obvious control level. I also like the interpretation of a "interaction effect" using Dummy coding. The classical coding for ANOVA is deviation effect coding, which creates coefficients that are deviations from the grand mean. In contrast to R, Deviation coding is the default in many statistical software packages including SAS, SPSS, and JMP. The method of coding can make a difference in an ANOVA table. Watch out for this -- I've found several published papers where the researchers used the default dummy coding but interpreted the ANOVA table as if they had used deviation coding. This is both getting ahead of ourselves and somewhat moot, because I don't advocate reporting ANOVA tables.
+:::
+
+<br>
+
+::: {.callout-caution collapse="true"}
+## Expand For Phenomenal Cosmic Power -- regression using matrix algebra
+Recall from stats 101 that the slope of $X$ in the model $Y = b_0 + b_1 X$ is $b_1 = \frac{\textrm{COV}(X,Y)}{\textrm{VAR}(X)}$. This can be generalized using the equation
+
+$$
+\mathbf{b} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+$$
+
+where $\mathbf{X}$ is the model matrix containing a column for an intercept, columns for all indicator variables, and columns for all numeric covariates. $\mathbf{b}$ is a vector containing the model coefficients, including the intercept in the first element. The first part of the RHS ($\mathbf{X}^\top \mathbf{X}$) is a matrix of the "sums of squares and cross-products" of the columns of $\mathbf{X}$. Dividing each element of this matrix by $N-1$ gives us the covariance matrix of the $\mathbf{X}$, which contains the variances of the $X$ columns along the diagonal, so this component has the role of the denominator in the stats 101 equation. Matrix algebra doesn't do division, so the inverse of this matrix is multiplied by the second part. The second part or the RHS ($\mathbf{X}^\top \mathbf{y}$) is a vector containing the cross-products of each column of $\mathbf{X}$ with $\mathbf{y}$. Dividing each element of this vector by $N-1$ gives us the covariances of each $X$ with $y$, so this component has the role of the numerator in the stats 101 equation.
+:::
+
 
 #### The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.
 
@@ -424,10 +416,6 @@ gg
 
 A geometric interpretation of the coefficients is illustrated in Figure @fig-oneway-coef-fig. $b_0$ is the conditional mean of the reference level ("Vehicle") and is an estimate of $\beta_0$, the true, conditional mean of the population. $b_1$ is the difference in the conditional means of the first non-reference level ("12,13-diHOME") and the reference level ("Vehicle") and is an estimate of $\beta_1$, the true difference in the conditional means of the population with and without the treatment 12,13-diHOME. 
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-tl;dr. What is a population? In the experimental biology examples in this text, we might consider the population as a very idealized, infinitely large set of mice, or fish, or fruit flies, or communities from which our sample is a reasonably representative subset. For the experiments in the 12,13-diHOME study, the population might be conceived of as the hypothetical, infinitely large set of 12-week-old, male, C57BL/6J mice, raised in the mouse facility at Joslin Diabetes Center. An even more abstract way to way to think about what the population could be is the infinitely large set of values that could generated by the linear model.
-</div> 
-
 #### Better know the coefficient table
 
 ```{r}
@@ -446,28 +434,34 @@ fig3d_m1_coef|>
 
 #### The emmeans table is a table of modeled means and inferential statistics
 
-```{r fig3d_m1_emm_kable, echo=FALSE}
+```{r}
+#| echo: false
+#| label: tbl-oneway-fig3d-emm
+
 kable(summary(fig3d_m1_emm),
       digits = c(1,1,2,1,1,1),
       caption = "Estimated marginal means table for model fig3d_m1.") |>
   kable_styling()
 ```
 
-The table of marginal means for the model fit to the fig3d serum TG data (Model \@ref(eq:lm-model-example-1)) is given in Table \@ref(tab:fig3d_m1_emm_kable). The table of marginal means gives the **modeled* mean, standard error and confidence interval for all specified groups. There is no test-statistic with a *p*-value because there is no significance test. In this text, I'll refer to this table as the "emmeans table", since it is the output from the `emmeans` function  ("em" is the abbreviation for "estimated marginal"). I'll use "modeled means" to refer to the means themselves as these are the estimate of means from a fit linear model.
+The table of marginal means of a fit model gives the **modeled* mean, standard error and confidence interval for all specified groups. We use these *modeled* means, SEs, and CIs, for the response plot. Note that here is no test-statistic with a *p*-value because there is no significance test.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-A **marginal mean** is the mean over a set of conditional means. For example, if a treatment factor has three levels, the conditional means are the means for each level and the marginal mean is the mean of the three means. Or, if the conditional means are the expected values given a continous covariate, the marginal mean is the expected value at the mean of covariate. The specified emmeans table of the fig3d data is not too exciting because it simply contains the conditional means -- the values are not marginalized over any $X$. Because the emmeans table contains different sorts of means (conditional, marginal, adjusted), this text will generally refer to the means in this table as "modeled means".
-</div>
+@. In this text, I'll refer to this table as the "emmeans table", since it is the output from the `emmeans` function  ("em" is the abbreviation for "estimated marginal").
+@. I'll use "modeled means", "modeled SEs", and "modeled CIs" to refer to the statistics in the table, as these are the estimate of means, SE, and CI from a fit linear model.
 
-```{r cat-x-emmeans-table, echo = FALSE}
-kable(summary(fig3d_m1_emm),
-      digits = 5,
-      caption = "The emmeans table contains modeled means, SE, and CIs.") |>
-  kable_styling()
-```
+::: {.callout-note title="Better Know: marginal mean"}
+A **marginal mean** is the mean over a set of conditional means. For example, if a treatment factor has three levels, the conditional means are the means for each level and the marginal mean is the mean of the three means. Or, if the conditional means are the expected values given a continous covariate, the marginal mean is the expected value at the mean of covariate. The specified emmeans table of the fig3d data is not too exciting because it simply contains the conditional means -- the values are not marginalized over any $X$. Because the emmeans table contains different sorts of means (conditional, marginal, adjusted), this text will generally refer to the means in this table as "modeled means"
+:::
 
+::: {.callout-important}
+It is exceptionally important to understand the difference between the means, SEs, and CIs in the emmeans table and the statistics of the same name in a summary table of the data.
+:::
 
-```{r cat-x-summary-table, echo = FALSE}
+The emmeans table and a summary statistics table show different statistics -- this is important to know for plotting.
+
+```{r}
+#| echo: false
+
 # summary table
 summary_table <- fig3d[, .(mean = mean(serum_tg),
                             SE = sd(serum_tg)/sqrt(.N)),
@@ -482,29 +476,41 @@ kable(summary_table,
   kable_styling()
 ```
 
-1. The means in the emmeans table are modeled means. Here, and for many linear models, these will be equal to the sampled means. This will not be the case in models with one or more continuous covariates, or if marginal means are explicitly specified. 
-2. Unlike the modeled means, the modeled standard errors and confidence intervals will, effectively, never equal sample standard errors and confidence intervals. In many models, plots using sample statistics can lead to very deceiving inference of differences between groups. This is why this text advocates plotting the model -- using modeled means and confidence intervals in plots.
 
-It is exceptionally important to understand the difference between the means, SEs, and CIs in the emmeans table and the statistics of the same name in a summary table of the data.
+```{r}
+#| echo: false
 
-1. The statistics in a summary table are **sampled** means, SEs, and CIs -- these statistics are computed for the group using *only the data in the group*.
-2. To understand modeled SEs and CIs, recall that the standard error of a sample mean is $\frac{s}{\sqrt{n}}$, where $s$ is the sample standard deviation and $n$ is the sample size in the group. The computation of the SE in the emmeans table uses the same equation, except the numerator is not the sample standard deviation of the group but the model standard deviation, which is an estimate of the true standard deviation $\sigma$. As with the sample SE, the denominator for the modeled SE is the sample size $n$ for the group. Since the numerator of the modeled SE is the same for all groups, the modeled SE will be the same in all groups that have the same sample size, as seen in the marginal means table for the model fit to the Figure 3d data. This is not true for sampled SEs, since sampled standard deviations will always differ.
+kable(summary(fig3d_m1_emm),
+      digits = 5,
+      caption = "Estimated marginal means table for model fig3d_m1.") |>
+  kable_styling()
+```
 
+The top table is the summary statistics table for fig3d data. The bottom table is a the emmeans table of the fit model (m1). I show both to five decimal places for comparison of the values.
+
+@. The statistics in a summary table are **sampled** means, SEs, and CIs -- these statistics are computed for the group using *only the data in the group*.
+@. The means in the emmeans table are modeled means. Here, and for many linear models, these will be equal to the sampled means. This will not be the case in some more complex models.
+@. The modeled SEs and CIs show the range of means that are consistent with the data. This is important for understanding any mismatch between the data and the model (the model assumptions).
+@. Unlike the modeled means, the modeled standard errors and confidence intervals will never equal sample standard errors and confidence intervals. In more complex models, plots using sample statistics can lead to very deceiving inference of differences between groups.
+@. To understand modeled SEs and CIs, recall that the standard error of a sample mean is $\frac{s}{\sqrt{n}}$, where $s$ is the sample standard deviation and $n$ is the sample size in the group. The computation of the SE in the emmeans table uses the same equation, except the numerator is not the sample standard deviation of the group but the model standard deviation, which is an estimate of the true standard deviation $\sigma$. As with the sample SE, the denominator for the modeled SE is the sample size $n$ for the group. Since the numerator of the modeled SE is the same for all groups, the modeled SE will be the same in all groups that have the same sample size, as seen in the marginal means table for the model fit to the Figure 3d data. This is not true for sampled SEs, since sampled standard deviations will always differ.
+
+::: {.callout-note title="Better Know: model sigma"}
 It may seem odd to use a common standard deviation in the computation of the modeled SEs. It is not. Remember that an assumption of the linear model is homogeneity of variances -- that all residuals $e_i$ are drawn from the same distribution ($N(0, \sigma^2)$) (a "single hat") regardless of group. The model standard deviation $\hat{\sigma}$ is the estimate of the square root of the variance of this distribution. Given this interpretation, it is useful to think of each sample standard deviation as an estimate of $\sigma$ (the linear model assumes that all differences among the sample standard deviations are due entirely to sampling). The model standard deviation is a more precise estimate of $\sigma$ since it is computed from a larger sample (all $N$ residuals).
+:::
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
+::: {.callout-note title="Better Know: model sigma"}
 The model standard deviation is called the "pooled" standard deviation in the ANOVA literature and is computed as a sample-size weighted average of the sample standard deviations.
-</div>
+:::
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
+::: {.callout-note title="Better Know: model sigma"}
 The modeled standard error of the mean uses the estimate of $\sigma$ from the fit model. This estimate is
 
 \begin{equation}
 \hat{\sigma} = \sqrt{\frac{\sum{(y_i - \hat{y}_i)^2}}{df}}
 \end{equation}
 
-Create a code chunk that computes this. Recall that $(y_i - \hat{y}_i)$ is the set of residuals from the model, which can be extracted using `residuals(fit)` where "fit" is the fit model object. $df$ is the model degrees of freedom, which is $N-k$, where $N$ is the total sample size and $k$ is the number of parameters that are fit. This makes sense -- for the sample variance there is one parameter that is fit, the mean of the group. In model fig3d_m1, there are two parameters that are fit, the intercept and the coefficient of treatment12,13-diHOME.
-</div>
+Create a code chunk that computes this. Recall that $(y_i - \hat{y}_i)$ is the set of residuals from the model, which can be extracted using `residuals(fit)` where "fit" is the fit model object. $df$ is the model degrees of freedom, which is $N-k$, where $N$ is the total sample size and $k$ is the number of parameters that are fit. This makes sense -- for the sample variance there is one parameter that is fit, the mean of the group, so the denominator is $n - 1$. In model fig3d_m1, there are two parameters that are fit, the intercept and the coefficient of treatment12,13-diHOME, so the denominator is $N - 2$ where $N$ is the total sample size (the sum of the $n$ for each treatment level).
+:::
 
 ```{r cat-x-explore-1, echo=FALSE, eval=FALSE}
 summary(fig3d_m1)$sigma
@@ -1057,13 +1063,13 @@ Notes
 4. The coefficients of `m1_type3` will be different from `m1`. The intercept will be the grand mean and the coefficients of the non-reference levels (the effects) will be their deviations from the grand mean. I don't find this definition of "effects" very useful for most experiments in biology.
 5. The contrasts (differences in the means among pairs of groups) in the contrast table will be the same, regardless of the contrast coding.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-Danger!. Many online sites suggest this bit of code before a Type III ANOVA using car::Anova:
+::: {.callout-warning}
+Danger! Many online sites suggest this bit of code before a Type III ANOVA using car::Anova()
 
 `options(contrasts = c("contr.sum", "contr.poly")`
 
-If you're reading this book, you almost certainly don't want to do this because this code resets how R computes coefficients of linear models and SS of ANOVA tables. This will effect all future analysis until the contrasts are set to something else or a new R session is started. 
-</div>
+If you're reading this book, you almost certainly don't want to do this because this code resets how R computes coefficients of linear models and SS of ANOVA tables. This will effect all future analyses until the contrasts are set to something else or a new R session is started.
+:::
 
 **base R aov and anova**
 
