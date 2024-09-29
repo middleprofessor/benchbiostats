@@ -2096,7 +2096,7 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 </section>
 <section id="planned-comparisons-using-custom-contrasts" class="level4" data-number="10.2.4.2">
 <h4 data-number="10.2.4.2" class="anchored" data-anchor-id="planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.2</span> Planned comparisons using custom contrasts</h4>
-<p>In any experiment with more than two groups, we have multiple contrasts (or “multiple tests”). Almost always, researchers are only interested in a subset of these. We can limit the number of contrasts computed by the <code>contrast()</code> function by passing a custom contrast object in <code>method =</code>.</p>
+<p>In any experiment with more than two groups, we have multiple contrasts (or “multiple tests”). Almost always, researchers are only interested in a subset of these. This subset of focal contrasts are <strong>planned comparisons</strong>. We can limit the number of contrasts computed by the <code>contrast()</code> function by passing a custom contrast object in <code>method =</code>.</p>
 <p>Let’s say the focal contrasts are <code>Cold - Control</code> and <code>NE - Cold</code> but not the contrast <code>NE - Control</code>. To pass a custom contrast object with only these contrasts, I first peek at the emm object to see the order of group means.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2115,12 +2115,12 @@ Confidence level used: 0.95 </code></pre>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>cold <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>my_contrasts <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>planned_contrasts <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cold - Control"</span> <span class="ot">=</span> cold <span class="sc">-</span> cntrl,</span>
 <span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NE - Cold"</span> <span class="ot">=</span> ne <span class="sc">-</span> cold)</span>
 <span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> my_contrasts,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> planned_contrasts,</span>
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">adjust =</span> <span class="st">"holm"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">

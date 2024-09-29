@@ -984,7 +984,7 @@ Notice that inference is the same, only the direction of the effect differs.
 
 #### Planned comparisons using custom contrasts
 
-In any experiment with more than two groups, we have multiple contrasts (or "multiple tests"). Almost always, researchers are only interested in a subset of these. We can limit the number of contrasts computed by the `contrast()` function by passing a custom contrast object in `method =`.
+In any experiment with more than two groups, we have multiple contrasts (or "multiple tests"). Almost always, researchers are only interested in a subset of these. This subset of focal contrasts are **planned comparisons**. We can limit the number of contrasts computed by the `contrast()` function by passing a custom contrast object in `method =`.
 
 Let's say the focal contrasts are `Cold - Control` and `NE - Cold` but not the contrast `NE - Control`. To pass a custom contrast object with only these contrasts, I first peek at the emm object to see the order of group means.
 
@@ -999,12 +999,12 @@ cntrl <- c(1, 0, 0)
 cold <- c(0, 1, 0)
 ne <- c(0, 0, 1)
 
-my_contrasts <- list(
+planned_contrasts <- list(
   "Cold - Control" = cold - cntrl,
   "NE - Cold" = ne - cold)
 
 contrast(m1_emm,
-        method = my_contrasts,
+        method = planned_contrasts,
         adjust = "holm") |>
   summary(infer = TRUE)
 
