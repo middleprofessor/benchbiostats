@@ -874,17 +874,31 @@ The *t* and *p*-values computed from three separate tests differ from the *t* an
 m1 <- lm(diHOME ~ treatment, data = fig2a)
 ```
 
-1. As described in [Fitting the linear model](#fit-the-model), `diHOME ~ treatment` is the model formula. All functions that will be used to fit models in this text will use a model formula. Many base R and package functions that are meant to be either "easy" or follow an ANOVA strategy use lists of dependent and independent variables instead of a model formula. We won't use these because they are not consistent with a linear modeling way of thinking about data analysis.
-2. $\texttt{treatment}$ was specifically coded as a factor variable in the import and wrangle chunk and R will automatically create the correct indicator variables. If categorical variables on the RHS of the formula have not be converted to factors by the user, then R will treat character variables as factors and create the indicator variables. If the categorical variable is numeric (for example, the variable `time` might have levels 1, 2, 3 instead of "1 hour", "2 hours", "three hours"), R will treat the variable as numeric and not create the indicator variables. A user could use the formula `y ~ factor(time)` to force R to create the indicator variable. I prefer to explicitly create a version of the variable that is recoded as factor using something like `dt[, time_fac := factor(time, levels = c("1", "2", "3"))]`.
+1. The two arguments are the model formula `diHOME ~ treatment` and the data object `fig2a`.
+2. The model formula has the form `y ~ x`. I read this as "y as a function of x" but say "y squiggly x" when I'm speaking it out loud. `y` is the response variable `diHome`. Here, `x` is the factor `treatment`.
+3. In this text, the `y` and `x` parts of the model formula will always be the names of columns of data in the data object. But, either or both can be vectors or matrices that are not in a data.table (or other kind of data object).
+4. All functions that will be used to fit models in this text will use a model formula.
+5. Many base R and package functions that are meant to be either "easy" or follow an ANOVA strategy use lists of dependent and independent variables instead of a model formula. We won't use these because they are not consistent with a linear modeling way of thinking about data analysis.
+6. `treatment` was specifically coded as a factor variable in the import and wrangle chunk above and R will automatically create the correct indicator variables.
+7. If categorical variables on the RHS of the formula have not be converted to factors by the user, then R will treat character variables as factors and create the indicator variables.
+
+::: {.callout-warning}
+If you have a numeric or integer `x` variable but want the model to treat this as categorical, you need to change the object type to factor, otherwise the lm function will treat the variable as numeric. For example, if you have a variable `time` with levels 1, 2, 3 instead of "1 hour", "2 hours", "three hours", then you could fit this as a factor variable using the formula `y ~ factor(time)` to force R to create the indicator variables. I prefer to explicitly create a version of the variable that is recoded as factor using something like `dt[, time_fac := factor(time, levels = c("1", "2", "3"))]`
+:::
 
 ### Controlling the output in tables using the coefficient table as an example
 
 ```{r}
+m1_coef <- coef(summary(m1))
+
+# or if we want the CIs of the coefficeints too
+
 m1_coef <- cbind(coef(summary(m1)),
                  confint(m1))
 m1_coef
 ```
-The standard print of the `m1_coef` object is too long for the display and often wraps when printed on the display, which can make it hard to read. I use `knitr::kable` to print the table with fewer decimal places and `kableExtra::kable_styling` to make it a little prettier.
+
+For many table-like objects, I use `knitr::kable` to print the table with fewer decimal places and `kableExtra::kable_styling` to make it a little prettier.
 
 ```{r}
 # the row names are not part of the m1_coef object
@@ -897,6 +911,16 @@ m1_coef|> # pipe the m1_coef object to kable
 # explore other styles in the kableExtra package
 ```
 
+Note that as of this writing (09/29/2024), `kable_styling()` is not correctly printing the absolute value signs in the p-value label. This is annoying, so as a fix, I'm changing the column name to `p value`
+
+```{r}
+colnames(m1_coef)[4] <- "p value"
+m1_coef|> # pipe the m1_coef object to kable
+  kable(digits = c(2,3,3,5,2,2)) |> 
+  kable_styling()
+
+```
+
 ### Using the emmeans function
 
 ```{r cat-x-m1_emm}
@@ -906,11 +930,12 @@ m1_emm
 
 Notes
 
-1. Note that printing the `emmeans` object displays useful information. Here, this information includes the confidence level used. If the object is printed using `kable` (as in the "Inference" and "Understanding" sections above), only the table is printed and the additional information is lost.
-2. `emmeans` computes the modeled means of all combinations of the levels of the factor variables specified in `specs`.
-3. If there are two factor variables in the model, and both are passed to `specs`, then the modeled means of all combinations of the levels of the two variables are computed. If only one factor variable is passed, then the marginal means (averaged over all levels of the missing factor) are computed. This will become more clear in the chapter "Models for two (or more) categorical X variables".
-4. If there are continuous covariates in the model, the modeled means are computed at the average values of these covariates. These covariates do not need to be passed to the `specs` argument.
-5. You can pass numeric and integer covariates to `specs` to control the value of the covariates used compute the modeled means. This is outlined in [Adding covariates to a linear model](chapter-covariates)
+@. Note that printing the `emmeans` object displays useful information. Here, this information includes the confidence level used. If the object is printed using `kable` (as in the "Inference" and "Understanding" sections above), only the table is printed and the additional information is lost.
+@. emmeans` computes the modeled means of all combinations of the levels of the factor variables specified in the argument `specs`.
+@. An important argument of the emmeans function is `type =`, which controls the "space" of the response variable.
+@. Output options are more complex if there are two or more X variables. This will be covered in the chapter "Models for two (or more) categorical X variables".
+@. If there are continuous covariates in the model, the modeled means are computed at the average values of these covariates. These covariates do not need to be passed to the `specs` argument.
+@. You can pass numeric and integer covariates to `specs` to control the value of the covariates used to compute the modeled means. This is outlined in [Adding covariates to a linear model](chapter-covariates)
 
 ### Using the contrast function
 
@@ -923,6 +948,7 @@ m1_planned <- contrast(m1_emm,
 
 m1_planned
 ```
+
 Notes
 
 1. Note that printing the `contrast` object displays useful information, including the confidence level used and the method of adjustment for multiple tests. If the object is printed using `kable() |> kable_styling()` (as in the "Inference" and "Understanding" sections above), only the table is printed and the additional information is lost.
@@ -930,23 +956,71 @@ Notes
 3. The `adjust` argument controls if and how to adjust for multiple tests. Each `method` has a default adjustment method. See below.
 4. The `level` argument controls the percentile boundaries of the confidence interval. The default is 0.95. Including this argument with this value makes this level transparent.
 
-#### method argument
+#### the method argument controls the set of contrasts
 
 The `method =` argument is used to control the set of contrasts that are computed. Type `help("contrast-methods")` into the console to see the list of available methods. Also, read the [comparisons and contrasts vignette](https://cran.r-project.org/web/packages/emmeans/vignettes/comparisons.html){target="_blank"} for more on `emmeans::contrast()`
 
-1. `method = "trt.vs.ctrl"` computes all non-reference minus reference contrasts. This method was used in the "Inference" section because it gives the two contrasts of the planned comparisons identified in the "understand the experimental design" step.
-2. The default adjustment for multiple tests is "dunnettx", which is [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"}. "none" was specified in the inference section because both comparisons were planned.
+@. `method = "revpairwise"` computes all pairwise contrasts. The contrasts that include the reference are in the direction $nonreference - reference$, which is the direction prferred in this text since the result is the effect if you add the treatment. The default *p*-value adjustment is "tukey", which is the [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"}
+@. `method = "pairwise"` is the default method. "pairwise" computes all pairwise contrasts but in the direction opposite to "revpairwise". The default *p*-value adjustment is "tukey."
+@. `method = "trt.vs.ctrl"` computes all non-reference minus reference contrasts. This method was used in the "Inference" section because it gives the two contrasts of the planned comparisons identified in the "understand the experimental design" step. The default *p*-value adjustment for multiple tests is "dunnettx", which is [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"}.
+
+Here are all pairwise contrasts using "revpairwise"
 
 ```{r}
-m1_tukey <- contrast(m1_emm,
-                       method = "revpairwise",
-                       adjust = "tukey",
-                       level = 0.95) |>
+contrast(m1_emm,
+        method = "revpairwise") |>
   summary(infer = TRUE)
-m1_tukey
 ```
-1. Both `method = "pairwise"` and `method = "revpairwise"` compute all pairwise comparisons. I prefer "revpairwise" because the contrasts that include the reference are in the direction non-reference minus reference.
-2. The default adjustment for multiple tests is "tukey", which is the [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"}.
+
+and using "pairwise"
+
+```{r}
+contrast(m1_emm,
+        method = "pairwise") |>
+  summary(infer = TRUE)
+```
+
+Notice that inference is the same, only the direction of the effect differs.
+
+#### Planned comparisons using custom contrasts
+
+In any experiment with more than two groups, we have multiple contrasts (or "multiple tests"). Almost always, researchers are only interested in a subset of these. We can limit the number of contrasts computed by the `contrast()` function by passing a custom contrast object in `method =`.
+
+Let's say the focal contrasts are `Cold - Control` and `NE - Cold` but not the contrast `NE - Control`. To pass a custom contrast object with only these contrasts, I first peek at the emm object to see the order of group means.
+
+```{r}
+m1_emm
+```
+
+Now we use this to create the contrasts and send these to the `contrast()` function.
+
+```{r}
+cntrl <- c(1, 0, 0)
+cold <- c(0, 1, 0)
+ne <- c(0, 0, 1)
+
+my_contrasts <- list(
+  "Cold - Control" = cold - cntrl,
+  "NE - Cold" = ne - cold)
+
+contrast(m1_emm,
+        method = my_contrasts,
+        adjust = "holm") |>
+  summary(infer = TRUE)
+
+```
+
+What did I do?
+
+1. We have three means so I created three vectors of length 3.
+2. Each vector contains a "1" in the position that indicates that group's row in the emmeans table.
+3. I then create the contrast object as a list containing the contrasts in the form
+
+"output contrast name" = group1 - group2
+
+::: {.callout-tip}
+Mindless *p*-values waste research time and money so contrasts take thought. Note that adjustments depend on the number of contrasts so if an advisor or reviewer or benighted colleague insists on adjusting for multiple tests, then fewer tests using this planned comparison approach will have higher power. However, all pairwise contrasts can be useful to a reader, so I would recommend creating a table with all pairwise contrasts with both unadjusted and adjusted *p*-values and adding this to a supplementary file.
+:::
 
 #### Adjustment for multiple tests
 
@@ -960,45 +1034,11 @@ See the Section \@ref(twoway-multiple-tests) in the chapter "Linear models with 
 6. "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} not the Type I error rate for a family of tests. One might use this in an exploratory experiment.
 7. "mvt" -- based on the multivariate *t* distribution and using covariance structure of the variables.
 
-#### Planned comparisons using custom contrasts
-
-With any but purely exploratory experiment, we have certain contrasts that test the focal hypotheses. We care little to none about other contrasts. We can limit the contrasts computed using `emmeans::contrast()` by passing custom contrasts to `method`.
-
-1. create a set of vectors with as many elements as there are rows in the emmeans table. Name each vector using the (or a) group name for the row in the emmeans table. For the vector created for row *j*, set the value of the *j*th element to 1 and set all other values to zero.
-2. create a list of contrasts, with each set in the list the difference of two of the named vectors from step 1.
-
-```{r}
-# m1_emm # print in console to get row numbers
-# set the mean as the row number from the emmeans table
-cn <- c(1,0,0) # control is in row 1
-cold <- c(0,1,0) # cold in in row 2
-ne <- c(0,0,1) # ne is in row 3
-
-# contrasts are the difference in the vectors created above
-# the focal contrasts are in the understand the experimental
-# design section
-# 1. (cold - cn) 
-# 2. (ne - cn)
-
-planned_contrasts <- list(
-  "Cold - Cn" = c(cold - cn),
-  "NE - Cn" = c(ne - cn)
-)
-m1_planned <- contrast(m1_emm,
-                       method = planned_contrasts,
-                       adjust = "none"
-) |>
-  summary(infer = TRUE)
-
-m1_planned|>
-  kable(digits = c(1,1,2,0,1,1,1,4)) |>
-  kable_styling()
-  
-```
-
 ### How to generate ANOVA tables
 
 ANOVA is Analysis of Variance. Researchers frequently use the term "ANOVA" as the name for an analysis of an experiment with single-factor with more than two groups. However, ANOVA is a general method of inference for complex experimental designs. ANOVA models and regression models are different ways of expressing the same underlying linear model.
+
+ANOVA tables can be useful for some sophisticated analyses. But for most researchers, an ANOVA table is more likely to lead to misconception than enlightenment. I would typpically recommend to never look at an ANOVA table. But, if your PI, manager, thesis committee, or journal editor insists that you do ANOVA, and you cannot convince them otherwise, here is how to generate an ANOVA table in R. Note that even though we are generating that table, the computation of the contrast table and all inference from that is not part of the ANOVA.
 
 ```{r fig2a-anova-table, echo=FALSE, warning=FALSE, message=FALSE}
 m1 <- lm(diHOME ~ treatment, data = fig2a)
@@ -1019,8 +1059,6 @@ Notes
 5. $\texttt{Mean Sq}$ contains the **mean square** for each term (row) in the table. The mean square is a variance. Remember that the numerator of a variance is a sum of squared differences between observed and mean values. The numerator of $\texttt{Mean Sq}$ is the value in $\texttt{Sum Sq}$ from the same row. And, remember that the denominator of a variance is a degree of freedom. The denominator of $\texttt{Mean Sq}$ is the value in $\texttt{DF}$ from the same row. 
 
 An ANOVA table for a single factor with more than two groups has a single *p*-value for the treatment term. The single *p*-value is the probability of sampling a value of *F* as large or larger than the observed *F* under the null (no true effects of either treatment and all specifications of the generating model are true). There is not much we can do with this number - we want to estimate the effect sizes and their uncertainty and we don't get this from an ANOVA table. Many textbooks, websites, and colleagues suggest to 1) fit the ANOVA, 2) check the *F*, and, if $F < 0.05$, 3) do "tests after an ANOVA". These tests after an ANOVA are the planned comparisons and post-hoc tests described above using the linear model. In classical ANOVA, the initial computation of the cell means (means of treatment combinations) and sums of squares was a logical first step to the decomposition of these sums of squares to compute the contrasts. With modern linear models using regression, the ANOVA first step is unnecessary and not recommended.
-
-If your PI, manager, thesis committee, or journal editor insists that you do ANOVA, and you cannot convince them otherwise, here is how to generate an ANOVA table in R. Note that even though we are generating that table, the computation of the contrast table and all inference from that is not part of the ANOVA.
 
 #### The afex aov_4 function
 

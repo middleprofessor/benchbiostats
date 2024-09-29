@@ -294,9 +294,9 @@ window.Quarto = {
   <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">10.2.3</span> Using the emmeans function</a></li>
   <li><a href="#using-the-contrast-function" id="toc-using-the-contrast-function" class="nav-link" data-scroll-target="#using-the-contrast-function"><span class="header-section-number">10.2.4</span> Using the contrast function</a>
   <ul class="collapse">
-  <li><a href="#method-argument" id="toc-method-argument" class="nav-link" data-scroll-target="#method-argument"><span class="header-section-number">10.2.4.1</span> method argument</a></li>
-  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.2</span> Adjustment for multiple tests</a></li>
-  <li><a href="#planned-comparisons-using-custom-contrasts" id="toc-planned-comparisons-using-custom-contrasts" class="nav-link" data-scroll-target="#planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.3</span> Planned comparisons using custom contrasts</a></li>
+  <li><a href="#the-method-argument-controls-the-set-of-contrasts" id="toc-the-method-argument-controls-the-set-of-contrasts" class="nav-link" data-scroll-target="#the-method-argument-controls-the-set-of-contrasts"><span class="header-section-number">10.2.4.1</span> the method argument controls the set of contrasts</a></li>
+  <li><a href="#planned-comparisons-using-custom-contrasts" id="toc-planned-comparisons-using-custom-contrasts" class="nav-link" data-scroll-target="#planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.2</span> Planned comparisons using custom contrasts</a></li>
+  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.3</span> Adjustment for multiple tests</a></li>
   </ul></li>
   <li><a href="#how-to-generate-anova-tables" id="toc-how-to-generate-anova-tables" class="nav-link" data-scroll-target="#how-to-generate-anova-tables"><span class="header-section-number">10.2.5</span> How to generate ANOVA tables</a>
   <ul class="collapse">
@@ -1854,16 +1854,38 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol type="1">
-<li>As described in <a href="#fit-the-model">Fitting the linear model</a>, <code>diHOME ~ treatment</code> is the model formula. All functions that will be used to fit models in this text will use a model formula. Many base R and package functions that are meant to be either “easy” or follow an ANOVA strategy use lists of dependent and independent variables instead of a model formula. We won’t use these because they are not consistent with a linear modeling way of thinking about data analysis.</li>
-<li><span class="math inline">\(\texttt{treatment}\)</span> was specifically coded as a factor variable in the import and wrangle chunk and R will automatically create the correct indicator variables. If categorical variables on the RHS of the formula have not be converted to factors by the user, then R will treat character variables as factors and create the indicator variables. If the categorical variable is numeric (for example, the variable <code>time</code> might have levels 1, 2, 3 instead of “1 hour”, “2 hours”, “three hours”), R will treat the variable as numeric and not create the indicator variables. A user could use the formula <code>y ~ factor(time)</code> to force R to create the indicator variable. I prefer to explicitly create a version of the variable that is recoded as factor using something like <code>dt[, time_fac := factor(time, levels = c("1", "2", "3"))]</code>.</li>
+<li>The two arguments are the model formula <code>diHOME ~ treatment</code> and the data object <code>fig2a</code>.</li>
+<li>The model formula has the form <code>y ~ x</code>. I read this as “y as a function of x” but say “y squiggly x” when I’m speaking it out loud. <code>y</code> is the response variable <code>diHome</code>. Here, <code>x</code> is the factor <code>treatment</code>.</li>
+<li>In this text, the <code>y</code> and <code>x</code> parts of the model formula will always be the names of columns of data in the data object. But, either or both can be vectors or matrices that are not in a data.table (or other kind of data object).</li>
+<li>All functions that will be used to fit models in this text will use a model formula.</li>
+<li>Many base R and package functions that are meant to be either “easy” or follow an ANOVA strategy use lists of dependent and independent variables instead of a model formula. We won’t use these because they are not consistent with a linear modeling way of thinking about data analysis.</li>
+<li><code>treatment</code> was specifically coded as a factor variable in the import and wrangle chunk above and R will automatically create the correct indicator variables.</li>
+<li>If categorical variables on the RHS of the formula have not be converted to factors by the user, then R will treat character variables as factors and create the indicator variables.</li>
 </ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you have a numeric or integer <code>x</code> variable but want the model to treat this as categorical, you need to change the object type to factor, otherwise the lm function will treat the variable as numeric. For example, if you have a variable <code>time</code> with levels 1, 2, 3 instead of “1 hour”, “2 hours”, “three hours”, then you could fit this as a factor variable using the formula <code>y ~ factor(time)</code> to force R to create the indicator variables. I prefer to explicitly create a version of the variable that is recoded as factor using something like <code>dt[, time_fac := factor(time, levels = c("1", "2", "3"))]</code></p>
+</div>
+</div>
 </section>
 <section id="controlling-the-output-in-tables-using-the-coefficient-table-as-an-example" class="level3" data-number="10.2.2">
 <h3 data-number="10.2.2" class="anchored" data-anchor-id="controlling-the-output-in-tables-using-the-coefficient-table-as-an-example"><span class="header-section-number">10.2.2</span> Controlling the output in tables using the coefficient table as an example</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(m1)),</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">confint</span>(m1))</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>m1_coef</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>m1_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or if we want the CIs of the coefficeints too</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(m1)),</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">confint</span>(m1))</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>m1_coef</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate Std. Error  t value    Pr(&gt;|t|)     2.5 %   97.5 %
 (Intercept)   12.023075   3.081337 3.901902 0.001595771  5.414264 18.63189
@@ -1871,7 +1893,7 @@ treatmentCold  7.140386   4.570362 1.562324 0.140527829 -2.662066 16.94284
 treatmentNE   14.794354   4.357669 3.395015 0.004355868  5.448083 24.14063</code></pre>
 </div>
 </div>
-<p>The standard print of the <code>m1_coef</code> object is too long for the display and often wraps when printed on the display, which can make it hard to read. I use <code>knitr::kable</code> to print the table with fewer decimal places and <code>kableExtra::kable_styling</code> to make it a little prettier.</p>
+<p>For many table-like objects, I use <code>knitr::kable</code> to print the table with fewer decimal places and <code>kableExtra::kable_styling</code> to make it a little prettier.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the row names are not part of the m1_coef object</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># so there is no digit designation for this column</span></span>
@@ -1927,12 +1949,65 @@ treatmentNE   14.794354   4.357669 3.395015 0.004355868  5.448083 24.14063</code
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># explore other styles in the kableExtra package</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Note that as of this writing (09/29/2024), <code>kable_styling()</code> is not correctly printing the absolute value signs in the p-value label. This is annoying, so as a fix, I’m changing the column name to <code>p value</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(m1_coef)[<span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="st">"p value"</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>m1_coef<span class="sc">|&gt;</span> <span class="co"># pipe the m1_coef object to kable</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5 %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">12.02</td>
+<td style="text-align: right;">3.081</td>
+<td style="text-align: right;">3.902</td>
+<td style="text-align: right;">0.00160</td>
+<td style="text-align: right;">5.41</td>
+<td style="text-align: right;">18.63</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">treatmentCold</td>
+<td style="text-align: right;">7.14</td>
+<td style="text-align: right;">4.570</td>
+<td style="text-align: right;">1.562</td>
+<td style="text-align: right;">0.14053</td>
+<td style="text-align: right;">-2.66</td>
+<td style="text-align: right;">16.94</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">treatmentNE</td>
+<td style="text-align: right;">14.79</td>
+<td style="text-align: right;">4.358</td>
+<td style="text-align: right;">3.395</td>
+<td style="text-align: right;">0.00436</td>
+<td style="text-align: right;">5.45</td>
+<td style="text-align: right;">24.14</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
 </section>
 <section id="using-the-emmeans-function" class="level3" data-number="10.2.3">
 <h3 data-number="10.2.3" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">10.2.3</span> Using the emmeans function</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> treatment emmean   SE df lower.CL upper.CL
  Control     12.0 3.08 14     5.41     18.6
@@ -1943,24 +2018,25 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 <p>Notes</p>
-<ol type="1">
+<ol start="8" class="example" type="1">
 <li>Note that printing the <code>emmeans</code> object displays useful information. Here, this information includes the confidence level used. If the object is printed using <code>kable</code> (as in the “Inference” and “Understanding” sections above), only the table is printed and the additional information is lost.</li>
-<li><code>emmeans</code> computes the modeled means of all combinations of the levels of the factor variables specified in <code>specs</code>.</li>
-<li>If there are two factor variables in the model, and both are passed to <code>specs</code>, then the modeled means of all combinations of the levels of the two variables are computed. If only one factor variable is passed, then the marginal means (averaged over all levels of the missing factor) are computed. This will become more clear in the chapter “Models for two (or more) categorical X variables”.</li>
+<li>emmeans<code>computes the modeled means of all combinations of the levels of the factor variables specified in the argument</code>specs`.</li>
+<li>An important argument of the emmeans function is <code>type =</code>, which controls the “space” of the response variable.</li>
+<li>Output options are more complex if there are two or more X variables. This will be covered in the chapter “Models for two (or more) categorical X variables”.</li>
 <li>If there are continuous covariates in the model, the modeled means are computed at the average values of these covariates. These covariates do not need to be passed to the <code>specs</code> argument.</li>
-<li>You can pass numeric and integer covariates to <code>specs</code> to control the value of the covariates used compute the modeled means. This is outlined in <a href="chapter-covariates">Adding covariates to a linear model</a></li>
+<li>You can pass numeric and integer covariates to <code>specs</code> to control the value of the covariates used to compute the modeled means. This is outlined in <a href="chapter-covariates">Adding covariates to a linear model</a></li>
 </ol>
 </section>
 <section id="using-the-contrast-function" class="level3" data-number="10.2.4">
 <h3 data-number="10.2.4" class="anchored" data-anchor-id="using-the-contrast-function"><span class="header-section-number">10.2.4</span> Using the contrast function</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>m1_planned <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"trt.vs.ctrl"</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">adjust =</span> <span class="st">"none"</span>,</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">|&gt;</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>m1_planned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>m1_planned <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"trt.vs.ctrl"</span>,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">adjust =</span> <span class="st">"none"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>m1_planned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast       estimate   SE df lower.CL upper.CL t.ratio p.value
  Cold - Control     7.14 4.57 14    -2.66     16.9   1.562  0.1405
@@ -1976,20 +2052,19 @@ Confidence level used: 0.95 </code></pre>
 <li>The <code>adjust</code> argument controls if and how to adjust for multiple tests. Each <code>method</code> has a default adjustment method. See below.</li>
 <li>The <code>level</code> argument controls the percentile boundaries of the confidence interval. The default is 0.95. Including this argument with this value makes this level transparent.</li>
 </ol>
-<section id="method-argument" class="level4" data-number="10.2.4.1">
-<h4 data-number="10.2.4.1" class="anchored" data-anchor-id="method-argument"><span class="header-section-number">10.2.4.1</span> method argument</h4>
+<section id="the-method-argument-controls-the-set-of-contrasts" class="level4" data-number="10.2.4.1">
+<h4 data-number="10.2.4.1" class="anchored" data-anchor-id="the-method-argument-controls-the-set-of-contrasts"><span class="header-section-number">10.2.4.1</span> the method argument controls the set of contrasts</h4>
 <p>The <code>method =</code> argument is used to control the set of contrasts that are computed. Type <code>help("contrast-methods")</code> into the console to see the list of available methods. Also, read the <a href="https://cran.r-project.org/web/packages/emmeans/vignettes/comparisons.html" target="_blank">comparisons and contrasts vignette</a> for more on <code>emmeans::contrast()</code></p>
-<ol type="1">
-<li><code>method = "trt.vs.ctrl"</code> computes all non-reference minus reference contrasts. This method was used in the “Inference” section because it gives the two contrasts of the planned comparisons identified in the “understand the experimental design” step.</li>
-<li>The default adjustment for multiple tests is “dunnettx”, which is <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a>. “none” was specified in the inference section because both comparisons were planned.</li>
+<ol start="14" class="example" type="1">
+<li><code>method = "revpairwise"</code> computes all pairwise contrasts. The contrasts that include the reference are in the direction <span class="math inline">\(nonreference - reference\)</span>, which is the direction prferred in this text since the result is the effect if you add the treatment. The default <em>p</em>-value adjustment is “tukey”, which is the <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a></li>
+<li><code>method = "pairwise"</code> is the default method. “pairwise” computes all pairwise contrasts but in the direction opposite to “revpairwise”. The default <em>p</em>-value adjustment is “tukey.”</li>
+<li><code>method = "trt.vs.ctrl"</code> computes all non-reference minus reference contrasts. This method was used in the “Inference” section because it gives the two contrasts of the planned comparisons identified in the “understand the experimental design” step. The default <em>p</em>-value adjustment for multiple tests is “dunnettx”, which is <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a>.</li>
 </ol>
+<p>Here are all pairwise contrasts using “revpairwise”</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>m1_tukey <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">adjust =</span> <span class="st">"tukey"</span>,</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">|&gt;</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>m1_tukey</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">"revpairwise"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast       estimate   SE df lower.CL upper.CL t.ratio p.value
  Cold - Control     7.14 4.57 14    -4.82     19.1   1.562  0.2936
@@ -2001,13 +2076,86 @@ Conf-level adjustment: tukey method for comparing a family of 3 estimates
 P value adjustment: tukey method for comparing a family of 3 estimates </code></pre>
 </div>
 </div>
-<ol type="1">
-<li>Both <code>method = "pairwise"</code> and <code>method = "revpairwise"</code> compute all pairwise comparisons. I prefer “revpairwise” because the contrasts that include the reference are in the direction non-reference minus reference.</li>
-<li>The default adjustment for multiple tests is “tukey”, which is the <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a>.</li>
-</ol>
+<p>and using “pairwise”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast       estimate   SE df lower.CL upper.CL t.ratio p.value
+ Control - Cold    -7.14 4.57 14    -19.1     4.82  -1.562  0.2936
+ Control - NE     -14.79 4.36 14    -26.2    -3.39  -3.395  0.0114
+ Cold - NE         -7.65 4.57 14    -19.6     4.31  -1.675  0.2490
+
+Confidence level used: 0.95 
+Conf-level adjustment: tukey method for comparing a family of 3 estimates 
+P value adjustment: tukey method for comparing a family of 3 estimates </code></pre>
+</div>
+</div>
+<p>Notice that inference is the same, only the direction of the effect differs.</p>
 </section>
-<section id="adjustment-for-multiple-tests" class="level4" data-number="10.2.4.2">
-<h4 data-number="10.2.4.2" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.2</span> Adjustment for multiple tests</h4>
+<section id="planned-comparisons-using-custom-contrasts" class="level4" data-number="10.2.4.2">
+<h4 data-number="10.2.4.2" class="anchored" data-anchor-id="planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.2</span> Planned comparisons using custom contrasts</h4>
+<p>In any experiment with more than two groups, we have multiple contrasts (or “multiple tests”). Almost always, researchers are only interested in a subset of these. We can limit the number of contrasts computed by the <code>contrast()</code> function by passing a custom contrast object in <code>method =</code>.</p>
+<p>Let’s say the focal contrasts are <code>Cold - Control</code> and <code>NE - Cold</code> but not the contrast <code>NE - Control</code>. To pass a custom contrast object with only these contrasts, I first peek at the emm object to see the order of group means.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> treatment emmean   SE df lower.CL upper.CL
+ Control     12.0 3.08 14     5.41     18.6
+ Cold        19.2 3.38 14    11.92     26.4
+ NE          26.8 3.08 14    20.21     33.4
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>Now we use this to create the contrasts and send these to the <code>contrast()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cntrl <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>cold <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>my_contrasts <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cold - Control"</span> <span class="ot">=</span> cold <span class="sc">-</span> cntrl,</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NE - Cold"</span> <span class="ot">=</span> ne <span class="sc">-</span> cold)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> my_contrasts,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">adjust =</span> <span class="st">"holm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast       estimate   SE df lower.CL upper.CL t.ratio p.value
+ Cold - Control     7.14 4.57 14    -4.33     18.6   1.562  0.2324
+ NE - Cold          7.65 4.57 14    -3.82     19.1   1.675  0.2324
+
+Confidence level used: 0.95 
+Conf-level adjustment: bonferroni method for 2 estimates 
+P value adjustment: holm method for 2 tests </code></pre>
+</div>
+</div>
+<p>What did I do?</p>
+<ol type="1">
+<li>We have three means so I created three vectors of length 3.</li>
+<li>Each vector contains a “1” in the position that indicates that group’s row in the emmeans table.</li>
+<li>I then create the contrast object as a list containing the contrasts in the form</li>
+</ol>
+<p>“output contrast name” = group1 - group2</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mindless <em>p</em>-values waste research time and money so contrasts take thought. Note that adjustments depend on the number of contrasts so if an advisor or reviewer or benighted colleague insists on adjusting for multiple tests, then fewer tests using this planned comparison approach will have higher power. However, all pairwise contrasts can be useful to a reader, so I would recommend creating a table with all pairwise contrasts with both unadjusted and adjusted <em>p</em>-values and adding this to a supplementary file.</p>
+</div>
+</div>
+</section>
+<section id="adjustment-for-multiple-tests" class="level4" data-number="10.2.4.3">
+<h4 data-number="10.2.4.3" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.3</span> Adjustment for multiple tests</h4>
 <p>See the Section @ref(twoway-multiple-tests) in the chapter “Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models” for a more thorough explanation of the <em>p</em>-value adjustment for multiple tests that arise if an experiment has more than two treatment groups. Here, I just outline choices available in the <code>emmeans::contrast</code> function.</p>
 <ol type="1">
 <li>“none” – no adjustment</li>
@@ -2019,85 +2167,11 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 <li>“mvt” – based on the multivariate <em>t</em> distribution and using covariance structure of the variables.</li>
 </ol>
 </section>
-<section id="planned-comparisons-using-custom-contrasts" class="level4" data-number="10.2.4.3">
-<h4 data-number="10.2.4.3" class="anchored" data-anchor-id="planned-comparisons-using-custom-contrasts"><span class="header-section-number">10.2.4.3</span> Planned comparisons using custom contrasts</h4>
-<p>With any but purely exploratory experiment, we have certain contrasts that test the focal hypotheses. We care little to none about other contrasts. We can limit the contrasts computed using <code>emmeans::contrast()</code> by passing custom contrasts to <code>method</code>.</p>
-<ol type="1">
-<li>create a set of vectors with as many elements as there are rows in the emmeans table. Name each vector using the (or a) group name for the row in the emmeans table. For the vector created for row <em>j</em>, set the value of the <em>j</em>th element to 1 and set all other values to zero.</li>
-<li>create a list of contrasts, with each set in the list the difference of two of the named vectors from step 1.</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># m1_emm # print in console to get row numbers</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># set the mean as the row number from the emmeans table</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>cn <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="co"># control is in row 1</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>cold <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>) <span class="co"># cold in in row 2</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="co"># ne is in row 3</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># contrasts are the difference in the vectors created above</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="co"># the focal contrasts are in the understand the experimental</span></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="co"># design section</span></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. (cold - cn) </span></span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. (ne - cn)</span></span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>planned_contrasts <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cold - Cn"</span> <span class="ot">=</span> <span class="fu">c</span>(cold <span class="sc">-</span> cn),</span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NE - Cn"</span> <span class="ot">=</span> <span class="fu">c</span>(ne <span class="sc">-</span> cn)</span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>m1_planned <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> planned_contrasts,</span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>                       <span class="at">adjust =</span> <span class="st">"none"</span></span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>m1_planned<span class="sc">|&gt;</span></span>
-<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">4</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">contrast</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">df</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">lower.CL</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">upper.CL</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">t.ratio</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Cold - Cn</td>
-<td style="text-align: right;">7.1</td>
-<td style="text-align: right;">4.57</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">-2.7</td>
-<td style="text-align: right;">16.9</td>
-<td style="text-align: right;">1.6</td>
-<td style="text-align: right;">0.1405</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">NE - Cn</td>
-<td style="text-align: right;">14.8</td>
-<td style="text-align: right;">4.36</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">5.4</td>
-<td style="text-align: right;">24.1</td>
-<td style="text-align: right;">3.4</td>
-<td style="text-align: right;">0.0044</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</section>
 </section>
 <section id="how-to-generate-anova-tables" class="level3" data-number="10.2.5">
 <h3 data-number="10.2.5" class="anchored" data-anchor-id="how-to-generate-anova-tables"><span class="header-section-number">10.2.5</span> How to generate ANOVA tables</h3>
 <p>ANOVA is Analysis of Variance. Researchers frequently use the term “ANOVA” as the name for an analysis of an experiment with single-factor with more than two groups. However, ANOVA is a general method of inference for complex experimental designs. ANOVA models and regression models are different ways of expressing the same underlying linear model.</p>
+<p>ANOVA tables can be useful for some sophisticated analyses. But for most researchers, an ANOVA table is more likely to lead to misconception than enlightenment. I would typpically recommend to never look at an ANOVA table. But, if your PI, manager, thesis committee, or journal editor insists that you do ANOVA, and you cannot convince them otherwise, here is how to generate an ANOVA table in R. Note that even though we are generating that table, the computation of the contrast table and all inference from that is not part of the ANOVA.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -2144,18 +2218,17 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 <li><span class="math inline">\(\texttt{Mean Sq}\)</span> contains the <strong>mean square</strong> for each term (row) in the table. The mean square is a variance. Remember that the numerator of a variance is a sum of squared differences between observed and mean values. The numerator of <span class="math inline">\(\texttt{Mean Sq}\)</span> is the value in <span class="math inline">\(\texttt{Sum Sq}\)</span> from the same row. And, remember that the denominator of a variance is a degree of freedom. The denominator of <span class="math inline">\(\texttt{Mean Sq}\)</span> is the value in <span class="math inline">\(\texttt{DF}\)</span> from the same row.</li>
 </ol>
 <p>An ANOVA table for a single factor with more than two groups has a single <em>p</em>-value for the treatment term. The single <em>p</em>-value is the probability of sampling a value of <em>F</em> as large or larger than the observed <em>F</em> under the null (no true effects of either treatment and all specifications of the generating model are true). There is not much we can do with this number - we want to estimate the effect sizes and their uncertainty and we don’t get this from an ANOVA table. Many textbooks, websites, and colleagues suggest to 1) fit the ANOVA, 2) check the <em>F</em>, and, if <span class="math inline">\(F &lt; 0.05\)</span>, 3) do “tests after an ANOVA”. These tests after an ANOVA are the planned comparisons and post-hoc tests described above using the linear model. In classical ANOVA, the initial computation of the cell means (means of treatment combinations) and sums of squares was a logical first step to the decomposition of these sums of squares to compute the contrasts. With modern linear models using regression, the ANOVA first step is unnecessary and not recommended.</p>
-<p>If your PI, manager, thesis committee, or journal editor insists that you do ANOVA, and you cannot convince them otherwise, here is how to generate an ANOVA table in R. Note that even though we are generating that table, the computation of the contrast table and all inference from that is not part of the ANOVA.</p>
 <section id="the-afex-aov_4-function" class="level4" data-number="10.2.5.1">
 <h4 data-number="10.2.5.1" class="anchored" data-anchor-id="the-afex-aov_4-function"><span class="header-section-number">10.2.5.1</span> The afex aov_4 function</h4>
 <p>The package afex was developed to make it much easier for researchers to generate ANOVA tables that look like those from other statistics packages including SAS, SPSS, JMP, and Graphpad Prism.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .I is a data.table function that returns the row number</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>fig2a[, fake_id <span class="sc">:</span><span class="er">=</span> <span class="fu">paste</span>(<span class="st">"mouse"</span>, .I)]</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>m1_aov4 <span class="ot">&lt;-</span> <span class="fu">aov_4</span>(diHOME <span class="sc">~</span> treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>fake_id),</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> fig2a)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1_aov4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .I is a data.table function that returns the row number</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>fig2a[, fake_id <span class="sc">:</span><span class="er">=</span> <span class="fu">paste</span>(<span class="st">"mouse"</span>, .I)]</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>m1_aov4 <span class="ot">&lt;-</span> <span class="fu">aov_4</span>(diHOME <span class="sc">~</span> treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>fake_id),</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> fig2a)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1_aov4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type 3 tests)
 
@@ -2178,11 +2251,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h4 data-number="10.2.5.2" class="anchored" data-anchor-id="the-car-anova-function"><span class="header-section-number">10.2.5.2</span> The car Anova function</h4>
 <p>The car package has the extremely useful <code>Anova</code> function although using it is a bit like doing brain surgery having only watched a youtube video.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>type3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">treatment =</span> contr.sum)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>m1_type3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment,</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig2a,</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">contrasts =</span> type3)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m1_type3, <span class="at">type=</span><span class="st">"3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>type3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">treatment =</span> contr.sum)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>m1_type3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig2a,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">contrasts =</span> type3)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m1_type3, <span class="at">type=</span><span class="st">"3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -2220,8 +2293,8 @@ Warning
 </div>
 <p><strong>base R aov and anova</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>m1_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_aov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>m1_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_aov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
 treatment    2  656.9   328.4   5.765 0.0149 *
@@ -2232,9 +2305,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same as m1 in the Example 2 section</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same as m1 in the Example 2 section</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(diHOME <span class="sc">~</span> treatment, <span class="at">data =</span> fig2a)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -2259,60 +2332,60 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="importing-and-wrangling-the-fig3d-data-for-example-1" class="level3" data-number="10.3.1">
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="importing-and-wrangling-the-fig3d-data-for-example-1"><span class="header-section-number">10.3.1</span> Importing and wrangling the fig3d data for example 1</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"The cold-induced lipokine 12,13-diHOME promotes fatty acid transport into brown adipose tissue"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"The cold-induced lipokine 12,13-diHOME promotes fatty acid transport into brown adipose tissue"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need data_folder and data_from from earlier chunk</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41591_2017_BFnm4297_MOESM3_ESM.xlsx"</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ignore the column with animal ID. Based on methods, I am inferring</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co"># that the six mice in vehicle group *are different* from the</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="co"># six mice in the 1213 group.</span></span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>col_names_3d <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"1213"</span>)</span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"12,13-diHOME"</span>)</span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>fig3d <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Figure 3d"</span>,</span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"B3:C9"</span>,</span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> col_names_3d,</span>
-<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
-<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"serum_tg"</span>)</span>
-<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a><span class="co"># change group name of "1213"</span></span>
-<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>fig3d[treatment <span class="sc">==</span> <span class="st">"1213"</span>, treatment <span class="sc">:</span><span class="er">=</span> <span class="st">"12,13-diHOME"</span>]</span>
-<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a><span class="co"># make treatment a factor with the order in "treatment_levels"</span></span>
-<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>fig3d[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_levels)]</span>
-<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a><span class="co">#View(fig3d)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need data_folder and data_from from earlier chunk</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41591_2017_BFnm4297_MOESM3_ESM.xlsx"</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ignore the column with animal ID. Based on methods, I am inferring</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="co"># that the six mice in vehicle group *are different* from the</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># six mice in the 1213 group.</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>col_names_3d <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"1213"</span>)</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"12,13-diHOME"</span>)</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>fig3d <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Figure 3d"</span>,</span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"B3:C9"</span>,</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> col_names_3d,</span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"serum_tg"</span>)</span>
+<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a><span class="co"># change group name of "1213"</span></span>
+<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a>fig3d[treatment <span class="sc">==</span> <span class="st">"1213"</span>, treatment <span class="sc">:</span><span class="er">=</span> <span class="st">"12,13-diHOME"</span>]</span>
+<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-22"><a href="#cb60-22" aria-hidden="true" tabindex="-1"></a><span class="co"># make treatment a factor with the order in "treatment_levels"</span></span>
+<span id="cb60-23"><a href="#cb60-23" aria-hidden="true" tabindex="-1"></a>fig3d[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_levels)]</span>
+<span id="cb60-24"><a href="#cb60-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-25"><a href="#cb60-25" aria-hidden="true" tabindex="-1"></a><span class="co">#View(fig3d)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-and-wrangling-the-fig2a-data-for-example-2" class="level3" data-number="10.3.2">
 <h3 data-number="10.3.2" class="anchored" data-anchor-id="importing-and-wrangling-the-fig2a-data-for-example-2"><span class="header-section-number">10.3.2</span> Importing and wrangling the fig2a data for example 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need data_folder and data_from from earlier chunk</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41591_2017_BFnm4297_MOESM2_ESM.xlsx"</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co"># assuming mice are independent and not same mouse used for all three treatment</span></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>melt_col_names <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Animal"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>fig2a <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig 2a"</span>,</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A3:G6"</span>,</span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> melt_col_names,</span>
-<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"id"</span>,</span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"diHOME"</span>) <span class="co"># cannot start a variable with number</span></span>
-<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(fig2a, <span class="at">old =</span> <span class="fu">colnames</span>(fig2a)[<span class="dv">1</span>], <span class="at">new =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>treatment_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Control"</span>, <span class="st">"Cold"</span>, <span class="st">"NE"</span>)</span>
-<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>fig2a[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_order)] <span class="co"># order levels</span></span>
-<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a><span class="co">#View(fig2a)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need data_folder and data_from from earlier chunk</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41591_2017_BFnm4297_MOESM2_ESM.xlsx"</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># assuming mice are independent and not same mouse used for all three treatment</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>melt_col_names <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Animal"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>fig2a <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig 2a"</span>,</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A3:G6"</span>,</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> melt_col_names,</span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"id"</span>,</span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"diHOME"</span>) <span class="co"># cannot start a variable with number</span></span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(fig2a, <span class="at">old =</span> <span class="fu">colnames</span>(fig2a)[<span class="dv">1</span>], <span class="at">new =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>treatment_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Control"</span>, <span class="st">"Cold"</span>, <span class="st">"NE"</span>)</span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>fig2a[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_order)] <span class="co"># order levels</span></span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a><span class="co">#View(fig2a)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
