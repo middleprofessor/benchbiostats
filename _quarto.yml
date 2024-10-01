@@ -18,6 +18,7 @@ book:
     - chapters/intro-stat-modeling.qmd
     - chapters/continuous_x.qmd
     - chapters/categorical_x.qmd
+    - chapters/model-checking.qmd
 
 bibliography: references.bib
 
