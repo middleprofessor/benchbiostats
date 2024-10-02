@@ -260,7 +260,8 @@ window.Quarto = {
   <li><a href="#residuals" id="toc-residuals" class="nav-link" data-scroll-target="#residuals"><span class="header-section-number">11.3.1</span> Residuals</a></li>
   <li><a href="#normal-qq" id="toc-normal-qq" class="nav-link" data-scroll-target="#normal-qq"><span class="header-section-number">11.3.2</span> A Normal Q-Q plot is used to check for characteristic departures from Normality</a>
   <ul class="collapse">
-  <li><a href="#normal-qq-plot-of-the-fake-data-generated-above" id="toc-normal-qq-plot-of-the-fake-data-generated-above" class="nav-link" data-scroll-target="#normal-qq-plot-of-the-fake-data-generated-above"><span class="header-section-number">11.3.2.1</span> Normal QQ-plot of the fake data generated above</a></li>
+  <li><a href="#lets-construct-a-normal-q-q-plot" id="toc-lets-construct-a-normal-q-q-plot" class="nav-link" data-scroll-target="#lets-construct-a-normal-q-q-plot"><span class="header-section-number">11.3.2.1</span> Let’s construct a Normal Q-Q plot</a></li>
+  <li><a href="#normal-qq-plot-of-the-fake-data-generated-above" id="toc-normal-qq-plot-of-the-fake-data-generated-above" class="nav-link" data-scroll-target="#normal-qq-plot-of-the-fake-data-generated-above"><span class="header-section-number">11.3.2.2</span> Normal QQ-plot of the fake data generated above</a></li>
   </ul></li>
   <li><a href="#mapping-qq-plot-departures-from-normality" id="toc-mapping-qq-plot-departures-from-normality" class="nav-link" data-scroll-target="#mapping-qq-plot-departures-from-normality"><span class="header-section-number">11.3.3</span> Mapping QQ-plot departures from Normality</a>
   <ul class="collapse">
@@ -301,27 +302,40 @@ window.Quarto = {
 
 <section id="check-check" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="check-check"><span class="header-section-number">11.1</span> All statistical analyses should be followed by model checking</h2>
-<p>We us a linear model to infer effects or predict future outcomes. Our inference is uncertain. Given the model assumptions, we can quantify this uncertainty with standard errors, and from these standard errors we can compute confidence intervals and <em>p</em>-values. It is good practice to use a series of <strong>diagnostic plots</strong>, diagnostic statistics, and simulation to check how well the data approximate the fit model and model assumptions. <strong>Model checking</strong> is used to both check our subjective confidence in the modeled estimates and uncertainty and to provide empirical evidence for subjective decision making in the analysis workflow.</p>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>NHST blues</strong> – Researchers are often encouraged by textbooks, colleagues, or the literature to test the assumptions of a <em>t</em>-test or ANOVA with formal hypothesis tests of distributions such as a Shapiro-Wilks test of normality or a Levine test of homogeneity. In this strategy, an alternative to the <em>t</em>-test/ANOVA is used if the distribution test’s p-value is less than some cut-off (such as 0.05). Common alternatives include 1) transformations of the response to either make it more normal or the variances more homogenous, 2) implementation of alternative tests such as a Mann-Whitney-Wilcoxon (MWW) test for non-normal data or a Welch <em>t</em>-test/ANOVA for heterogenous variances. The logic of a test of normality or homogeneity before a <em>t</em>-test/ANOVA isn’t consistent with frequentist thinking because the failure to reject a null hypothesis does not mean the null hypothesis is true. We shouldn’t conclude that a sample is “normal” or that the variances are “homogenous” because a distributional test’s <em>p</em>-value &gt; 0.05. But, maybe we should of the distributional pre-test as an “objective” model check? The logic of this objective decision rule suffers from several issues. <strong>First</strong>, the subsequent <em>p</em>-value of the <em>t</em>test/ANOVA test is not valid because this <em>p</em>-value is the long-run frequency of a test-statistic as large or larger than the observed statistic conditional on the null – not conditional on the subset of nulls with <span class="math inline">\(p &gt; 0.05\)</span> in the distribution test. <strong>Second</strong>, real data are only approximately normal; with small <span class="math inline">\(n\)</span>, it will be hard to reject the null of a normal distribution because of low power, but, as <span class="math inline">\(n\)</span> increses, a normality test will reject any real dataset. <strong>Third</strong>, and most importantly, our analysis should follow the logic of our goals. If our goal is the estimation of effects, we cannot get meaningful estimates from a non-parametric test (with a few exceptions) or a transformed response, as these methods are entirely about computing a “correct” <em>p</em>-value. Good alternatives to classic non-parametric tests and transformations are bootstrap estimates of confidence limits, permutation tests, and generalized linear models.</p>
+<p>We use a linear model to infer effects or predict future outcomes. Our inference is uncertain. Given the model assumptions, we can quantify this uncertainty with standard errors, and from these standard errors we can compute confidence intervals and <em>p</em>-values. It is good practice to use a series of <strong>diagnostic plots</strong>, diagnostic statistics, and simulation to check how well the data approximate the fit model and model assumptions. <strong>Model checking</strong> is used to both check our subjective confidence in the modeled estimates and uncertainty and to provide empirical evidence for subjective decision making in the analysis workflow.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="NHST Blues">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+NHST Blues
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Researchers are often encouraged by textbooks, colleagues, or the literature to test the assumptions of a <em>t</em>-test or ANOVA with formal hypothesis tests of distributions such as a Shapiro-Wilks test of normality or a Levine test of homogeneity. In this strategy, an alternative to the <em>t</em>-test/ANOVA is used if the distribution test’s p-value is less than some cut-off (such as 0.05). Common alternatives include 1) transformations of the response to either make it more normal or the variances more homogenous, 2) implementation of alternative tests such as a Mann-Whitney-Wilcoxon (MWW) test for non-normal data or a Welch <em>t</em>-test/ANOVA for heterogenous variances. The logic of a test of normality or homogeneity before a <em>t</em>-test/ANOVA is a bit inconsistent with frequentist thinking because the failure to reject a null hypothesis does not mean the null hypothesis is true. That is, we shouldn’t conclude that a sample is “normal” or that the variances are “homogenous” because a distributional test’s <em>p</em>-value &gt; 0.05.</p>
+<p>But, maybe we should simply be pragmatic, and use a distributional pre-test as an “objective” model check. The logic of this objective decision rule suffers from several issues. <strong>First</strong>, for tests of normality, at least, a major issue is: Distribution tests are less likely to reject the null for small <span class="math inline">\(n\)</span> (because of low power) than large <span class="math inline">\(n\)</span> (because all real data is, at best, only approximately normal), but inference from confidence intervals and <em>p</em>-values from <em>t</em>-tests/ANOVAs are less reliable with small <span class="math inline">\(n\)</span> than with large <span class="math inline">\(n\)</span>. As a consequence, researchers will often use normal-models when inference is least reliable and alternative models when they inference is most reliable. <strong>Second</strong>, a <em>p</em>-value of the <em>t</em>test/ANOVA test following a distribution test is not strictly valid because a <em>p</em>-value is the long-run frequency of a test-statistic as large or larger than the observed statistic conditional on the null – not conditional on the subset of nulls with <span class="math inline">\(p &gt; 0.05\)</span> in a distribution test. <strong>Third</strong>, and most importantly, our analysis should follow the logic of our goals. If our goal is the estimation of effects, we cannot get meaningful estimates from a non-parametric test (with a few exceptions) or a transformed response, as these methods are entirely about computing a “correct” <em>p</em>-value. Good alternatives to classic non-parametric tests and transformations are bootstrap estimates of confidence limits, permutation tests, and generalized linear models.</p>
+</div>
 </div>
 </section>
 <section id="linear-model-assumptions" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="linear-model-assumptions"><span class="header-section-number">11.2</span> Linear model assumptions</h2>
 <p>To facilitate explanation of assumptions of the linear model and extensions of the linear model, I will use both the error-draw and conditional-draw specifications of a linear model with a single <span class="math inline">\(X\)</span> variable.</p>
-<p>error draw: <span class="math display">\[\begin{align}
+<p>error draw: <span id="eq-model-checking-spec1"><span class="math display">\[
+\begin{align}
 y &amp;= \beta_0 + \beta_1 x_i + \varepsilon_i\\
 \varepsilon_i &amp;\sim N(0, \sigma^2)
-(\#eq:model-checking-spec1)
-\end{align}\]</span></p>
-<p>conditional draw: <span class="math display">\[\begin{align}
+\end{align}
+\tag{11.1}\]</span></span></p>
+<p>conditional draw: <span id="eq-model-checking-spec2"><span class="math display">\[
+\begin{align}
 y_i &amp;\sim N(\mu_i, \sigma^2)\\
 \mathrm{E}(Y|X=x_i) &amp;= \mu_i\\
 \mu_i &amp;= \beta_0 + \beta_1 x_i
-(\#eq:model-checking-spec2)
-\end{align}\]</span></p>
+\end{align}
+\tag{11.2}\]</span></span></p>
 <p>This model generates random data using the set of rules specified in the model equations. To quantify uncertainty in our estimated parameters, including standard errors, confidence intervals, and <em>p</em>-values, we make the assumption that the data from the experiment is a random sample generated using these rules.</p>
-<p>The two rules specified in the model above (Model @ref(eq:model-checking-spec)) are</p>
+<p>The two rules specified in the model above are</p>
 <ol type="1">
 <li>The systematic component of data generation is <span class="math inline">\(\beta_0 + \beta_1 X\)</span>.</li>
 </ol>
@@ -335,13 +349,8 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 <section id="a-bit-about-iid" class="level3" data-number="11.2.1">
 <h3 data-number="11.2.1" class="anchored" data-anchor-id="a-bit-about-iid"><span class="header-section-number">11.2.1</span> A bit about IID</h3>
 <ol type="1">
-<li><strong>Independent</strong> means that the random draw for one case cannot be predicted from the random draw of any other case. A lack of independence creates <em>correlated error</em>. There are lots or reasons that errors might be correlated. If individuals are measured both within and among cages, or tanks, or plots, or field sites, then we’d expect the measures within the same unit (cage, tank, plot, site) to err from the model in the same direction because of environmental features shared by individuals within the unit but not by individuals in other units. Multiple measures within experimental units create “clusters” of error. Lack of independence or clustered error can be modeled using <strong>generalized least squares (GLS)</strong> models that directly model the structure of the error and with <strong>random effects</strong> models. Random effects models go by many names including linear mixed models (common in Ecology), hierarchical models, and multilevel models. Both GLS and random effects models are variations of linear models.</li>
-</ol>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>tl;dr</strong> – Measures taken within the same individual over time (<em>repeated measures</em>) are correlated and are common in all areas of biology. In ecology and evolutionary studies, measures that are taken from sites that are closer together or measures taken closer in time or measures from more closely related biological species will tend to have more similar error than measures taken from sites that are further apart or from times that are further apart or from species that are less closely related. Space and time and phylogeny create <strong>spatial, temporal, and phylogenetic autocorrelation</strong>.</p>
-</div>
-<ol start="2" type="1">
-<li><strong>Identical</strong> means that all random draws at a given value of <span class="math inline">\(X\)</span> are from the same distribution. Using the error-draw specification of the model above, this can be restated as, the error-draw (<span class="math inline">\(\varepsilon_i\)</span>) for every <span class="math inline">\(i\)</span> is from the same distribution <span class="math inline">\(N(0, \sigma^2\)</span>). Using the conditional-draw specification, this can be restated as, the random-draw <span class="math inline">\(y_i\)</span> for every <span class="math inline">\(i\)</span> with the same expected value <span class="math inline">\(\mu = \mu_i\)</span> is from the same distribution <span class="math inline">\(N(\mu_i, \sigma^2\)</span>). Understand the importance of this. Parametric inference using this model assumes that the sampling variance of <span class="math inline">\(\mu\)</span> <em>at a single value of <span class="math inline">\(X\)</span></em> is the same for <em>all values of <span class="math inline">\(X\)</span></em>. If <span class="math inline">\(X\)</span> is continuous, this means the spread of the points around the regression line is the same at all values of <span class="math inline">\(X\)</span> in the data. If <span class="math inline">\(X\)</span> is categorical, this means the spread of the points around the mean of a group is the same for all groups. A consequence of “identical”, then, for all classical linear models, is the assumption of homogeneity (or <strong>homoskedasticity</strong>) of variance. If the sampling variance differs among the <span class="math inline">\(X\)</span>, then the variances are heterogenous or <strong>heteroskedastic</strong>. Experimental treatments can affect the variance of the response in addition to the mean of the response. Heterogenous variance can be modeled using <strong>Generalized Least Squares (GLS)</strong> linear models. Many natural biological processes generate data in which the error is a function of the mean. For example, measures of biological variables that grow, such as size of body parts, have variances that “grow” with the mean. Or, measures of counts, such as the number of cells damaged by toxin, the number of eggs in a nest, or the number of mRNA transcripts per cell have variances that are a function of the mean. Both growth and count measures can sometimes be reasonably modeled using a linear model but more often, they are better modeled using a <strong>Generalized Linear Model</strong> (GLM).</li>
+<li><p><strong>Independent</strong> means that the random draw for one case cannot be predicted from the random draw of any other case. A lack of independence creates <em>correlated error</em>. There are lots or reasons that errors might be correlated. Multiple measures from the same mouse/litter/cage/preparation are expected to be more similar to each other than to measures from different mice/litters/cages/preparations. Multiple measures within any unit that shares variance not shared by other units creates “clusters” of error. Lack of independence or clustered error can be modeled using <strong>generalized least squares (GLS)</strong> models that directly model the structure of the error and with <strong>random effects</strong> models. Random effects models go by many names including linear mixed models (common in Ecology), hierarchical models, and multilevel models. Both GLS and random effects models are variations of linear models.</p></li>
+<li><p><strong>Identical</strong> means that all random draws at a given value of <span class="math inline">\(X\)</span> are from the same distribution. Using the error-draw specification of the model above, this can be restated as, the error-draw (<span class="math inline">\(\varepsilon_i\)</span>) for every <span class="math inline">\(i\)</span> is from the same distribution <span class="math inline">\(N(0, \sigma^2\)</span>). Using the conditional-draw specification, this can be restated as, the random-draw <span class="math inline">\(y_i\)</span> for every <span class="math inline">\(i\)</span> with the same expected value <span class="math inline">\(\mu = \mu_i\)</span> is from the same distribution <span class="math inline">\(N(\mu_i, \sigma^2\)</span>). Understand the importance of this. Parametric inference using this model assumes that the sampling variance of <span class="math inline">\(\mu\)</span> <em>at a single value of <span class="math inline">\(X\)</span></em> is the same for <em>all values of <span class="math inline">\(X\)</span></em>. If <span class="math inline">\(X\)</span> is continuous, this means the spread of the points around the regression line is the same at all values of <span class="math inline">\(X\)</span> in the data. If <span class="math inline">\(X\)</span> is categorical, this means the spread of the points around the mean of a group is the same for all groups. A consequence of “identical”, then, for all classical linear models, is the assumption of homogeneity (or <strong>homoskedasticity</strong>) of variance. If the sampling variance differs among the <span class="math inline">\(X\)</span>, then the variances are heterogenous or <strong>heteroskedastic</strong>. Experimental treatments can affect the variance of the response in addition to the mean of the response. Heterogenous variance can be modeled using <strong>Generalized Least Squares (GLS)</strong> linear models. Many natural biological processes generate data in which the error is a function of the mean. For example, measures of biological variables that grow, such as size of body parts, have variances that “grow” with the mean. Or, measures of counts, such as the number of cells damaged by toxin, the number of eggs in a nest, or the number of mRNA transcripts per cell have variances that are a function of the mean. Both growth and count measures can sometimes be reasonably modeled using a linear model but more often, they are better modeled using a <strong>Generalized Linear Model</strong> (GLM).</p></li>
 </ol>
 </section>
 </section>
@@ -350,8 +359,18 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 <section id="residuals" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="residuals"><span class="header-section-number">11.3.1</span> Residuals</h3>
 <p>A residual of a statistical model is <span class="math inline">\(y_i - \hat{y}_i\)</span>. Remember that <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X\)</span> has the value <span class="math inline">\(x_i\)</span> (compactly written as <span class="math inline">\(X=x_i\)</span>). And remember that <span class="math inline">\(\hat{y}_i\)</span> is the estimate of <span class="math inline">\(\mu_i\)</span>. For linear models (but not generalized linear models), the residuals of the fit model are estimates of the <span class="math inline">\(\varepsilon\)</span> in equation @ref(eq:model-checking-spec1). This <em>is not</em> true for generalized linear models because GLMs are not specified using @ref(eq:model-checking-spec1).</p>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>Alert</strong> A common misconception is that inference from a linear model assumes that the <em>response</em> (the measured <span class="math inline">\(Y\)</span>) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. Model @ref(eq:model-checking-spec1) explicitly shows that it is the error that has the normal distribution – the distribution of <span class="math inline">\(Y\)</span> is a mix of the distribution of <span class="math inline">\(X\)</span> and that of the error. A more general way of thinking about the assumed distribution uses the specification in model @ref(eq:model-checking-spec2), which shows that it is the <em>conditional</em> response that is assumed to be IID normal. Remember, a conditional response (<span class="math inline">\(y_i\)</span>) is a random draw from the infinite set of responses at a given value of <span class="math inline">\(X\)</span>.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Alert">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Alert
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A common misconception is that inference from a linear model assumes that the <em>response</em> (the measured <span class="math inline">\(Y\)</span>) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. Model @ref(eq:model-checking-spec1) explicitly shows that it is the error that has the normal distribution – the distribution of <span class="math inline">\(Y\)</span> is a mix of the distribution of <span class="math inline">\(X\)</span> and that of the error. A more general way of thinking about the assumed distribution uses the specification in model @ref(eq:model-checking-spec2), which shows that it is the <em>conditional</em> response that is assumed to be IID normal. Remember, a conditional response (<span class="math inline">\(y_i\)</span>) is a random draw from the infinite set of responses at a given value of <span class="math inline">\(X\)</span></p>
+</div>
 </div>
 <p>Let’s look at the distribution of residuals versus the distribution of responses for a hypothetical experiment with a single, categorical <span class="math inline">\(X\)</span> variable (the experimental factor) with two levels (“Cn” for control and “Tr” for treatment). The true parameters are <span class="math inline">\(\beta_0 = 10\)</span> (the true mean for the control group, or <span class="math inline">\(\mu_{0}\)</span>), <span class="math inline">\(\beta_1=4\)</span> (the difference between the true mean for the treatment minus the true mean for the control, or <span class="math inline">\(\mu_1 - \mu_0\)</span>), and <span class="math inline">\(\sigma = 2\)</span> (the error standard deviation).</p>
 <div class="cell">
@@ -366,8 +385,18 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 </div>
 <p>The plot above shows a histogram of the response (A) and residuals (B). In the plot of the response, the mode (the highest bar, or bin with the most cases) includes true mean for each group. And, as expected given <span class="math inline">\(\beta_1=4\)</span>, the modes of the two groups are 4 units apart. It should be easy to see from this plot that the response does not have a normal distribution. Instead, it is distincly bimodal. But the distribution of the response <em>within</em> each level looks like these are drawn from a normal distribution – and it should. In the plot of the residuals, the values of both groups are shifted so that the mean of each group is at zero. The consequence of the shift is that the combined set of residuals does look like it is drawn from a Normal distribution.</p>
 <p>The two plots suggest two different approaches for model checking. First, we could examine the responses within each level of the experimental factor. Or, second, we could examine the residuals of the fit model, ignoring that the residuals come from multiple groups. The first is inefficient because it requires as many checks as there are levels in the factor. The second requires a single check.</p>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>Alert</strong> Some textbooks that recommend formal hypothesis tests of normality recommend the inefficient, multiple testing on each group separately. This isn’t wrong, it’s just more work than it needs to be and also suffers from “multiple testing”.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Alert">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Alert
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some textbooks that recommend formal hypothesis tests of normality recommend the inefficient, multiple testing on each group separately. This isn’t wrong, it’s just more work than it needs to be and also suffers from “multiple testing”.</p>
+</div>
 </div>
 </section>
 <section id="normal-qq" class="level3" data-number="11.3.2">
@@ -406,14 +435,35 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 </div>
 </div>
 <p>A Normal Q-Q plot is not a test if the data are Normal. Instead, a Normal Q-Q plot is used to check for characteristic departures from Normality that are signatures of certain well-known distribution families. A researcher can look at a QQ-plot and reason that a departure is small and choose to fit a classic linear model using the Normal distribution. Or, a researcher can look at a QQ-plot and reason that the departure is large enough to fit a generalized linear model with a specific distribution family.</p>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>Stats 101</strong> A quantile is the value of a distribution that is greater than <span class="math inline">\(p\)</span> percent of the values in the distribution. The 2.5% quantile of a uniform distribution from 0 to 1 is 0.025. The 2.5% quantile of a standard normal distribution is -1.96 (remember that 95% of the values in a standard normal distribution are between -1.96 and 1.96). The 50% quantile of a uniform distribution is 0.5 and the 50% quantile of a standard normal distribution is 0.0 (this is the median of the distribtion – 50% of the values are smaller and 50% of the values are larger).</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Stats 101">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>Stats 201</strong> A Q-Q plot more generally is a scatter plot of two vectors of quantiles either of which can come from a sample or a theoretical distribution. In the GLM chapter, the text will introduce Q-Q plots of residual quantiles transformed to have an expected uniform distribution. These are plotted against theoretical uniform quantiles from 0 to 1.</p>
+<div class="callout-title-container flex-fill">
+Stats 101
 </div>
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-<p><strong>Intuition Pump</strong> – Let’s construct a Normal Q-Q plot. A <strong>quantile</strong> (or percentile) of a vector of numbers is the value of the point at a specified percentage rank. The median is the 50% quantile. The 95% confidence intervals are at the 2.5% and 97.5% quantiles. In a Normal Q-Q plot, we want to plot the quantiles of the residuals against a set of theoretical quantiles.</p>
+</div>
+<div class="callout-body-container callout-body">
+<p>A quantile is the value of a distribution that is greater than <span class="math inline">\(p\)</span> percent of the values in the distribution. The 2.5% quantile of a uniform distribution from 0 to 1 is 0.025. The 2.5% quantile of a standard normal distribution is -1.96 (remember that 95% of the values in a standard normal distribution are between -1.96 and 1.96). The 50% quantile of a uniform distribution is 0.5 and the 50% quantile of a standard normal distribution is 0.0 (this is the median of the distribtion – 50% of the values are smaller and 50% of the values are larger).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Stats 201">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Stats 201
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A Q-Q plot more generally is a scatter plot of two vectors of quantiles either of which can come from a sample or a theoretical distribution. In the GLM chapter, the text will introduce Q-Q plots of residual quantiles transformed to have an expected uniform distribution. These are plotted against theoretical uniform quantiles from 0 to 1.</p>
+</div>
+</div>
+<section id="lets-construct-a-normal-q-q-plot" class="level4" data-number="11.3.2.1">
+<h4 data-number="11.3.2.1" class="anchored" data-anchor-id="lets-construct-a-normal-q-q-plot"><span class="header-section-number">11.3.2.1</span> Let’s construct a Normal Q-Q plot</h4>
+<p>A <strong>quantile</strong> (or percentile) of a vector of numbers is the value of the point at a specified percentage rank. The median is the 50% quantile. The 95% confidence intervals are at the 2.5% and 97.5% quantiles. In a Normal Q-Q plot, we want to plot the quantiles of the residuals against a set of theoretical quantiles.</p>
 <ol type="1">
 <li>To get the observed quantiles, rank the residuals of the fit linear model from most negative to most positive – these are your quantiles! For example, if you have <span class="math inline">\(n=145\)</span> residuals, then the 73rd point is the 50% quantile.</li>
 <li>A theoretical quantile from the normal distribution can be constructed using the <code>qnorm</code> function which returns the normal quantiles for a specified vector of percents. Alternatively, one could randomly sample <span class="math inline">\(n\)</span> points using <code>rnorm</code>. These of course will be sampled quantiles so will only approximate the expected theoretical quantiles, but I add this here because we use this method below.</li>
@@ -421,6 +471,31 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 <p>Now simply plot the observed against theoretical quantiles. Often, the <strong>standardized</strong> quantiles are plotted. A standardized variable has a mean of zero and a standard deviation of one and is computed by 1) centering the vector at zero by subtracting the mean from every value, and 2) dividing each value by the standard deviation of the vector. Recognize that because a standard deviation is a function of deviations from the mean, it doesn’t matter which of these operations is done first. A standardized theoretical quantile is specified by <code>qnorm(p, mean = 0, sd = 1)</code>, which is the default.</p>
 <p>Code for this would look something like this</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># try this with real data. Here I just make it up</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fake_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> <span class="dv">10</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="fu">rnorm</span>(<span class="dv">20</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mean =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">11</span>), <span class="at">each =</span> <span class="dv">10</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> treatment, <span class="at">data =</span> fake_data)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>fake_data[, y_residual <span class="sc">:</span><span class="er">=</span> <span class="fu">residuals</span>(m1)]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>quantile_observed <span class="ot">&lt;-</span> fake_data[, y_residual] <span class="sc">%&gt;%</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">length</span>(quantile_observed)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> N <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">/</span>q, <span class="dv">1</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span>q, <span class="at">by =</span> <span class="dv">1</span><span class="sc">/</span>q)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>quantile_theoretical <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(x)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># this is not the robust regression line</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(<span class="at">x =</span> quantile_theoretical, <span class="at">y =</span> quantile_observed) <span class="sc">+</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"theoretical normal quantile"</span>) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"observed normal quanitle"</span>) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
 </div>
@@ -432,9 +507,9 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 </div>
 </div>
 </div>
-</div>
-<section id="normal-qq-plot-of-the-fake-data-generated-above" class="level4" data-number="11.3.2.1">
-<h4 data-number="11.3.2.1" class="anchored" data-anchor-id="normal-qq-plot-of-the-fake-data-generated-above"><span class="header-section-number">11.3.2.1</span> Normal QQ-plot of the fake data generated above</h4>
+</section>
+<section id="normal-qq-plot-of-the-fake-data-generated-above" class="level4" data-number="11.3.2.2">
+<h4 data-number="11.3.2.2" class="anchored" data-anchor-id="normal-qq-plot-of-the-fake-data-generated-above"><span class="header-section-number">11.3.2.2</span> Normal QQ-plot of the fake data generated above</h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -515,43 +590,43 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 <li>At each value of the Normal quantile, compute the 95 percentile range of the sampled quantiles. Draw a ribbon inside these boundaries.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>normal_qq <span class="ot">&lt;-</span> <span class="fu">ppoints</span>(n) <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qnorm</span>()</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>sample_qq <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter<span class="sc">*</span>n)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>inc <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  y_res <span class="ot">&lt;-</span> y <span class="sc">-</span> <span class="fu">mean</span>(y)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  sample_qq[inc] <span class="ot">&lt;-</span> y_res[<span class="fu">order</span>(y_res)]</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  inc <span class="ot">&lt;-</span> inc <span class="sc">+</span> n</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>qq_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">normal_qq =</span> normal_qq,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sample_qq =</span> sample_qq)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>qq_ci <span class="ot">&lt;-</span> qq_data[, .(<span class="at">median =</span> <span class="fu">median</span>(sample_qq),</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lower =</span> <span class="fu">quantile</span>(sample_qq, <span class="fl">0.025</span>),</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">upper =</span> <span class="fu">quantile</span>(sample_qq, <span class="fl">0.975</span>)),</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                 by <span class="ot">=</span> normal_qq]</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> qq_data,</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> normal_qq,</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> sample_qq)) <span class="sc">+</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> qq_ci,</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">ymin =</span> lower,</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax =</span> upper,</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> median,</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill =</span> <span class="st">"band"</span>),</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill =</span> pal_okabe_ito[<span class="dv">1</span>],</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Normal Quantile"</span>) <span class="sc">+</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sample Quantile"</span>) <span class="sc">+</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_grid</span>() <span class="sc">+</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>normal_qq <span class="ot">&lt;-</span> <span class="fu">ppoints</span>(n) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qnorm</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sample_qq <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter<span class="sc">*</span>n)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>inc <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  y_res <span class="ot">&lt;-</span> y <span class="sc">-</span> <span class="fu">mean</span>(y)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  sample_qq[inc] <span class="ot">&lt;-</span> y_res[<span class="fu">order</span>(y_res)]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  inc <span class="ot">&lt;-</span> inc <span class="sc">+</span> n</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>qq_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">normal_qq =</span> normal_qq,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sample_qq =</span> sample_qq)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>qq_ci <span class="ot">&lt;-</span> qq_data[, .(<span class="at">median =</span> <span class="fu">median</span>(sample_qq),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lower =</span> <span class="fu">quantile</span>(sample_qq, <span class="fl">0.025</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">upper =</span> <span class="fu">quantile</span>(sample_qq, <span class="fl">0.975</span>)),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                 by <span class="ot">=</span> normal_qq]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> qq_data,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> normal_qq,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> sample_qq)) <span class="sc">+</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> qq_ci,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">ymin =</span> lower,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax =</span> upper,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> median,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill =</span> <span class="st">"band"</span>),</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill =</span> pal_okabe_ito[<span class="dv">1</span>],</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Normal Quantile"</span>) <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sample Quantile"</span>) <span class="sc">+</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_grid</span>() <span class="sc">+</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -568,28 +643,28 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6707815/" target="_blank">Public source</a></p>
 <p><a href="https://www.nature.com/articles/s41586-019-1450-6#Sec22" target="_blank">Data source</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Loss of p53 triggers WNT-dependent systemic inflammation to drive breast cancer metastasis"</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2019_1450_MOESM3_ESM.xlsx"</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Trp53+/+"</span>, <span class="st">"Trp53-/-"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>fig1f <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig. 1f"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A2:B23"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> treatment_levels,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"il1beta"</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>fig1f[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_levels)]</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># be careful of the missing data. This can create mismatch between id and residual unless specified in lm</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># head(fig1f)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Loss of p53 triggers WNT-dependent systemic inflammation to drive breast cancer metastasis"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2019_1450_MOESM3_ESM.xlsx"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Trp53+/+"</span>, <span class="st">"Trp53-/-"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fig1f <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig. 1f"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A2:B23"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> treatment_levels,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"il1beta"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>fig1f[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_levels)]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># be careful of the missing data. This can create mismatch between id and residual unless specified in lm</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># head(fig1f)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Fit a linear model</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(il1beta <span class="sc">~</span> treatment,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig1f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(il1beta <span class="sc">~</span> treatment,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig1f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="normal-q-q-plots" class="level3" data-number="11.5.1">
 <h3 data-number="11.5.1" class="anchored" data-anchor-id="normal-q-q-plots"><span class="header-section-number">11.5.1</span> Normal Q-Q plots</h3>
@@ -601,9 +676,9 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 </ol>
 <p>The robust line is more sensitive to departures from Normality than the quartiles line.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># defaults: robust line with bootstrap CI</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1, <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># defaults: robust line with bootstrap CI</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1, <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -613,18 +688,18 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classic: standard line with parametric CI</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">line =</span> <span class="st">"quartiles"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">simulate =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classic: standard line with parametric CI</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">line =</span> <span class="st">"quartiles"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">simulate =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>ggpubr::ggqqplot</code> generates a pretty, ggplot2 based Normal Q-Q plot, using the standard method for computing the line and confidence band.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m1_residuals <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">m1_residuals =</span> <span class="fu">residuals</span>(m1))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m1_residuals[, studentized <span class="sc">:</span><span class="er">=</span> m1_residuals<span class="sc">/</span><span class="fu">sd</span>(m1_residuals)]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggqqplot</span>(<span class="at">data =</span> m1_residuals,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">x =</span> <span class="st">"studentized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>m1_residuals <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">m1_residuals =</span> <span class="fu">residuals</span>(m1))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m1_residuals[, studentized <span class="sc">:</span><span class="er">=</span> m1_residuals<span class="sc">/</span><span class="fu">sd</span>(m1_residuals)]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggqqplot</span>(<span class="at">data =</span> m1_residuals,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">x =</span> <span class="st">"studentized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

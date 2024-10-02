@@ -39,34 +39,38 @@ quantilize_1 <- function(x){
 
 ## All statistical analyses should be followed by model checking {#check-check}
 
-We us a linear model to infer effects or predict future outcomes. Our inference is uncertain. Given the model assumptions, we can quantify this uncertainty with standard errors, and from these standard errors we can compute confidence intervals and *p*-values. It is good practice to use a series of **diagnostic plots**, diagnostic statistics, and simulation to check how well the data approximate the fit model and model assumptions. **Model checking** is used to both check our subjective confidence in the modeled estimates and uncertainty and to provide empirical evidence for subjective decision making in the analysis workflow.
+We use a linear model to infer effects or predict future outcomes. Our inference is uncertain. Given the model assumptions, we can quantify this uncertainty with standard errors, and from these standard errors we can compute confidence intervals and *p*-values. It is good practice to use a series of **diagnostic plots**, diagnostic statistics, and simulation to check how well the data approximate the fit model and model assumptions. **Model checking** is used to both check our subjective confidence in the modeled estimates and uncertainty and to provide empirical evidence for subjective decision making in the analysis workflow.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**NHST blues** -- Researchers are often encouraged by textbooks, colleagues, or the literature to test the assumptions of a *t*-test or ANOVA with formal hypothesis tests of distributions such as a Shapiro-Wilks test of normality or a Levine test of homogeneity. In this strategy, an alternative to the *t*-test/ANOVA is used if the distribution test's p-value is less than some cut-off (such as 0.05). Common alternatives include 1) transformations of the response to either make it more normal or the variances more homogenous, 2) implementation of alternative tests such as a Mann-Whitney-Wilcoxon (MWW) test for non-normal data or a Welch *t*-test/ANOVA for heterogenous variances. The logic of a test of normality or homogeneity before a *t*-test/ANOVA isn't consistent with frequentist thinking because the failure to reject a null hypothesis does not mean the null hypothesis is true. We shouldn't conclude that a sample is "normal" or that the variances are "homogenous" because a distributional test's *p*-value > 0.05. But, maybe we should of the distributional pre-test as an "objective" model check? The logic of this objective decision rule suffers from several issues. **First**, the subsequent *p*-value of the *t*test/ANOVA test is not valid because this *p*-value is the long-run frequency of a test-statistic as large or larger than the observed statistic conditional on the null -- not conditional on the subset of nulls with $p > 0.05$ in the distribution test. **Second**, real data are only approximately normal; with small $n$, it will be hard to reject the null of a normal distribution because of low power, but, as $n$ increses, a normality test will reject any real dataset. **Third**, and most importantly, our analysis should follow the logic of our goals. If our goal is the estimation of effects, we cannot get meaningful estimates from a non-parametric test (with a few exceptions) or a transformed response, as these methods are entirely about computing a "correct" *p*-value. Good alternatives to classic non-parametric tests and transformations are bootstrap estimates of confidence limits, permutation tests, and generalized linear models. 
-</div> 
+::: {.callout-note title="NHST Blues"}
+Researchers are often encouraged by textbooks, colleagues, or the literature to test the assumptions of a *t*-test or ANOVA with formal hypothesis tests of distributions such as a Shapiro-Wilks test of normality or a Levine test of homogeneity. In this strategy, an alternative to the *t*-test/ANOVA is used if the distribution test's p-value is less than some cut-off (such as 0.05). Common alternatives include 1) transformations of the response to either make it more normal or the variances more homogenous, 2) implementation of alternative tests such as a Mann-Whitney-Wilcoxon (MWW) test for non-normal data or a Welch *t*-test/ANOVA for heterogenous variances. The logic of a test of normality or homogeneity before a *t*-test/ANOVA is a bit inconsistent with frequentist thinking because the failure to reject a null hypothesis does not mean the null hypothesis is true. That is, we shouldn't conclude that a sample is "normal" or that the variances are "homogenous" because a distributional test's *p*-value > 0.05.
+
+But, maybe we should simply be pragmatic, and use a distributional pre-test as an "objective" model check. The logic of this objective decision rule suffers from several issues. **First**, for tests of normality, at least, a major issue is: Distribution tests are less likely to reject the null for small $n$ (because of low power) than large $n$ (because all real data is, at best, only approximately normal), but inference from confidence intervals and *p*-values from *t*-tests/ANOVAs are less reliable with small $n$ than with large $n$. As a consequence, researchers will often use normal-models when inference is least reliable and alternative models when they inference is most reliable. **Second**, a *p*-value of the *t*test/ANOVA test following a distribution test is not strictly valid because a *p*-value is the long-run frequency of a test-statistic as large or larger than the observed statistic conditional on the null -- not conditional on the subset of nulls with $p > 0.05$ in a distribution test. **Third**, and most importantly, our analysis should follow the logic of our goals. If our goal is the estimation of effects, we cannot get meaningful estimates from a non-parametric test (with a few exceptions) or a transformed response, as these methods are entirely about computing a "correct" *p*-value. Good alternatives to classic non-parametric tests and transformations are bootstrap estimates of confidence limits, permutation tests, and generalized linear models. 
+:::
 
 ## Linear model assumptions
 
 To facilitate explanation of assumptions of the linear model and extensions of the linear model, I will use both the error-draw and conditional-draw specifications of a linear model with a single $X$ variable.
 
 error draw:
+$$
 \begin{align}
 y &= \beta_0 + \beta_1 x_i + \varepsilon_i\\
 \varepsilon_i &\sim N(0, \sigma^2)
-(\#eq:model-checking-spec1)
 \end{align}
+$$ {#eq-model-checking-spec1}
 
 conditional draw:
+$$
 \begin{align}
 y_i &\sim N(\mu_i, \sigma^2)\\
 \mathrm{E}(Y|X=x_i) &= \mu_i\\
 \mu_i &= \beta_0 + \beta_1 x_i
-(\#eq:model-checking-spec2)
 \end{align}
+$$ {#eq-model-checking-spec2}
 
 This model generates random data using the set of rules specified in the model equations. To quantify uncertainty in our estimated parameters, including standard errors, confidence intervals, and *p*-values, we make the assumption that the data from the experiment is a random sample generated using these rules. 
 
-The two rules specified in the model above (Model \@ref(eq:model-checking-spec)) are
+The two rules specified in the model above are
 
 1. The systematic component of data generation is $\beta_0 + \beta_1 X$.
 * More generally, all linear models in this text specify systematic components that are *linear in the parameters*. Perhaps a better name for this is "additive in the parameters". Additive (or linear) simply means that we can add up the products of a parameter and an $X$ variable to get the conditional expectation $\mathrm{E}(Y|X)$.
@@ -74,11 +78,7 @@ The two rules specified in the model above (Model \@ref(eq:model-checking-spec))
 2. The stochastic component of data generation is "IID Normal", where IID is **independent and identically distributed** and Normal refers to the Normal (or Gaussian) distribution. The IID assumption is common to all linear models. Again, for the purpose of this text, I define a "linear model" very broadly as a model that is linear in the parameters. This includes many extensions of the classical linear model including generalized least squares linear models, linear mixed models, generalized additive models, and generalized linear models. **Parametric** inference form all linear models requires the specification of a distribution family to sample. Families that we will use in this book include Normal, gamma, binomial, poisson, and negative binomial. This text will also cover **distribution free** methods of quantifying uncertainty using the bootstrap and permutation, which do not specify a sampling distribution family.
 
 ### A bit about IID
-1. **Independent** means that the random draw for one case cannot be predicted from the random draw of any other case. A lack of independence creates *correlated error*. There are lots or reasons that errors might be correlated. If individuals are measured both within and among cages, or tanks, or plots, or field sites, then we'd expect the measures within the same unit (cage, tank, plot, site) to err from the model in the same direction because of environmental features shared by individuals within the unit but not by individuals in other units. Multiple measures within experimental units create "clusters" of error. Lack of independence or clustered error can be modeled using **generalized least squares (GLS)** models that directly model the structure of the error and with **random effects** models. Random effects models go by many names including linear mixed models (common in Ecology), hierarchical models, and multilevel models. Both GLS and random effects models are variations of linear models.
-
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**tl;dr** -- Measures taken within the same individual over time (*repeated measures*) are correlated and are common in all areas of biology. In ecology and evolutionary studies, measures that are taken from sites that are closer together or measures taken closer in time or measures from more closely related biological species will tend to have more similar error than measures taken from sites that are further apart or from times that are further apart or from species that are less closely related. Space and time and phylogeny create **spatial, temporal, and phylogenetic autocorrelation**.
-</div> 
+1. **Independent** means that the random draw for one case cannot be predicted from the random draw of any other case. A lack of independence creates *correlated error*. There are lots or reasons that errors might be correlated. Multiple measures from the same mouse/litter/cage/preparation are expected to be more similar to each other than to measures from different mice/litters/cages/preparations. Multiple measures within any unit that shares variance not shared by other units creates "clusters" of error. Lack of independence or clustered error can be modeled using **generalized least squares (GLS)** models that directly model the structure of the error and with **random effects** models. Random effects models go by many names including linear mixed models (common in Ecology), hierarchical models, and multilevel models. Both GLS and random effects models are variations of linear models.
 
 2. **Identical** means that all random draws at a given value of $X$ are from the same distribution. Using the error-draw specification of the model above, this can be restated as, the error-draw ($\varepsilon_i$) for every $i$ is from the same distribution $N(0, \sigma^2$). Using the conditional-draw specification, this can be restated as, the random-draw $y_i$ for every $i$ with the same expected value $\mu = \mu_i$ is from the same distribution $N(\mu_i, \sigma^2$). Understand the importance of this. Parametric inference using this model assumes that the sampling variance of $\mu$ *at a single value of $X$* is the same for *all values of $X$*. If $X$ is continuous, this means the spread of the points around the regression line is the same at all values of $X$ in the data. If $X$ is categorical, this means the spread of the points around the mean of a group is the same for all groups. A consequence of "identical", then, for all classical linear models, is the assumption of homogeneity (or **homoskedasticity**) of variance. If the sampling variance differs among the $X$, then the variances are heterogenous or **heteroskedastic**. Experimental treatments can affect the variance of the response in addition to the mean of the response. Heterogenous variance can be modeled using **Generalized Least Squares (GLS)** linear models. Many natural biological processes generate data in which the error is a function of the mean. For example, measures of biological variables that grow, such as size of body parts, have variances that "grow" with the mean. Or, measures of counts, such as the number of cells damaged by toxin, the number of eggs in a nest, or the number of mRNA transcripts per cell have variances that are a function of the mean. Both growth and count measures can sometimes be reasonably modeled using a linear model but more often, they are better modeled using a **Generalized Linear Model** (GLM).
 
@@ -86,9 +86,9 @@ The two rules specified in the model above (Model \@ref(eq:model-checking-spec))
 ### Residuals
 A residual of a statistical model is $y_i - \hat{y}_i$. Remember that $\hat{y}_i$ is the predicted value of $Y$ when $X$ has the value $x_i$ (compactly written as $X=x_i$). And remember that $\hat{y}_i$ is the estimate of $\mu_i$. For linear models (but not generalized linear models), the residuals of the fit model are estimates of the $\varepsilon$ in equation \@ref(eq:model-checking-spec1). This *is not* true for generalized linear models because GLMs are not specified using \@ref(eq:model-checking-spec1).
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**Alert** A common misconception is that inference from a linear model assumes that the *response* (the measured $Y$) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. Model \@ref(eq:model-checking-spec1) explicitly shows that it is the error that has the normal distribution -- the distribution of $Y$ is a mix of the distribution of $X$ and that of the error. A more general way of thinking about the assumed distribution uses the specification in model \@ref(eq:model-checking-spec2), which shows that it is the *conditional* response that is assumed to be IID normal. Remember, a conditional response ($y_i$) is a random draw from the infinite set of responses at a given value of $X$.
-</div> 
+::: {.callout-warning title="Alert"}
+A common misconception is that inference from a linear model assumes that the *response* (the measured $Y$) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. Model \@ref(eq:model-checking-spec1) explicitly shows that it is the error that has the normal distribution -- the distribution of $Y$ is a mix of the distribution of $X$ and that of the error. A more general way of thinking about the assumed distribution uses the specification in model \@ref(eq:model-checking-spec2), which shows that it is the *conditional* response that is assumed to be IID normal. Remember, a conditional response ($y_i$) is a random draw from the infinite set of responses at a given value of $X$
+:::
 
 Let's look at the distribution of residuals versus the distribution of responses for a hypothetical experiment with a single, categorical $X$ variable (the experimental factor) with two levels ("Cn" for control and "Tr" for treatment). The true parameters are $\beta_0 = 10$ (the true mean for the control group, or $\mu_{0}$), $\beta_1=4$ (the difference between the true mean for the treatment minus the true mean for the control, or $\mu_1 - \mu_0$), and $\sigma = 2$ (the error standard deviation). 
 
@@ -135,9 +135,9 @@ The plot above shows a histogram of the response (A) and residuals (B). In the p
 
 The two plots suggest two different approaches for model checking. First, we could examine the responses within each level of the experimental factor. Or, second, we could examine the residuals of the fit model, ignoring that the residuals come from multiple groups. The first is inefficient because it requires as many checks as there are levels in the factor. The second requires a single check.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**Alert** Some textbooks that recommend formal hypothesis tests of normality recommend the inefficient, multiple testing on each group separately. This isn't wrong, it's just more work than it needs to be and also suffers from "multiple testing".
-</div> 
+::: {.callout-warning title="Alert"}
+Some textbooks that recommend formal hypothesis tests of normality recommend the inefficient, multiple testing on each group separately. This isn't wrong, it's just more work than it needs to be and also suffers from "multiple testing".
+:::
 
 ### A Normal Q-Q plot is used to check for characteristic departures from Normality {#normal-qq}
 A Normal Q-Q plot is a scatterplot of
@@ -153,16 +153,17 @@ p
 
 A Normal Q-Q plot is not a test if the data are Normal. Instead, a Normal Q-Q plot is used to check for characteristic departures from Normality that are signatures of certain well-known distribution families. A researcher can look at a QQ-plot and reason that a departure is small and choose to fit a classic linear model using the Normal distribution. Or, a researcher can look at a QQ-plot and reason that the departure is large enough to fit a generalized linear model with a specific distribution family.
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**Stats 101** A quantile is the value of a distribution that is greater than $p$ percent of the values in the distribution. The 2.5% quantile of a uniform distribution from 0 to 1 is 0.025. The 2.5% quantile of a standard normal distribution is -1.96 (remember that 95% of the values in a standard normal distribution are between -1.96 and 1.96). The 50% quantile of a uniform distribution is 0.5 and the 50% quantile of a standard normal distribution is 0.0 (this is the median of the distribtion -- 50% of the values are smaller and 50% of the values are larger).
-</div> 
+::: {.callout-tip title="Stats 101"}
+A quantile is the value of a distribution that is greater than $p$ percent of the values in the distribution. The 2.5% quantile of a uniform distribution from 0 to 1 is 0.025. The 2.5% quantile of a standard normal distribution is -1.96 (remember that 95% of the values in a standard normal distribution are between -1.96 and 1.96). The 50% quantile of a uniform distribution is 0.5 and the 50% quantile of a standard normal distribution is 0.0 (this is the median of the distribtion -- 50% of the values are smaller and 50% of the values are larger).
+:::
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**Stats 201** A Q-Q plot more generally is a scatter plot of two vectors of quantiles either of which can come from a sample or a theoretical distribution. In the GLM chapter, the text will introduce Q-Q plots of residual quantiles transformed to have an expected uniform distribution. These are plotted against theoretical uniform quantiles from 0 to 1.
-</div> 
+::: {.callout-tip title="Stats 201"}
+A Q-Q plot more generally is a scatter plot of two vectors of quantiles either of which can come from a sample or a theoretical distribution. In the GLM chapter, the text will introduce Q-Q plots of residual quantiles transformed to have an expected uniform distribution. These are plotted against theoretical uniform quantiles from 0 to 1.
+::: 
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-**Intuition Pump** -- Let's construct a Normal Q-Q plot. A **quantile** (or percentile) of a vector of numbers is the value of the point at a specified percentage rank. The median is the 50% quantile. The 95% confidence intervals are at the 2.5% and 97.5% quantiles. In a Normal Q-Q plot, we want to plot the quantiles of the residuals against a set of theoretical quantiles.
+#### Let's construct a Normal Q-Q plot
+
+A **quantile** (or percentile) of a vector of numbers is the value of the point at a specified percentage rank. The median is the 50% quantile. The 95% confidence intervals are at the 2.5% and 97.5% quantiles. In a Normal Q-Q plot, we want to plot the quantiles of the residuals against a set of theoretical quantiles.
 
 1. To get the observed quantiles, rank the residuals of the fit linear model from most negative to most positive -- these are your quantiles! For example, if you have $n=145$ residuals, then the 73rd point is the 50% quantile.
 2. A theoretical quantile from the normal distribution can be constructed using the `qnorm` function which returns the normal quantiles for a specified vector of percents. Alternatively, one could randomly sample $n$ points using `rnorm`. These of course will be sampled quantiles so will only approximate the expected theoretical quantiles, but I add this here because we use this method below.
@@ -171,7 +172,7 @@ Now simply plot the observed against theoretical quantiles. Often, the **standar
 
 Code for this would look something like this
 
-```{r glm1-qqplot-sim, echo=FALSE}
+```{r glm1-qqplot-sim, echo=TRUE}
 # try this with real data. Here I just make it up
 fake_data <- data.table(
   treatment = rep(c("cn", "tr"), each = 10),
@@ -198,7 +199,7 @@ qplot(x = quantile_theoretical, y = quantile_observed) +
   ylab("observed normal quanitle") +
   theme_pubr()
 ```
-</div> 
+
 
 #### Normal QQ-plot of the fake data generated above
 
