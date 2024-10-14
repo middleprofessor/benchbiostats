@@ -61,7 +61,7 @@ The second column is the **family-wise error rate** (FWER), the probability of a
 An assumption of these probabilities is the tests are independent. Importantly, this independence assumption is also true for most, but not all, of the adjustment methods.
 :::
 
-## In many experiments, we don't want to adjust for multiple tests
+## Example 1 -- In many experiments, we don't want to adjust for multiple tests (exfig2d data)
 
 In many experiments, we don't want to adjust for multiple tests because there is only a single test in the family even if there are multiple tests in the experiment. Researchers are adjusting because of a confusion on what a family is. The cost of this adjustment is more conservative (higher) *p*-values, which leads to less power, which leads to more failed discoveries or more research costs (mice, time) to discover by *p*-value.
 
@@ -243,7 +243,7 @@ Extended figure 2d presents only one of six response variables that were measure
 2. jejunal, duodenal, and ileal triglyceride effectively answer the same focal question "does activating the DMV increase fat absorption in a specific part of the small intestine". So adjusting for three tests is probably justified here, but again, the adjustment is for the same contrast ("3q - con") from the model fit to three different response variables.
 3. Adjustment for multiple responses is common in some subfields of experimental bench biology that are measuring thousands of responses (gene expression, functional MRI) but I I haven't seen adjustment for multiple phenotypic responses from a single experiment.
 
-## Tukey adjustment is extremely common, and (mostly) unjustified
+## Example 2 -- Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data)
 
 ```{r}
 #| label: multiple-tests-fig5l-import
@@ -265,11 +265,15 @@ fig5l[, cdc42 := as.numeric(cdc42)]
 fig5l[, eps8 := as.numeric(eps8)]
 fig5l[, vil1 := as.numeric(vil1)]
 fig5l[, treatment_orig := fill_down(treatment_orig)]
-fig5l[treatment_orig == "flox-veh", treatment := "WT Vehicle"]
-fig5l[treatment_orig == "flox-Pue", treatment := "WT Puerarin"]
-fig5l[treatment_orig == "KO-veh", treatment := "KO Vehicle"]
-fig5l[treatment_orig == "KO-Pue", treatment := "KO Puerarin"]
-fig5l[, treatment := factor(treatment, levels = unique(treatment))]
+fig5l[treatment_orig == "flox-veh", group := "WT Vehicle"]
+fig5l[treatment_orig == "flox-Pue", group := "WT Puerarin"]
+fig5l[treatment_orig == "KO-veh", group := "KO Vehicle"]
+fig5l[treatment_orig == "KO-Pue", group := "KO Puerarin"]
+fig5l[, group := factor(group, levels = unique(group))]
+
+fig5l[, c("genotype", "treatment") := tstrsplit(group, " ")]
+fig5l[, genotype := factor(genotype, levels = c("WT", "KO"))]
+fig5l[, treatment := factor(treatment, levels = c("Vehicle", "Puerarin"))]
 
 ```
 
@@ -310,8 +314,6 @@ The researchers answer these questions using these two contrasts
 
 So, there are two research questions, each answered by a single contrast. There is nothing to adjust because each family consists of only a single test.
 
-What did the researchers do? Here, the researchers followed the norm in experimental bench biology and used the Tukey HSD adjustment for a single family of six tests (all six pairwise tests). Perhaps the norm is following a definition of family as "all tests within an experiment". Regardless, the adjustment logic in Fig. 5l is inconsistent with that in Fig 2d., where the researchers adjusted for the two tests of interest instead of the set of all three pairwise comparisons in the experiment. In Fig. 5l, the researchers adjust for all six pairwise comparisons, show only four contrasts in the figure and in the Excel file of the data, but only seem interested in the two contrasts that answer the focal questions.
-
 ::: {.callout-note}
 Look at question 2 closely -- its a comparison of contrast 1 and contrast 2. Ultimately, the  researchers are asking about the effects of Puerarin with and without a functional *Gabra1* GABA receptor, so there is a single primary contrast of interest
 
@@ -320,14 +322,16 @@ Look at question 2 closely -- its a comparison of contrast 1 and contrast 2. Ult
 This contrast is called the **interaction effect** or simply the interaction. The interaction is the difference in contrasts 1 and 2. An interaction is a **difference of differences**. The estimation of interaction effects almost always answers the focal question in 2 x 2 designs but is almost never estimated in experimental bench biology. More information on designs for two factors and interaction effects is in chapter @two-factors
 :::
 
-
-Of the six pairwise contrasts, the authors are focussed on four, the so-called "simple effects".
+What did the researchers do? Of the six pairwise contrasts, only two of which they focussed on in the text, the researchers report the four "simple effects" in the figure and in the archived Excel file. These are:
 
 1. (WT Puerarin) - (WT Vehicle) answers the question "how does microvilli-related gene expression change when we add puerarin to mice with fuctional Gabra1?". This is a positive control for contrast 2.
 2. (KO Puerarin) - (KO Vehicle) answers the question "how does microvilli-related gene expression change when we add puerarin to mice with knocked out Gabra1?". This is a focal contrast.
 3. (KO Vehicle)) - (WT Vehicle) answers the question "how does microvilli-related gene expression change when we knock out *Gabra1* and don't give puerarin administration? This is a positive control for contrast 4.
 4. (KO Puerarin) - (WT Puerarin) answers the question "how does microvilli-related gene expression change when we knock out *Gabra1* but give puerarin administration? This is a focal contrast.
 
+Instead of adjusting for the two tests of interest, or the four computed tests, the researchers followed the norm in experimental bench biology and used the Tukey HSD adjustment for a single family of six tests (all six pairwise tests). Perhaps the norm is following a definition of family as "all tests within an experiment". Regardless, the adjustment logic in Fig. 5l is inconsistent with that in Fig 2d., where the researchers adjusted for the two tests of interest instead of the set of all three pairwise comparisons in the experiment. In Fig. 5l, the researchers adjust for all six pairwise comparisons, show only four contrasts in the figure and in the Excel file of the data, but only seem interested in the two contrasts that answer the focal questions.
+
+What is the cost of adjustment? In @tbl-mult-tests-fig5_m1 below, for the two focal tests, I give the unadjusted *p*-values, the Tukey *p*-values based on all six pairwise tests, and the Holm *p*-values based on the four simple effects. The cost of the Tukey and Holm adjustments are given in the last two columns as the ratio of the adjusted to unadjusted *p*-value. This loss of power is an unnecessary and results from a confusion in the experimental bench biology community of what a family of tests mean. Loss of power leads to more time, more dollars, more animals, and more failed discoveries.  
 
 
 ```{r}
@@ -337,8 +341,8 @@ Of the six pairwise contrasts, the authors are focussed on four, the so-called "
 #| warning: false
 #| tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
 #| 
-m1 <- lm(ezrin ~ treatment, data = fig5l)
-m1_emm <- emmeans(m1, specs = "treatment")
+m1 <- lm(ezrin ~ genotype * treatment, data = fig5l)
+m1_emm <- emmeans(m1, specs = c("genotype", "treatment"))
 m1_pairs <- contrast(m1_emm,
                      method = "revpairwise",
                      adjust = "none") |>
@@ -350,27 +354,37 @@ m1_tukey <- contrast(m1_emm,
   summary(infer = TRUE) |>
   data.table()
 
-m1_pairs[, tukey := m1_tukey$p.value]
-m1_pairs[ , multiple := tukey/p.value]
+m1_simple <- contrast(m1_emm,
+                      method = "revpairwise",
+                      simple = "each",
+                      combine = TRUE,
+                      adjust = "holm") |>
+  summary(infer = TRUE) |>
+  data.table()
 
-m1_pvals <- m1_pairs[, .SD, .SDcols = c("contrast", "estimate", "p.value", "tukey", "multiple")]
-colnames(m1_pvals) <- c("Contrast", "Estimate", "Unadjusted P", "Tukey P", "Tukey/Unadjusted")
+m1_pairs[, tukey := m1_tukey$p.value]
+m1_pairs[c(1,2,5,6), holm := m1_simple[c(1,3,4,2), p.value]]
+
+m1_pairs[ , cost_tukey := tukey/p.value]
+m1_pairs[ , cost_holm := holm/p.value]
+
+m1_pvals <- m1_pairs[, .SD, .SDcols = c("contrast", "estimate", "p.value", "tukey", "holm", "cost_tukey", "cost_holm")]
+colnames(m1_pvals) <- c("Contrast", "Estimate", "Unadjusted P", "Tukey P", "Holm P", "Tukey/Unadjusted", "Holm/Unadjusted")
 
 # only the simple effects are of interest. These are rows 1, 2, 5, 6
-m1_pvals[c(1, 2, 5, 6), ] |>
-  kable(digits = c(1, 3, 4, 4, 1)) |>
+m1_pvals[c(2,5), ] |>
+  kable(digits = c(1, 3, 4, 4, 4, 1, 1)) |>
   kable_styling(full_width = FALSE)
 
 ```
-
-The cost of adjustment is given in the last column of @tbl-mult-tests-fig5_m1. In three of the contrasts, the Tukey adjusted *p*-value is 5-6X the unadjusted value. This is an unnecessary loss of power. Loss of power leads to more time, more dollars, more animals, and more failed discoveries.  
 
 ## Or, maybe we do want to adjust, but not in the way that is usually done
 
 For each of the contrasts in the Fig. 5l example above, the researchers measured the response in four microvilli-related genes. Each of these genes answers the question posed for a contrast. For example, all four genes answer the question for contrast 1, which is "how does microvilli-related gene expression change when we add puerarin to mice with functional Gabra1?" The family is the four contrasts (WT Puerarin - WT Vehicle) for each of the four genes. The researchers should adjust for the four tests within this family. The next section shows how this is done.
 
-## Using the FDR method to adjust *p*-values from different fit models, each for a different response
+## Example 3 -- Using the FDR method to adjust *p*-values from different fit models, each for a different response (lipocalin fig3 data)
 
+In both the 
 Let's adjust the four *p*-values for each contrast using
 
 1. FDR. This method adjusts *p*-values so that the false discovery rate is 5%.
@@ -388,110 +402,7 @@ FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + num
 $$
 In 
 
-```{r}
-#| label: mult-tests-fdr-simulation
-#| echo: false
-#| message: false
-#| warning: false
 
-n_iter <- 1
-n_tests <- 20
-alpha <- 0.05
-
-true_fraction <- 0.80 # fraction of tests with true effect
-false_fraction <- 1 - true_fraction # fraction of tests with no effect
-n_true <- true_fraction * n_tests # number of tests with true effect
-n_false <- false_fraction * n_tests # number of tests with no effect
-power_exp <- .6
-delta <- power.t.test(n = 10, sd = 1, power = power_exp, sig.level = alpha)$delta
-p_true <- numeric(n_true)
-p_false <- numeric(n_false)
-  for(j in 1:n_true){
-    p_true[j] <- t.test(rnorm(n = 10), rnorm(n = 10, mean = delta), var.equal = TRUE)$p.value
-  }
-  for(j in 1:n_false){
-    p_false[j] <- t.test(rnorm(n = 10), rnorm(n = 10), var.equal = TRUE)$p.value
-  }
-  type_1 <- sum(p_false < 0.05)/n_false
-  power <- sum(p_true < 0.05)/n_true
-  
-  p_none <- c(p_true, p_false)
-  p_holm <- p.adjust(p_none, method = "holm")
-  p_fdr <- p.adjust(p_none, method = "BH")
-  p_true_holm <- p_holm[1:n_true]
-  p_true_fdr <- p_fdr[1:n_true]
-  p_false_holm <- p_holm[(n_true + 1):n_tests]
-  p_false_fdr <- p_fdr[(n_true + 1):n_tests]
-  
-  true_discoveries_none <- sum(p_true < 0.05)
-  false_nondiscoveries_none <- sum(p_true > 0.05)
-  false_discoveries_none <- sum(p_false < 0.05)
-  true_nondiscoveries_none <- sum(p_false > 0.05)
-  total_discoveries_none <- true_discoveries_none + false_discoveries_none
-  total_non_discoveries_none <- false_nondiscoveries_none + true_nondiscoveries_none
-  TDR_none <- true_discoveries_none/total_discoveries_none
-  FDR_none <- false_discoveries_none/total_discoveries_none
-  FNDR_none <- false_nondiscoveries_none/total_non_discoveries_none
-  type_1_none <- false_discoveries_none/n_false
-  power_none <- true_discoveries_none/n_true
-
-  true_discoveries_holm <- sum(p_true_holm < 0.05)
-  false_nondiscoveries_holm <- sum(p_true_holm > 0.05)
-  false_discoveries_holm <- sum(p_false_holm < 0.05)
-  true_nondiscoveries_holm <- sum(p_false_holm > 0.05)
-  total_discoveries_holm <- true_discoveries_holm + false_discoveries_holm
-  total_non_discoveries_holm <- false_nondiscoveries_holm + true_nondiscoveries_holm
-  TDR_holm <- true_discoveries_holm/total_discoveries_holm
-  FDR_holm <- false_discoveries_holm/total_discoveries_holm
-  FNDR_holm <- false_nondiscoveries_holm/total_non_discoveries_holm
-  type_1_holm <- false_discoveries_holm/n_false
-  power_holm <- true_discoveries_holm/n_true
-
-  true_discoveries_fdr <- sum(p_true_fdr < 0.05)
-  false_nondiscoveries_fdr <- sum(p_true_fdr > 0.05)
-  false_discoveries_fdr <- sum(p_false_fdr < 0.05)
-  true_nondiscoveries_fdr <- sum(p_false_fdr > 0.05)
-  total_discoveries_fdr <- true_discoveries_fdr + false_discoveries_fdr
-  total_non_discoveries_fdr <- false_nondiscoveries_fdr + true_nondiscoveries_fdr
-  TDR_fdr <- true_discoveries_fdr/total_discoveries_fdr
-  FDR_fdr <- false_discoveries_fdr/total_discoveries_fdr
-  FNDR_fdr <- false_nondiscoveries_fdr/total_non_discoveries_fdr
-  type_1_fdr <- false_discoveries_fdr/n_false
-  power_fdr <- true_discoveries_fdr/n_true
-
-  out_table <- data.table(
-    Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power"),
-    None = c(true_discoveries_none, false_discoveries_none, TDR_none,
-             FDR_none, FNDR_none, type_1_none, power_none),
-    Holm = c(true_discoveries_holm, false_discoveries_holm, TDR_holm,
-             FDR_holm, FNDR_holm, type_1_holm, power_holm),
-    FDR = c(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,
-            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr)
-  )
-  
-  row_digits <- function(df, d){
-    # df is a data.frame or data.table
-    # d is a single value for all rows or vector of digits for each row
-    
-    inc <- which(unlist(lapply(df, is.numeric)))
-    x <- round(Filter(is.numeric, df), d)|>
-      apply(2, as.character) |>
-      data.table()
-    df_out <- apply(df, 2, as.character) |>
-      data.table()
-    df_out[, inc] <- x
-    return(df_out)
-  }
-  
-  out_table_round <- row_digits(out_table,
-                                c(0,0,3,3,3,3,2))
-  
-  out_table_round |>
-    kable() |>
-    kable_styling()
-
-
-```
 
 
 1. In 
@@ -506,6 +417,7 @@ One way that R, or any programming language, is more efficient than menu-driven 
 ```{r}
 #| label: tbl-mult-tests-fig5_all
 #| echo: false
+#| eval: false
 #| message: false
 #| warning: false
 #| tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
@@ -680,5 +592,113 @@ for(set_i in 1:n_cardiolipins){
   p_table |>
     kable() |>
     kable_styling()
+```
+
+## Better Know FDR
+
+```{r}
+#| label: mult-tests-fdr-simulation
+#| echo: false
+#| eval: false
+#| message: false
+#| warning: false
+
+n_iter <- 1
+n_tests <- 20
+alpha <- 0.05
+
+true_fraction <- 0.80 # fraction of tests with true effect
+false_fraction <- 1 - true_fraction # fraction of tests with no effect
+n_true <- true_fraction * n_tests # number of tests with true effect
+n_false <- false_fraction * n_tests # number of tests with no effect
+power_exp <- .6
+delta <- power.t.test(n = 10, sd = 1, power = power_exp, sig.level = alpha)$delta
+p_true <- numeric(n_true)
+p_false <- numeric(n_false)
+  for(j in 1:n_true){
+    p_true[j] <- t.test(rnorm(n = 10), rnorm(n = 10, mean = delta), var.equal = TRUE)$p.value
+  }
+  for(j in 1:n_false){
+    p_false[j] <- t.test(rnorm(n = 10), rnorm(n = 10), var.equal = TRUE)$p.value
+  }
+  type_1 <- sum(p_false < 0.05)/n_false
+  power <- sum(p_true < 0.05)/n_true
+  
+  p_none <- c(p_true, p_false)
+  p_holm <- p.adjust(p_none, method = "holm")
+  p_fdr <- p.adjust(p_none, method = "BH")
+  p_true_holm <- p_holm[1:n_true]
+  p_true_fdr <- p_fdr[1:n_true]
+  p_false_holm <- p_holm[(n_true + 1):n_tests]
+  p_false_fdr <- p_fdr[(n_true + 1):n_tests]
+  
+  true_discoveries_none <- sum(p_true < 0.05)
+  false_nondiscoveries_none <- sum(p_true > 0.05)
+  false_discoveries_none <- sum(p_false < 0.05)
+  true_nondiscoveries_none <- sum(p_false > 0.05)
+  total_discoveries_none <- true_discoveries_none + false_discoveries_none
+  total_non_discoveries_none <- false_nondiscoveries_none + true_nondiscoveries_none
+  TDR_none <- true_discoveries_none/total_discoveries_none
+  FDR_none <- false_discoveries_none/total_discoveries_none
+  FNDR_none <- false_nondiscoveries_none/total_non_discoveries_none
+  type_1_none <- false_discoveries_none/n_false
+  power_none <- true_discoveries_none/n_true
+
+  true_discoveries_holm <- sum(p_true_holm < 0.05)
+  false_nondiscoveries_holm <- sum(p_true_holm > 0.05)
+  false_discoveries_holm <- sum(p_false_holm < 0.05)
+  true_nondiscoveries_holm <- sum(p_false_holm > 0.05)
+  total_discoveries_holm <- true_discoveries_holm + false_discoveries_holm
+  total_non_discoveries_holm <- false_nondiscoveries_holm + true_nondiscoveries_holm
+  TDR_holm <- true_discoveries_holm/total_discoveries_holm
+  FDR_holm <- false_discoveries_holm/total_discoveries_holm
+  FNDR_holm <- false_nondiscoveries_holm/total_non_discoveries_holm
+  type_1_holm <- false_discoveries_holm/n_false
+  power_holm <- true_discoveries_holm/n_true
+
+  true_discoveries_fdr <- sum(p_true_fdr < 0.05)
+  false_nondiscoveries_fdr <- sum(p_true_fdr > 0.05)
+  false_discoveries_fdr <- sum(p_false_fdr < 0.05)
+  true_nondiscoveries_fdr <- sum(p_false_fdr > 0.05)
+  total_discoveries_fdr <- true_discoveries_fdr + false_discoveries_fdr
+  total_non_discoveries_fdr <- false_nondiscoveries_fdr + true_nondiscoveries_fdr
+  TDR_fdr <- true_discoveries_fdr/total_discoveries_fdr
+  FDR_fdr <- false_discoveries_fdr/total_discoveries_fdr
+  FNDR_fdr <- false_nondiscoveries_fdr/total_non_discoveries_fdr
+  type_1_fdr <- false_discoveries_fdr/n_false
+  power_fdr <- true_discoveries_fdr/n_true
+
+  out_table <- data.table(
+    Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power"),
+    None = c(true_discoveries_none, false_discoveries_none, TDR_none,
+             FDR_none, FNDR_none, type_1_none, power_none),
+    Holm = c(true_discoveries_holm, false_discoveries_holm, TDR_holm,
+             FDR_holm, FNDR_holm, type_1_holm, power_holm),
+    FDR = c(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,
+            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr)
+  )
+  
+  row_digits <- function(df, d){
+    # df is a data.frame or data.table
+    # d is a single value for all rows or vector of digits for each row
+    
+    inc <- which(unlist(lapply(df, is.numeric)))
+    x <- round(Filter(is.numeric, df), d)|>
+      apply(2, as.character) |>
+      data.table()
+    df_out <- apply(df, 2, as.character) |>
+      data.table()
+    df_out[, inc] <- x
+    return(df_out)
+  }
+  
+  out_table_round <- row_digits(out_table,
+                                c(0,0,3,3,3,3,2))
+  
+  out_table_round |>
+    kable() |>
+    kable_styling()
+
+
 ```
 

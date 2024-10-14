@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Linear models with two categorical X – Factorial linear models (“two-way ANOVA”) – Statistics for the Experimental Bench Biologist</title>
+<title>13&nbsp; Linear models with two categorical X – Factorial linear models (“two-way ANOVA”) – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/model-checking.html" rel="prev">
+<link href="../chapters/multiple-testing.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -145,7 +145,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/two-factors.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/two-factors.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -244,8 +244,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../chapters/multiple-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjusting <em>p</em>-values for multiple tests</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../chapters/two-factors.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
   </div>
 </li>
     </ul>
@@ -258,104 +264,104 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#a-linear-model-with-crossed-factors-estimates-interaction-effects" id="toc-a-linear-model-with-crossed-factors-estimates-interaction-effects" class="nav-link active" data-scroll-target="#a-linear-model-with-crossed-factors-estimates-interaction-effects"><span class="header-section-number">12.1</span> A linear model with crossed factors estimates interaction effects</a>
+  <li><a href="#a-linear-model-with-crossed-factors-estimates-interaction-effects" id="toc-a-linear-model-with-crossed-factors-estimates-interaction-effects" class="nav-link active" data-scroll-target="#a-linear-model-with-crossed-factors-estimates-interaction-effects"><span class="header-section-number">13.1</span> A linear model with crossed factors estimates interaction effects</a>
   <ul>
-  <li><a href="#an-interaction-is-a-difference-in-simple-effects" id="toc-an-interaction-is-a-difference-in-simple-effects" class="nav-link" data-scroll-target="#an-interaction-is-a-difference-in-simple-effects"><span class="header-section-number">12.1.1</span> An interaction is a difference in simple effects</a></li>
-  <li><a href="#a-linear-model-with-crossed-factors-includes-interaction-effects" id="toc-a-linear-model-with-crossed-factors-includes-interaction-effects" class="nav-link" data-scroll-target="#a-linear-model-with-crossed-factors-includes-interaction-effects"><span class="header-section-number">12.1.2</span> A linear model with crossed factors includes interaction effects</a></li>
-  <li><a href="#factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature" id="toc-factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature" class="nav-link" data-scroll-target="#factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature"><span class="header-section-number">12.1.3</span> factorial experiments are frequently analyzed as flattened linear models in the experimental biology literature</a></li>
+  <li><a href="#an-interaction-is-a-difference-in-simple-effects" id="toc-an-interaction-is-a-difference-in-simple-effects" class="nav-link" data-scroll-target="#an-interaction-is-a-difference-in-simple-effects"><span class="header-section-number">13.1.1</span> An interaction is a difference in simple effects</a></li>
+  <li><a href="#a-linear-model-with-crossed-factors-includes-interaction-effects" id="toc-a-linear-model-with-crossed-factors-includes-interaction-effects" class="nav-link" data-scroll-target="#a-linear-model-with-crossed-factors-includes-interaction-effects"><span class="header-section-number">13.1.2</span> A linear model with crossed factors includes interaction effects</a></li>
+  <li><a href="#factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature" id="toc-factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature" class="nav-link" data-scroll-target="#factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature"><span class="header-section-number">13.1.3</span> factorial experiments are frequently analyzed as flattened linear models in the experimental biology literature</a></li>
   </ul></li>
-  <li><a href="#example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data" id="toc-example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data" class="nav-link" data-scroll-target="#example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data"><span class="header-section-number">12.2</span> Example 1 – Estimation of a treatment effect relative to a control effect (“Something different”) (Experiment 2j glucose uptake data)</a>
+  <li><a href="#example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data" id="toc-example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data" class="nav-link" data-scroll-target="#example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data"><span class="header-section-number">13.2</span> Example 1 – Estimation of a treatment effect relative to a control effect (“Something different”) (Experiment 2j glucose uptake data)</a>
   <ul>
-  <li><a href="#twoway-understand1" id="toc-twoway-understand1" class="nav-link" data-scroll-target="#twoway-understand1"><span class="header-section-number">12.2.1</span> Understand the experimental design</a></li>
-  <li><a href="#fit-the-linear-model" id="toc-fit-the-linear-model" class="nav-link" data-scroll-target="#fit-the-linear-model"><span class="header-section-number">12.2.2</span> Fit the linear model</a></li>
-  <li><a href="#twoway-exp2j-inf" id="toc-twoway-exp2j-inf" class="nav-link" data-scroll-target="#twoway-exp2j-inf"><span class="header-section-number">12.2.3</span> Inference</a></li>
-  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">12.2.4</span> Plot the model</a></li>
-  <li><a href="#alternaplot-the-model" id="toc-alternaplot-the-model" class="nav-link" data-scroll-target="#alternaplot-the-model"><span class="header-section-number">12.2.5</span> alternaPlot the model</a></li>
+  <li><a href="#twoway-understand1" id="toc-twoway-understand1" class="nav-link" data-scroll-target="#twoway-understand1"><span class="header-section-number">13.2.1</span> Understand the experimental design</a></li>
+  <li><a href="#fit-the-linear-model" id="toc-fit-the-linear-model" class="nav-link" data-scroll-target="#fit-the-linear-model"><span class="header-section-number">13.2.2</span> Fit the linear model</a></li>
+  <li><a href="#twoway-exp2j-inf" id="toc-twoway-exp2j-inf" class="nav-link" data-scroll-target="#twoway-exp2j-inf"><span class="header-section-number">13.2.3</span> Inference</a></li>
+  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">13.2.4</span> Plot the model</a></li>
+  <li><a href="#alternaplot-the-model" id="toc-alternaplot-the-model" class="nav-link" data-scroll-target="#alternaplot-the-model"><span class="header-section-number">13.2.5</span> alternaPlot the model</a></li>
   </ul></li>
-  <li><a href="#understanding-the-linear-model-with-crossed-factors-1" id="toc-understanding-the-linear-model-with-crossed-factors-1" class="nav-link" data-scroll-target="#understanding-the-linear-model-with-crossed-factors-1"><span class="header-section-number">12.3</span> Understanding the linear model with crossed factors 1</a>
+  <li><a href="#understanding-the-linear-model-with-crossed-factors-1" id="toc-understanding-the-linear-model-with-crossed-factors-1" class="nav-link" data-scroll-target="#understanding-the-linear-model-with-crossed-factors-1"><span class="header-section-number">13.3</span> Understanding the linear model with crossed factors 1</a>
   <ul>
-  <li><a href="#twoway-what-coefs-are" id="toc-twoway-what-coefs-are" class="nav-link" data-scroll-target="#twoway-what-coefs-are"><span class="header-section-number">12.3.1</span> What the coefficients are</a></li>
-  <li><a href="#the-interaction-effect-is-something-different" id="toc-the-interaction-effect-is-something-different" class="nav-link" data-scroll-target="#the-interaction-effect-is-something-different"><span class="header-section-number">12.3.2</span> The interaction effect is something different</a></li>
-  <li><a href="#why-we-want-to-compare-the-treatment-effect-to-a-control-effect" id="toc-why-we-want-to-compare-the-treatment-effect-to-a-control-effect" class="nav-link" data-scroll-target="#why-we-want-to-compare-the-treatment-effect-to-a-control-effect"><span class="header-section-number">12.3.3</span> Why we want to compare the treatment effect to a control effect</a></li>
-  <li><a href="#the-order-of-the-factors-in-the-model-tells-the-same-story-differently" id="toc-the-order-of-the-factors-in-the-model-tells-the-same-story-differently" class="nav-link" data-scroll-target="#the-order-of-the-factors-in-the-model-tells-the-same-story-differently"><span class="header-section-number">12.3.4</span> The order of the factors in the model tells the same story differently</a></li>
-  <li><a href="#power-for-the-interaction-effect-is-less-than-that-for-simple-effects" id="toc-power-for-the-interaction-effect-is-less-than-that-for-simple-effects" class="nav-link" data-scroll-target="#power-for-the-interaction-effect-is-less-than-that-for-simple-effects"><span class="header-section-number">12.3.5</span> Power for the interaction effect is less than that for simple effects</a></li>
-  <li><a href="#planned-comparisons-vs.-post-hoc-tests" id="toc-planned-comparisons-vs.-post-hoc-tests" class="nav-link" data-scroll-target="#planned-comparisons-vs.-post-hoc-tests"><span class="header-section-number">12.3.6</span> Planned comparisons vs.&nbsp;post-hoc tests</a></li>
+  <li><a href="#twoway-what-coefs-are" id="toc-twoway-what-coefs-are" class="nav-link" data-scroll-target="#twoway-what-coefs-are"><span class="header-section-number">13.3.1</span> What the coefficients are</a></li>
+  <li><a href="#the-interaction-effect-is-something-different" id="toc-the-interaction-effect-is-something-different" class="nav-link" data-scroll-target="#the-interaction-effect-is-something-different"><span class="header-section-number">13.3.2</span> The interaction effect is something different</a></li>
+  <li><a href="#why-we-want-to-compare-the-treatment-effect-to-a-control-effect" id="toc-why-we-want-to-compare-the-treatment-effect-to-a-control-effect" class="nav-link" data-scroll-target="#why-we-want-to-compare-the-treatment-effect-to-a-control-effect"><span class="header-section-number">13.3.3</span> Why we want to compare the treatment effect to a control effect</a></li>
+  <li><a href="#the-order-of-the-factors-in-the-model-tells-the-same-story-differently" id="toc-the-order-of-the-factors-in-the-model-tells-the-same-story-differently" class="nav-link" data-scroll-target="#the-order-of-the-factors-in-the-model-tells-the-same-story-differently"><span class="header-section-number">13.3.4</span> The order of the factors in the model tells the same story differently</a></li>
+  <li><a href="#power-for-the-interaction-effect-is-less-than-that-for-simple-effects" id="toc-power-for-the-interaction-effect-is-less-than-that-for-simple-effects" class="nav-link" data-scroll-target="#power-for-the-interaction-effect-is-less-than-that-for-simple-effects"><span class="header-section-number">13.3.5</span> Power for the interaction effect is less than that for simple effects</a></li>
+  <li><a href="#planned-comparisons-vs.-post-hoc-tests" id="toc-planned-comparisons-vs.-post-hoc-tests" class="nav-link" data-scroll-target="#planned-comparisons-vs.-post-hoc-tests"><span class="header-section-number">13.3.6</span> Planned comparisons vs.&nbsp;post-hoc tests</a></li>
   </ul></li>
-  <li><a href="#example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data" id="toc-example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data" class="nav-link" data-scroll-target="#example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data"><span class="header-section-number">12.4</span> Example 2: Estimation of the effect of background condition on an effect (“it depends”) (Experiment 3e lesian area data)</a>
+  <li><a href="#example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data" id="toc-example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data" class="nav-link" data-scroll-target="#example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data"><span class="header-section-number">13.4</span> Example 2: Estimation of the effect of background condition on an effect (“it depends”) (Experiment 3e lesian area data)</a>
   <ul>
-  <li><a href="#understand-the-experimental-design" id="toc-understand-the-experimental-design" class="nav-link" data-scroll-target="#understand-the-experimental-design"><span class="header-section-number">12.4.1</span> Understand the experimental design</a></li>
-  <li><a href="#fit-the-linear-model-1" id="toc-fit-the-linear-model-1" class="nav-link" data-scroll-target="#fit-the-linear-model-1"><span class="header-section-number">12.4.2</span> Fit the linear model</a></li>
-  <li><a href="#check-the-model" id="toc-check-the-model" class="nav-link" data-scroll-target="#check-the-model"><span class="header-section-number">12.4.3</span> Check the model</a></li>
-  <li><a href="#inference-from-the-model" id="toc-inference-from-the-model" class="nav-link" data-scroll-target="#inference-from-the-model"><span class="header-section-number">12.4.4</span> Inference from the model</a></li>
-  <li><a href="#plot-the-model-1" id="toc-plot-the-model-1" class="nav-link" data-scroll-target="#plot-the-model-1"><span class="header-section-number">12.4.5</span> Plot the model</a></li>
-  <li><a href="#alternaplot-the-model-1" id="toc-alternaplot-the-model-1" class="nav-link" data-scroll-target="#alternaplot-the-model-1"><span class="header-section-number">12.4.6</span> alternaPlot the model</a></li>
+  <li><a href="#understand-the-experimental-design" id="toc-understand-the-experimental-design" class="nav-link" data-scroll-target="#understand-the-experimental-design"><span class="header-section-number">13.4.1</span> Understand the experimental design</a></li>
+  <li><a href="#fit-the-linear-model-1" id="toc-fit-the-linear-model-1" class="nav-link" data-scroll-target="#fit-the-linear-model-1"><span class="header-section-number">13.4.2</span> Fit the linear model</a></li>
+  <li><a href="#check-the-model" id="toc-check-the-model" class="nav-link" data-scroll-target="#check-the-model"><span class="header-section-number">13.4.3</span> Check the model</a></li>
+  <li><a href="#inference-from-the-model" id="toc-inference-from-the-model" class="nav-link" data-scroll-target="#inference-from-the-model"><span class="header-section-number">13.4.4</span> Inference from the model</a></li>
+  <li><a href="#plot-the-model-1" id="toc-plot-the-model-1" class="nav-link" data-scroll-target="#plot-the-model-1"><span class="header-section-number">13.4.5</span> Plot the model</a></li>
+  <li><a href="#alternaplot-the-model-1" id="toc-alternaplot-the-model-1" class="nav-link" data-scroll-target="#alternaplot-the-model-1"><span class="header-section-number">13.4.6</span> alternaPlot the model</a></li>
   </ul></li>
-  <li><a href="#understanding-the-linear-model-with-crossed-factors-2" id="toc-understanding-the-linear-model-with-crossed-factors-2" class="nav-link" data-scroll-target="#understanding-the-linear-model-with-crossed-factors-2"><span class="header-section-number">12.5</span> Understanding the linear model with crossed factors 2</a>
+  <li><a href="#understanding-the-linear-model-with-crossed-factors-2" id="toc-understanding-the-linear-model-with-crossed-factors-2" class="nav-link" data-scroll-target="#understanding-the-linear-model-with-crossed-factors-2"><span class="header-section-number">13.5</span> Understanding the linear model with crossed factors 2</a>
   <ul>
-  <li><a href="#twoway-marginal-means" id="toc-twoway-marginal-means" class="nav-link" data-scroll-target="#twoway-marginal-means"><span class="header-section-number">12.5.1</span> Conditional and marginal means</a></li>
-  <li><a href="#simple-conditional-effects" id="toc-simple-conditional-effects" class="nav-link" data-scroll-target="#simple-conditional-effects"><span class="header-section-number">12.5.2</span> Simple (conditional) effects</a></li>
-  <li><a href="#sec-twoway-marginal-effects" id="toc-sec-twoway-marginal-effects" class="nav-link" data-scroll-target="#sec-twoway-marginal-effects"><span class="header-section-number">12.5.3</span> Marginal effects</a></li>
-  <li><a href="#the-additive-model" id="toc-the-additive-model" class="nav-link" data-scroll-target="#the-additive-model"><span class="header-section-number">12.5.4</span> The additive model</a></li>
-  <li><a href="#twoway-reduce" id="toc-twoway-reduce" class="nav-link" data-scroll-target="#twoway-reduce"><span class="header-section-number">12.5.5</span> Reduce models for the right reason</a></li>
-  <li><a href="#the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird" id="toc-the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird" class="nav-link" data-scroll-target="#the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird"><span class="header-section-number">12.5.6</span> The marginal means of an additive linear model with two factors can be weird</a></li>
+  <li><a href="#twoway-marginal-means" id="toc-twoway-marginal-means" class="nav-link" data-scroll-target="#twoway-marginal-means"><span class="header-section-number">13.5.1</span> Conditional and marginal means</a></li>
+  <li><a href="#simple-conditional-effects" id="toc-simple-conditional-effects" class="nav-link" data-scroll-target="#simple-conditional-effects"><span class="header-section-number">13.5.2</span> Simple (conditional) effects</a></li>
+  <li><a href="#sec-twoway-marginal-effects" id="toc-sec-twoway-marginal-effects" class="nav-link" data-scroll-target="#sec-twoway-marginal-effects"><span class="header-section-number">13.5.3</span> Marginal effects</a></li>
+  <li><a href="#the-additive-model" id="toc-the-additive-model" class="nav-link" data-scroll-target="#the-additive-model"><span class="header-section-number">13.5.4</span> The additive model</a></li>
+  <li><a href="#twoway-reduce" id="toc-twoway-reduce" class="nav-link" data-scroll-target="#twoway-reduce"><span class="header-section-number">13.5.5</span> Reduce models for the right reason</a></li>
+  <li><a href="#the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird" id="toc-the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird" class="nav-link" data-scroll-target="#the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird"><span class="header-section-number">13.5.6</span> The marginal means of an additive linear model with two factors can be weird</a></li>
   </ul></li>
-  <li><a href="#example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data" id="toc-example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data" class="nav-link" data-scroll-target="#example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data"><span class="header-section-number">12.6</span> Example 3: Estimation of synergy (“More than the sum of the parts”) (Experiment 1c JA data)</a>
+  <li><a href="#example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data" id="toc-example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data" class="nav-link" data-scroll-target="#example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data"><span class="header-section-number">13.6</span> Example 3: Estimation of synergy (“More than the sum of the parts”) (Experiment 1c JA data)</a>
   <ul>
-  <li><a href="#examine-the-data" id="toc-examine-the-data" class="nav-link" data-scroll-target="#examine-the-data"><span class="header-section-number">12.6.1</span> Examine the data</a></li>
-  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">12.6.2</span> Fit the model</a></li>
-  <li><a href="#model-check" id="toc-model-check" class="nav-link" data-scroll-target="#model-check"><span class="header-section-number">12.6.3</span> Model check</a></li>
-  <li><a href="#inference-from-the-model-1" id="toc-inference-from-the-model-1" class="nav-link" data-scroll-target="#inference-from-the-model-1"><span class="header-section-number">12.6.4</span> Inference from the model</a></li>
-  <li><a href="#plot-the-model-2" id="toc-plot-the-model-2" class="nav-link" data-scroll-target="#plot-the-model-2"><span class="header-section-number">12.6.5</span> Plot the model</a></li>
-  <li><a href="#alternative-plot" id="toc-alternative-plot" class="nav-link" data-scroll-target="#alternative-plot"><span class="header-section-number">12.6.6</span> Alternative plot</a></li>
+  <li><a href="#examine-the-data" id="toc-examine-the-data" class="nav-link" data-scroll-target="#examine-the-data"><span class="header-section-number">13.6.1</span> Examine the data</a></li>
+  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">13.6.2</span> Fit the model</a></li>
+  <li><a href="#model-check" id="toc-model-check" class="nav-link" data-scroll-target="#model-check"><span class="header-section-number">13.6.3</span> Model check</a></li>
+  <li><a href="#inference-from-the-model-1" id="toc-inference-from-the-model-1" class="nav-link" data-scroll-target="#inference-from-the-model-1"><span class="header-section-number">13.6.4</span> Inference from the model</a></li>
+  <li><a href="#plot-the-model-2" id="toc-plot-the-model-2" class="nav-link" data-scroll-target="#plot-the-model-2"><span class="header-section-number">13.6.5</span> Plot the model</a></li>
+  <li><a href="#alternative-plot" id="toc-alternative-plot" class="nav-link" data-scroll-target="#alternative-plot"><span class="header-section-number">13.6.6</span> Alternative plot</a></li>
   </ul></li>
-  <li><a href="#understanding-the-linear-model-with-crossed-factors-3" id="toc-understanding-the-linear-model-with-crossed-factors-3" class="nav-link" data-scroll-target="#understanding-the-linear-model-with-crossed-factors-3"><span class="header-section-number">12.7</span> Understanding the linear model with crossed factors 3</a>
+  <li><a href="#understanding-the-linear-model-with-crossed-factors-3" id="toc-understanding-the-linear-model-with-crossed-factors-3" class="nav-link" data-scroll-target="#understanding-the-linear-model-with-crossed-factors-3"><span class="header-section-number">13.7</span> Understanding the linear model with crossed factors 3</a>
   <ul>
-  <li><a href="#thinking-about-the-coefficients-of-the-linear-model" id="toc-thinking-about-the-coefficients-of-the-linear-model" class="nav-link" data-scroll-target="#thinking-about-the-coefficients-of-the-linear-model"><span class="header-section-number">12.7.1</span> Thinking about the coefficients of the linear model</a></li>
+  <li><a href="#thinking-about-the-coefficients-of-the-linear-model" id="toc-thinking-about-the-coefficients-of-the-linear-model" class="nav-link" data-scroll-target="#thinking-about-the-coefficients-of-the-linear-model"><span class="header-section-number">13.7.1</span> Thinking about the coefficients of the linear model</a></li>
   </ul></li>
-  <li><a href="#issues-in-inference" id="toc-issues-in-inference" class="nav-link" data-scroll-target="#issues-in-inference"><span class="header-section-number">12.8</span> Issues in inference</a>
+  <li><a href="#issues-in-inference" id="toc-issues-in-inference" class="nav-link" data-scroll-target="#issues-in-inference"><span class="header-section-number">13.8</span> Issues in inference</a>
   <ul>
-  <li><a href="#for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" id="toc-for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="nav-link" data-scroll-target="#for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">12.8.1</span> For pairwise inference, it doesn’t matter if you fit a factorial or a flattened linear model, but…</a></li>
-  <li><a href="#for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" id="toc-for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="nav-link" data-scroll-target="#for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">12.8.2</span> For interaction interaction, it doesn’t matter if you fit a factorial or a flattened linear model, but…</a></li>
-  <li><a href="#twoway-multiple-tests" id="toc-twoway-multiple-tests" class="nav-link" data-scroll-target="#twoway-multiple-tests"><span class="header-section-number">12.8.3</span> Adjusting <em>p</em>-values for multiple tests</a></li>
+  <li><a href="#for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" id="toc-for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="nav-link" data-scroll-target="#for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">13.8.1</span> For pairwise inference, it doesn’t matter if you fit a factorial or a flattened linear model, but…</a></li>
+  <li><a href="#for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" id="toc-for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="nav-link" data-scroll-target="#for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">13.8.2</span> For interaction interaction, it doesn’t matter if you fit a factorial or a flattened linear model, but…</a></li>
+  <li><a href="#twoway-multiple-tests" id="toc-twoway-multiple-tests" class="nav-link" data-scroll-target="#twoway-multiple-tests"><span class="header-section-number">13.8.3</span> Adjusting <em>p</em>-values for multiple tests</a></li>
   </ul></li>
-  <li><a href="#two-way-anova" id="toc-two-way-anova" class="nav-link" data-scroll-target="#two-way-anova"><span class="header-section-number">12.9</span> Two-way ANOVA</a>
+  <li><a href="#two-way-anova" id="toc-two-way-anova" class="nav-link" data-scroll-target="#two-way-anova"><span class="header-section-number">13.9</span> Two-way ANOVA</a>
   <ul>
-  <li><a href="#how-to-read-a-two-way-anova-table" id="toc-how-to-read-a-two-way-anova-table" class="nav-link" data-scroll-target="#how-to-read-a-two-way-anova-table"><span class="header-section-number">12.9.1</span> How to read a two-way ANOVA table</a></li>
-  <li><a href="#what-do-the-main-effects-in-an-anova-table-mean" id="toc-what-do-the-main-effects-in-an-anova-table-mean" class="nav-link" data-scroll-target="#what-do-the-main-effects-in-an-anova-table-mean"><span class="header-section-number">12.9.2</span> What do the main effects in an ANOVA table mean?</a></li>
+  <li><a href="#how-to-read-a-two-way-anova-table" id="toc-how-to-read-a-two-way-anova-table" class="nav-link" data-scroll-target="#how-to-read-a-two-way-anova-table"><span class="header-section-number">13.9.1</span> How to read a two-way ANOVA table</a></li>
+  <li><a href="#what-do-the-main-effects-in-an-anova-table-mean" id="toc-what-do-the-main-effects-in-an-anova-table-mean" class="nav-link" data-scroll-target="#what-do-the-main-effects-in-an-anova-table-mean"><span class="header-section-number">13.9.2</span> What do the main effects in an ANOVA table mean?</a></li>
   </ul></li>
-  <li><a href="#more-issues-in-inference" id="toc-more-issues-in-inference" class="nav-link" data-scroll-target="#more-issues-in-inference"><span class="header-section-number">12.10</span> More issues in inference</a>
+  <li><a href="#more-issues-in-inference" id="toc-more-issues-in-inference" class="nav-link" data-scroll-target="#more-issues-in-inference"><span class="header-section-number">13.10</span> More issues in inference</a>
   <ul>
-  <li><a href="#longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova" id="toc-longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova" class="nav-link" data-scroll-target="#longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova"><span class="header-section-number">12.10.1</span> Longitudinal experiments – include Time as a random factor (better than repeated measures ANOVA)</a></li>
+  <li><a href="#longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova" id="toc-longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova" class="nav-link" data-scroll-target="#longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova"><span class="header-section-number">13.10.1</span> Longitudinal experiments – include Time as a random factor (better than repeated measures ANOVA)</a></li>
   </ul></li>
-  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">12.11</span> Working in R</a>
+  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">13.11</span> Working in R</a>
   <ul>
-  <li><a href="#model-formula" id="toc-model-formula" class="nav-link" data-scroll-target="#model-formula"><span class="header-section-number">12.11.1</span> Model formula</a></li>
-  <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">12.11.2</span> Using the emmeans function</a>
+  <li><a href="#model-formula" id="toc-model-formula" class="nav-link" data-scroll-target="#model-formula"><span class="header-section-number">13.11.1</span> Model formula</a></li>
+  <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">13.11.2</span> Using the emmeans function</a>
   <ul class="collapse">
-  <li><a href="#conditional-means-table" id="toc-conditional-means-table" class="nav-link" data-scroll-target="#conditional-means-table"><span class="header-section-number">12.11.2.1</span> Conditional means table</a></li>
-  <li><a href="#marginal-means" id="toc-marginal-means" class="nav-link" data-scroll-target="#marginal-means"><span class="header-section-number">12.11.2.2</span> Marginal means</a></li>
+  <li><a href="#conditional-means-table" id="toc-conditional-means-table" class="nav-link" data-scroll-target="#conditional-means-table"><span class="header-section-number">13.11.2.1</span> Conditional means table</a></li>
+  <li><a href="#marginal-means" id="toc-marginal-means" class="nav-link" data-scroll-target="#marginal-means"><span class="header-section-number">13.11.2.2</span> Marginal means</a></li>
   </ul></li>
-  <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts"><span class="header-section-number">12.11.3</span> Contrasts</a>
+  <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts"><span class="header-section-number">13.11.3</span> Contrasts</a>
   <ul class="collapse">
-  <li><a href="#twoway-working-planned" id="toc-twoway-working-planned" class="nav-link" data-scroll-target="#twoway-working-planned"><span class="header-section-number">12.11.3.1</span> Planned contrasts</a></li>
-  <li><a href="#all-pairwise-effects" id="toc-all-pairwise-effects" class="nav-link" data-scroll-target="#all-pairwise-effects"><span class="header-section-number">12.11.3.2</span> All pairwise effects</a></li>
-  <li><a href="#simple-effects" id="toc-simple-effects" class="nav-link" data-scroll-target="#simple-effects"><span class="header-section-number">12.11.3.3</span> Simple effects</a></li>
-  <li><a href="#twoway-working-ixn" id="toc-twoway-working-ixn" class="nav-link" data-scroll-target="#twoway-working-ixn"><span class="header-section-number">12.11.3.4</span> Interaction contrasts</a></li>
-  <li><a href="#method-argument" id="toc-method-argument" class="nav-link" data-scroll-target="#method-argument"><span class="header-section-number">12.11.3.5</span> Method argument</a></li>
-  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">12.11.3.6</span> Adjustment for multiple tests</a></li>
+  <li><a href="#twoway-working-planned" id="toc-twoway-working-planned" class="nav-link" data-scroll-target="#twoway-working-planned"><span class="header-section-number">13.11.3.1</span> Planned contrasts</a></li>
+  <li><a href="#all-pairwise-effects" id="toc-all-pairwise-effects" class="nav-link" data-scroll-target="#all-pairwise-effects"><span class="header-section-number">13.11.3.2</span> All pairwise effects</a></li>
+  <li><a href="#simple-effects" id="toc-simple-effects" class="nav-link" data-scroll-target="#simple-effects"><span class="header-section-number">13.11.3.3</span> Simple effects</a></li>
+  <li><a href="#twoway-working-ixn" id="toc-twoway-working-ixn" class="nav-link" data-scroll-target="#twoway-working-ixn"><span class="header-section-number">13.11.3.4</span> Interaction contrasts</a></li>
+  <li><a href="#method-argument" id="toc-method-argument" class="nav-link" data-scroll-target="#method-argument"><span class="header-section-number">13.11.3.5</span> Method argument</a></li>
+  <li><a href="#adjustment-for-multiple-tests" id="toc-adjustment-for-multiple-tests" class="nav-link" data-scroll-target="#adjustment-for-multiple-tests"><span class="header-section-number">13.11.3.6</span> Adjustment for multiple tests</a></li>
   </ul></li>
-  <li><a href="#practice-safe-anova" id="toc-practice-safe-anova" class="nav-link" data-scroll-target="#practice-safe-anova"><span class="header-section-number">12.11.4</span> Practice safe ANOVA</a>
+  <li><a href="#practice-safe-anova" id="toc-practice-safe-anova" class="nav-link" data-scroll-target="#practice-safe-anova"><span class="header-section-number">13.11.4</span> Practice safe ANOVA</a>
   <ul class="collapse">
-  <li><a href="#the-afex-aov_4-function" id="toc-the-afex-aov_4-function" class="nav-link" data-scroll-target="#the-afex-aov_4-function"><span class="header-section-number">12.11.4.1</span> The afex aov_4 function</a></li>
-  <li><a href="#twoway-car-anova" id="toc-twoway-car-anova" class="nav-link" data-scroll-target="#twoway-car-anova"><span class="header-section-number">12.11.4.2</span> The car Anova function</a></li>
+  <li><a href="#the-afex-aov_4-function" id="toc-the-afex-aov_4-function" class="nav-link" data-scroll-target="#the-afex-aov_4-function"><span class="header-section-number">13.11.4.1</span> The afex aov_4 function</a></li>
+  <li><a href="#twoway-car-anova" id="toc-twoway-car-anova" class="nav-link" data-scroll-target="#twoway-car-anova"><span class="header-section-number">13.11.4.2</span> The car Anova function</a></li>
   </ul></li>
-  <li><a href="#better-to-avoid-these" id="toc-better-to-avoid-these" class="nav-link" data-scroll-target="#better-to-avoid-these"><span class="header-section-number">12.11.5</span> Better to avoid these</a></li>
+  <li><a href="#better-to-avoid-these" id="toc-better-to-avoid-these" class="nav-link" data-scroll-target="#better-to-avoid-these"><span class="header-section-number">13.11.5</span> Better to avoid these</a></li>
   </ul></li>
-  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">12.12</span> Hidden Code</a>
+  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">13.12</span> Hidden Code</a>
   <ul>
-  <li><a href="#import-exp2j-example-1" id="toc-import-exp2j-example-1" class="nav-link" data-scroll-target="#import-exp2j-example-1"><span class="header-section-number">12.12.1</span> Import exp2j (Example 1)</a></li>
-  <li><a href="#import-exp3e-lesian-area-data-example-2" id="toc-import-exp3e-lesian-area-data-example-2" class="nav-link" data-scroll-target="#import-exp3e-lesian-area-data-example-2"><span class="header-section-number">12.12.2</span> Import exp3e lesian area data (Example 2)</a></li>
-  <li><a href="#import-exp1c-ja-data-example-3" id="toc-import-exp1c-ja-data-example-3" class="nav-link" data-scroll-target="#import-exp1c-ja-data-example-3"><span class="header-section-number">12.12.3</span> Import Exp1c JA data (Example 3)</a></li>
+  <li><a href="#import-exp2j-example-1" id="toc-import-exp2j-example-1" class="nav-link" data-scroll-target="#import-exp2j-example-1"><span class="header-section-number">13.12.1</span> Import exp2j (Example 1)</a></li>
+  <li><a href="#import-exp3e-lesian-area-data-example-2" id="toc-import-exp3e-lesian-area-data-example-2" class="nav-link" data-scroll-target="#import-exp3e-lesian-area-data-example-2"><span class="header-section-number">13.12.2</span> Import exp3e lesian area data (Example 2)</a></li>
+  <li><a href="#import-exp1c-ja-data-example-3" id="toc-import-exp1c-ja-data-example-3" class="nav-link" data-scroll-target="#import-exp1c-ja-data-example-3"><span class="header-section-number">13.12.3</span> Import Exp1c JA data (Example 3)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -365,7 +371,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-twoway" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></h1>
+<h1 class="title"><span id="sec-twoway" class="quarto-section-identifier"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></h1>
 </div>
 
 
@@ -382,8 +388,8 @@ window.Quarto = {
 </header>
 
 
-<section id="a-linear-model-with-crossed-factors-estimates-interaction-effects" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="a-linear-model-with-crossed-factors-estimates-interaction-effects"><span class="header-section-number">12.1</span> A linear model with crossed factors estimates interaction effects</h2>
+<section id="a-linear-model-with-crossed-factors-estimates-interaction-effects" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="a-linear-model-with-crossed-factors-estimates-interaction-effects"><span class="header-section-number">13.1</span> A linear model with crossed factors estimates interaction effects</h2>
 <p>A factorial experiment is one in which there are two or more factor variables (categorical <span class="math inline">\(X\)</span>) that are <strong>crossed</strong>, resulting in a group for each combination of the levels of each factor. Each specific combination is a different treatment. A <strong>linear model with crossed factors</strong> is used to estimate <strong>interaction effects</strong>, which occur when the effect of the level of one factor is conditional on the level of the other factors. Estimation of the interaction effect is necessary for inferences about</p>
 <ol type="1">
 <li>“Something different” – Estimation of a treatment effect relative to a control effect (Example 1 – TLR9-/- mice)</li>
@@ -404,15 +410,15 @@ NHST Blues
 <p>NHST encourages dichotomous thinking such as “there is or isn’t an interaction effect.” Dichotomous thinking can only lead to disasters of biblical proportion, dogs and cats living together. Interaction effects in biology are ubiquitous. Sometimes they are small enough to ignore.</p>
 </div>
 </div>
-<section id="an-interaction-is-a-difference-in-simple-effects" class="level3" data-number="12.1.1">
-<h3 data-number="12.1.1" class="anchored" data-anchor-id="an-interaction-is-a-difference-in-simple-effects"><span class="header-section-number">12.1.1</span> An interaction is a difference in simple effects</h3>
+<section id="an-interaction-is-a-difference-in-simple-effects" class="level3" data-number="13.1.1">
+<h3 data-number="13.1.1" class="anchored" data-anchor-id="an-interaction-is-a-difference-in-simple-effects"><span class="header-section-number">13.1.1</span> An interaction is a difference in simple effects</h3>
 <p>In this chapter, I’ll describe an interaction effect using different descriptions (Examples 1-3). Here, I want to emphasize that an interaction effect is a difference of differences. To clarify this, I’ll introduce a fake experiment. A research group has evidence that a certain gene product (CGP) is an intermediary between intestinal microbiota and obesity. The researchers transfer feces from either lean mice or obese mice into either wildtype mice or CGP-/- mice to investigate the effect of microbiota and CGP on body weight. The design has two factors (donor and genotype), each with two levels (donor: “Lean”, “Obese; genotype:”WT”, “KO”), which makes this a <span class="math inline">\(2 \times 2\)</span> (crossed or factorial) design. There are <span class="math inline">\(n=6\)</span> replicates for each treatment.</p>
-<p>A good way to visualize the treatment combinations in a crossed design is with a <span class="math inline">\(m \times p\)</span> table showing all combinations of the <span class="math inline">\(m\)</span> levels of factor 1 (<code>donor</code>) against the <span class="math inline">\(p\)</span> levels of factor 2 (<code>genotype</code>) (<a href="#tbl-twoway-factorial-table" class="quarto-xref">Table&nbsp;<span>12.1</span></a>).</p>
+<p>A good way to visualize the treatment combinations in a crossed design is with a <span class="math inline">\(m \times p\)</span> table showing all combinations of the <span class="math inline">\(m\)</span> levels of factor 1 (<code>donor</code>) against the <span class="math inline">\(p\)</span> levels of factor 2 (<code>genotype</code>) (<a href="#tbl-twoway-factorial-table" class="quarto-xref">Table&nbsp;<span>13.1</span></a>).</p>
 <div class="cell">
 <div id="tbl-twoway-factorial-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-factorial-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 factorial experiment.
+Table&nbsp;13.1: Mean body weight of mice in four treatment groups of the 2 x 2 factorial experiment.
 </figcaption>
 <div aria-describedby="tbl-twoway-factorial-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -467,8 +473,8 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 \]</span></p>
 <p>This contrast is the interaction effect. <strong>An interaction effect is a difference of differences</strong>.</p>
 </section>
-<section id="a-linear-model-with-crossed-factors-includes-interaction-effects" class="level3" data-number="12.1.2">
-<h3 data-number="12.1.2" class="anchored" data-anchor-id="a-linear-model-with-crossed-factors-includes-interaction-effects"><span class="header-section-number">12.1.2</span> A linear model with crossed factors includes interaction effects</h3>
+<section id="a-linear-model-with-crossed-factors-includes-interaction-effects" class="level3" data-number="13.1.2">
+<h3 data-number="13.1.2" class="anchored" data-anchor-id="a-linear-model-with-crossed-factors-includes-interaction-effects"><span class="header-section-number">13.1.2</span> A linear model with crossed factors includes interaction effects</h3>
 <p>The factorial linear model for the fake data is</p>
 <p><span class="math display">\[
 \begin{align}
@@ -500,8 +506,8 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 </ol>
 <p>The mean of the “Obese KO” group is <span class="math inline">\(\beta_0 + \beta_1 + \beta_2 + \beta_3\)</span>. The expected mean of the “Obese KO” group, <em>if the factors are additive, which means the interaction effect is zero</em>, is <span class="math inline">\(\beta_0 + \beta_1 + \beta_2\)</span>. <strong>The interaction effect is the difference between the actual mean of the “Obese KO” group and this additive mean</strong>. The interaction effect is what’s left-over, after you’ve added Obese effect and the KO effect to the control.</p>
 </section>
-<section id="factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature" class="level3" data-number="12.1.3">
-<h3 data-number="12.1.3" class="anchored" data-anchor-id="factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature"><span class="header-section-number">12.1.3</span> factorial experiments are frequently analyzed as flattened linear models in the experimental biology literature</h3>
+<section id="factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature" class="level3" data-number="13.1.3">
+<h3 data-number="13.1.3" class="anchored" data-anchor-id="factorial-experiments-are-frequently-analyzed-as-flattened-linear-models-in-the-experimental-biology-literature"><span class="header-section-number">13.1.3</span> factorial experiments are frequently analyzed as flattened linear models in the experimental biology literature</h3>
 <p>Often, researchers analyze data from a factorial experiment with a one-way ANOVA followed by pairwise tests (or by a simple series of separate <em>t</em>-tests). For the fake experiment, this linear model is</p>
 <p><span class="math display">\[
 \begin{align}
@@ -514,15 +520,15 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 <p>I refer to this as a <strong>flattened</strong> model (the table of treatment combinations has been flattened into a single row). Inference from a factorial or flattened model is the same. We can get the same pairwise contrasts or interaction contrasts from either model. That said, a factorial model nudges researchers to think about the analysis as a factorial design, which is good, because interaction effects are an explicit component of a factorial model.</p>
 </section>
 </section>
-<section id="example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data"><span class="header-section-number">12.2</span> Example 1 – Estimation of a treatment effect relative to a control effect (“Something different”) (Experiment 2j glucose uptake data)</h2>
+<section id="example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="example-1-estimation-of-a-treatment-effect-relative-to-a-control-effect-something-different-experiment-2j-glucose-uptake-data"><span class="header-section-number">13.2</span> Example 1 – Estimation of a treatment effect relative to a control effect (“Something different”) (Experiment 2j glucose uptake data)</h2>
 <p>To introduce a linear model with crossed factors (categorical <span class="math inline">\(X\)</span> variables), I’ll use data from a set of experiments designed to measure the effect of the toll-like receptor protein TLR9 on the activation of excercise-induced AMP-activated protein kinase (AMPK) and downstream sequelae of this activation, including glucose transport (from outside to inside the cell) by skeletal muscle cells.</p>
 <p>Article source: <a href="https://www.nature.com/articles/s41586-020-1992-7" target="_blank">TLR9 and beclin 1 crosstalk regulates muscle AMPK activation in exercise</a></p>
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7047589/" target="_blank">Public source</a></p>
 <p>The data are from multiple experiments in Figure 2.</p>
 <p><a href="https://www.nature.com/articles/s41586-020-1992-7#Sec27" target="_blank">Data source</a></p>
-<section id="twoway-understand1" class="level3" data-number="12.2.1">
-<h3 data-number="12.2.1" class="anchored" data-anchor-id="twoway-understand1"><span class="header-section-number">12.2.1</span> Understand the experimental design</h3>
+<section id="twoway-understand1" class="level3" data-number="13.2.1">
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="twoway-understand1"><span class="header-section-number">13.2.1</span> Understand the experimental design</h3>
 <p><strong>Background</strong>. Exercise (muscle activity) stimulates AMPK activated glucose uptake (transport from outside to inside the muscle cell). Instead of natural exercise, which can stimulate multiple systems, the researchers directly activate the muscle with electrical stimulation.</p>
 <p><strong>Research question</strong> There are two ways to think about the question – both produce the same answer.</p>
 <ol type="1">
@@ -576,15 +582,15 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 <li>(KO Active - WT Active) - (KO Rest - WT Rest) – interaction contrast</li>
 </ol>
 </section>
-<section id="fit-the-linear-model" class="level3" data-number="12.2.2">
-<h3 data-number="12.2.2" class="anchored" data-anchor-id="fit-the-linear-model"><span class="header-section-number">12.2.2</span> Fit the linear model</h3>
+<section id="fit-the-linear-model" class="level3" data-number="13.2.2">
+<h3 data-number="13.2.2" class="anchored" data-anchor-id="fit-the-linear-model"><span class="header-section-number">13.2.2</span> Fit the linear model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>exp2j_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="twoway-exp2j-inf" class="level3" data-number="12.2.3">
-<h3 data-number="12.2.3" class="anchored" data-anchor-id="twoway-exp2j-inf"><span class="header-section-number">12.2.3</span> Inference</h3>
+<section id="twoway-exp2j-inf" class="level3" data-number="13.2.3">
+<h3 data-number="13.2.3" class="anchored" data-anchor-id="twoway-exp2j-inf"><span class="header-section-number">13.2.3</span> Inference</h3>
 <p><strong>The coefficient table</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>exp2j_m1_coef <span class="ot">&lt;-</span> <span class="fu">tidy</span>(exp2j_m1, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
@@ -808,8 +814,8 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contrast(exp2b.2_m1_emm, method = c("revpairwise"))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot-the-model" class="level3" data-number="12.2.4">
-<h3 data-number="12.2.4" class="anchored" data-anchor-id="plot-the-model"><span class="header-section-number">12.2.4</span> Plot the model</h3>
+<section id="plot-the-model" class="level3" data-number="13.2.4">
+<h3 data-number="13.2.4" class="anchored" data-anchor-id="plot-the-model"><span class="header-section-number">13.2.4</span> Plot the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_the_model</span>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  exp2j_m1,</span>
@@ -830,8 +836,8 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 </div>
 </div>
 </section>
-<section id="alternaplot-the-model" class="level3" data-number="12.2.5">
-<h3 data-number="12.2.5" class="anchored" data-anchor-id="alternaplot-the-model"><span class="header-section-number">12.2.5</span> alternaPlot the model</h3>
+<section id="alternaplot-the-model" class="level3" data-number="13.2.5">
+<h3 data-number="13.2.5" class="anchored" data-anchor-id="alternaplot-the-model"><span class="header-section-number">13.2.5</span> alternaPlot the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>exp2j_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(exp2j_m1_emm,</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
@@ -882,17 +888,17 @@ Table&nbsp;12.1: Mean body weight of mice in four treatment groups of the 2 x 2 
 </div>
 </section>
 </section>
-<section id="understanding-the-linear-model-with-crossed-factors-1" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="understanding-the-linear-model-with-crossed-factors-1"><span class="header-section-number">12.3</span> Understanding the linear model with crossed factors 1</h2>
-<p>Researchers in experimental biology report almost exclusively the <em>p</em>-values of the simple effects (<a href="#tbl-twoway-factorial-table" class="quarto-xref">Table&nbsp;<span>12.1</span></a>) in data from factorial experiments. These can be computed even if the data are flattened into a single “treatment” factor. But it is the interaction effect that is necessary to make many of the inferences made by the researchers. To see why, we need to understand what the coefficients in the coefficient table are.</p>
-<section id="twoway-what-coefs-are" class="level3" data-number="12.3.1">
-<h3 data-number="12.3.1" class="anchored" data-anchor-id="twoway-what-coefs-are"><span class="header-section-number">12.3.1</span> What the coefficients are</h3>
+<section id="understanding-the-linear-model-with-crossed-factors-1" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="understanding-the-linear-model-with-crossed-factors-1"><span class="header-section-number">13.3</span> Understanding the linear model with crossed factors 1</h2>
+<p>Researchers in experimental biology report almost exclusively the <em>p</em>-values of the simple effects (<a href="#tbl-twoway-factorial-table" class="quarto-xref">Table&nbsp;<span>13.1</span></a>) in data from factorial experiments. These can be computed even if the data are flattened into a single “treatment” factor. But it is the interaction effect that is necessary to make many of the inferences made by the researchers. To see why, we need to understand what the coefficients in the coefficient table are.</p>
+<section id="twoway-what-coefs-are" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="twoway-what-coefs-are"><span class="header-section-number">13.3.1</span> What the coefficients are</h3>
 <p>To understand the coefficients, it helps to use the means in the emmeans table to construct a factorial table of the cell means</p>
 <div class="cell">
 <div id="tbl-twoway-exp2j-cellmeans" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-exp2j-cellmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.2: Cell mean table
+Table&nbsp;13.2: Cell mean table
 </figcaption>
 <div aria-describedby="tbl-twoway-exp2j-cellmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -994,10 +1000,10 @@ Table&nbsp;12.2: Cell mean table
 <p>Explainer</p>
 <ol type="1">
 <li>Understand what the rows of the coefficient table are. There are four parameters in the fit linear model – the rows are the statistics for the estimates of these parameters. These estimates are the <strong>coefficients</strong> of the model.</li>
-<li>The <code>(Intercept)</code> coefficient (<span class="math inline">\(b_0\)</span>) is the mean <code>glucose_uptake</code> of the reference level, which was set to the “WT Rest” group (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>12.1</span></a>). This is the mean in the upper left cell in <a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>12.2</span></a>.</li>
-<li>The <code>stimulationActive</code> coefficient (<span class="math inline">\(b_2\)</span>) is the estimate of the <strong>the added effect of Stimulation when the genotype factor is at its reference level</strong>, and so is the mean in the upper right cell minus the mean in the upper left cell in <a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>12.2</span></a>. This coefficient is not a mean – it is a difference of means (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>12.1</span></a>). The mean of the “WT Active” group is <span class="math inline">\(b_0 + b_2\)</span>.</li>
-<li>The <code>genotypeKO</code> coefficient (<span class="math inline">\(b_1\)</span>) is the estimate of the <strong>the added effect of knocking out TLR9 when the stimulation factor is at its reference level</strong>, and so is the mean in the lower left cell minus the mean in the upper left cell in <a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>12.2</span></a>. This coefficient is not a mean – it is a difference of means (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>12.1</span></a>). The mean of the “KO Rest” group is <span class="math inline">\(b_0 + b_1\)</span>.</li>
-<li>The <code>stimulationActive:genotypeKO</code> coefficient (<span class="math inline">\(b_3\)</span>) is the estimate of the interaction effect between <code>genotype</code> and <code>stimulation</code>. It is <em>not</em> the mean in the lower right cell minus the mean in the upper left cell. Instead, <strong>it is the mean in the lower right cell minus the expected mean in the lower right cell if the genotype and activity treatment effects were additive</strong>. The expected additive-mean in the lower right cell (“KO Active”) is <span class="math inline">\(b_0 + b_1 + b_2\)</span>. The mean of KO stimulation is <span class="math inline">\(b_0 + b_1 + b_2 + b_3\)</span> (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>12.1</span></a>).</li>
+<li>The <code>(Intercept)</code> coefficient (<span class="math inline">\(b_0\)</span>) is the mean <code>glucose_uptake</code> of the reference level, which was set to the “WT Rest” group (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>). This is the mean in the upper left cell in <a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>13.2</span></a>.</li>
+<li>The <code>stimulationActive</code> coefficient (<span class="math inline">\(b_2\)</span>) is the estimate of the <strong>the added effect of Stimulation when the genotype factor is at its reference level</strong>, and so is the mean in the upper right cell minus the mean in the upper left cell in <a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. This coefficient is not a mean – it is a difference of means (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>). The mean of the “WT Active” group is <span class="math inline">\(b_0 + b_2\)</span>.</li>
+<li>The <code>genotypeKO</code> coefficient (<span class="math inline">\(b_1\)</span>) is the estimate of the <strong>the added effect of knocking out TLR9 when the stimulation factor is at its reference level</strong>, and so is the mean in the lower left cell minus the mean in the upper left cell in <a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. This coefficient is not a mean – it is a difference of means (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>). The mean of the “KO Rest” group is <span class="math inline">\(b_0 + b_1\)</span>.</li>
+<li>The <code>stimulationActive:genotypeKO</code> coefficient (<span class="math inline">\(b_3\)</span>) is the estimate of the interaction effect between <code>genotype</code> and <code>stimulation</code>. It is <em>not</em> the mean in the lower right cell minus the mean in the upper left cell. Instead, <strong>it is the mean in the lower right cell minus the expected mean in the lower right cell if the genotype and activity treatment effects were additive</strong>. The expected additive-mean in the lower right cell (“KO Active”) is <span class="math inline">\(b_0 + b_1 + b_2\)</span>. The mean of KO stimulation is <span class="math inline">\(b_0 + b_1 + b_2 + b_3\)</span> (<a href="#fig-twoway-what-coefs-are" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>).</li>
 <li>The interaction effect is a <strong>non-additive effect</strong>. Think about this. Adding the Stimulation alone adds 3.45 nmol glucose per protein per 15 min to the uptake rate of the reference. Adding KO alone adds 0.78 glucose per protein per 15 min to the uptake rate of the reference. If these effects were purely additive, then adding both Stimulation and KO to the reference rate should result in a mean of 6.75 + 3.45 + 0.78 = 10.98 glucose per protein per 15 min. The modeled mean for “KO Active” is 8.67 glucose per protein per 15 min. The difference observed - additive is 8.67 - 10.98 = -2.31 glucose per protein per 15 min. Compare this difference to the interaction coefficient in the coefficient table.</li>
 <li>Reinforce your understanding of <em>non-additive</em> in item 5. The interaction is a non-additive effect because the mean of the combined treatment is something different than if we were to just add the KO and Active effects. But this effect is additive in the linear model. This is what linear models are – a reference mean plus the sum of a bunch of effects.</li>
 <li>Understand what these rows <strong>are not</strong>. The <code>stimulationActive</code> row is not the same as the “stimulation” term in a Type III ANOVA table (the ANOVA table produced in GraphPad Prism or JMP). The <em>p</em>-values will be different because the <em>p</em>-values are testing different hypotheses. In the coefficient table, the <code>stimulationActive</code> <em>p</em>-value is testing the difference of the means of WT Active and WT Rest. The stimulation term in a Type III ANOVA table is testing if there is an overall stimulation effect, which is estimated as the average of the two stimulation contrasts (WT Active - WT Rest) and (KO Active - KO Rest). The average of these two contrasts is not often of interest (but sometimes is – see below).</li>
@@ -1010,16 +1016,16 @@ Table&nbsp;12.2: Cell mean table
 <img src="two-factors_files/figure-html/fig-twoway-what-coefs-are-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-what-coefs-are-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.1: The coefficients of a linear model with two crossed factors, explained.
+Figure&nbsp;13.1: The coefficients of a linear model with two crossed factors, explained.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="the-interaction-effect-is-something-different" class="level3" data-number="12.3.2">
-<h3 data-number="12.3.2" class="anchored" data-anchor-id="the-interaction-effect-is-something-different"><span class="header-section-number">12.3.2</span> The interaction effect is something different</h3>
-<p>Item 6 in the coefficient table explainer stated “The interaction is a non-additive effect because the mean of the combined treatment is <strong>something different</strong> than if we were to just add the KO and Active effects. The something different is the interaction effect. If the interaction effect were zero, the expected effect of stimulation in the KO mice would be the same as the expected effect of stimulation in the WT mice (<a href="#fig-twoway-something-different" class="quarto-xref">Figure&nbsp;<span>12.2</span></a>). This would suggest the underlying physiological changes between Rest and Active in the KO mice is”more of the same” physiological changes in the WT mice. But, because of the interaction, the underlying physiological changes between Rest and Active in the KO mice is “something different” to that of physiological changes in the WT mice (<a href="#fig-twoway-something-different" class="quarto-xref">Figure&nbsp;<span>12.2</span></a>).</p>
+<section id="the-interaction-effect-is-something-different" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="the-interaction-effect-is-something-different"><span class="header-section-number">13.3.2</span> The interaction effect is something different</h3>
+<p>Item 6 in the coefficient table explainer stated “The interaction is a non-additive effect because the mean of the combined treatment is <strong>something different</strong> than if we were to just add the KO and Active effects. The something different is the interaction effect. If the interaction effect were zero, the expected effect of stimulation in the KO mice would be the same as the expected effect of stimulation in the WT mice (<a href="#fig-twoway-something-different" class="quarto-xref">Figure&nbsp;<span>13.2</span></a>). This would suggest the underlying physiological changes between Rest and Active in the KO mice is”more of the same” physiological changes in the WT mice. But, because of the interaction, the underlying physiological changes between Rest and Active in the KO mice is “something different” to that of physiological changes in the WT mice (<a href="#fig-twoway-something-different" class="quarto-xref">Figure&nbsp;<span>13.2</span></a>).</p>
 <p>The biological reasons causing interaction effects are highly variable and are what makes Biology fun. Additive effects (no interaction) may occur when combined treatments act independently of each other. This might occur in the glucose uptake response if knocking out TLR9 opens a path to glucose uptake that is different from and independent of the paths activated by electrial stimulation. Positive, or <strong>synergistic</strong> interaction effects may occur when combined treatments augment each other’s ability to affect the response (see Example 3 below). This could occur in the glucose uptake response if knocking out TLR9 opens a path to glucose uptake that is different the paths activated by electrial stimulation but also makes the paths activated by stimulation more sensitive to stimulation. Negative, or <strong>antagonistic</strong> interaction effects may occur when combined treatments interfere with each other’s ability to affect the response. This could occur in the glucose uptake response if TLR9 is on the path from stimulation to glucose uptake. Knocking out TLR9 interferes with this path. If TLR9 is required, we’d expect the interaction effect to be the same magnitude but opposite sign of the control effect – that is, complete antagonism of the control effect. Previous experiments suggested this negative interaction. The measurement of this effect was the purpose of experiment <code>exp2j</code>.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -1029,20 +1035,20 @@ Figure&nbsp;12.1: The coefficients of a linear model with two crossed factors, e
 <img src="two-factors_files/figure-html/fig-twoway-something-different-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-something-different-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.2: The interaction is something different, not more of the same. To get the observed difference (4), take the expected difference (3) and add something different (5).
+Figure&nbsp;13.2: The interaction is something different, not more of the same. To get the observed difference (4), take the expected difference (3) and add something different (5).
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="why-we-want-to-compare-the-treatment-effect-to-a-control-effect" class="level3" data-number="12.3.3">
-<h3 data-number="12.3.3" class="anchored" data-anchor-id="why-we-want-to-compare-the-treatment-effect-to-a-control-effect"><span class="header-section-number">12.3.3</span> Why we want to compare the treatment effect to a control effect</h3>
+<section id="why-we-want-to-compare-the-treatment-effect-to-a-control-effect" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="why-we-want-to-compare-the-treatment-effect-to-a-control-effect"><span class="header-section-number">13.3.3</span> Why we want to compare the treatment effect to a control effect</h3>
 <p>The purpose of the experiment is to infer a TLR9 role in the regulation of muscle-stimulated glucose transport, that is, a <strong>stimulation-induced TLR9-/- effect</strong>. If TLR9 is in the pathway from muscle activity to glucose transport, we expect some kind of recovery to baseline (Rest) values in the KO Active group. But TLR9 may also (or alternatively) have a role in non-stimulation-induced glucose uptake.</p>
 <p>How do we make an inference about a stimulation-induced TLR9-/- effect using this experiment? Researchers typically look at the <strong>treatment effect</strong></p>
 <p>(KO Active - WT Active)</p>
 <p>and conclude a stimulation-induced TLR9-/- effect if it’s big (and negative)</p>
-<p>If the treatment effect is the correct contrast for inference, why bother with the measures of glucose uptake during Rest? The reason the treatment effect alone is the wrong contrast for inferring the <em>stimulation-induced</em> TLR9 effect is because it is confounded by the <strong>control effect</strong>, which is the contrast (KO Rest - WT Rest) (<a href="#fig-twoway-what-we-want" class="quarto-xref">Figure&nbsp;<span>12.3</span></a>).</p>
+<p>If the treatment effect is the correct contrast for inference, why bother with the measures of glucose uptake during Rest? The reason the treatment effect alone is the wrong contrast for inferring the <em>stimulation-induced</em> TLR9 effect is because it is confounded by the <strong>control effect</strong>, which is the contrast (KO Rest - WT Rest) (<a href="#fig-twoway-what-we-want" class="quarto-xref">Figure&nbsp;<span>13.3</span></a>).</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-twoway-what-we-want" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1051,7 +1057,7 @@ Figure&nbsp;12.2: The interaction is something different, not more of the same. 
 <img src="two-factors_files/figure-html/fig-twoway-what-we-want-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-what-we-want-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.3: Why the interaction effect is the stimulation-induced TLR9-/- effect
+Figure&nbsp;13.3: Why the interaction effect is the stimulation-induced TLR9-/- effect
 </figcaption>
 </figure>
 </div>
@@ -1059,10 +1065,10 @@ Figure&nbsp;12.3: Why the interaction effect is the stimulation-induced TLR9-/- 
 </div>
 <p>To unconfound the inference, subtract the confounder:</p>
 <p>(KO Active - WT Active) - (KO Rest - WT Rest)</p>
-<p>This is the interaction effect. Consequences of interpreting the treatment effect KO Active - WT Active as the stimulation-induced TLR9-/- effect are highlighted in <a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>12.4</span></a>. In these plots, the data are those from <code>exp2j</code> but with the values in the KO groups shifted up or down to create the scenarios.</p>
-<p>Scenario 1. The positive control has big effect AND KO has no effect during rest AND the stimulation-induced TLR9-/- effect is equal in magnitude but opposite direction to the Active effect in WT (<a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>12.4</span></a> A). The stimulation-induced TLR9-/- effect is conspicuous from the plot, if our sample means are close to the true means and we have high precision. The simple effect measures the stimulation-induced TLR9-/- effect correctly – but this is because the simple effect is equal in magnitude (but opposite sign) to the interaction effect. Many experiments in the literature are pretty similar to this scenario.</p>
-<p>Scenario 2. The positive control has big effect AND KO has a negative effect during rest BUT there is zero stimulation-induced TLR9-/- effect – that is, the interaction is zero (<a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>12.4</span></a> B). There is an effect of KO during stimulation but this effect is no different that that occuring during Rest. So this cannot be a <em>contraction induced</em> TLR9 effect. Simple effect 1 <em>inflates</em> the effect.</p>
-<p>Scenario 3. The positive control has big effect AND KO has a positive effect during rest AND there is a stimulation-induced TLR9-/- effect that is equal to that in scenario 1 (<a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>12.4</span></a> C). The positive effect of KO during Rest masks the stimulation-induced TLR9-/- effect. The simple effect <em>underestimates</em> the stimulation-induced TLR9-/- effect. This is similar to what is happening in Experiment 2j.</p>
+<p>This is the interaction effect. Consequences of interpreting the treatment effect KO Active - WT Active as the stimulation-induced TLR9-/- effect are highlighted in <a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>. In these plots, the data are those from <code>exp2j</code> but with the values in the KO groups shifted up or down to create the scenarios.</p>
+<p>Scenario 1. The positive control has big effect AND KO has no effect during rest AND the stimulation-induced TLR9-/- effect is equal in magnitude but opposite direction to the Active effect in WT (<a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>13.4</span></a> A). The stimulation-induced TLR9-/- effect is conspicuous from the plot, if our sample means are close to the true means and we have high precision. The simple effect measures the stimulation-induced TLR9-/- effect correctly – but this is because the simple effect is equal in magnitude (but opposite sign) to the interaction effect. Many experiments in the literature are pretty similar to this scenario.</p>
+<p>Scenario 2. The positive control has big effect AND KO has a negative effect during rest BUT there is zero stimulation-induced TLR9-/- effect – that is, the interaction is zero (<a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>13.4</span></a> B). There is an effect of KO during stimulation but this effect is no different that that occuring during Rest. So this cannot be a <em>contraction induced</em> TLR9 effect. Simple effect 1 <em>inflates</em> the effect.</p>
+<p>Scenario 3. The positive control has big effect AND KO has a positive effect during rest AND there is a stimulation-induced TLR9-/- effect that is equal to that in scenario 1 (<a href="#fig-twoway-scenarios" class="quarto-xref">Figure&nbsp;<span>13.4</span></a> C). The positive effect of KO during Rest masks the stimulation-induced TLR9-/- effect. The simple effect <em>underestimates</em> the stimulation-induced TLR9-/- effect. This is similar to what is happening in Experiment 2j.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-twoway-scenarios" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1071,16 +1077,16 @@ Figure&nbsp;12.3: Why the interaction effect is the stimulation-induced TLR9-/- 
 <img src="two-factors_files/figure-html/fig-twoway-scenarios-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-scenarios-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.4: Scenarios to show the consequence of inferring the stimulation-induced TLR9-/- effect from the simple effect (KO Active - WT Active). The simple effect and interaction effect lines extend from the KO Active mean to either the KO Rest mean (simple) or the expected mean of KO Active if the two factors were additive (interaction).
+Figure&nbsp;13.4: Scenarios to show the consequence of inferring the stimulation-induced TLR9-/- effect from the simple effect (KO Active - WT Active). The simple effect and interaction effect lines extend from the KO Active mean to either the KO Rest mean (simple) or the expected mean of KO Active if the two factors were additive (interaction).
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="the-order-of-the-factors-in-the-model-tells-the-same-story-differently" class="level3" data-number="12.3.4">
-<h3 data-number="12.3.4" class="anchored" data-anchor-id="the-order-of-the-factors-in-the-model-tells-the-same-story-differently"><span class="header-section-number">12.3.4</span> The order of the factors in the model tells the same story differently</h3>
-<p>The order of the factors in the model formula doesn’t matter for the coefficients, the estimated marginal means, or the contrasts. It can matter for ANOVA (more on this below) but not “tests after ANOVA”. But the order does matter to how the researchers communicates the results to themselves and in the report (<a href="#fig-twoway-same-story" class="quarto-xref">Figure&nbsp;<span>12.5</span></a>). The order is also a natural consequence of the <a href="#twoway-understand1">two different ways of framing the research question</a>.</p>
+<section id="the-order-of-the-factors-in-the-model-tells-the-same-story-differently" class="level3" data-number="13.3.4">
+<h3 data-number="13.3.4" class="anchored" data-anchor-id="the-order-of-the-factors-in-the-model-tells-the-same-story-differently"><span class="header-section-number">13.3.4</span> The order of the factors in the model tells the same story differently</h3>
+<p>The order of the factors in the model formula doesn’t matter for the coefficients, the estimated marginal means, or the contrasts. It can matter for ANOVA (more on this below) but not “tests after ANOVA”. But the order does matter to how the researchers communicates the results to themselves and in the report (<a href="#fig-twoway-same-story" class="quarto-xref">Figure&nbsp;<span>13.5</span></a>). The order is also a natural consequence of the <a href="#twoway-understand1">two different ways of framing the research question</a>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-twoway-same-story" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1089,19 +1095,19 @@ Figure&nbsp;12.4: Scenarios to show the consequence of inferring the stimulation
 <img src="two-factors_files/figure-html/fig-twoway-same-story-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-same-story-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.5: It may take some work but these plots show the same four means and effects. The only difference is how we communicate the story to ourselves and to others. A) the order of the factors in the model is stimulation * genotype. B) the order of the factors in the model is genotype * stimulation.
+Figure&nbsp;13.5: It may take some work but these plots show the same four means and effects. The only difference is how we communicate the story to ourselves and to others. A) the order of the factors in the model is stimulation * genotype. B) the order of the factors in the model is genotype * stimulation.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="power-for-the-interaction-effect-is-less-than-that-for-simple-effects" class="level3" data-number="12.3.5">
-<h3 data-number="12.3.5" class="anchored" data-anchor-id="power-for-the-interaction-effect-is-less-than-that-for-simple-effects"><span class="header-section-number">12.3.5</span> Power for the interaction effect is less than that for simple effects</h3>
+<section id="power-for-the-interaction-effect-is-less-than-that-for-simple-effects" class="level3" data-number="13.3.5">
+<h3 data-number="13.3.5" class="anchored" data-anchor-id="power-for-the-interaction-effect-is-less-than-that-for-simple-effects"><span class="header-section-number">13.3.5</span> Power for the interaction effect is less than that for simple effects</h3>
 <p>The interaction contrast is the difference of two simple contrasts and, consequently, the variance of the interaction contrast is <a href="https://en.wikipedia.org/wiki/Variance#Sum_of_uncorrelated_variables_(Bienaymé_formula)" target="_blank">twice that of the simple contrasts</a>. And, consequently, the SE of the interaction estimate is <span class="math inline">\(\sim 1.4 \times\)</span> larger than the precision of the two simple effects that form the contrast (1.4 is $sqrt{2}. The exact value will depend on differences in sample size among groups). The consequence of this is wider confidence intervals and larger <em>p</em>-values for the interaction contrast compared to a simple contrast of the same effect size.</p>
 </section>
-<section id="planned-comparisons-vs.-post-hoc-tests" class="level3" data-number="12.3.6">
-<h3 data-number="12.3.6" class="anchored" data-anchor-id="planned-comparisons-vs.-post-hoc-tests"><span class="header-section-number">12.3.6</span> Planned comparisons vs.&nbsp;post-hoc tests</h3>
+<section id="planned-comparisons-vs.-post-hoc-tests" class="level3" data-number="13.3.6">
+<h3 data-number="13.3.6" class="anchored" data-anchor-id="planned-comparisons-vs.-post-hoc-tests"><span class="header-section-number">13.3.6</span> Planned comparisons vs.&nbsp;post-hoc tests</h3>
 <p>The contrasts computed above were planned based on questions motivating the experiment. The planned contrasts contain three of the four simple effects. The four simple effects are</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>exp2j_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(exp2j_m1_emm,</span>
@@ -1189,13 +1195,13 @@ Figure&nbsp;12.5: It may take some work but these plots show the same four means
 <li>KO Active - WT Rest</li>
 <li>WT Active - KO Rest</li>
 </ol>
-<p>These are the contrasts of the diagonal pairs in the cell-means table (<a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>12.2</span></a>). In a factorial design, we generally are not interested in these diagonal contrasts. They could be reported in a supplement. Recognize that if you are adjusting <em>p</em>-values for multiple tests, and you do not care about these contrasts but have included them in the computation of the adjustment, then your adjusted <em>p</em>-values are conservative.</p>
+<p>These are the contrasts of the diagonal pairs in the cell-means table (<a href="#tbl-twoway-exp2j-cellmeans" class="quarto-xref">Table&nbsp;<span>13.2</span></a>). In a factorial design, we generally are not interested in these diagonal contrasts. They could be reported in a supplement. Recognize that if you are adjusting <em>p</em>-values for multiple tests, and you do not care about these contrasts but have included them in the computation of the adjustment, then your adjusted <em>p</em>-values are conservative.</p>
 </section>
 </section>
-<section id="example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data"><span class="header-section-number">12.4</span> Example 2: Estimation of the effect of background condition on an effect (“it depends”) (Experiment 3e lesian area data)</h2>
-<section id="understand-the-experimental-design" class="level3" data-number="12.4.1">
-<h3 data-number="12.4.1" class="anchored" data-anchor-id="understand-the-experimental-design"><span class="header-section-number">12.4.1</span> Understand the experimental design</h3>
+<section id="example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="example-2-estimation-of-the-effect-of-background-condition-on-an-effect-it-depends-experiment-3e-lesian-area-data"><span class="header-section-number">13.4</span> Example 2: Estimation of the effect of background condition on an effect (“it depends”) (Experiment 3e lesian area data)</h2>
+<section id="understand-the-experimental-design" class="level3" data-number="13.4.1">
+<h3 data-number="13.4.1" class="anchored" data-anchor-id="understand-the-experimental-design"><span class="header-section-number">13.4.1</span> Understand the experimental design</h3>
 <p><strong>Research question</strong> 1. What is the effect of the X chromosome complement on lipid-related disease markers? 2. What is the effect of sex (female or male gonad) on lipid-related disease markers? 3. How conditional is the sex effect on the chromosome complement? 4. How conditional is the effect of X chromosome complement on the level of sex?</p>
 <p><strong>Response variable</strong> <code>lesian_area</code> – atherosclerotic lesian area in aortic sinus.</p>
 <p><strong>Factor 1</strong> – <code>sex</code> (“Female”, “Male”). This is not the typical sex factor that is merely observed but is a manipulated factor. Sex is determined by the presence or absence of <em>SRY</em> on an autosome using the Four Core Genotype mouse model. <em>SRY</em> determines the gonad that develops (ovary or testis). “Female” does not have the autosome with <em>SRY</em>. “Male” has the autosome with <em>SRY</em>.</p>
@@ -1270,14 +1276,14 @@ Figure&nbsp;12.5: It may take some work but these plots show the same four means
 </ol>
 <p>In this experiment, there is no treatment contrast or control contrast. Instead, all four simple contrasts are of equal interest.</p>
 </section>
-<section id="fit-the-linear-model-1" class="level3" data-number="12.4.2">
-<h3 data-number="12.4.2" class="anchored" data-anchor-id="fit-the-linear-model-1"><span class="header-section-number">12.4.2</span> Fit the linear model</h3>
+<section id="fit-the-linear-model-1" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="fit-the-linear-model-1"><span class="header-section-number">13.4.2</span> Fit the linear model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>exp3e_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(lesian_area <span class="sc">~</span> sex<span class="sc">*</span>chromosome, <span class="at">data =</span> exp3e)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="check-the-model" class="level3" data-number="12.4.3">
-<h3 data-number="12.4.3" class="anchored" data-anchor-id="check-the-model"><span class="header-section-number">12.4.3</span> Check the model</h3>
+<section id="check-the-model" class="level3" data-number="13.4.3">
+<h3 data-number="13.4.3" class="anchored" data-anchor-id="check-the-model"><span class="header-section-number">13.4.3</span> Check the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_model</span>(exp3e_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -1292,8 +1298,8 @@ Figure&nbsp;12.5: It may take some work but these plots show the same four means
 </div>
 </div>
 </section>
-<section id="inference-from-the-model" class="level3" data-number="12.4.4">
-<h3 data-number="12.4.4" class="anchored" data-anchor-id="inference-from-the-model"><span class="header-section-number">12.4.4</span> Inference from the model</h3>
+<section id="inference-from-the-model" class="level3" data-number="13.4.4">
+<h3 data-number="13.4.4" class="anchored" data-anchor-id="inference-from-the-model"><span class="header-section-number">13.4.4</span> Inference from the model</h3>
 <p><strong>The coefficient table</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 2 - get the coefficient table</span></span>
@@ -1538,8 +1544,8 @@ Figure&nbsp;12.5: It may take some work but these plots show the same four means
 <li>Don’t infer “no effect” given the p-value of the interaction. The estimate of the interaction effect has the same magnitude as the estimated effect of XX in mice with male gonads and about 1/2 the magnitude as the estimated effect of XX in mice with female gonads. The interaction <em>p</em>-value suggests caution in our confidence of the sign of this effect.</li>
 </ol>
 </section>
-<section id="plot-the-model-1" class="level3" data-number="12.4.5">
-<h3 data-number="12.4.5" class="anchored" data-anchor-id="plot-the-model-1"><span class="header-section-number">12.4.5</span> Plot the model</h3>
+<section id="plot-the-model-1" class="level3" data-number="13.4.5">
+<h3 data-number="13.4.5" class="anchored" data-anchor-id="plot-the-model-1"><span class="header-section-number">13.4.5</span> Plot the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>exp3e_m1_plot <span class="ot">&lt;-</span> <span class="fu">ggplot_the_model</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit =</span> exp3e_m1,</span>
@@ -1562,8 +1568,8 @@ Figure&nbsp;12.5: It may take some work but these plots show the same four means
 </div>
 </div>
 </section>
-<section id="alternaplot-the-model-1" class="level3" data-number="12.4.6">
-<h3 data-number="12.4.6" class="anchored" data-anchor-id="alternaplot-the-model-1"><span class="header-section-number">12.4.6</span> alternaPlot the model</h3>
+<section id="alternaplot-the-model-1" class="level3" data-number="13.4.6">
+<h3 data-number="13.4.6" class="anchored" data-anchor-id="alternaplot-the-model-1"><span class="header-section-number">13.4.6</span> alternaPlot the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>exp3e_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(exp3e_m1_emm,</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
@@ -1610,15 +1616,15 @@ Figure&nbsp;12.5: It may take some work but these plots show the same four means
 </div>
 </section>
 </section>
-<section id="understanding-the-linear-model-with-crossed-factors-2" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="understanding-the-linear-model-with-crossed-factors-2"><span class="header-section-number">12.5</span> Understanding the linear model with crossed factors 2</h2>
-<section id="twoway-marginal-means" class="level3" data-number="12.5.1">
-<h3 data-number="12.5.1" class="anchored" data-anchor-id="twoway-marginal-means"><span class="header-section-number">12.5.1</span> Conditional and marginal means</h3>
+<section id="understanding-the-linear-model-with-crossed-factors-2" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="understanding-the-linear-model-with-crossed-factors-2"><span class="header-section-number">13.5</span> Understanding the linear model with crossed factors 2</h2>
+<section id="twoway-marginal-means" class="level3" data-number="13.5.1">
+<h3 data-number="13.5.1" class="anchored" data-anchor-id="twoway-marginal-means"><span class="header-section-number">13.5.1</span> Conditional and marginal means</h3>
 <div class="cell">
 <div id="tbl-twoway-conditional-means" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-conditional-means-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.3: Conditional (white background) and marginal (color background) means from full factorial model fit to lesian area data
+Table&nbsp;13.3: Conditional (white background) and marginal (color background) means from full factorial model fit to lesian area data
 </figcaption>
 <div aria-describedby="tbl-twoway-conditional-means-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1659,10 +1665,10 @@ Table&nbsp;12.3: Conditional (white background) and marginal (color background) 
 </figure>
 </div>
 </div>
-<p>The conditional means from the fit model are shown in the upper left <span class="math inline">\(2 \times 2\)</span> block (white background) of <a href="#tbl-twoway-conditional-means" class="quarto-xref">Table&nbsp;<span>12.3</span></a>. These means are conditional on the level of <code>sex</code> and <code>chromosome</code>. For the linear model with two crossed factor here (with no continuous covariates), these conditional means are equal to the sample means of the treatment. The values in the last row and column are the <strong>marginal means</strong>, which are the means of the associated row or column cells (these values are in the margins of the table). More generally, <em>marginal</em> refers to a statistic averaged across multiple levels of another variable. The marginal means of the <code>chromosome</code> levels (orange background) are the means of the “XX” and “XY” rows. The marginal means of the <code>sex</code> levels (blue background) are the means of the “Female” and “Male” columns. Note that the marginal means are simple averages across cell means and not weighted averages where the weights are the sample size used to compute the conditional (cell) means.</p>
+<p>The conditional means from the fit model are shown in the upper left <span class="math inline">\(2 \times 2\)</span> block (white background) of <a href="#tbl-twoway-conditional-means" class="quarto-xref">Table&nbsp;<span>13.3</span></a>. These means are conditional on the level of <code>sex</code> and <code>chromosome</code>. For the linear model with two crossed factor here (with no continuous covariates), these conditional means are equal to the sample means of the treatment. The values in the last row and column are the <strong>marginal means</strong>, which are the means of the associated row or column cells (these values are in the margins of the table). More generally, <em>marginal</em> refers to a statistic averaged across multiple levels of another variable. The marginal means of the <code>chromosome</code> levels (orange background) are the means of the “XX” and “XY” rows. The marginal means of the <code>sex</code> levels (blue background) are the means of the “Female” and “Male” columns. Note that the marginal means are simple averages across cell means and not weighted averages where the weights are the sample size used to compute the conditional (cell) means.</p>
 </section>
-<section id="simple-conditional-effects" class="level3" data-number="12.5.2">
-<h3 data-number="12.5.2" class="anchored" data-anchor-id="simple-conditional-effects"><span class="header-section-number">12.5.2</span> Simple (conditional) effects</h3>
+<section id="simple-conditional-effects" class="level3" data-number="13.5.2">
+<h3 data-number="13.5.2" class="anchored" data-anchor-id="simple-conditional-effects"><span class="header-section-number">13.5.2</span> Simple (conditional) effects</h3>
 <p>In a factorial experiment with crossed A and B factors, there is an effect of factor A (relative to the reference, or another level of factor A) for each of the <em>p</em> levels of factor B. And, there is an effect of factor B (relative to the reference, or another level of factor B) for each of the <em>m</em> levels of factor A. These effects of one factor at each of the levels of the other factor are called the <strong>simple effects</strong>. I prefer <strong>conditional effects</strong>, since the value of the effect is conditional on the level of the other factor.</p>
 <p>For the mouse lesian area experiment, there is a chromosome effect at <code>sex = Female</code> and a different effect at <code>sex = Male</code>. Similarly, there is a sex effect at <code>chromosome = XX</code> and a different effect at <code>chromosome = XY</code>.</p>
 <div class="cell">
@@ -1744,7 +1750,7 @@ Table&nbsp;12.3: Conditional (white background) and marginal (color background) 
 <div id="tbl-twoway-simple-effects" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-simple-effects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.4: Conditional ("simple") effects of sex (orange background) and chromosome (blue background) on lesian area. The conditional means of each combination of the factor levels are in the cells with the white background. The simple effect is the difference in the means of the associated row or column.
+Table&nbsp;13.4: Conditional ("simple") effects of sex (orange background) and chromosome (blue background) on lesian area. The conditional means of each combination of the factor levels are in the cells with the white background. The simple effect is the difference in the means of the associated row or column.
 </figcaption>
 <div aria-describedby="tbl-twoway-simple-effects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1786,8 +1792,8 @@ Table&nbsp;12.4: Conditional ("simple") effects of sex (orange background) and c
 </div>
 </div>
 </section>
-<section id="sec-twoway-marginal-effects" class="level3" data-number="12.5.3">
-<h3 data-number="12.5.3" class="anchored" data-anchor-id="sec-twoway-marginal-effects"><span class="header-section-number">12.5.3</span> Marginal effects</h3>
+<section id="sec-twoway-marginal-effects" class="level3" data-number="13.5.3">
+<h3 data-number="13.5.3" class="anchored" data-anchor-id="sec-twoway-marginal-effects"><span class="header-section-number">13.5.3</span> Marginal effects</h3>
 <p>The average of the conditional effects for a factor are the <strong>marginal effects</strong>, or the <strong>main effects</strong> in ANOVA terminology.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(exp3e_m1, <span class="at">specs =</span> <span class="st">"sex"</span>) <span class="sc">|&gt;</span></span>
@@ -1814,12 +1820,12 @@ Results are averaged over the levels of: sex </code></pre>
 </div>
 </div>
 <p>I’m showing the full output from the emmeans package output to highlight the warning that the inference “may be misleading” because of the interaction effect in the linear model. This is a healthy warning that I follow up on below.</p>
-<p>In <a href="#tbl-twoway-main" class="quarto-xref">Table&nbsp;<span>12.5</span></a>, I add the marginal effects to the table of conditional effects from above (<a href="#tbl-twoway-simple-effects" class="quarto-xref">Table&nbsp;<span>12.4</span></a>).</p>
+<p>In <a href="#tbl-twoway-main" class="quarto-xref">Table&nbsp;<span>13.5</span></a>, I add the marginal effects to the table of conditional effects from above (<a href="#tbl-twoway-simple-effects" class="quarto-xref">Table&nbsp;<span>13.4</span></a>).</p>
 <div class="cell">
 <div id="tbl-twoway-main" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-main-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.5: Marginal effects of sex (orange) and chromosome (blue) on lesian area. Simple effects are in grey cells. The conditional means of each combination of the factor levels are in the white cells.
+Table&nbsp;13.5: Marginal effects of sex (orange) and chromosome (blue) on lesian area. Simple effects are in grey cells. The conditional means of each combination of the factor levels are in the white cells.
 </figcaption>
 <div aria-describedby="tbl-twoway-main-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1872,8 +1878,8 @@ Table&nbsp;12.5: Marginal effects of sex (orange) and chromosome (blue) on lesia
 </div>
 </div>
 </section>
-<section id="the-additive-model" class="level3" data-number="12.5.4">
-<h3 data-number="12.5.4" class="anchored" data-anchor-id="the-additive-model"><span class="header-section-number">12.5.4</span> The additive model</h3>
+<section id="the-additive-model" class="level3" data-number="13.5.4">
+<h3 data-number="13.5.4" class="anchored" data-anchor-id="the-additive-model"><span class="header-section-number">13.5.4</span> The additive model</h3>
 <p>Marginal effects can be useful for summarizing a general trend, but, like any average, might not be especially meaningful if there is large heterogeneity of the simple effects, which occurs when the interaction effect is large.</p>
 <p>If an interaction effect is small, and we want to summarize the results as general trends (“sex does this, chromosome does that”), then the best practice strategy is to refit a new linear model that estimates the effects of the two factors as if the interaction were equal to zero.</p>
 <p><span id="eq-twoway-reduced"><span class="math display">\[
@@ -1882,8 +1888,8 @@ Table&nbsp;12.5: Marginal effects of sex (orange) and chromosome (blue) on lesia
 &amp;\quad \ \beta_1 \texttt{sex}_\texttt{Male} \ + \\
 &amp;\quad \ \beta_2 \texttt{chromosome}_\texttt{XY}
 \end{align}
-\tag{12.1}\]</span></span></p>
-<p>Model <a href="#eq-twoway-reduced" class="quarto-xref">Equation&nbsp;<span>12.1</span></a> is a <strong>reduced model</strong> because one of the terms has been removed from the model. This particular reduced model is often referred to as the <strong>additive model</strong>, since it excludes the interaction term, which is non-additive effect (the indicator variable is the product of two “main” indicator variables). In R, this model is</p>
+\tag{13.1}\]</span></span></p>
+<p>Model <a href="#eq-twoway-reduced" class="quarto-xref">Equation&nbsp;<span>13.1</span></a> is a <strong>reduced model</strong> because one of the terms has been removed from the model. This particular reduced model is often referred to as the <strong>additive model</strong>, since it excludes the interaction term, which is non-additive effect (the indicator variable is the product of two “main” indicator variables). In R, this model is</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>exp3e_m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(lesian_area <span class="sc">~</span> sex <span class="sc">+</span> chromosome, <span class="at">data =</span> exp3e)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1948,7 +1954,7 @@ Table&nbsp;12.5: Marginal effects of sex (orange) and chromosome (blue) on lesia
 <div id="tbl-twoway-exp3e-m2-pairs" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-exp3e-m2-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.6: Conditional effects of additive model.
+Table&nbsp;13.6: Conditional effects of additive model.
 </figcaption>
 <div aria-describedby="tbl-twoway-exp3e-m2-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2031,8 +2037,8 @@ Table&nbsp;12.6: Conditional effects of additive model.
 <li>Compare the table of marginal effects of the additive model to the table of marginal effects of the full model. The estimates for the chromosome effect are the same but the <em>t</em>-values and <em>p</em>-values differ because of different degrees of freedom (the full model estimates one more parameter, the interaction effect). The estimates for the sex effect are not the same between the two tables because of an imbalance of sample size. In the computation of the marginal effect of chromosome, the two simple effects both have sample size of 5 and 4. But in the computation of the marginal effect of sex, one simple effect has sample size of 5 and 5 while the other has a simple effect of 4 and 4.</li>
 </ol>
 </section>
-<section id="twoway-reduce" class="level3" data-number="12.5.5">
-<h3 data-number="12.5.5" class="anchored" data-anchor-id="twoway-reduce"><span class="header-section-number">12.5.5</span> Reduce models for the right reason</h3>
+<section id="twoway-reduce" class="level3" data-number="13.5.5">
+<h3 data-number="13.5.5" class="anchored" data-anchor-id="twoway-reduce"><span class="header-section-number">13.5.5</span> Reduce models for the right reason</h3>
 <p>Unless one factor truly has no effect, there will always be an interaction. As stated above, interactions are ubiquitous. If an interaction is small, it can make sense to drop the interaction term and re-fit an additive model to estimate marginal effects in order to present a simplified picture of what is going on, with the recognition that these estimates are smoothing over the heterogenity in conditional (simple) effects that truly exist.</p>
 <p>Aided and abetted by statistics textbooks for biologists, there is a long history of researchers dropping an interaction effect because the interaction <span class="math inline">\(p&gt;0.05\)</span>. A good rule of thumb is, don’t make model decisions based on <em>p</em>-values. It doesn’t make any sense.</p>
 <ol type="1">
@@ -2043,8 +2049,8 @@ Table&nbsp;12.6: Conditional effects of additive model.
 <ol type="1">
 <li>there is certainly a real interaction between these two factors and this interaction reflects interesting biology.</li>
 <li>For this example, I might report both – the additive effect in the main paper (since the big chromosome complement effect is the story) and the conditional effects in the supplement, which might further work on investigating the underlying biology. Or maybe two sets of <em>p</em>-values on the plot? There are lots of unexplored ways to provide more “ways” of looking at the results.</li>
-<li>Regardless, for this example, I would not avoid reporting the interaction effect and the conditional effects somewhere. The estimated interaction effect (0.14 mm<span class="math inline">\(^2\)</span>) is moderately large relative to the four simple effects. It’s much bigger than the marginal effect of sex and about 2/3 the size of the marginal effect of chromosome (<a href="#tbl-twoway-exp3e-m2-pairs" class="quarto-xref">Table&nbsp;<span>12.6</span></a>).</li>
-<li>A response plot of both models (<a href="#fig-twoway-additive-plot" class="quarto-xref">Figure&nbsp;<span>12.6</span></a>) can help understanding and the decision of which model to report.</li>
+<li>Regardless, for this example, I would not avoid reporting the interaction effect and the conditional effects somewhere. The estimated interaction effect (0.14 mm<span class="math inline">\(^2\)</span>) is moderately large relative to the four simple effects. It’s much bigger than the marginal effect of sex and about 2/3 the size of the marginal effect of chromosome (<a href="#tbl-twoway-exp3e-m2-pairs" class="quarto-xref">Table&nbsp;<span>13.6</span></a>).</li>
+<li>A response plot of both models (<a href="#fig-twoway-additive-plot" class="quarto-xref">Figure&nbsp;<span>13.6</span></a>) can help understanding and the decision of which model to report.</li>
 </ol>
 <div class="cell">
 <div class="cell-output-display">
@@ -2054,21 +2060,21 @@ Table&nbsp;12.6: Conditional effects of additive model.
 <img src="two-factors_files/figure-html/fig-twoway-additive-plot-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-additive-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.6: A. Conditional means and p-values of conditional effects. B. Marginal means and p-values of marginal effects.
+Figure&nbsp;13.6: A. Conditional means and p-values of conditional effects. B. Marginal means and p-values of marginal effects.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird" class="level3" data-number="12.5.6">
-<h3 data-number="12.5.6" class="anchored" data-anchor-id="the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird"><span class="header-section-number">12.5.6</span> The marginal means of an additive linear model with two factors can be weird</h3>
+<section id="the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird" class="level3" data-number="13.5.6">
+<h3 data-number="13.5.6" class="anchored" data-anchor-id="the-marginal-means-of-an-additive-linear-model-with-two-factors-can-be-weird"><span class="header-section-number">13.5.6</span> The marginal means of an additive linear model with two factors can be weird</h3>
 <p>To better understand the marginal effects computed from the additive model, let’s compare the emmeans table of the factorial and additive models.</p>
 <div class="cell">
 <div id="tbl-twoway-exp3e_m1_emm" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-exp3e_m1_emm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.7: Conditional means of the lesian area data computed from the factorial model.
+Table&nbsp;13.7: Conditional means of the lesian area data computed from the factorial model.
 </figcaption>
 <div aria-describedby="tbl-twoway-exp3e_m1_emm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2134,7 +2140,7 @@ Table&nbsp;12.7: Conditional means of the lesian area data computed from the fac
 <div id="tbl-twoway-exp3e_m2_emm" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-exp3e_m2_emm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.8: Marginal means of the lesian area data computed from the additive model.
+Table&nbsp;13.8: Marginal means of the lesian area data computed from the additive model.
 </figcaption>
 <div aria-describedby="tbl-twoway-exp3e_m2_emm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2198,13 +2204,13 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 <p>Explainer</p>
 <ol type="1">
-<li>The means in the conditional means table (<a href="#tbl-twoway-exp3e_m1_emm" class="quarto-xref">Table&nbsp;<span>12.7</span></a>) are equal to the sample means. These are conditional on <code>sex</code> and <code>chromosome</code>.</li>
-<li>The means in the marginal means table (<a href="#tbl-twoway-exp3e_m2_emm" class="quarto-xref">Table&nbsp;<span>12.8</span></a>) are not equal to the sample means. These are modeled means of the four groups from a model in which there is no interaction effect, so all conditional effects for one factor are the same for each level of the other factor. If you take the difference of Male - Female for both the XX and the XY groups, these will be the same. All data has some measured interaction (even if there is no true interaction. But remember, interaction is ubiquitous in biology). The larger this interaction, the more weird the marginal means because these are less compatible with the data.</li>
+<li>The means in the conditional means table (<a href="#tbl-twoway-exp3e_m1_emm" class="quarto-xref">Table&nbsp;<span>13.7</span></a>) are equal to the sample means. These are conditional on <code>sex</code> and <code>chromosome</code>.</li>
+<li>The means in the marginal means table (<a href="#tbl-twoway-exp3e_m2_emm" class="quarto-xref">Table&nbsp;<span>13.8</span></a>) are not equal to the sample means. These are modeled means of the four groups from a model in which there is no interaction effect, so all conditional effects for one factor are the same for each level of the other factor. If you take the difference of Male - Female for both the XX and the XY groups, these will be the same. All data has some measured interaction (even if there is no true interaction. But remember, interaction is ubiquitous in biology). The larger this interaction, the more weird the marginal means because these are less compatible with the data.</li>
 </ol>
 </section>
 </section>
-<section id="example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data" class="level2" data-number="12.6">
-<h2 data-number="12.6" class="anchored" data-anchor-id="example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data"><span class="header-section-number">12.6</span> Example 3: Estimation of synergy (“More than the sum of the parts”) (Experiment 1c JA data)</h2>
+<section id="example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="example-3-estimation-of-synergy-more-than-the-sum-of-the-parts-experiment-1c-ja-data"><span class="header-section-number">13.6</span> Example 3: Estimation of synergy (“More than the sum of the parts”) (Experiment 1c JA data)</h2>
 <p>To explain what synergy is and why it is estimated by the interaction effect, this example uses data from an experiment measuring the effect of two defense signals on the defense response in Maize plants. In response to herbivory from insects, maize, and other plants, release multiple, chemical signals into the air (chemicals that evaporate into the air are known as volatile compounds). These chemicals signal the plant, and neighboring plants, to secrete anti-herbivory hormones, including abcisic acid and jasmonic acid. The researchers investigated the effects of two volatile compounds, (Z)‐3‐hexenyl acetate (HAC) and Indole, on the defense response both each without the other and in combination.</p>
 <p>The example data come from Figure 1c, which is the effect of HAC and Indole on tissue concentrations of the hormone jasmonic acid (JA). The design is fully crossed with two factors, each with two levels: <code>hac</code>, with levels “HAC-” and “HAC+”, and <code>indole</code>, with levels (“Indole-” and “Indole+”).</p>
 <div class="cell">
@@ -2232,8 +2238,8 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </table>
 </div>
 </div>
-<section id="examine-the-data" class="level3" data-number="12.6.1">
-<h3 data-number="12.6.1" class="anchored" data-anchor-id="examine-the-data"><span class="header-section-number">12.6.1</span> Examine the data</h3>
+<section id="examine-the-data" class="level3" data-number="13.6.1">
+<h3 data-number="13.6.1" class="anchored" data-anchor-id="examine-the-data"><span class="header-section-number">13.6.1</span> Examine the data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> ja, <span class="at">data =</span> exp1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -2249,14 +2255,14 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 <p>Too few points for box plot. control variance is small. No obvious implausible points. fit with lm but recognize small n warning for any inference.</p>
 </section>
-<section id="fit-the-model" class="level3" data-number="12.6.2">
-<h3 data-number="12.6.2" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">12.6.2</span> Fit the model</h3>
+<section id="fit-the-model" class="level3" data-number="13.6.2">
+<h3 data-number="13.6.2" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">13.6.2</span> Fit the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>exp1c_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(ja <span class="sc">~</span> hac <span class="sc">*</span> indole, <span class="at">data =</span> exp1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="model-check" class="level3" data-number="12.6.3">
-<h3 data-number="12.6.3" class="anchored" data-anchor-id="model-check"><span class="header-section-number">12.6.3</span> Model check</h3>
+<section id="model-check" class="level3" data-number="13.6.3">
+<h3 data-number="13.6.3" class="anchored" data-anchor-id="model-check"><span class="header-section-number">13.6.3</span> Model check</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_model</span>(exp1c_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -2276,8 +2282,8 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 <p>The distribution looks like a sample from a Normal. The variance looks like it increases with the mean. This suggest gls modeling heterogeneity.</p>
 </section>
-<section id="inference-from-the-model-1" class="level3" data-number="12.6.4">
-<h3 data-number="12.6.4" class="anchored" data-anchor-id="inference-from-the-model-1"><span class="header-section-number">12.6.4</span> Inference from the model</h3>
+<section id="inference-from-the-model-1" class="level3" data-number="13.6.4">
+<h3 data-number="13.6.4" class="anchored" data-anchor-id="inference-from-the-model-1"><span class="header-section-number">13.6.4</span> Inference from the model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>exp1c_m1_coef <span class="ot">&lt;-</span> <span class="fu">tidy</span>(exp1c_m1, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -2483,8 +2489,8 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 </div>
 </section>
-<section id="plot-the-model-2" class="level3" data-number="12.6.5">
-<h3 data-number="12.6.5" class="anchored" data-anchor-id="plot-the-model-2"><span class="header-section-number">12.6.5</span> Plot the model</h3>
+<section id="plot-the-model-2" class="level3" data-number="13.6.5">
+<h3 data-number="13.6.5" class="anchored" data-anchor-id="plot-the-model-2"><span class="header-section-number">13.6.5</span> Plot the model</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -2495,8 +2501,8 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 </div>
 </section>
-<section id="alternative-plot" class="level3" data-number="12.6.6">
-<h3 data-number="12.6.6" class="anchored" data-anchor-id="alternative-plot"><span class="header-section-number">12.6.6</span> Alternative plot</h3>
+<section id="alternative-plot" class="level3" data-number="13.6.6">
+<h3 data-number="13.6.6" class="anchored" data-anchor-id="alternative-plot"><span class="header-section-number">13.6.6</span> Alternative plot</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2509,10 +2515,10 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 </section>
 </section>
-<section id="understanding-the-linear-model-with-crossed-factors-3" class="level2" data-number="12.7">
-<h2 data-number="12.7" class="anchored" data-anchor-id="understanding-the-linear-model-with-crossed-factors-3"><span class="header-section-number">12.7</span> Understanding the linear model with crossed factors 3</h2>
-<section id="thinking-about-the-coefficients-of-the-linear-model" class="level3" data-number="12.7.1">
-<h3 data-number="12.7.1" class="anchored" data-anchor-id="thinking-about-the-coefficients-of-the-linear-model"><span class="header-section-number">12.7.1</span> Thinking about the coefficients of the linear model</h3>
+<section id="understanding-the-linear-model-with-crossed-factors-3" class="level2" data-number="13.7">
+<h2 data-number="13.7" class="anchored" data-anchor-id="understanding-the-linear-model-with-crossed-factors-3"><span class="header-section-number">13.7</span> Understanding the linear model with crossed factors 3</h2>
+<section id="thinking-about-the-coefficients-of-the-linear-model" class="level3" data-number="13.7.1">
+<h3 data-number="13.7.1" class="anchored" data-anchor-id="thinking-about-the-coefficients-of-the-linear-model"><span class="header-section-number">13.7.1</span> Thinking about the coefficients of the linear model</h3>
 <p><span id="eq-factorial-full"><span class="math display">\[
 \begin{align}
 \texttt{ja} &amp;= \beta_0  \ + \\
@@ -2520,7 +2526,7 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 &amp;\quad \ \beta_2 (\texttt{indole}_\texttt{Indole+}) \ + \\  
 &amp;\quad \ \beta_3 (\texttt{hac}_\texttt{HAC+}:\texttt{indole}_\texttt{Indole+})
 \end{align}
-\tag{12.2}\]</span></span></p>
+\tag{13.2}\]</span></span></p>
 <p>The linear model makes it easy to understand synergy in the <span class="math inline">\(2 \times 2\)</span> design. If we start with the mean of the reference (the group without the added HAC or Indole), then <span class="math inline">\(\beta_1\)</span> is the extra bit due to adding HAC, <span class="math inline">\(\beta_2\)</span> is the extra bit due to adding Indole, and <span class="math inline">\(\beta_3\)</span> is the extra bit due to synergy between HAC and Indole. A positive <span class="math inline">\(\beta_3\)</span> means the combined treatment effect is more than the sum of the parts.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -2593,10 +2599,10 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 </section>
 </section>
-<section id="issues-in-inference" class="level2" data-number="12.8">
-<h2 data-number="12.8" class="anchored" data-anchor-id="issues-in-inference"><span class="header-section-number">12.8</span> Issues in inference</h2>
-<section id="for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="level3" data-number="12.8.1">
-<h3 data-number="12.8.1" class="anchored" data-anchor-id="for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">12.8.1</span> For pairwise inference, it doesn’t matter if you fit a factorial or a flattened linear model, but…</h3>
+<section id="issues-in-inference" class="level2" data-number="13.8">
+<h2 data-number="13.8" class="anchored" data-anchor-id="issues-in-inference"><span class="header-section-number">13.8</span> Issues in inference</h2>
+<section id="for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="level3" data-number="13.8.1">
+<h3 data-number="13.8.1" class="anchored" data-anchor-id="for-pairwise-inference-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">13.8.1</span> For pairwise inference, it doesn’t matter if you fit a factorial or a flattened linear model, but…</h3>
 <p>Compare the pairwise comparisons of the Experiment 2j glucose uptake data using a factorial linear model and a flattened linear model.</p>
 <p>Factorial:</p>
 <div class="cell">
@@ -2790,8 +2796,8 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 <p>::: {.callout-tip, title=“Here’s the but…} But…just fit the factorial model. This makes it much easier to get the best practice mindless contrasts (the simple effects) and the interaction effect (either from the coefficient table or the emmeans package) and if Reviewer 2/PI/boss/old-school colleague demands p-value adjustment you will have slightly more power adjusting for a family of four simple effects than six pairwise comparisons (see below). :::</p>
 </section>
-<section id="for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="level3" data-number="12.8.2">
-<h3 data-number="12.8.2" class="anchored" data-anchor-id="for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">12.8.2</span> For interaction interaction, it doesn’t matter if you fit a factorial or a flattened linear model, but…</h3>
+<section id="for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but" class="level3" data-number="13.8.2">
+<h3 data-number="13.8.2" class="anchored" data-anchor-id="for-interaction-interaction-it-doesnt-matter-if-you-fit-a-factorial-or-a-flattened-linear-model-but"><span class="header-section-number">13.8.2</span> For interaction interaction, it doesn’t matter if you fit a factorial or a flattened linear model, but…</h3>
 <p>Factorial model:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using m1 from above</span></span>
@@ -2893,9 +2899,9 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 </div>
 <p>::: {.callout-tip, title=“Here’s the but…} But…see the previous tip :::</p>
 </section>
-<section id="twoway-multiple-tests" class="level3" data-number="12.8.3">
-<h3 data-number="12.8.3" class="anchored" data-anchor-id="twoway-multiple-tests"><span class="header-section-number">12.8.3</span> Adjusting <em>p</em>-values for multiple tests</h3>
-<p>First, you probably don’t want to adjust for multiple tests in a 2 x 2 (or larger) design (<span class="quarto-unresolved-ref">?sec-multiple-tests</span>). Or, if you do, you want to adjust for multiple responses, not multiple contrasts within one response (<span class="quarto-unresolved-ref">?sec-multiple-tests</span>). Understand that the norm in experimental bench biology misunderstands what a <strong>family of tests</strong> is (<span class="quarto-unresolved-ref">?sec-multiple-tests</span>).</p>
+<section id="twoway-multiple-tests" class="level3" data-number="13.8.3">
+<h3 data-number="13.8.3" class="anchored" data-anchor-id="twoway-multiple-tests"><span class="header-section-number">13.8.3</span> Adjusting <em>p</em>-values for multiple tests</h3>
+<p>First, you probably don’t want to adjust for multiple tests in a 2 x 2 (or larger) design (<a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>). Or, if you do, you want to adjust for multiple responses, not multiple contrasts within one response (<a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>). Understand that the norm in experimental bench biology misunderstands what a <strong>family of tests</strong> is (<a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>).</p>
 <p>But, if Reviewer 2, or your PI, or an older colleague demands <em>p</em>-value adjustment, <a href="https://en.wikipedia.org/wiki/Just_Say_No" target="_blank">just say no</a>. If you cannot, then read on.</p>
 <p>Here are seven different adjustment methods (including no adjustment) for the simple effects of the <code>exp2j</code> data.</p>
 <div class="cell">
@@ -2969,29 +2975,29 @@ Table&nbsp;12.8: Marginal means of the lesian area data computed from the additi
 <li><strong>Sidak</strong> – The Sidak correction has increased power relative to Bonferroni but does not explicitly account for correlated tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
 <li><strong>Holm</strong> – The Holm variant of the Bonferroni adjustment has increased power relative to the Bonferroni but does not explicitly account for correlated tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
 <li><strong>Mvt</strong> – The multivariate <em>t</em> adjustment corrects for the empirically measured correlation.</li>
-<li><strong>FDR</strong> – The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See <span class="quarto-unresolved-ref">?sec-multiple-tests</span>.</li>
+<li><strong>FDR</strong> – The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>.</li>
 </ol>
 <p>Further thoughts on multiple adjustment, focussing on the highlighted row in the table.</p>
 <ol type="1">
 <li>Report the focal p-values on the figure. Then, report all pairwise and interaction, <em>p</em>-values in a supplement. Reporting all <em>p</em>-values on the figure overwhelms the principal message of a figure. There should be a table of these for every experiment in the supplement.</li>
 <li>If you’re following best practice, report the focal <em>none-adjusted</em> p-values in the figure. Then, in the supplement, report the none-adjusted and adjusted value for all pairwise comparisons <strong>and interaction effects</strong>.</li>
-<li>If you’ve adjusted for multiple response variables (<span class="quarto-unresolved-ref">?sec-multiple-tests</span>), report the focal, adjusted values on the figure (adjusted for multple responses, not multiple tests within a response). Then, in the supplement, report the none-adjusted and adjusted value for all pairwise comparisons <strong>and interaction effects</strong>, again, using the adjustment for multiple responses not multiple tests within a response.</li>
+<li>If you’ve adjusted for multiple response variables (<a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>), report the focal, adjusted values on the figure (adjusted for multple responses, not multiple tests within a response). Then, in the supplement, report the none-adjusted and adjusted value for all pairwise comparisons <strong>and interaction effects</strong>, again, using the adjustment for multiple responses not multiple tests within a response.</li>
 <li>In a Fisherian world-view of <em>p</em>-values, there just isn’t any real difference in inference between <span class="math inline">\(p = 0.02\)</span> (no adjustment) and <span class="math inline">\(p = 0.086\)</span> (Tukey adjustment from all pairwise comparisons). Fisher expected decisions based on multiple replications of the experiment, all (or nearly) with <span class="math inline">\(p &lt; 0.05\)</span>. From a Fisherian-world-view, then, we have bigger how-to-do-science issues than multiple testing if we are making decisions entirely on <span class="math inline">\(p = 0.02\)</span> versus <span class="math inline">\(p = 0.086\)</span>.</li>
 <li>From a Neyman-Pearson testing world-view, there is a consequential difference in inference between <span class="math inline">\(p = 0.02\)</span> (no adjustment) and <span class="math inline">\(p = 0.086\)</span> (Tukey adjustment from all pairwise comparisons) but I don’t think experimental bench biologists are practicing pure Neyman-Pearson.</li>
 </ol>
 </section>
 </section>
-<section id="two-way-anova" class="level2" data-number="12.9">
-<h2 data-number="12.9" class="anchored" data-anchor-id="two-way-anova"><span class="header-section-number">12.9</span> Two-way ANOVA</h2>
+<section id="two-way-anova" class="level2" data-number="13.9">
+<h2 data-number="13.9" class="anchored" data-anchor-id="two-way-anova"><span class="header-section-number">13.9</span> Two-way ANOVA</h2>
 <p>Both wet-bench and ecology/evolution experimental biologists do ANOVA. Many textbooks, advisors, and colleagues tell researchers to report “tests after ANOVA” – what I call pairwise contrasts – but in modern computing, pairwise contrasts and ANOVA tables are both computed from the same underlying regression model. The ANOVA is not necessary for any inference, a point I return to below.</p>
 <p>Let’s use the glucose uptake experiment (Example 1) to explore the ANOVA table.</p>
-<section id="how-to-read-a-two-way-anova-table" class="level3" data-number="12.9.1">
-<h3 data-number="12.9.1" class="anchored" data-anchor-id="how-to-read-a-two-way-anova-table"><span class="header-section-number">12.9.1</span> How to read a two-way ANOVA table</h3>
+<section id="how-to-read-a-two-way-anova-table" class="level3" data-number="13.9.1">
+<h3 data-number="13.9.1" class="anchored" data-anchor-id="how-to-read-a-two-way-anova-table"><span class="header-section-number">13.9.1</span> How to read a two-way ANOVA table</h3>
 <div class="cell">
 <div id="tbl-twoway-anova-explainer" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-anova-explainer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.9: ANOVA table of glucose uptake experiment (Example 1).
+Table&nbsp;13.9: ANOVA table of glucose uptake experiment (Example 1).
 </figcaption>
 <div aria-describedby="tbl-twoway-anova-explainer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -3036,22 +3042,22 @@ Table&nbsp;12.9: ANOVA table of glucose uptake experiment (Example 1).
 <ol type="1">
 <li>This ANOVA table is computed using Type III sum of squares and should match the output from most statistics software including Graphpad Prism. The relevance of this is addressed below.</li>
 <li>In general, an ANOVA table has a row for each term in the underlying linear model. ANOVA is a method for decomposing the total variance into batches and each of these terms is a batch. For the linear model with two crossed factors, there is a term for each factor and a term for the interaction. <code>stimulation</code> and <code>genotype</code> are the <strong>main</strong> (or 1st order) effects. <code>stimulation:genotype</code> is the interaction (or 2nd order) effect. These terms are the row names of the table.</li>
-<li>Some ANOVA functions in R also include a row for the variance of the residuals from the fit model. This row can be useful for learning what the values in ANOVA table are but only one statistic from the row (the residual df) is especially useful for reporting. In <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>12.9</span></a>, this residual df is included in the statistics for each term.</li>
-<li>Many ANOVA tables contain additional SS (sum of squares) and MSE (mean square error) columns. The MSE is the variance of the term and used to compute the <em>F</em> statistic. The SS is used to compute the MSE. Since these columns are used for computation but not reporting, <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>12.9</span></a> excludes these.</li>
+<li>Some ANOVA functions in R also include a row for the variance of the residuals from the fit model. This row can be useful for learning what the values in ANOVA table are but only one statistic from the row (the residual df) is especially useful for reporting. In <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>13.9</span></a>, this residual df is included in the statistics for each term.</li>
+<li>Many ANOVA tables contain additional SS (sum of squares) and MSE (mean square error) columns. The MSE is the variance of the term and used to compute the <em>F</em> statistic. The SS is used to compute the MSE. Since these columns are used for computation but not reporting, <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>13.9</span></a> excludes these.</li>
 <li><strong>df</strong> (Degree of freedom) – If the term is a factor, the df will equal the number of levels (<span class="math inline">\(k\)</span>) for the factor minus 1. Think of it this way: the contribution of the variance due to a factor is a function of the variability of the <span class="math inline">\(k\)</span> level means around the grand mean. How many degrees of independent variation do these level means have, given that we know the grand mean? The answer is <span class="math inline">\(k-1\)</span> – once the values of <span class="math inline">\(k-1\)</span> level means are written down, the <span class="math inline">\(k\)</span>th level mean has no freedom to vary; its value has to be <span class="math inline">\(k\bar{\bar{Y}} - \sum_i^{k-1}{Y_i}\)</span>. For an interaction term, the df is the product of the df of each of the factors in the interaction.</li>
 <li><strong>F</strong> (<em>F</em>-value or <em>F</em>-ratio) – This is the test statistic. It is the ratio of the MSE for the term divided by the MSE of the residual (this is strictly true for only “Fixed effects” ANOVA, which we have here).</li>
 <li><strong>p.value</strong> – the <em>p</em>-value for the test statistic. <em>F</em> is compared to an <em>F</em>-distribution, which is a distribution of <em>F</em>-values under the null.</li>
 </ol>
 </section>
-<section id="what-do-the-main-effects-in-an-anova-table-mean" class="level3" data-number="12.9.2">
-<h3 data-number="12.9.2" class="anchored" data-anchor-id="what-do-the-main-effects-in-an-anova-table-mean"><span class="header-section-number">12.9.2</span> What do the main effects in an ANOVA table mean?</h3>
+<section id="what-do-the-main-effects-in-an-anova-table-mean" class="level3" data-number="13.9.2">
+<h3 data-number="13.9.2" class="anchored" data-anchor-id="what-do-the-main-effects-in-an-anova-table-mean"><span class="header-section-number">13.9.2</span> What do the main effects in an ANOVA table mean?</h3>
 <p>It is very common in the literature to see researchers report the rows of an ANOVA table by stating something like “We found an effect of stimulation on glucose uptake (<span class="math inline">\(F_{1,25} = 26.9\)</span>, <span class="math inline">\(p &lt; 0.0001\)</span>)”. Thinking of a main effect term in an ANOVA table as “an effect” can be misleading. What does “an effect” mean? Afterall, there are <em>two</em> effects of <code>stimulation</code> in this experiment, one in the wildtype mice and one in the TLR9-/- mice.</p>
-<p>Main effects in ANOVA tables are about average effects. A main effect in a two-way ANOVA table is an “overall” marginal effect. Recall that a marginal effect of the level of Factor A is the average of the conditional effects at each level of B (<a href="#sec-twoway-marginal-effects" class="quarto-xref"><span>Section 12.5.3</span></a>). For a <span class="math inline">\(2 \times 2\)</span> table, there is only one marginal effect for each factor and, as a consquence, the <em>p</em> value for the main effect term of <code>stimulation</code> in the ANOVA table (<a href="#tbl-twoway-anova-table" class="quarto-xref">Table&nbsp;<span>12.10</span></a>) is equal to the <em>p</em>-value of the marginal effect of <code>stimulation</code> in the contrast table (<a href="#tbl-twoway-marginal-table" class="quarto-xref">Table&nbsp;<span>12.11</span></a>). The “main term” effect of stimulation is illustrated in <a href="#fig-twoway-anova-explainer-plot" class="quarto-xref">Figure&nbsp;<span>12.7</span></a>.</p>
+<p>Main effects in ANOVA tables are about average effects. A main effect in a two-way ANOVA table is an “overall” marginal effect. Recall that a marginal effect of the level of Factor A is the average of the conditional effects at each level of B (<a href="#sec-twoway-marginal-effects" class="quarto-xref"><span>Section 13.5.3</span></a>). For a <span class="math inline">\(2 \times 2\)</span> table, there is only one marginal effect for each factor and, as a consquence, the <em>p</em> value for the main effect term of <code>stimulation</code> in the ANOVA table (<a href="#tbl-twoway-anova-table" class="quarto-xref">Table&nbsp;<span>13.10</span></a>) is equal to the <em>p</em>-value of the marginal effect of <code>stimulation</code> in the contrast table (<a href="#tbl-twoway-marginal-table" class="quarto-xref">Table&nbsp;<span>13.11</span></a>). The “main term” effect of stimulation is illustrated in <a href="#fig-twoway-anova-explainer-plot" class="quarto-xref">Figure&nbsp;<span>13.7</span></a>.</p>
 <div class="cell">
 <div id="tbl-twoway-anova-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-anova-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.10: Reprinting the ANOVA table of the glucose uptake experiment (Example 1) to show more decimal places of the p-value.
+Table&nbsp;13.10: Reprinting the ANOVA table of the glucose uptake experiment (Example 1) to show more decimal places of the p-value.
 </figcaption>
 <div aria-describedby="tbl-twoway-anova-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -3100,7 +3106,7 @@ Table&nbsp;12.10: Reprinting the ANOVA table of the glucose uptake experiment (E
 <div id="tbl-twoway-marginal-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-marginal-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;12.11: Marginal effect of stimulation on glucose uptake.
+Table&nbsp;13.11: Marginal effect of stimulation on glucose uptake.
 </figcaption>
 <div aria-describedby="tbl-twoway-marginal-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -3146,7 +3152,7 @@ Table&nbsp;12.11: Marginal effect of stimulation on glucose uptake.
 <img src="two-factors_files/figure-html/fig-twoway-anova-explainer-plot-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twoway-anova-explainer-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.7: The main effect of stimulation in the ANOVA table tests the average of the conditional effects of stimulation. The average of the conditional effects is the difference between the marginal means of Active and of Rest.
+Figure&nbsp;13.7: The main effect of stimulation in the ANOVA table tests the average of the conditional effects of stimulation. The average of the conditional effects is the difference between the marginal means of Active and of Rest.
 </figcaption>
 </figure>
 </div>
@@ -3154,16 +3160,16 @@ Figure&nbsp;12.7: The main effect of stimulation in the ANOVA table tests the av
 </div>
 </section>
 </section>
-<section id="more-issues-in-inference" class="level2" data-number="12.10">
-<h2 data-number="12.10" class="anchored" data-anchor-id="more-issues-in-inference"><span class="header-section-number">12.10</span> More issues in inference</h2>
-<section id="longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova" class="level3" data-number="12.10.1">
-<h3 data-number="12.10.1" class="anchored" data-anchor-id="longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova"><span class="header-section-number">12.10.1</span> Longitudinal experiments – include Time as a random factor (better than repeated measures ANOVA)</h3>
+<section id="more-issues-in-inference" class="level2" data-number="13.10">
+<h2 data-number="13.10" class="anchored" data-anchor-id="more-issues-in-inference"><span class="header-section-number">13.10</span> More issues in inference</h2>
+<section id="longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova" class="level3" data-number="13.10.1">
+<h3 data-number="13.10.1" class="anchored" data-anchor-id="longitudinal-experiments-include-time-as-a-random-factor-better-than-repeated-measures-anova"><span class="header-section-number">13.10.1</span> Longitudinal experiments – include Time as a random factor (better than repeated measures ANOVA)</h3>
 </section>
 </section>
-<section id="working-in-r" class="level2" data-number="12.11">
-<h2 data-number="12.11" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">12.11</span> Working in R</h2>
-<section id="model-formula" class="level3" data-number="12.11.1">
-<h3 data-number="12.11.1" class="anchored" data-anchor-id="model-formula"><span class="header-section-number">12.11.1</span> Model formula</h3>
+<section id="working-in-r" class="level2" data-number="13.11">
+<h2 data-number="13.11" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">13.11</span> Working in R</h2>
+<section id="model-formula" class="level3" data-number="13.11.1">
+<h3 data-number="13.11.1" class="anchored" data-anchor-id="model-formula"><span class="header-section-number">13.11.1</span> Model formula</h3>
 <p>A linear model with two crossed factors is specified in the model formula as <code>y ~ A*B</code> where <code>A</code> is the first factor, and <code>B</code> is the second factor. R expands this formula to <code>y ~ 1 + A + B + A:B</code> where the colon indicates an interaction (multiplicative) effect.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype, <span class="at">data =</span> exp2j)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3339,10 +3345,10 @@ Figure&nbsp;12.7: The main effect of stimulation in the ANOVA table tests the av
 </div>
 </div>
 </section>
-<section id="using-the-emmeans-function" class="level3" data-number="12.11.2">
-<h3 data-number="12.11.2" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">12.11.2</span> Using the emmeans function</h3>
-<section id="conditional-means-table" class="level4" data-number="12.11.2.1">
-<h4 data-number="12.11.2.1" class="anchored" data-anchor-id="conditional-means-table"><span class="header-section-number">12.11.2.1</span> Conditional means table</h4>
+<section id="using-the-emmeans-function" class="level3" data-number="13.11.2">
+<h3 data-number="13.11.2" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">13.11.2</span> Using the emmeans function</h3>
+<section id="conditional-means-table" class="level4" data-number="13.11.2.1">
+<h4 data-number="13.11.2.1" class="anchored" data-anchor-id="conditional-means-table"><span class="header-section-number">13.11.2.1</span> Conditional means table</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model m1 fit above</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># m1 &lt;- lm(glucose_uptake ~ stimulation * genotype, data = exp2j)</span></span>
@@ -3367,8 +3373,8 @@ Confidence level used: 0.95 </code></pre>
 <li>If there are two factor variables in the model, and both are passed to <code>specs</code>, then the modeled means of all combinations of the levels of the two variables are computed. If only one factor variable is passed, then the marginal means (averaged over all levels of the missing factor) are computed (see below).</li>
 </ol>
 </section>
-<section id="marginal-means" class="level4" data-number="12.11.2.2">
-<h4 data-number="12.11.2.2" class="anchored" data-anchor-id="marginal-means"><span class="header-section-number">12.11.2.2</span> Marginal means</h4>
+<section id="marginal-means" class="level4" data-number="13.11.2.2">
+<h4 data-number="13.11.2.2" class="anchored" data-anchor-id="marginal-means"><span class="header-section-number">13.11.2.2</span> Marginal means</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>m1_emm_stimulation <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"stimulation"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -3391,10 +3397,10 @@ Confidence level used: 0.95 </code></pre>
 </ol>
 </section>
 </section>
-<section id="contrasts" class="level3" data-number="12.11.3">
-<h3 data-number="12.11.3" class="anchored" data-anchor-id="contrasts"><span class="header-section-number">12.11.3</span> Contrasts</h3>
-<section id="twoway-working-planned" class="level4" data-number="12.11.3.1">
-<h4 data-number="12.11.3.1" class="anchored" data-anchor-id="twoway-working-planned"><span class="header-section-number">12.11.3.1</span> Planned contrasts</h4>
+<section id="contrasts" class="level3" data-number="13.11.3">
+<h3 data-number="13.11.3" class="anchored" data-anchor-id="contrasts"><span class="header-section-number">13.11.3</span> Contrasts</h3>
+<section id="twoway-working-planned" class="level4" data-number="13.11.3.1">
+<h4 data-number="13.11.3.1" class="anchored" data-anchor-id="twoway-working-planned"><span class="header-section-number">13.11.3.1</span> Planned contrasts</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>wt_rest <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>wt_active <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>)</span>
@@ -3477,8 +3483,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 </section>
-<section id="all-pairwise-effects" class="level4" data-number="12.11.3.2">
-<h4 data-number="12.11.3.2" class="anchored" data-anchor-id="all-pairwise-effects"><span class="header-section-number">12.11.3.2</span> All pairwise effects</h4>
+<section id="all-pairwise-effects" class="level4" data-number="13.11.3.2">
+<h4 data-number="13.11.3.2" class="anchored" data-anchor-id="all-pairwise-effects"><span class="header-section-number">13.11.3.2</span> All pairwise effects</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
@@ -3509,8 +3515,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <li>The <code>level</code> argument controls the percentile boundaries of the confidence interval. The default is 0.95. Including this argument with this value makes this level transparent.</li>
 </ol>
 </section>
-<section id="simple-effects" class="level4" data-number="12.11.3.3">
-<h4 data-number="12.11.3.3" class="anchored" data-anchor-id="simple-effects"><span class="header-section-number">12.11.3.3</span> Simple effects</h4>
+<section id="simple-effects" class="level4" data-number="13.11.3.3">
+<h4 data-number="13.11.3.3" class="anchored" data-anchor-id="simple-effects"><span class="header-section-number">13.11.3.3</span> Simple effects</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
@@ -3592,8 +3598,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </div>
 </div>
 </section>
-<section id="twoway-working-ixn" class="level4" data-number="12.11.3.4">
-<h4 data-number="12.11.3.4" class="anchored" data-anchor-id="twoway-working-ixn"><span class="header-section-number">12.11.3.4</span> Interaction contrasts</h4>
+<section id="twoway-working-ixn" class="level4" data-number="13.11.3.4">
+<h4 data-number="13.11.3.4" class="anchored" data-anchor-id="twoway-working-ixn"><span class="header-section-number">13.11.3.4</span> Interaction contrasts</h4>
 <p>The interaction contrasts can be computed as in <a href="#twoway-working-planned">Planned contrasts</a> above or using the argument “interaction =”</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>m1_ixn <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
@@ -3636,8 +3642,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </div>
 </div>
 </section>
-<section id="method-argument" class="level4" data-number="12.11.3.5">
-<h4 data-number="12.11.3.5" class="anchored" data-anchor-id="method-argument"><span class="header-section-number">12.11.3.5</span> Method argument</h4>
+<section id="method-argument" class="level4" data-number="13.11.3.5">
+<h4 data-number="13.11.3.5" class="anchored" data-anchor-id="method-argument"><span class="header-section-number">13.11.3.5</span> Method argument</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"pairwise"</span>,</span>
@@ -3794,8 +3800,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <li><code>method = "trt.vs.ctrl"</code> gives a very flattened picture of the model results and constrains what we can infer from the results.</li>
 </ol>
 </section>
-<section id="adjustment-for-multiple-tests" class="level4" data-number="12.11.3.6">
-<h4 data-number="12.11.3.6" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">12.11.3.6</span> Adjustment for multiple tests</h4>
+<section id="adjustment-for-multiple-tests" class="level4" data-number="13.11.3.6">
+<h4 data-number="13.11.3.6" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">13.11.3.6</span> Adjustment for multiple tests</h4>
 <p>set the <code>adjust =</code> argument to</p>
 <ol type="1">
 <li>“none” – no adjustment</li>
@@ -3808,12 +3814,12 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </ol>
 </section>
 </section>
-<section id="practice-safe-anova" class="level3" data-number="12.11.4">
-<h3 data-number="12.11.4" class="anchored" data-anchor-id="practice-safe-anova"><span class="header-section-number">12.11.4</span> Practice safe ANOVA</h3>
+<section id="practice-safe-anova" class="level3" data-number="13.11.4">
+<h3 data-number="13.11.4" class="anchored" data-anchor-id="practice-safe-anova"><span class="header-section-number">13.11.4</span> Practice safe ANOVA</h3>
 <p>Many researchers are unaware of the different ways of computing the sum of squares in an ANOVA table. The <em>F</em>-value and <em>p</em>-value are both functions of the sum of squares. When the cells of a two-way ANOVA are not balanced (different sample sizes among the cells), the different ways of computing the sum of squares can matter. There is a great deal of sound and fury about which methods should be used and which avoided. For many research questions and the experiments used to address these, these arguments are moot because the ANOVA table is simply unnecessary for inference. Instead, fit the linear model and compute the contrasts of interest.</p>
 <p>If your reviewer/advisor/boss wants an ANOVA table and wants this table to match that in Graphpad Prism or JMP, then you need a table computed from Type III sum of squares. If using a linear model to compute the ANOVA (remember that ANOVA was developed without fitting linear models), then the linear model needs to be fit using a model matrix constructed with indicator variables using effects coding. There are two safe ways to do this in R.</p>
-<section id="the-afex-aov_4-function" class="level4" data-number="12.11.4.1">
-<h4 data-number="12.11.4.1" class="anchored" data-anchor-id="the-afex-aov_4-function"><span class="header-section-number">12.11.4.1</span> The afex aov_4 function</h4>
+<section id="the-afex-aov_4-function" class="level4" data-number="13.11.4.1">
+<h4 data-number="13.11.4.1" class="anchored" data-anchor-id="the-afex-aov_4-function"><span class="header-section-number">13.11.4.1</span> The afex aov_4 function</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .I is a data.table function that returns the row number</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>exp2j[, fake_id <span class="sc">:</span><span class="er">=</span> <span class="fu">paste</span>(<span class="st">"mouse"</span>, .I)]</span>
@@ -3866,8 +3872,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <li>The formula includes the addition of a random factor (<code>(1|id)</code>) even though there really is no random factor in this model. See <a href="#lmm">Models with random factors – Blocking and pseudoreplication</a> for more information on random factors. The random factor (the factor variable “id” created in the line before the fit model line) identifies the individual mouse from which the response variable was measured. Because the response was only measured once on each individual mouse, “id” is not really a random factor but the addition of this in the model formula is necessary for the <code>aov_4</code> function to work.</li>
 </ol>
 </section>
-<section id="twoway-car-anova" class="level4" data-number="12.11.4.2">
-<h4 data-number="12.11.4.2" class="anchored" data-anchor-id="twoway-car-anova"><span class="header-section-number">12.11.4.2</span> The car Anova function</h4>
+<section id="twoway-car-anova" class="level4" data-number="13.11.4.2">
+<h4 data-number="13.11.4.2" class="anchored" data-anchor-id="twoway-car-anova"><span class="header-section-number">13.11.4.2</span> The car Anova function</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>type3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">stimulation =</span> contr.sum,</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">genotype =</span> contr.sum)</span>
@@ -3933,8 +3939,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </div>
 </section>
 </section>
-<section id="better-to-avoid-these" class="level3" data-number="12.11.5">
-<h3 data-number="12.11.5" class="anchored" data-anchor-id="better-to-avoid-these"><span class="header-section-number">12.11.5</span> Better to avoid these</h3>
+<section id="better-to-avoid-these" class="level3" data-number="13.11.5">
+<h3 data-number="13.11.5" class="anchored" data-anchor-id="better-to-avoid-these"><span class="header-section-number">13.11.5</span> Better to avoid these</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>m1_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j)</span>
@@ -3975,10 +3981,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ol>
 </section>
 </section>
-<section id="hidden-code" class="level2" data-number="12.12">
-<h2 data-number="12.12" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">12.12</span> Hidden Code</h2>
-<section id="import-exp2j-example-1" class="level3" data-number="12.12.1">
-<h3 data-number="12.12.1" class="anchored" data-anchor-id="import-exp2j-example-1"><span class="header-section-number">12.12.1</span> Import exp2j (Example 1)</h3>
+<section id="hidden-code" class="level2" data-number="13.12">
+<h2 data-number="13.12" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">13.12</span> Hidden Code</h2>
+<section id="import-exp2j-example-1" class="level3" data-number="13.12.1">
+<h3 data-number="13.12.1" class="anchored" data-anchor-id="import-exp2j-example-1"><span class="header-section-number">13.12.1</span> Import exp2j (Example 1)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"TLR9 and beclin 1 crosstalk regulates muscle AMPK activation in exercise"</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2020_1992_MOESM4_ESM.xlsx"</span></span>
@@ -4016,8 +4022,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb61-34"><a href="#cb61-34" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp2j)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="import-exp3e-lesian-area-data-example-2" class="level3" data-number="12.12.2">
-<h3 data-number="12.12.2" class="anchored" data-anchor-id="import-exp3e-lesian-area-data-example-2"><span class="header-section-number">12.12.2</span> Import exp3e lesian area data (Example 2)</h3>
+<section id="import-exp3e-lesian-area-data-example-2" class="level3" data-number="13.12.2">
+<h3 data-number="13.12.2" class="anchored" data-anchor-id="import-exp3e-lesian-area-data-example-2"><span class="header-section-number">13.12.2</span> Import exp3e lesian area data (Example 2)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"XX sex chromosome complement promotes atherosclerosis in mice"</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2019_10462_MOESM6_ESM.xlsx"</span></span>
@@ -4060,8 +4066,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb62-39"><a href="#cb62-39" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp3e) # highlight and run to see data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="import-exp1c-ja-data-example-3" class="level3" data-number="12.12.3">
-<h3 data-number="12.12.3" class="anchored" data-anchor-id="import-exp1c-ja-data-example-3"><span class="header-section-number">12.12.3</span> Import Exp1c JA data (Example 3)</h3>
+<section id="import-exp1c-ja-data-example-3" class="level3" data-number="13.12.3">
+<h3 data-number="13.12.3" class="anchored" data-anchor-id="import-exp1c-ja-data-example-3"><span class="header-section-number">13.12.3</span> Import Exp1c JA data (Example 3)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Integration of two herbivore-induced plant volatiles results in synergistic effects on plant defense and resistance"</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"Data for Dryad.xlsx"</span></span>
@@ -4516,8 +4522,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/model-checking.html" class="pagination-link" aria-label="Model checking">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model checking</span></span>
+      <a href="../chapters/multiple-testing.html" class="pagination-link" aria-label="Adjusting *p*-values for multiple tests">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Adjusting <em>p</em>-values for multiple tests</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
