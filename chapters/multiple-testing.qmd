@@ -1,0 +1,684 @@
+# Adjusting *p*-values for multiple tests {#sec-multiple-tests}
+
+```{r}
+#| label: multiple-tests-setup
+#| echo: false
+#| message: false
+#| warning: false
+# import and messaging
+library(here)
+library(janitor)
+library(readxl)
+library(writexl)
+library(data.table)
+
+# analysis
+library(emmeans)
+
+# graphics and output
+library(ggplot2)
+library(ggpubr) # qq plot functions
+#library(qqplotr) ## qq plot functions
+library(ggforce)
+library(cowplot)
+library(knitr)
+library(kableExtra)
+
+data_folder <- "data"
+here <- here::here
+
+source(here("R/ggplot_the_model.R"))
+
+```
+
+In many experiments, researchers have multiple treatments or multiple responses. This results in multiple tests against the null. For example, in an experiment with four treatment levels, there are six combinations of contrasts (A - B, A - C, A - D, B - C, B - D, C - D) and a researcher might be interested in all six *p*-values. Or, in an experiment with only two levels, there could be six response variables (expression level in six different genes. Or, six different phenotypes). Here, there are six contrasts (B - A for all six response variables) and six tests. Researchers commonly adjust for multiple testing in examples like these (the exception is multiple phenotype responses. Curiously, researchers almost never adjust for this). What is multiple testing and why do we want to adjust? And, something that doesn't seem to be considered much in the experimental bench biology literature, *when* do we want to adjust?
+
+## In a family of multiple tests, what is the probability of at least one p-value less than 0.05?
+
+A **family** of tests is a set of tests that are used to make some inference about one question. For example, "In this mouse model of diabetes, are any genes differently expressed between diabetes mice and wildtype mice"? $p < 0.05$ for any of the tested genes answers the question. If a researcher only tests one gene, then the probability of $p < 0.05$ if there is no expression difference between phenotypes is 5%. But if a researcher tests two genes, there is a higher probability than 5% that at least one will have $p < 0.05$ if there is no expression difference between phenotypes for both genes. And, if a researcher tests ten genes, there is a much higher probability than 5% that at least one will have $p < 0.05$ if there is no expression difference between phenotypes for any of the ten genes. What are these probabilities?
+
+The probability of a significant *p*-value in one test is 0.05, so the probability of no non-significant *p*-values in one test is 1 - 0.05. The probability of no non-significant *p*-values in two tests is $(1 - 0.05)^2$, so the probability of at least one significant *p*-value is $1 - (1 - 0.05)^2$. The probability of no non-significant *p*-values in ten tests is $(1 - 0.05)^10$, so the probability of at least one significant *p*-value in ten tests is $1 - (1 - 0.05)^2$. Let's compute these probabilities, and more. 
+
+```{r}
+#| label: mult-tests-fwer
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: Family-wise error rate for unadjusted *p*-values
+
+n_tests <- c(1, 2, 5, 10, 100)
+table_out <- data.table(
+  "Number of tests" = n_tests,
+  "Prob(at least 1 < 0.05)" = 1 - (1 - 0.05)^n_tests
+)
+table_out |>
+  kable(digits = 2) |>
+  kable_styling(full_width = FALSE)
+```
+The second column is the **family-wise error rate** (FWER), the probability of at least one $p < 0.05$ in a family of tests in which there are no true effects. So the FWER for a family of 10 tests is 40% *if our p-values are not adjusted for multiple testing*. We adjust *p* values in experiments with multiple tests in order to control the FWER.
+
+::: {.callout-note}
+An assumption of these probabilities is the tests are independent. Importantly, this independence assumption is also true for most, but not all, of the adjustment methods.
+:::
+
+## In many experiments, we don't want to adjust for multiple tests
+
+In many experiments, we don't want to adjust for multiple tests because there is only a single test in the family even if there are multiple tests in the experiment. Researchers are adjusting because of a confusion on what a family is. The cost of this adjustment is more conservative (higher) *p*-values, which leads to less power, which leads to more failed discoveries or more research costs (mice, time) to discover by *p*-value.
+
+```{r}
+#| label: multiple-tests-exfig2-import
+#| echo: false
+#| message: false
+#| warning: false
+
+data_from <- "A brain-to-gut signal controls intestinal fat absorption"
+file_name <- "41586_2024_7929_MOESM13_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+exfig2_import <- function(phenotype = "xxx", range_in = "xxx"){
+  exfig2_part <- read_excel(file_path,
+                            sheet = "Sheet1",
+                            range = range_in,
+                            col_names = TRUE) |>
+    data.table() |>
+    melt(variable.name = "treatment",
+         value.name = phenotype)
+  return(exfig2_part)
+}
+
+exfig2 <- exfig2_import(phenotype = "nefa",
+                        range = "A47:C57")
+exfig2 <- cbind(exfig2,
+                "fecal_tg" = exfig2_import(phenotype = "fecal_tg",
+                                           range = "A64:C74")$fecal_tg)
+exfig2 <- cbind(exfig2,
+                "jejunal_tg" = exfig2_import(phenotype = "jejunal_tg",
+                                             range = "A81:C91")$jejunal_tg)
+exfig2[, treatment := factor(treatment,
+                             levels = unique(treatment))]
+```
+
+Let's explore what a family is using data from the article
+
+Source: [Lyu, Q., Xue, W., Liu, R. et al. A brain-to-gut signal controls intestinal fat absorption. Nature (2024). https://doi.org/10.1038/s41586-024-07929-5](https://www.nature.com/articles/s41586-024-07929-5){target="_blank"}
+
+[Data source](https://www.nature.com/articles/s41586-024-07929-5#Fig7){target="_blank"}
+
+Figure: Extended Figure 2d
+
+In this study, the researchers investigate the control of fat absorption in the intestine by the dorsal motor nucleus of the vagus nerve (DMV) and show that the plant metabolite puerarin mimics this DMV suppression.
+
+The experiment in Extended Figure 2d follows up initial experiments from Figure 1 that show that inactivation of the DMV in mice decreased weight gain on a high fat diet relative to control mice and that DMV-inactive mice had lower plasma triglycerides, higher fat content in the feces, and lower fat absorption in the jejunum part of the small intestine. The DMV was inactivated by Clozapine N-oxide (CNO) binding to a human-designed hM4D(Gi) inhibitory receptor whose expression is controlled by the researchers.
+
+In the experiment in Extended Figure 2d, the response is fecal NEFA (non-esterified fatty acid).
+
+The three treatments are 
+
+1. "con" is a negative control with a designer receptor that doesn't bind CNO. The researchers expect fecal NEFA equal to mice with no designed receptors.
+2. "3q" is the focal treatment using a designer receptor that should activate the DMV. If the DMV regulation of fat absorption is working as thought, the researchers expect increased fat absorption so lower fecal NEFA levels relative to "con".
+3. "4i" is a positive control using the DMV-inactivating receptor in the previous experiments. The researchers expect higher NEFA levels relative to "con", as in the experiments in Fig. 1.
+
+There are three contrasts of single treatments ("3q - con", "4i - con", "4i - 3q") so three tests. The researchers follow the norm in experimental bench biology research and report p-values adjusted for multiple tests. Specifically, the researchers adjusted for the two contrasts comparing a treatment to the negative control ("3q - con" and "4i - con"). This adjustment seems to follow the logic that a family is the set of tests of interest to the researchers (the contrast "4i - 3q" is not of interest). But "of interest to the researchers" doesn't define a family of tests. Instead, "same question" defines a family of tests. If were were to include both contrasts in a family, what is the question? It would have to be something like “if we manipulate the activity of the DMV, do we get a change in fecal NEFA?".
+
+This isn't the question addressed by the research. The researchers have one focal question: "does activating the DMV increase fat absorption and consequently, decrease fecal NEFA levels?" Only one test (the contrast "3q - con") answers this question so the family has a single test and there is no need to adjust. The researchers are interested in a second question as a check on the experiment itself. This question is something like "Are we actually getting the known response given the intervention". Only one test (the contrast "4i - con") answers this question so there is no need to adjust.
+
+Let's look at the cost of adjustment. The researchers used the Holm-Sidák method to adjust the two *p*-values. Holm-Sidák is an option in Graphpad Prism but not Base R and is not available in any of the major testing R packages. So, I wrote a function to compute this.
+
+```{r}
+#| label: mult-test-holm-sidak
+#| echo: true
+
+holm_sidak <- function(p, alpha = 0.05){
+  n <- length(p)
+  rank_p <- frank(p)
+  inv_rank_p <- n - rank_p + 1
+  
+  # put pvalues and the inv rankings in rank order
+  p_order <- p[rank_p]
+  inv_rank_order <- inv_rank_p[rank_p]
+  
+  # compute the adjusted p-value
+  p_holm_sidak_order <- (1 - (1 - p_order)^(inv_rank_order))
+  
+  # adjusted p-values of higher rank cannot be less than adjusted p-value of lower rank
+  # so find and adjust these
+  for(j in 2:n){
+    if(p_holm_sidak_order[j] < p_holm_sidak_order[j-1]){
+      p_holm_sidak_order[j] <- p_holm_sidak_order[j-1]
+    }
+  }
+  
+  # any adjusted > 1 make 1
+  p_holm_sidak_order[p_holm_sidak_order > 1.0] <- 1.0
+  
+  # put back into original order
+  p_holm_sidak <- p_holm_sidak_order[rank_p]
+  return(p_holm_sidak)
+}
+```
+
+```{r}
+#| label: mult-test-holm-sidak-check
+#| echo: false
+
+holm_sidak_check <- function(p, alpha = 0.05){
+  n <- length(p)
+  rank_p <- frank(p)
+  inv_rank_p <- n - rank_p + 1
+
+  p_bonf <- p * n
+  p_bonf[p_bonf > 1] <- 1.0
+
+  p_holm <- p * inv_rank_p
+  p_thresh <- min(p[which(p_holm >= 1)])
+  p_holm[p >= p_thresh] <- 1.0
+
+  p_bonf_sidak <- (1 - (1 - p)^(n))
+  p_thresh <- min(p[which(p_bonf_sidak >= 1)])
+  p_bonf_sidak[p >= p_thresh] <- 1.0
+
+  p_holm_sidak2 <- (1 - (1 - p)^(inv_rank_p))
+  p_order <- p[rank_p]
+  inv_rank_order <- inv_rank_p[rank_p]
+  p_holm_sidak_order <- (1 - (1 - p_order)^(inv_rank_order))
+  for(j in 2:n){
+    if(p_holm_sidak_order[j] < p_holm_sidak_order[j-1]){
+      p_holm_sidak_order[j] <- p_holm_sidak_order[j-1]
+    }
+  }
+  p_holm_sidak_order[p_holm_sidak_order > 1.0] <- 1.0
+  p_holm_sidak <- p_holm_sidak_order[rank_p]
+  
+  p_thresh <- min(p[which(p_holm_sidak >= 1)])
+  p_holm_sidak[p >= p_thresh] <- 1.0
+
+  p_table <- data.table(
+    p = p,
+    bonf = p_bonf,
+    holm = p_holm,
+    bonf_sidak = p_bonf_sidak,
+    holm_sidak = p_holm_sidak,
+    bonf_check = p.adjust(p, "bonf"),
+    holm_check = p.adjust(p, "holm"),
+    sidak_check = MHTdiscrete::Sidak.p.adjust(p), # equivalen to bonf-sidak not holm-sidak
+    sidak_holm_check = RHSDB::rh.sd.sidak(p)
+  )
+  return(p_holm_sidak)
+}
+```
+
+```{r}
+#| label: tbl-mult-tests-exfig2_m1
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: Unadjusted *p*-value and Holm-Sidak adjusted *p*-value for the experiment in Extended Figure 2d
+m1 <- lm(nefa ~ treatment, data = exfig2)
+m1_emm <- emmeans(m1, specs = "treatment")
+m1_pairs <- contrast(m1_emm,
+                     method = "trt.vs.ctrl",
+                     adjust = "none") |>
+  summary(infer = TRUE) |>
+  data.table()
+
+m1_pairs[, holm_sidak := holm_sidak(p.value)]
+m1_pvals <- m1_pairs[, .SD, .SDcols = c("contrast", "estimate", "p.value", "holm_sidak")]
+colnames(m1_pvals) <- c("Contrast", "Estimate", "Unadjusted P", "Holm-Sidak P")
+
+m1_pvals |>
+  kable(digits = c(1, 3, 5, 5)) |>
+  kable_styling(full_width = FALSE)
+```
+
+The cost is about double because there are two tests. If we use $p < 0.05$ to act as if there is an effect, then the adjustment costs us nothing here. Adjusting for a small (two to three) number of tests is not going to have much impact on the quality of science either way. Nevertheless
+
+1. adjusting is unnecessary in experiments like this, where there are multiple questions addressed by the experiment and each question is answered by a single test. This is the case for many, many experiments in experimental bench biology.
+2. although small, the increased power with not adjusting is free.
+
+
+## Or, maybe we do want to adjust, but not in the way that is usually done
+
+Extended figure 2d presents only one of six response variables that were measured on each mouse. The other response variables were body weight, fecal triglyceride, jejunal triglyceride, duodenal triglyceride, and ileal triglyceride. Some thoughts:
+
+1. Fecal NEFA and Fecal triglyceride effectively answer the same focal question "does activating the DMV increase fat absorption and consequently, decrease fecal fat levels?" So, adjusting for two tests is probably justified but the two tests are the same contrast ("3q - con") with two different response variables and not different contrasts for the same response variable.
+2. jejunal, duodenal, and ileal triglyceride effectively answer the same focal question "does activating the DMV increase fat absorption in a specific part of the small intestine". So adjusting for three tests is probably justified here, but again, the adjustment is for the same contrast ("3q - con") from the model fit to three different response variables.
+3. Adjustment for multiple responses is common in some subfields of experimental bench biology that are measuring thousands of responses (gene expression, functional MRI) but I I haven't seen adjustment for multiple phenotypic responses from a single experiment.
+
+## Tukey adjustment is extremely common, and (mostly) unjustified
+
+```{r}
+#| label: multiple-tests-fig5l-import
+#| echo: false
+#| message: false
+#| warning: false
+data_from <- "A brain-to-gut signal controls intestinal fat absorption"
+file_name <- "41586_2024_7929_MOESM11_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+fig5l <- read_excel(file_path,
+                    sheet = "Sheet1",
+                    range = "A133:AG137",
+                    col_names = FALSE) |>
+  data.table() |>
+  transpose(make.names = 1)
+colnames(fig5l)[1] <- c("treatment_orig")
+fig5l[, ezrin := as.numeric(ezrin)]
+fig5l[, cdc42 := as.numeric(cdc42)]
+fig5l[, eps8 := as.numeric(eps8)]
+fig5l[, vil1 := as.numeric(vil1)]
+fig5l[, treatment_orig := fill_down(treatment_orig)]
+fig5l[treatment_orig == "flox-veh", treatment := "WT Vehicle"]
+fig5l[treatment_orig == "flox-Pue", treatment := "WT Puerarin"]
+fig5l[treatment_orig == "KO-veh", treatment := "KO Vehicle"]
+fig5l[treatment_orig == "KO-Pue", treatment := "KO Puerarin"]
+fig5l[, treatment := factor(treatment, levels = unique(treatment))]
+
+```
+
+
+A very common research design in experimental bench biology is a design with two factors, each with two levels, with mice assigned to all 2 x 2 = 4 combinations of the levels. Analysis of these models for two (or more) factors is the focus of Chapter xxx. The experiment in Figure 5l is a good example of a 2 x 2 design.
+
+[Data source](https://www.nature.com/articles/s41586-024-07929-5#MOESM11){target="_blank"}
+
+Figure: Figure 5l
+
+The experiment in Fig. 5 follows up experiments that show that the plant metabolite puerarin binds to the GABA receptor encoded by *Gabra1* and increases GABA's inhibitory effect on the target neuron. In the experiment in Fig. 5, the researchers are investigating the mechanism of the effect of DVM-vagus supression on fat absorption in the jejunum. Figure 5c shows that suppressing DMV using COS activation of the designer 4i inhibitory receptor (as above) results in decreased jejunal microvilli length -- the reduced length decreases surface area for absorption. Figure 5d shows that suppressing DMV results in reduced expression of four genes involved in microvilli growth and organization. The design of the experiment in Fig. 5c, d is the same as that in Extended fig 2d above.
+
+Fig. 5l uses a 2 x 2 crossed design to investigate the effect of puerarin with and without a functional *Gabra1* GABA receptor.
+
+Here, we'll focus on the first gene, *ezr*, which encodes the protein ezrin.
+
+The two factors are
+
+1. genotype, with levels "WT" and "KO". KO is the conditional knockout of *Gabra1* in the DMV.
+2. puerarin, with levels "Vehicle" and "Puerarin". Infusion of a saline solution (Vehicle) or a solution with Puerarin.
+
+All levels of both factors are combined to create the four treatment combinations (the design is **fully factorial**)
+
+1. "WT Vehicle" is the combination "WT" + "Vehicle". This is the negative control.
+2. "WT Puerarin" is the combination "WT" + "Puerarin".
+3. "KO Vehicle" is the combination "KO" + "Vehicle".
+4. "KO Puerarin" is the combination "KO" + "Puerarin"
+
+The primary questions of the experiment are:
+
+1. does addition of puerarin reduce RNA expression in mice with functional *Gabra1* GABA receptor?
+2. does deletion of *Gabra1* remove this effect of puerarin?
+
+The researchers answer these questions using these two contrasts
+
+1. WT Puerarin - WT Vehicle
+2. KO Puerarin - KO Vehicle
+
+So, there are two research questions, each answered by a single contrast. There is nothing to adjust because each family consists of only a single test.
+
+What did the researchers do? Here, the researchers followed the norm in experimental bench biology and used the Tukey HSD adjustment for a single family of six tests (all six pairwise tests). Perhaps the norm is following a definition of family as "all tests within an experiment". Regardless, the adjustment logic in Fig. 5l is inconsistent with that in Fig 2d., where the researchers adjusted for the two tests of interest instead of the set of all three pairwise comparisons in the experiment. In Fig. 5l, the researchers adjust for all six pairwise comparisons, show only four contrasts in the figure and in the Excel file of the data, but only seem interested in the two contrasts that answer the focal questions.
+
+::: {.callout-note}
+Look at question 2 closely -- its a comparison of contrast 1 and contrast 2. Ultimately, the  researchers are asking about the effects of Puerarin with and without a functional *Gabra1* GABA receptor, so there is a single primary contrast of interest
+
+(KO Puerarin - KO Vehicle) - (WT Puerarin - WT Vehicle)
+
+This contrast is called the **interaction effect** or simply the interaction. The interaction is the difference in contrasts 1 and 2. An interaction is a **difference of differences**. The estimation of interaction effects almost always answers the focal question in 2 x 2 designs but is almost never estimated in experimental bench biology. More information on designs for two factors and interaction effects is in chapter @two-factors
+:::
+
+
+Of the six pairwise contrasts, the authors are focussed on four, the so-called "simple effects".
+
+1. (WT Puerarin) - (WT Vehicle) answers the question "how does microvilli-related gene expression change when we add puerarin to mice with fuctional Gabra1?". This is a positive control for contrast 2.
+2. (KO Puerarin) - (KO Vehicle) answers the question "how does microvilli-related gene expression change when we add puerarin to mice with knocked out Gabra1?". This is a focal contrast.
+3. (KO Vehicle)) - (WT Vehicle) answers the question "how does microvilli-related gene expression change when we knock out *Gabra1* and don't give puerarin administration? This is a positive control for contrast 4.
+4. (KO Puerarin) - (WT Puerarin) answers the question "how does microvilli-related gene expression change when we knock out *Gabra1* but give puerarin administration? This is a focal contrast.
+
+
+
+```{r}
+#| label: tbl-mult-tests-fig5_m1
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
+#| 
+m1 <- lm(ezrin ~ treatment, data = fig5l)
+m1_emm <- emmeans(m1, specs = "treatment")
+m1_pairs <- contrast(m1_emm,
+                     method = "revpairwise",
+                     adjust = "none") |>
+  summary(infer = TRUE) |>
+  data.table()
+
+m1_tukey <- contrast(m1_emm,
+                     method = "revpairwise") |>
+  summary(infer = TRUE) |>
+  data.table()
+
+m1_pairs[, tukey := m1_tukey$p.value]
+m1_pairs[ , multiple := tukey/p.value]
+
+m1_pvals <- m1_pairs[, .SD, .SDcols = c("contrast", "estimate", "p.value", "tukey", "multiple")]
+colnames(m1_pvals) <- c("Contrast", "Estimate", "Unadjusted P", "Tukey P", "Tukey/Unadjusted")
+
+# only the simple effects are of interest. These are rows 1, 2, 5, 6
+m1_pvals[c(1, 2, 5, 6), ] |>
+  kable(digits = c(1, 3, 4, 4, 1)) |>
+  kable_styling(full_width = FALSE)
+
+```
+
+The cost of adjustment is given in the last column of @tbl-mult-tests-fig5_m1. In three of the contrasts, the Tukey adjusted *p*-value is 5-6X the unadjusted value. This is an unnecessary loss of power. Loss of power leads to more time, more dollars, more animals, and more failed discoveries.  
+
+## Or, maybe we do want to adjust, but not in the way that is usually done
+
+For each of the contrasts in the Fig. 5l example above, the researchers measured the response in four microvilli-related genes. Each of these genes answers the question posed for a contrast. For example, all four genes answer the question for contrast 1, which is "how does microvilli-related gene expression change when we add puerarin to mice with functional Gabra1?" The family is the four contrasts (WT Puerarin - WT Vehicle) for each of the four genes. The researchers should adjust for the four tests within this family. The next section shows how this is done.
+
+## Using the FDR method to adjust *p*-values from different fit models, each for a different response
+
+Let's adjust the four *p*-values for each contrast using
+
+1. FDR. This method adjusts *p*-values so that the false discovery rate is 5%.
+2. Holm. This method adjust *p*-values so that the family wise error rate is 5%.
+
+In a sense, FDR is more liberal and Holm is more conservative but they have different goals. When $p < 0.05$, researchers act as if they have discovered or confirmed something, so call $p < 0.05$ a **discovery**. Consider these two situations
+
+1. $p < 0.05$ and the Null Hypothesis is false -- there is a true effect of treatment, or, there is a true difference in means between the two treatment levels. This is a true discovery.
+2. $p < 0.05$ but the Null Hypothesis is true -- there is no true effect of treatment, or, there is no true difference in means between the two treatment levels. This is a false discovery.
+
+The **false discovery rate** in a batch of tests is
+
+$$
+FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + number\;of\;true\;discoveries}
+$$
+In 
+
+```{r}
+#| label: mult-tests-fdr-simulation
+#| echo: false
+#| message: false
+#| warning: false
+
+n_iter <- 1
+n_tests <- 20
+alpha <- 0.05
+
+true_fraction <- 0.80 # fraction of tests with true effect
+false_fraction <- 1 - true_fraction # fraction of tests with no effect
+n_true <- true_fraction * n_tests # number of tests with true effect
+n_false <- false_fraction * n_tests # number of tests with no effect
+power_exp <- .6
+delta <- power.t.test(n = 10, sd = 1, power = power_exp, sig.level = alpha)$delta
+p_true <- numeric(n_true)
+p_false <- numeric(n_false)
+  for(j in 1:n_true){
+    p_true[j] <- t.test(rnorm(n = 10), rnorm(n = 10, mean = delta), var.equal = TRUE)$p.value
+  }
+  for(j in 1:n_false){
+    p_false[j] <- t.test(rnorm(n = 10), rnorm(n = 10), var.equal = TRUE)$p.value
+  }
+  type_1 <- sum(p_false < 0.05)/n_false
+  power <- sum(p_true < 0.05)/n_true
+  
+  p_none <- c(p_true, p_false)
+  p_holm <- p.adjust(p_none, method = "holm")
+  p_fdr <- p.adjust(p_none, method = "BH")
+  p_true_holm <- p_holm[1:n_true]
+  p_true_fdr <- p_fdr[1:n_true]
+  p_false_holm <- p_holm[(n_true + 1):n_tests]
+  p_false_fdr <- p_fdr[(n_true + 1):n_tests]
+  
+  true_discoveries_none <- sum(p_true < 0.05)
+  false_nondiscoveries_none <- sum(p_true > 0.05)
+  false_discoveries_none <- sum(p_false < 0.05)
+  true_nondiscoveries_none <- sum(p_false > 0.05)
+  total_discoveries_none <- true_discoveries_none + false_discoveries_none
+  total_non_discoveries_none <- false_nondiscoveries_none + true_nondiscoveries_none
+  TDR_none <- true_discoveries_none/total_discoveries_none
+  FDR_none <- false_discoveries_none/total_discoveries_none
+  FNDR_none <- false_nondiscoveries_none/total_non_discoveries_none
+  type_1_none <- false_discoveries_none/n_false
+  power_none <- true_discoveries_none/n_true
+
+  true_discoveries_holm <- sum(p_true_holm < 0.05)
+  false_nondiscoveries_holm <- sum(p_true_holm > 0.05)
+  false_discoveries_holm <- sum(p_false_holm < 0.05)
+  true_nondiscoveries_holm <- sum(p_false_holm > 0.05)
+  total_discoveries_holm <- true_discoveries_holm + false_discoveries_holm
+  total_non_discoveries_holm <- false_nondiscoveries_holm + true_nondiscoveries_holm
+  TDR_holm <- true_discoveries_holm/total_discoveries_holm
+  FDR_holm <- false_discoveries_holm/total_discoveries_holm
+  FNDR_holm <- false_nondiscoveries_holm/total_non_discoveries_holm
+  type_1_holm <- false_discoveries_holm/n_false
+  power_holm <- true_discoveries_holm/n_true
+
+  true_discoveries_fdr <- sum(p_true_fdr < 0.05)
+  false_nondiscoveries_fdr <- sum(p_true_fdr > 0.05)
+  false_discoveries_fdr <- sum(p_false_fdr < 0.05)
+  true_nondiscoveries_fdr <- sum(p_false_fdr > 0.05)
+  total_discoveries_fdr <- true_discoveries_fdr + false_discoveries_fdr
+  total_non_discoveries_fdr <- false_nondiscoveries_fdr + true_nondiscoveries_fdr
+  TDR_fdr <- true_discoveries_fdr/total_discoveries_fdr
+  FDR_fdr <- false_discoveries_fdr/total_discoveries_fdr
+  FNDR_fdr <- false_nondiscoveries_fdr/total_non_discoveries_fdr
+  type_1_fdr <- false_discoveries_fdr/n_false
+  power_fdr <- true_discoveries_fdr/n_true
+
+  out_table <- data.table(
+    Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power"),
+    None = c(true_discoveries_none, false_discoveries_none, TDR_none,
+             FDR_none, FNDR_none, type_1_none, power_none),
+    Holm = c(true_discoveries_holm, false_discoveries_holm, TDR_holm,
+             FDR_holm, FNDR_holm, type_1_holm, power_holm),
+    FDR = c(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,
+            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr)
+  )
+  
+  row_digits <- function(df, d){
+    # df is a data.frame or data.table
+    # d is a single value for all rows or vector of digits for each row
+    
+    inc <- which(unlist(lapply(df, is.numeric)))
+    x <- round(Filter(is.numeric, df), d)|>
+      apply(2, as.character) |>
+      data.table()
+    df_out <- apply(df, 2, as.character) |>
+      data.table()
+    df_out[, inc] <- x
+    return(df_out)
+  }
+  
+  out_table_round <- row_digits(out_table,
+                                c(0,0,3,3,3,3,2))
+  
+  out_table_round |>
+    kable() |>
+    kable_styling()
+
+
+```
+
+
+1. In 
+
+
+
+
+
+
+One way that R, or any programming language, is more efficient than menu-driven statistical software such as Graphpad Prism is the ability to write scripts to combine analyses, which is what we need to do to adjust *p*-values from multiple fit statistical models.
+
+```{r}
+#| label: tbl-mult-tests-fig5_all
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
+
+gene_list <- c("ezrin", "cdc42", "eps8", "vil1")
+# use a for loop to collect the p-values for each test for each gene
+p_none <- matrix(NA, nrow = 6, ncol = length(gene_list))
+for(j in 1:length(gene_list)){
+  formula_j <- paste(gene_list[j], "~", "treatment") |>
+    as.formula()
+  m1 <- lm(formula_j, data = fig5l)
+  m1_emm <- emmeans(m1, specs = "treatment")
+  m1_pairs <- contrast(m1_emm,
+                       method = "revpairwise",
+                       adjust = "none") |>
+    summary(infer = TRUE) |>
+    data.table()
+  p_none[, j] <- m1_pairs$p.value
+}
+colnames(p_none) <- gene_list
+
+# FDR Adjust 
+p_fdr <- copy(p_none)
+for(i in 1:nrow(p_fdr)){
+  p_fdr[i,] <- p.adjust(p_fdr[i,], method = "fdr")
+}
+
+p_none_dt <- data.table(
+  contrast = m1_pairs$contrast,
+  p_none
+)
+
+p_fdr_dt <- data.table(
+  contrast = m1_pairs$contrast,
+  p_fdr
+)
+
+p_table_out <- rbind(p_fdr_dt[c(1,2,5,6),], p_none_dt[c(1,2,5,6),])
+
+p_table_out |>
+  kable(digits = 4) |>
+  kable_styling(full_width = FALSE) |>
+  pack_rows("FDR Adjusted", 1, 4) |>
+  pack_rows("Non-adjusted", 5, 8)
+```
+
+
+```{r}
+#| label: multiple-tests-fig3-import
+#| echo: false
+#| message: false
+#| warning: false
+#| eval: true
+
+data_from <- "Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice"
+
+write_it <- FALSE
+if(write_it == TRUE){
+  file_name <- "41467_2023_42473_MOESM7_ESM.xlsx"
+  file_path <- here(data_folder, data_from, file_name)
+  
+  # note I had to insert rows in the excel file 
+  # in between some of the
+  # sets because of inconsistency in the file
+  fig3_import <- function(range_in = "xxx", lipid_id = "xxx"){
+    fig3_wide <- read_excel(file_path,
+                            sheet = "Fig. 3",
+                            range = range_in) |>
+      data.table()
+    fig3_long <- melt(fig3_wide,
+                      measure.vars = colnames(fig3_wide),
+                      variable.name = "treatment",
+                      value.name = paste0("cardiolipin_", lipid_id))
+    fig3_long[, treatment := factor(treatment,
+                                    levels = colnames(fig3_wide))]
+    fig3_long[, mouse_id := .I]
+    return(fig3_long)
+  }
+  
+  fig3 <- data.table(NULL)
+  row_1 <- 12
+  for(fig_id in letters[4:21]){
+    row_2 <- row_1 + 5
+    range_in <- paste0(
+      "B",row_1,":E",row_2
+    )
+    if(fig_id == letters[4]){
+      fig3 <- fig3_import(range_in, fig_id)
+    }else{
+      fig3_part <- fig3_import(range_in, fig_id)
+      fig3 <- merge(fig3, fig3_part, by = c("mouse_id", "treatment"))
+    }
+    # fig3 <- rbind(
+    #   fig3,
+    #   data.table(
+    #     figure = fig_id,
+    #     fig3_import(range_in))
+    # )
+    row_1 <- row_2 + 4
+  }
+
+  # row 5 and 15 have all missing data
+  fig3 <- fig3[-c(5,15), ]
+  
+  outfile_name <- "Lipocalin 2 fig 3.xlsx"
+  outfile_path <- here(data_folder, data_from, outfile_name)
+  write_xlsx(fig3, outfile_path) 
+}
+
+outfile_name <- "Lipocalin 2 fig 3.xlsx"
+outfile_path <- here(data_folder, data_from, outfile_name)
+fig3 <- read_excel(outfile_path) |>
+  data.table()
+fig3[, treatment := factor(treatment, levels = unique(treatment))]
+
+```
+
+
+```{r}
+#| label: multiple-tests-fig3-analyze
+#| echo: false
+#| message: false
+#| warning: false
+#| eval: true
+
+y_cols <- which(substr(names(fig3), 1, 11) == "cardiolipin")
+n_cardiolipins <- length(y_cols)
+
+p_table <- data.table(NULL)
+for(set_i in 1:n_cardiolipins){
+  lipid_id <- colnames(fig3)[y_cols[set_i]]
+  formula_i <- paste(lipid_id, "~", "treatment") |>
+    formula()
+  m1 <- lm(formula_i, data = fig3)
+  m1_pairs <- emmeans(m1, specs = "treatment") |>
+    contrast(method = "revpairwise",
+             adjust = "none") |>
+    summary() |>
+    data.table()
+  # authors are keeping contrasts in rows 1,2,6 and use t-test
+  p1 <- t.test(fig3[treatment == "WT-Saline", get(lipid_id)],
+               fig3[treatment == "WT-CL", get(lipid_id)],
+               var.equal = TRUE)$p.value
+  p2 <- t.test(fig3[treatment == "WT-Saline", get(lipid_id)],
+               fig3[treatment == "KO-Saline", get(lipid_id)],
+               var.equal = TRUE)$p.value
+  p3 <- t.test(fig3[treatment == "KO-Saline", get(lipid_id)],
+               fig3[treatment == "KO-CL", get(lipid_id)],
+               var.equal = TRUE)$p.value
+  p_table <- rbind(
+    p_table,
+    data.table(
+      "lipid_id" = lipid_id,
+      m1_pairs[c(1,2,6), .SD, .SDcols = c("contrast", "p.value")],
+      ttest = c(p1, p2, p3)
+    )
+  )
+}
+
+  p_table[, holm := p.adjust(ttest, "holm") |> round(3)]
+  p_table[, fdr := p.adjust(ttest, "fdr") |> round(3)]
+  p_table[, ttest := round(ttest, 4)]
+  
+  data.table(
+    adjust = c("lm","ttest", "holm", "fdr"),
+    n_lt_5 = c(sum(p_table[, p.value] < 0.05),
+               sum(p_table[, ttest] < 0.05),
+               sum(p_table[, holm] < 0.05),
+               sum(p_table[, fdr] < 0.05))
+  )
+
+  p_table |>
+    kable() |>
+    kable_styling()
+```
+

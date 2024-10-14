@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11&nbsp; Model Checking – Statistics for the Experimental Bench Biologist</title>
+<title>11&nbsp; Model checking – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../chapters/two-factors.html" rel="next">
 <link href="../chapters/categorical_x.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -143,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/model-checking.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model Checking</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/model-checking.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model checking</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -237,7 +238,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/model-checking.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model Checking</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/two-factors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
   </div>
 </li>
     </ul>
@@ -261,20 +268,21 @@ window.Quarto = {
   <li><a href="#normal-qq" id="toc-normal-qq" class="nav-link" data-scroll-target="#normal-qq"><span class="header-section-number">11.3.2</span> A Normal Q-Q plot is used to check for characteristic departures from Normality</a>
   <ul class="collapse">
   <li><a href="#lets-construct-a-normal-q-q-plot" id="toc-lets-construct-a-normal-q-q-plot" class="nav-link" data-scroll-target="#lets-construct-a-normal-q-q-plot"><span class="header-section-number">11.3.2.1</span> Let’s construct a Normal Q-Q plot</a></li>
-  <li><a href="#normal-qq-plot-of-the-fake-data-generated-above" id="toc-normal-qq-plot-of-the-fake-data-generated-above" class="nav-link" data-scroll-target="#normal-qq-plot-of-the-fake-data-generated-above"><span class="header-section-number">11.3.2.2</span> Normal QQ-plot of the fake data generated above</a></li>
+  <li><a href="#normal-qq-plot-of-the-fake-data-generated-in-fig-modelcheck-histogram" id="toc-normal-qq-plot-of-the-fake-data-generated-in-fig-modelcheck-histogram" class="nav-link" data-scroll-target="#normal-qq-plot-of-the-fake-data-generated-in-fig-modelcheck-histogram"><span class="header-section-number">11.3.2.2</span> Normal QQ-plot of the fake data generated in Figure&nbsp;<span>11.1</span></a></li>
   </ul></li>
   <li><a href="#mapping-qq-plot-departures-from-normality" id="toc-mapping-qq-plot-departures-from-normality" class="nav-link" data-scroll-target="#mapping-qq-plot-departures-from-normality"><span class="header-section-number">11.3.3</span> Mapping QQ-plot departures from Normality</a>
   <ul class="collapse">
-  <li><a href="#mapping-characteristic-departures-on-a-q-q-plot-to-specific-distributions" id="toc-mapping-characteristic-departures-on-a-q-q-plot-to-specific-distributions" class="nav-link" data-scroll-target="#mapping-characteristic-departures-on-a-q-q-plot-to-specific-distributions"><span class="header-section-number">11.3.3.1</span> Mapping characteristic departures on a Q-Q plot to specific distributions</a></li>
-  <li><a href="#pump-your-intuition-confidence-bands-of-a-q-q-plot" id="toc-pump-your-intuition-confidence-bands-of-a-q-q-plot" class="nav-link" data-scroll-target="#pump-your-intuition-confidence-bands-of-a-q-q-plot"><span class="header-section-number">11.3.3.2</span> Pump your intuition – confidence bands of a Q-Q plot</a></li>
+  <li><a href="#pump-your-intuition-confidence-bands-of-a-q-q-plot" id="toc-pump-your-intuition-confidence-bands-of-a-q-q-plot" class="nav-link" data-scroll-target="#pump-your-intuition-confidence-bands-of-a-q-q-plot"><span class="header-section-number">11.3.3.1</span> Pump your intuition – confidence bands of a Q-Q plot</a></li>
   </ul></li>
   <li><a href="#model-checking-spread-level" id="toc-model-checking-spread-level" class="nav-link" data-scroll-target="#model-checking-spread-level"><span class="header-section-number">11.3.4</span> Model checking homoskedasticity</a></li>
   </ul></li>
-  <li><a href="#using-r" id="toc-using-r" class="nav-link" data-scroll-target="#using-r"><span class="header-section-number">11.4</span> Using R</a></li>
-  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">11.5</span> Hidden Code</a>
+  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">11.4</span> Working in R</a>
   <ul>
-  <li><a href="#normal-q-q-plots" id="toc-normal-q-q-plots" class="nav-link" data-scroll-target="#normal-q-q-plots"><span class="header-section-number">11.5.1</span> Normal Q-Q plots</a></li>
+  <li><a href="#ggcheck_the_qq-from-the-ggplot_the_model-source-code" id="toc-ggcheck_the_qq-from-the-ggplot_the_model-source-code" class="nav-link" data-scroll-target="#ggcheck_the_qq-from-the-ggplot_the_model-source-code"><span class="header-section-number">11.4.1</span> ggcheck_the_qq from the ggplot_the_model source code</a></li>
+  <li><a href="#qqplot-from-the-car-package" id="toc-qqplot-from-the-car-package" class="nav-link" data-scroll-target="#qqplot-from-the-car-package"><span class="header-section-number">11.4.2</span> qqPlot from the car package</a></li>
+  <li><a href="#ggqqplot-from-the-ggpubr-package" id="toc-ggqqplot-from-the-ggpubr-package" class="nav-link" data-scroll-target="#ggqqplot-from-the-ggpubr-package"><span class="header-section-number">11.4.3</span> ggqqplot from the ggpubr package</a></li>
   </ul></li>
+  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">11.5</span> Hidden Code</a></li>
   </ul>
 </nav>
     </div>
@@ -283,7 +291,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-model-checking" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model Checking</span></span></h1>
+<h1 class="title"><span id="sec-model-checking" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model checking</span></span></h1>
 </div>
 
 
@@ -358,7 +366,7 @@ y_i &amp;\sim N(\mu_i, \sigma^2)\\
 <h2 data-number="11.3" class="anchored" data-anchor-id="diagnostic-plots-use-the-residuals-from-the-model-fit"><span class="header-section-number">11.3</span> Diagnostic plots use the residuals from the model fit</h2>
 <section id="residuals" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="residuals"><span class="header-section-number">11.3.1</span> Residuals</h3>
-<p>A residual of a statistical model is <span class="math inline">\(y_i - \hat{y}_i\)</span>. Remember that <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X\)</span> has the value <span class="math inline">\(x_i\)</span> (compactly written as <span class="math inline">\(X=x_i\)</span>). And remember that <span class="math inline">\(\hat{y}_i\)</span> is the estimate of <span class="math inline">\(\mu_i\)</span>. For linear models (but not generalized linear models), the residuals of the fit model are estimates of the <span class="math inline">\(\varepsilon\)</span> in equation @ref(eq:model-checking-spec1). This <em>is not</em> true for generalized linear models because GLMs are not specified using @ref(eq:model-checking-spec1).</p>
+<p>A residual of a statistical model is <span class="math inline">\(y_i - \hat{y}_i\)</span>. Remember that <span class="math inline">\(\hat{y}_i\)</span> is the predicted value of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X\)</span> has the value <span class="math inline">\(x_i\)</span> (compactly written as <span class="math inline">\(X=x_i\)</span>). And remember that <span class="math inline">\(\hat{y}_i\)</span> is the estimate of <span class="math inline">\(\mu_i\)</span>. For linear models (but not generalized linear models), the residuals of the fit model are estimates of the <span class="math inline">\(\varepsilon\)</span> in <a href="#eq-model-checking-spec1" class="quarto-xref">Equation&nbsp;<span>11.1</span></a>. This <em>is not</em> true for generalized linear models because GLMs are not specified using <a href="#eq-model-checking-spec1" class="quarto-xref">Equation&nbsp;<span>11.1</span></a>.</p>
 <div class="callout callout-style-default callout-warning callout-titled" title="Alert">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -369,16 +377,20 @@ Alert
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A common misconception is that inference from a linear model assumes that the <em>response</em> (the measured <span class="math inline">\(Y\)</span>) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. Model @ref(eq:model-checking-spec1) explicitly shows that it is the error that has the normal distribution – the distribution of <span class="math inline">\(Y\)</span> is a mix of the distribution of <span class="math inline">\(X\)</span> and that of the error. A more general way of thinking about the assumed distribution uses the specification in model @ref(eq:model-checking-spec2), which shows that it is the <em>conditional</em> response that is assumed to be IID normal. Remember, a conditional response (<span class="math inline">\(y_i\)</span>) is a random draw from the infinite set of responses at a given value of <span class="math inline">\(X\)</span></p>
+<p>A common misconception is that inference from a linear model assumes that the <em>response</em> (the measured <span class="math inline">\(Y\)</span>) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. <a href="#eq-model-checking-spec1" class="quarto-xref">Equation&nbsp;<span>11.1</span></a> explicitly shows that it is the error that has the normal distribution – the distribution of <span class="math inline">\(Y\)</span> is a mix of the distribution of <span class="math inline">\(X\)</span> and that of the error. A more general way of thinking about the assumed distribution uses the specification in <a href="#eq-model-checking-spec2" class="quarto-xref">Equation&nbsp;<span>11.2</span></a>, which shows that it is the <em>conditional</em> response that is assumed to be IID normal. Remember, a conditional response is a random draw from the infinite set of responses at a given value of <span class="math inline">\(X\)</span></p>
 </div>
 </div>
 <p>Let’s look at the distribution of residuals versus the distribution of responses for a hypothetical experiment with a single, categorical <span class="math inline">\(X\)</span> variable (the experimental factor) with two levels (“Cn” for control and “Tr” for treatment). The true parameters are <span class="math inline">\(\beta_0 = 10\)</span> (the true mean for the control group, or <span class="math inline">\(\mu_{0}\)</span>), <span class="math inline">\(\beta_1=4\)</span> (the difference between the true mean for the treatment minus the true mean for the control, or <span class="math inline">\(\mu_1 - \mu_0\)</span>), and <span class="math inline">\(\sigma = 2\)</span> (the error standard deviation).</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="model-checking_files/figure-html/model-check-histogram, model-check-residuals1-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Histogram of the (A) response, showing with modes near the true means of each group and (B) residuals, with a mode for both groups at zero.</figcaption>
+<div id="fig-modelcheck-histogram" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-modelcheck-histogram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="model-checking_files/figure-html/fig-modelcheck-histogram-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-modelcheck-histogram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.1: Histogram of the (A) response, showing two modes, one near the true mean of each group, and (B) residuals, with a mode for both groups at zero.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -508,18 +520,9 @@ Stats 201
 </div>
 </div>
 </section>
-<section id="normal-qq-plot-of-the-fake-data-generated-above" class="level4" data-number="11.3.2.2">
-<h4 data-number="11.3.2.2" class="anchored" data-anchor-id="normal-qq-plot-of-the-fake-data-generated-above"><span class="header-section-number">11.3.2.2</span> Normal QQ-plot of the fake data generated above</h4>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="model-checking_files/figure-html/model-check-qq-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>If the sampled distribution approximates a sample from a normal distribution, the scatter should fall along a line from the bottom, left to the top, right of the plot. The interpretation of a normal Q-Q plot is enhanced with a line of “expected values” of the sample quantiles if the sample residuals are drawn from a normal distribution. The closer the sample quantiles are to the line, the more closely the residuals approximate the expectation from a normal distribution. Because of sampling, the sampled values always deviate from the line, especially at the ends. The shaded gray area in the Q-Q plot in Figure @ref(fig:model-check-qq) are the 95% confidence bands of the quantiles. A pattern of observed quantiles with some individual points outside of these boundaries indicates a sample that would be unusual if sampled from a Normal distribution.</p>
+<section id="normal-qq-plot-of-the-fake-data-generated-in-fig-modelcheck-histogram" class="level4" data-number="11.3.2.2">
+<h4 data-number="11.3.2.2" class="anchored" data-anchor-id="normal-qq-plot-of-the-fake-data-generated-in-fig-modelcheck-histogram"><span class="header-section-number">11.3.2.2</span> Normal QQ-plot of the fake data generated in <a href="#fig-modelcheck-histogram" class="quarto-xref">Figure&nbsp;<span>11.1</span></a></h4>
+<p>If the sampled distribution approximates a sample from a normal distribution, the scatter should fall along a line from the bottom, left to the top, right of the plot. The interpretation of a normal Q-Q plot is enhanced with a line of “expected values” of the sample quantiles if the sample residuals are drawn from a normal distribution. The closer the sample quantiles are to the line, the more closely the residuals approximate the expectation from a normal distribution. Because of sampling, the sampled values always deviate from the line, especially at the ends. The shaded gray area in the Q-Q plot in Figure <span class="quarto-unresolved-ref">?fig-modelcheck-qq</span> are the 95% confidence bands of the quantiles. A pattern of observed quantiles with some individual points outside of these boundaries indicates a sample that would be unusual if sampled from a Normal distribution.</p>
 <p>Biological datasets frequently have departures on a Normal Q-Q plot that are characteristic of specific distribution families, including lognormal, binomial, poisson, negative binomial, gamma, and beta. It is useful to learn how to read a Normal Q-Q plot to help guide how to model your data.</p>
 <p>What about the intepretation of the Q-Q plot in Figure @ref(fig:model-check-qq)? At the small end of the distribution (bottom-left), the sample values are a bit more negative than expected, which means the left tail is a bit extended. At the large end (upper-right), the sample values are, a bit less positive than expected, which means the right tail is a bit shortened. This is a departure in the direction of a left skewed distribution. Should we fit a different model given these deviations? To guide us, we compare the quantiles to the 95% confidence band of the quantiles. Clearly the observed quantiles are within the range of quantiles that we’d expect if sampling from a Normal distribution.</p>
 </section>
@@ -535,9 +538,14 @@ Stats 201
 <p><strong>Skewed-Right Q-Q</strong></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="model-checking_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<div id="fig-modelcheck-skewright" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-modelcheck-skewright-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="model-checking_files/figure-html/fig-modelcheck-skewright-1.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-modelcheck-skewright-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.2: Comparison of samples from a right skewed (Negative Binomial) and Normal distribution.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -548,9 +556,14 @@ Stats 201
 <p><strong>Skewed-Left Q-Q</strong></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="model-checking_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<div id="fig-modelcheck-skewleft" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-modelcheck-skewleft-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="model-checking_files/figure-html/fig-modelcheck-skewleft-1.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-modelcheck-skewleft-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.3: Comparison of samples from a left skewed (upper end of Beta) and Normal distribution.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -561,9 +574,14 @@ Stats 201
 <p><strong>Heavy Tail Q-Q</strong></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="model-checking_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<div id="fig-modelcheck-heavy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-modelcheck-heavy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="model-checking_files/figure-html/fig-modelcheck-heavy-1.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-modelcheck-heavy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.4: Comparison of samples from a heavy tailed (t) and Normal distribution.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -571,16 +589,25 @@ Stats 201
 <p>The Normal Q-Q plot of a sample from a heavy-tail distribution is characterized by sample quantiles at the low (left) end being more negative than the expected Normal quantiles and quantiles at the high (right) end that are more positive than the expected normal quantiles.</p>
 <p>The histograms in the left panel explain this pattern. At each tail, the heavy-tail distribution has more <strong>density</strong> – there are more values far from the mean – compared to the Normal distribution. This is the origin of “heavy tail”. It is easy to see from this that, if we rank the values of each distribution from small to large (these are the quantiles), the lower quantiles of the heavy tail distribution will be more negative than the matching quantile of the Normal distribution. For example, the 10th quantile for the heavy-tail distribution will be much more negative than the 10th quantile for the Normal distribution. Likewise, the upper quantiles of the heavy tail distribution will be more positive than the matching quantile of the Normal distribution. For example, the 99,990th quantile for the heavy-tail distribution will be much more positive than the 99,990th quantile for the Normal distribution.</p>
 <p>The heavy-tail plot in the middle panel shows more boxplot outliers than in the Normal plot. This would be hard to recognize in a plot of real data.</p>
-<section id="mapping-characteristic-departures-on-a-q-q-plot-to-specific-distributions" class="level4" data-number="11.3.3.1">
-<h4 data-number="11.3.3.1" class="anchored" data-anchor-id="mapping-characteristic-departures-on-a-q-q-plot-to-specific-distributions"><span class="header-section-number">11.3.3.1</span> Mapping characteristic departures on a Q-Q plot to specific distributions</h4>
+<div class="callout callout-style-default callout-important callout-titled" title="Mapping characteristic departures on a Q-Q plot to specific distributions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Mapping characteristic departures on a Q-Q plot to specific distributions
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ol type="1">
 <li>Continuous response variables of length, area, weight, or duration will often look like samples from a continous probability distribution that is right-skewed, such as the <strong>lognormal</strong> or <strong>gamma</strong> distributions.</li>
 <li>Count response variables will frequently look like samples from a discrete probability distribution that is right-skewed, such as the <strong>poisson</strong>, <strong>quasi-poisson</strong>, or <strong>negative binomial</strong> distributions.</li>
 <li>Proportion (fraction of a whole) response variables will frequently look like samples from a continuous probability distribution bounded by 0 and 1, such as the <strong>beta</strong> distribution. Samples from a beta distribution can be left skewed, if the mean is near 1, right-skewed, if the mean is near zero, or symmetrical, if the mean is near 0.5.</li>
 </ol>
-</section>
-<section id="pump-your-intuition-confidence-bands-of-a-q-q-plot" class="level4" data-number="11.3.3.2">
-<h4 data-number="11.3.3.2" class="anchored" data-anchor-id="pump-your-intuition-confidence-bands-of-a-q-q-plot"><span class="header-section-number">11.3.3.2</span> Pump your intuition – confidence bands of a Q-Q plot</h4>
+</div>
+</div>
+<section id="pump-your-intuition-confidence-bands-of-a-q-q-plot" class="level4" data-number="11.3.3.1">
+<h4 data-number="11.3.3.1" class="anchored" data-anchor-id="pump-your-intuition-confidence-bands-of-a-q-q-plot"><span class="header-section-number">11.3.3.1</span> Pump your intuition – confidence bands of a Q-Q plot</h4>
 <p>In introducing the confidence bands of the Q-Q plot above, I stated “A pattern of observed quantiles with some individual points outside of these boundaries indicates a sample that would be unusual if sampled from a Normal distribution.” Let’s use a parametric bootstrap to explore this.</p>
 <ol type="1">
 <li>Sample <span class="math inline">\(n\)</span> values from a Normal distribution</li>
@@ -634,40 +661,55 @@ Stats 201
 <h3 data-number="11.3.4" class="anchored" data-anchor-id="model-checking-spread-level"><span class="header-section-number">11.3.4</span> Model checking homoskedasticity</h3>
 </section>
 </section>
-<section id="using-r" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="using-r"><span class="header-section-number">11.4</span> Using R</h2>
+<section id="working-in-r" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">11.4</span> Working in R</h2>
+<p>Let’s use a fake dataset to show qq plots generated by different packages.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> sigma<span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fake_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Cn"</span>, <span class="st">"Tr"</span>), <span class="at">each=</span>n),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>               <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu <span class="sc">+</span> beta, <span class="at">sd =</span> sigma))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> treatment, <span class="at">data =</span> fake_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="ggcheck_the_qq-from-the-ggplot_the_model-source-code" class="level3" data-number="11.4.1">
+<h3 data-number="11.4.1" class="anchored" data-anchor-id="ggcheck_the_qq-from-the-ggplot_the_model-source-code"><span class="header-section-number">11.4.1</span> ggcheck_the_qq from the ggplot_the_model source code</h3>
+<p><code>ggcheck_the_qq</code> from the ggplot_the_model source code replicates the default behavior of the <code>car::qqPlot</code> (see below), which is a robust line through the points with a 95% confidence interval.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_qq</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model-checking_files/figure-html/modelcheck-working-ggchecktheqq-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The practice in this text is to print both the qqplot and the spread-level plot using <code>ggcheck_the_model</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_model</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model-checking_files/figure-html/modelcheck-working-ggcheckthemodel-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="hidden-code" class="level2" data-number="11.5">
-<h2 data-number="11.5" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">11.5</span> Hidden Code</h2>
-<p>Source: <a href="https://www.nature.com/articles/s41586-019-1450-6" target="_blank">Wellenstein, M.D., Coffelt, S.B., Duits, D.E., van Miltenburg, M.H., Slagter, M., de Rink, I., Henneman, L., Kas, S.M., Prekovic, S., Hau, C.S. and Vrijland, K., 2019. Loss of p53 triggers WNT-dependent systemic inflammation to drive breast cancer metastasis. Nature, 572(7770), pp.538-542.</a></p>
-<p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6707815/" target="_blank">Public source</a></p>
-<p><a href="https://www.nature.com/articles/s41586-019-1450-6#Sec22" target="_blank">Data source</a></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Loss of p53 triggers WNT-dependent systemic inflammation to drive breast cancer metastasis"</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2019_1450_MOESM3_ESM.xlsx"</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Trp53+/+"</span>, <span class="st">"Trp53-/-"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fig1f <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig. 1f"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A2:B23"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> treatment_levels,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"il1beta"</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>fig1f[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_levels)]</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># be careful of the missing data. This can create mismatch between id and residual unless specified in lm</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># head(fig1f)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Fit a linear model</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(il1beta <span class="sc">~</span> treatment,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig1f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="normal-q-q-plots" class="level3" data-number="11.5.1">
-<h3 data-number="11.5.1" class="anchored" data-anchor-id="normal-q-q-plots"><span class="header-section-number">11.5.1</span> Normal Q-Q plots</h3>
+<section id="qqplot-from-the-car-package" class="level3" data-number="11.4.2">
+<h3 data-number="11.4.2" class="anchored" data-anchor-id="qqplot-from-the-car-package"><span class="header-section-number">11.4.2</span> qqPlot from the car package</h3>
 <p><code>car::qqPlot</code> has several important arguments to control the type of Q-Q plot. The function uses base graphics instead of ggplot2. Typically, these plots would not be published other than possibly a supplement. <a href="https://www.tjmahr.com/quantile-quantile-plots-from-scratch/" target="_blank">Q-Q Plots and Worm Plots from Scratch</a> is a good source of some of the arguments in <code>qqPlot</code>. Three important arguments are:</p>
 <ol type="1">
 <li>simulate. If passing a <code>lm</code> object, then the default confidence band is generated by a parametric bootstrap (<code>simulate = TRUE</code>). This band will differ somewhat each time you replot unless you set the seed with <code>set.seed</code>. Setting the argument <code>simulate = FALSE</code> returns the parametric band.</li>
@@ -676,41 +718,74 @@ Stats 201
 </ol>
 <p>The robust line is more sensitive to departures from Normality than the quartiles line.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># defaults: robust line with bootstrap CI</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1, <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># defaults: robust line with bootstrap CI</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1, <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="model-checking_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="model-checking_files/figure-html/modelcheck-working-car-default-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classic: standard line with parametric CI</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">line =</span> <span class="st">"quartiles"</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">simulate =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classic: standard line with parametric CI</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(m1,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">line =</span> <span class="st">"quartiles"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">simulate =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">id =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="ggqqplot-from-the-ggpubr-package" class="level3" data-number="11.4.3">
+<h3 data-number="11.4.3" class="anchored" data-anchor-id="ggqqplot-from-the-ggpubr-package"><span class="header-section-number">11.4.3</span> ggqqplot from the ggpubr package</h3>
 <p><code>ggpubr::ggqqplot</code> generates a pretty, ggplot2 based Normal Q-Q plot, using the standard method for computing the line and confidence band.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>m1_residuals <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">m1_residuals =</span> <span class="fu">residuals</span>(m1))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m1_residuals[, studentized <span class="sc">:</span><span class="er">=</span> m1_residuals<span class="sc">/</span><span class="fu">sd</span>(m1_residuals)]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggqqplot</span>(<span class="at">data =</span> m1_residuals,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">x =</span> <span class="st">"studentized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m1_residuals <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">m1_residuals =</span> <span class="fu">residuals</span>(m1))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>m1_residuals[, studentized <span class="sc">:</span><span class="er">=</span> m1_residuals<span class="sc">/</span><span class="fu">sd</span>(m1_residuals)]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggqqplot</span>(<span class="at">data =</span> m1_residuals,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">x =</span> <span class="st">"studentized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="model-checking_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="model-checking_files/figure-html/modelcheck-working-ggpubr-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="hidden-code" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">11.5</span> Hidden Code</h2>
+<p>Source: <a href="https://www.nature.com/articles/s41586-019-1450-6" target="_blank">Wellenstein, M.D., Coffelt, S.B., Duits, D.E., van Miltenburg, M.H., Slagter, M., de Rink, I., Henneman, L., Kas, S.M., Prekovic, S., Hau, C.S. and Vrijland, K., 2019. Loss of p53 triggers WNT-dependent systemic inflammation to drive breast cancer metastasis. Nature, 572(7770), pp.538-542.</a></p>
+<p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6707815/" target="_blank">Public source</a></p>
+<p><a href="https://www.nature.com/articles/s41586-019-1450-6#Sec22" target="_blank">Data source</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Loss of p53 triggers WNT-dependent systemic inflammation to drive breast cancer metastasis"</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2019_1450_MOESM3_ESM.xlsx"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Trp53+/+"</span>, <span class="st">"Trp53-/-"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>fig1f <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig. 1f"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A2:B23"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">measure.vars =</span> treatment_levels,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">value.name =</span> <span class="st">"il1beta"</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>fig1f[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, treatment_levels)]</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># be careful of the missing data. This can create mismatch between id and residual unless specified in lm</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co"># head(fig1f)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Fit a linear model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(il1beta <span class="sc">~</span> treatment,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig1f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1141,6 +1216,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../chapters/two-factors.html" class="pagination-link" aria-label="Linear models with two categorical $X$ -- Factorial linear models (&quot;two-way ANOVA&quot;)">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

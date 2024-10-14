@@ -19,6 +19,7 @@ book:
     - chapters/continuous_x.qmd
     - chapters/categorical_x.qmd
     - chapters/model-checking.qmd
+    - chapters/two-factors.qmd
 
 bibliography: references.bib
 

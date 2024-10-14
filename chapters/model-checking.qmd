@@ -1,4 +1,4 @@
-# Model Checking {#sec-model-checking}
+# Model checking {#sec-model-checking}
 
 ```{r model-check-setup, echo=FALSE, warning=FALSE, message=FALSE}
 # import and messaging
@@ -84,15 +84,18 @@ The two rules specified in the model above are
 
 ## Diagnostic plots use the residuals from the model fit
 ### Residuals
-A residual of a statistical model is $y_i - \hat{y}_i$. Remember that $\hat{y}_i$ is the predicted value of $Y$ when $X$ has the value $x_i$ (compactly written as $X=x_i$). And remember that $\hat{y}_i$ is the estimate of $\mu_i$. For linear models (but not generalized linear models), the residuals of the fit model are estimates of the $\varepsilon$ in equation \@ref(eq:model-checking-spec1). This *is not* true for generalized linear models because GLMs are not specified using \@ref(eq:model-checking-spec1).
+A residual of a statistical model is $y_i - \hat{y}_i$. Remember that $\hat{y}_i$ is the predicted value of $Y$ when $X$ has the value $x_i$ (compactly written as $X=x_i$). And remember that $\hat{y}_i$ is the estimate of $\mu_i$. For linear models (but not generalized linear models), the residuals of the fit model are estimates of the $\varepsilon$ in @eq-model-checking-spec1. This *is not* true for generalized linear models because GLMs are not specified using @eq-model-checking-spec1.
 
 ::: {.callout-warning title="Alert"}
-A common misconception is that inference from a linear model assumes that the *response* (the measured $Y$) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. Model \@ref(eq:model-checking-spec1) explicitly shows that it is the error that has the normal distribution -- the distribution of $Y$ is a mix of the distribution of $X$ and that of the error. A more general way of thinking about the assumed distribution uses the specification in model \@ref(eq:model-checking-spec2), which shows that it is the *conditional* response that is assumed to be IID normal. Remember, a conditional response ($y_i$) is a random draw from the infinite set of responses at a given value of $X$
+A common misconception is that inference from a linear model assumes that the *response* (the measured $Y$) is IID Normal. This is wrong. Either specification of the linear model shows precisely why this conception is wrong. @eq-model-checking-spec1 explicitly shows that it is the error that has the normal distribution -- the distribution of $Y$ is a mix of the distribution of $X$ and that of the error. A more general way of thinking about the assumed distribution uses the specification in @eq-model-checking-spec2, which shows that it is the *conditional* response that is assumed to be IID normal. Remember, a conditional response is a random draw from the infinite set of responses at a given value of $X$
 :::
 
 Let's look at the distribution of residuals versus the distribution of responses for a hypothetical experiment with a single, categorical $X$ variable (the experimental factor) with two levels ("Cn" for control and "Tr" for treatment). The true parameters are $\beta_0 = 10$ (the true mean for the control group, or $\mu_{0}$), $\beta_1=4$ (the difference between the true mean for the treatment minus the true mean for the control, or $\mu_1 - \mu_0$), and $\sigma = 2$ (the error standard deviation). 
 
-```{r model-check-histogram, model-check-residuals1, echo=FALSE, fig.cap="Histogram of the (A) response, showing with modes near the true means of each group and (B) residuals, with a mode for both groups at zero."}
+```{r}
+#| echo: false
+#| label: fig-modelcheck-histogram
+#| fig-cap: "Histogram of the (A) response, showing two modes, one near the true mean of each group, and (B) residuals, with a mode for both groups at zero."
 
 set.seed(20)
 n <- 50
@@ -201,9 +204,12 @@ qplot(x = quantile_theoretical, y = quantile_observed) +
 ```
 
 
-#### Normal QQ-plot of the fake data generated above
+#### Normal QQ-plot of the fake data generated in @fig-modelcheck-histogram
 
-```{r model-check-qq, echo=FALSE}
+```{r}
+#| echo: false
+#| label: fig-modelcheck-qq
+
 # fake data created above
 # histogram
 gg1_treatment <- gghistogram(data = fd,
@@ -229,16 +235,12 @@ gg2_treatment <- ggstripchart(data = fd,
 #  theme(legend.position = "none") +
   NULL
 
-fd[, Residual := residuals(lm(Response ~ Treatment))]
-gg3_treatment <- ggqqplot(data = fd,
-                          x = "Residual",
-                          title="Normal") +
-  theme_pubr(base_size = 8)
-
-gg3_treatment
+m1 <- lm(Response ~ Treatment, data = fd)
+fd[, Residual := residuals(m1)]
+gg3_treatment <- ggcheck_the_qq(m1)
 ```
 
-If the sampled distribution approximates a sample from a normal distribution, the scatter should fall along a line from the bottom, left to the top, right of the plot. The interpretation of a normal Q-Q plot is enhanced with a line of "expected values" of the sample quantiles if the sample residuals are drawn from a normal distribution. The closer the sample quantiles are to the line, the more closely the residuals approximate the expectation from a normal distribution. Because of sampling, the sampled values always deviate from the line, especially at the ends. The shaded gray area in the Q-Q plot in Figure \@ref(fig:model-check-qq) are the 95% confidence bands of the quantiles. A pattern of observed quantiles with some individual points outside of these boundaries indicates a sample that would be unusual if sampled from a Normal distribution.
+If the sampled distribution approximates a sample from a normal distribution, the scatter should fall along a line from the bottom, left to the top, right of the plot. The interpretation of a normal Q-Q plot is enhanced with a line of "expected values" of the sample quantiles if the sample residuals are drawn from a normal distribution. The closer the sample quantiles are to the line, the more closely the residuals approximate the expectation from a normal distribution. Because of sampling, the sampled values always deviate from the line, especially at the ends. The shaded gray area in the Q-Q plot in Figure @fig-modelcheck-qq are the 95% confidence bands of the quantiles. A pattern of observed quantiles with some individual points outside of these boundaries indicates a sample that would be unusual if sampled from a Normal distribution.
 
 Biological datasets frequently have departures on a Normal Q-Q plot that are characteristic of specific distribution families, including lognormal, binomial, poisson, negative binomial, gamma, and beta. It is useful to learn how to read a Normal Q-Q plot to help guide how to model your data.
 
@@ -303,11 +305,11 @@ fd_subset <- fd_normal[distribution == x_levels[2],
                        .SD[sample(.N,  10^3)],
                        by = distribution]
 
-fd_subset[, residual := residuals(lm(response ~ 1))]
-gg3_normal <- ggqqplot(data = fd_subset,
-                          x = "residual",
-                          title="Normal") +
-  theme_pubr(base_size = 8)
+m1 <- lm(response ~ 1, data = fd_subset)
+fd_subset[, residual := residuals(m1)]
+gg3_normal <- ggcheck_the_qq(m1) +
+  theme_pubr(base_size = 8) +
+  ggtitle("Normal")
 
 ```
 
@@ -367,10 +369,11 @@ fd_subset <- fd_lognorm[distribution == x_levels[2],
                        .SD[sample(.N,  10^3)],
                        by = distribution]
 
-fd_subset[, residual := residuals(lm(response ~ 1))]
-gg3_lognormal <- ggqqplot(data = fd_subset,
-                          x = "residual",
-                          title="Lognormal")
+m1 <- lm(response ~ 1, data = fd_subset)
+gg3_lognormal <- ggcheck_the_qq(m1) +
+  theme_pubr(base_size = 8) +
+  ggtitle("Lognormal")
+
 ```
 
 ```{r model-check-gamma, echo=FALSE, eval=TRUE}
@@ -429,11 +432,10 @@ gg2_gamma <- ggstripchart(data = fd_subset,
 fd_subset <- fd_gamma[distribution == x_levels[2],
                        .SD[sample(.N,  10^3)],
                        by = distribution]
-
-fd_subset[, residual := residuals(lm(response ~ 1))]
-gg3_gamma <- ggqqplot(data = fd_subset,
-                          x = "residual",
-                          title="Gamma")
+m1 <- lm(response ~ 1, data = fd_subset)
+gg3_gamma <- ggcheck_the_qq(m1) +
+  theme_pubr(base_size = 8) +
+  ggtitle("Right skew")
 
 ```
 
@@ -483,17 +485,17 @@ gg2_negbin <- ggstripchart(data = fd_subset,
                            add = "boxplot",
                            alpha = 0.2,
                            palette = pal_okabe_ito) +
+  scale_x_discrete(labels = c("Normal", "Negative Binomial")) +
   theme_pubr(base_size = 8) +
   theme(legend.position = "none")
 
 fd_subset <- fd_negbin[distribution == x_levels[2],
                        .SD[sample(.N,  10^3)],
                        by = distribution]
-fd_subset[, residual := residuals(lm(response ~ 1))]
-gg3_negbin <- ggqqplot(data = fd_subset,
-                          x = "residual",
-                          title="Right skew") +
-  theme_pubr(base_size = 8)
+m1 <- lm(response ~ 1, data = fd_subset)
+gg3_negbin <- ggcheck_the_qq(m1) +
+  theme_pubr(base_size = 8) +
+  ggtitle("Right skew")
 
 ```
 
@@ -545,18 +547,17 @@ gg2_t <- ggstripchart(data = fd_subset,
                       add = "boxplot",
                       alpha = 0.2,
                       palette = pal_okabe_ito) +
+  scale_x_discrete(labels = c("Normal", "t distribution")) +
   theme_pubr(base_size = 8) +
   theme(legend.position = "none")
 
 fd_subset <- fd_t[distribution == x_levels[2],
                        .SD[sample(.N,  10^3)],
                        by = distribution]
-
-fd_subset[, residual := residuals(lm(response ~ 1))]
-gg3_t <- ggqqplot(data = fd_subset,
-                          x = "residual",
-                          title="Heavy Tail") +
-  theme_pubr(base_size = 8)
+m1 <- lm(response ~ 1, data = fd_subset)
+gg3_t <- ggcheck_the_qq(m1) +
+  theme_pubr(base_size = 8) +
+  ggtitle("Heavy Tail")
 
 ```
 
@@ -610,6 +611,7 @@ gg2_beta <- ggstripchart(data = fd_subset,
                          add = "boxplot",
                          alpha = 0.2,
                          palette = pal_okabe_ito) +
+  scale_x_discrete(labels = c("Normal", "Beta")) +
   theme_pubr(base_size = 8) +
   theme(legend.position = "none")
 
@@ -618,11 +620,10 @@ fd_subset <- fd_beta[distribution == x_levels[2],
                        by = distribution]
 
 fd_subset[, residual := residuals(lm(response ~ 1))]
-gg3_beta <- ggqqplot(data = fd_subset,
-                          x = "residual",
-                          title="Left skew") +
-  theme_pubr(base_size = 8)
-
+m1 <- lm(response ~ 1, data = fd_subset)
+gg3_beta <- ggcheck_the_qq(m1) +
+  theme_pubr(base_size = 8) +
+  ggtitle("Left skew")
 # gg1_beta
 # gg2_beta
 # gg3_beta
@@ -641,8 +642,16 @@ gg_heavy <- plot_grid(gg1_t, gg2_t, gg3_t,
 
 **Skewed-Right Q-Q**
 
-```{r, echo = FALSE, out.width="90%", fig.asp = .4}
+```{r}
+#| echo: false
+#| label: fig-modelcheck-skewright
+#| fig-cap: "Comparison of samples from a right skewed (Negative Binomial) and Normal distribution."
+#| out.width: "90%"
+#| fig.asp: 0.4
+
+# , echo = FALSE, out.width="90%", fig.asp = .4
 gg_right
+
 ```
 
 The Normal Q-Q plot of a sample from a right-skewed distribution is characterized by sample quantiles at the high (right) end being more positive than the expected Normal quantiles. Often, the quantiles at the low (left) end are also less negative than the expected normal quantiles. The consequence is a concave up pattern.
@@ -653,7 +662,13 @@ The middle panel compares a boxplot and stripchart of samples from the two distr
 
 **Skewed-Left Q-Q**
 
-```{r, echo = FALSE, out.width="90%", fig.asp = .4}
+```{r}
+#| echo: false
+#| label: fig-modelcheck-skewleft
+#| fig-cap: "Comparison of samples from a left skewed (upper end of Beta) and Normal distribution."
+#| out.width: "90%"
+#| fig.asp: 0.4
+
 gg_left
 ```
 
@@ -665,7 +680,13 @@ The skewed-left plot in the middle panel highlights several hallmarks of a skewe
 
 **Heavy Tail Q-Q**
 
-```{r, echo = FALSE, out.width="90%", fig.asp = .4}
+```{r}
+#| echo: false
+#| label: fig-modelcheck-heavy
+#| fig-cap: "Comparison of samples from a heavy tailed (t) and Normal distribution."
+#| out.width: "90%"
+#| fig.asp: 0.4
+
 gg_heavy
 ```
 
@@ -675,11 +696,11 @@ The histograms in the left panel explain this pattern. At each tail, the heavy-t
 
 The heavy-tail plot in the middle panel shows more boxplot outliers than in the Normal plot. This would be hard to recognize in a plot of real data.
 
-#### Mapping characteristic departures on a Q-Q plot to specific distributions
-
+::: {.callout-important title="Mapping characteristic departures on a Q-Q plot to specific distributions"}
 1. Continuous response variables of length, area, weight, or duration will often look like samples from a continous probability distribution that is right-skewed, such as the **lognormal** or **gamma** distributions.
 2. Count response variables will frequently look like samples from a discrete probability distribution that is right-skewed, such as the **poisson**, **quasi-poisson**, or **negative binomial** distributions.
 3. Proportion (fraction of a whole) response variables will frequently look like samples from a continuous probability distribution bounded by 0 and 1, such as the **beta** distribution. Samples from a beta distribution can be left skewed, if the mean is near 1, right-skewed, if the mean is near zero, or symmetrical, if the mean is near 0.5.
+:::
 
 #### Pump your intuition -- confidence bands of a Q-Q plot
 
@@ -733,7 +754,86 @@ ggplot(data = qq_data,
 
 ### Model checking homoskedasticity {#model-checking-spread-level}
 
-## Using R
+## Working in R
+
+Let's use a fake dataset to show qq plots generated by different packages.
+
+```{r}
+#| label: modelcheck-fakedata-working
+
+set.seed(20)
+n <- 50
+mu <- 10
+sigma <- 2
+beta <- sigma*2
+fake_data <- data.table(
+  treatment = rep(c("Cn", "Tr"), each=n),
+  response = c(rnorm(n, mean = mu, sd = sigma),
+               rnorm(n, mean = mu + beta, sd = sigma))
+)
+
+m1 <- lm(response ~ treatment, data = fake_data)
+```
+
+### ggcheck_the_qq from the ggplot_the_model source code
+
+`ggcheck_the_qq` from the ggplot_the_model source code replicates the default behavior of the `car::qqPlot` (see below), which is a robust line through the points with a 95% confidence interval.
+
+```{r}
+#| label: modelcheck-working-ggchecktheqq
+set.seed(1)
+ggcheck_the_qq(m1)
+```
+
+The practice in this text is to print both the qqplot and the spread-level plot using `ggcheck_the_model`
+
+```{r}
+#| label: modelcheck-working-ggcheckthemodel
+set.seed(1)
+ggcheck_the_model(m1)
+```
+
+### qqPlot from the car package
+
+`car::qqPlot` has several important arguments to control the type of Q-Q plot. The function uses base graphics instead of ggplot2. Typically, these plots would not be published other than possibly a supplement. [Q-Q Plots and Worm Plots from Scratch](https://www.tjmahr.com/quantile-quantile-plots-from-scratch/){target="_blank"} is a good source of some of the arguments in `qqPlot`. Three important arguments are:
+
+1. simulate. If passing a `lm` object, then the default confidence band is generated by a parametric bootstrap (`simulate = TRUE`). This band will differ somewhat each time you replot unless you set the seed with `set.seed`. Setting the argument `simulate = FALSE` returns the parametric band.
+2. line. If passing a `lm` object, then the default line is a fit from a robust regression (`line = "robust"`). Setting the argument `line = "quartiles"` fits a line throught the 25th and 75th percentile (or "quartiles") quantiles.
+3. id. The default identifies the index of the two points with the most extreme quartiles. Set to FALSE to hide.
+
+The robust line is more sensitive to departures from Normality than the quartiles line.
+
+```{r}
+#| label: modelcheck-working-car-default
+
+# defaults: robust line with bootstrap CI
+set.seed(1)
+qqPlot(m1, id = FALSE)
+```
+
+```{r, eval=FALSE}
+#| label: modelcheck-working-car-classic
+
+# classic: standard line with parametric CI
+qqPlot(m1,
+       line = "quartiles",
+       simulate = FALSE,
+       id = FALSE)
+```
+
+### ggqqplot from the ggpubr package
+
+`ggpubr::ggqqplot` generates a pretty, ggplot2 based Normal Q-Q plot, using the standard method for computing the line and confidence band.
+
+```{r}
+#| label: modelcheck-working-ggpubr
+
+m1_residuals <- data.table(m1_residuals = residuals(m1))
+m1_residuals[, studentized := m1_residuals/sd(m1_residuals)]
+ggqqplot(data = m1_residuals,
+                          x = "studentized")
+```
+
 
 ## Hidden Code
 
@@ -863,40 +963,6 @@ ggqqplot(data = data.table(m1_res=m1_res),
 
 
 ```
-
-### Normal Q-Q plots
-
-`car::qqPlot` has several important arguments to control the type of Q-Q plot. The function uses base graphics instead of ggplot2. Typically, these plots would not be published other than possibly a supplement. [Q-Q Plots and Worm Plots from Scratch](https://www.tjmahr.com/quantile-quantile-plots-from-scratch/){target="_blank"} is a good source of some of the arguments in `qqPlot`. Three important arguments are:
-
-1. simulate. If passing a `lm` object, then the default confidence band is generated by a parametric bootstrap (`simulate = TRUE`). This band will differ somewhat each time you replot unless you set the seed with `set.seed`. Setting the argument `simulate = FALSE` returns the parametric band.
-2. line. If passing a `lm` object, then the default line is a fit from a robust regression (`line = "robust"`). Setting the argument `line = "quartiles"` fits a line throught the 25th and 75th percentile (or "quartiles") quantiles.
-3. id. The default identifies the index of the two points with the most extreme quartiles. Set to FALSE to hide.
-
-The robust line is more sensitive to departures from Normality than the quartiles line.
-
-```{r}
-# defaults: robust line with bootstrap CI
-set.seed(1)
-qqPlot(m1, id = FALSE)
-```
-
-```{r, eval=FALSE}
-# classic: standard line with parametric CI
-qqPlot(m1,
-       line = "quartiles",
-       simulate = FALSE,
-       id = FALSE)
-```
-
-`ggpubr::ggqqplot` generates a pretty, ggplot2 based Normal Q-Q plot, using the standard method for computing the line and confidence band.
-
-```{r}
-m1_residuals <- data.table(m1_residuals = residuals(m1))
-m1_residuals[, studentized := m1_residuals/sd(m1_residuals)]
-ggqqplot(data = m1_residuals,
-                          x = "studentized")
-```
-
 
 
 
