@@ -349,14 +349,15 @@ simulator <- function(
 
 ```{r holm-sidak}
 
-holm_sidak <- function(p, alpha = 0.05){
+holm_sidak <- function(p){
+  # assume alpha = 0.05
   n <- length(p)
   rank_p <- frank(p)
   inv_rank_p <- n - rank_p + 1
   
   # put pvalues and the inv rankings in rank order
-  p_order <- p[rank_p]
-  inv_rank_order <- inv_rank_p[rank_p]
+  p_order <- p[order(p)]
+  inv_rank_order <- inv_rank_p[order(p)]
   
   # compute the adjusted p-value
   p_holm_sidak_order <- (1 - (1 - p_order)^(inv_rank_order))
@@ -376,6 +377,7 @@ holm_sidak <- function(p, alpha = 0.05){
   p_holm_sidak <- p_holm_sidak_order[rank_p]
   return(p_holm_sidak)
 }
+
 ```
 
 ```{r pairwise_paired_tt}

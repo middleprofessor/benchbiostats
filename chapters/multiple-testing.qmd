@@ -136,57 +136,6 @@ This isn't the question addressed by the research. The researchers have one foca
 Let's look at the cost of adjustment. The researchers used the Holm-Sidák method to adjust the two *p*-values.
 
 ```{r}
-#| label: mult-test-holm-sidak-check
-#| echo: false
-#| eval: false
-
-holm_sidak_check <- function(p, alpha = 0.05){
-  n <- length(p)
-  rank_p <- frank(p)
-  inv_rank_p <- n - rank_p + 1
-
-  p_bonf <- p * n
-  p_bonf[p_bonf > 1] <- 1.0
-
-  p_holm <- p * inv_rank_p
-  p_thresh <- min(p[which(p_holm >= 1)])
-  p_holm[p >= p_thresh] <- 1.0
-
-  p_bonf_sidak <- (1 - (1 - p)^(n))
-  p_thresh <- min(p[which(p_bonf_sidak >= 1)])
-  p_bonf_sidak[p >= p_thresh] <- 1.0
-
-  p_holm_sidak2 <- (1 - (1 - p)^(inv_rank_p))
-  p_order <- p[rank_p]
-  inv_rank_order <- inv_rank_p[rank_p]
-  p_holm_sidak_order <- (1 - (1 - p_order)^(inv_rank_order))
-  for(j in 2:n){
-    if(p_holm_sidak_order[j] < p_holm_sidak_order[j-1]){
-      p_holm_sidak_order[j] <- p_holm_sidak_order[j-1]
-    }
-  }
-  p_holm_sidak_order[p_holm_sidak_order > 1.0] <- 1.0
-  p_holm_sidak <- p_holm_sidak_order[rank_p]
-  
-  p_thresh <- min(p[which(p_holm_sidak >= 1)])
-  p_holm_sidak[p >= p_thresh] <- 1.0
-
-  p_table <- data.table(
-    p = p,
-    bonf = p_bonf,
-    holm = p_holm,
-    bonf_sidak = p_bonf_sidak,
-    holm_sidak = p_holm_sidak,
-    bonf_check = p.adjust(p, "bonf"),
-    holm_check = p.adjust(p, "holm"),
-    sidak_check = MHTdiscrete::Sidak.p.adjust(p), # equivalen to bonf-sidak not holm-sidak
-    sidak_holm_check = RHSDB::rh.sd.sidak(p)
-  )
-  return(p_holm_sidak)
-}
-```
-
-```{r}
 #| label: tbl-mult-tests-exfig2_m1
 #| echo: true
 #| message: false
@@ -784,7 +733,7 @@ m1_simple
   
 ```
 
-### Options in emmeans::contrast()
+#### Options in emmeans::contrast()
 
 1. "none" -- no adjustment.
 
@@ -840,12 +789,108 @@ Notes:
 1. Again, we wouldn't typically do this, we would simply use the "adjust = " argument within the `contrast()` function and not bother to extract the *p*-values and then adjust these, as done here.
 2. When we would want to extract the *p*-values and adjust is when we have multiple responses for the same experiment and these responses answer the same question, which is common in experimental bench biology and is the case for all three examples above.
 
-### Options in p.adjust()
+#### Options in p.adjust()
 
 1. "BH" or "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} using the logic of Benjamini & Hochberg. The BH method assumes independent tests. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
 2. "BY" -- is a modification of BH using the logic of Benjamini & Yekutieli. The BY method relaxes the independent test assumption and consequently is more consertive than BH. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
 3. "holm" -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is the Holm modification of Bonferroni and is used to control the FWER. It is more powerful than Bonferroni while still holding FWER at alpha. For most uses of *p*-value adjustment in experimental bench biology, we are less interested in controling the FWER than the FDR.
 4. "bonferroni" -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"}  is the original, general-purpose adjustment for a set of *p*-values to control the FWER. It has less power than the Holm modification, so it's use should be historic only.
+
+### A Holm-Sidak function for reproducing GraphPad Prism results
+
+```{r}
+holm_sidak <- function(p){
+  # assume alpha = 0.05
+  n <- length(p)
+  rank_p <- frank(p)
+  inv_rank_p <- n - rank_p + 1
+  
+  # put pvalues and the inv rankings in rank order
+  p_order <- p[order(p)]
+  inv_rank_order <- inv_rank_p[order(p)]
+  
+  # compute the adjusted p-value
+  p_holm_sidak_order <- (1 - (1 - p_order)^(inv_rank_order))
+  
+  # adjusted p-values of higher rank cannot be less than adjusted p-value of lower rank
+  # so find and adjust these
+  for(j in 2:n){
+    if(p_holm_sidak_order[j] < p_holm_sidak_order[j-1]){
+      p_holm_sidak_order[j] <- p_holm_sidak_order[j-1]
+    }
+  }
+  
+  # any adjusted > 1 make 1
+  p_holm_sidak_order[p_holm_sidak_order > 1.0] <- 1.0
+  
+  # put back into original order
+  p_holm_sidak <- p_holm_sidak_order[rank_p]
+  return(p_holm_sidak)
+}
+
+```
+
+Notes
+
+1. This function only computes the Holm-Sidak *p*-value and not the adjusted CIs. The Holm CI's will be close. For Holm-Sidak CIs see the function `RHSDB::rh.sd.sidak`
+2. This function is used exactly like any other R function. Here I compare both Holm and Holm-Sidak for the Lipocalin Fig3 dataset. Just like the Sidak adjustment is slightly more powerful than Bonferroni, the Holm-Sidak is slightly more powerful than Holm. These tiny differences are rather moot, given the TL;DR at the start of this chapter (@sec-multiple-tests).
+
+```{r}
+#| label: multiple-tests-holm-sidak-example
+#| eval: true
+#| echo: true
+
+m1 <- lm(cardiolipin_d ~ genotype * treatment, data = fig3)
+m1_emm <- emmeans(m1, specs = c("genotype", "treatment"))
+# compute the four simple effect p-values
+m1_simple <- contrast(m1_emm,
+                      method = "revpairwise",
+                      simple = "each",
+                      combine = TRUE,
+                      adjust = "none") |>
+  summary(infer = TRUE) |>
+  data.table()
+
+# compute holm
+m1_simple[, holm := p.adjust(p.value, "holm")]
+
+# compute holm-sidak
+m1_simple[, holm_sidak := holm_sidak(p.value)]
+m1_simple |>
+  kable(digits = c(1,1,1,3,3,1,3,3,1,4,4,4)) |>
+  kable_styling()
+```
+
+```{r}
+#| label: multiple-tests-holm-sidak-check
+#| eval: false
+#| echo: false
+
+m1 <- lm(cardiolipin_d ~ genotype * treatment, data = fig3)
+m1_emm <- emmeans(m1, specs = c("genotype", "treatment"))
+# compute the four simple effect p-values
+m1_simple <- contrast(m1_emm,
+                      method = "revpairwise",
+                      simple = "each",
+                      combine = TRUE,
+                      adjust = "none") |>
+  summary(infer = TRUE) |>
+  data.table()
+
+# compute holm-sidak
+m1_simple[, holm_sidak := holm_sidak(p.value)]
+p_check <- RHSDB::rh.sd.sidak(m1_simple$p.value,
+                              effect = m1_simple$estimate,
+                              effect.se = m1_simple$SE,
+                              df = m1_simple$df)
+m1_simple <- cbind(
+  m1_simple, p_check
+)
+m1_simple |>
+  kable(digits = c(1,1,1,3,3,1,3,3,1,4,4,4,4,4,4)) |>
+  kable_styling()
+```
+
 
 ## Hidden Import Code
 ### Example 1 (exfig2 data) {#sec-exfig2-import-unhide}
