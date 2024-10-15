@@ -1,4 +1,4 @@
-# Adjusting *p*-values for multiple tests {#sec-multiple-tests}
+# Multiple tests -- why and when to adjust *p*-values {#sec-multiple-tests}
 
 ```{r}
 #| label: multiple-tests-setup
@@ -115,6 +115,8 @@ Source: [Lyu, Q., Xue, W., Liu, R. et al. A brain-to-gut signal controls intesti
 
 Figure: Extended Figure 2d
 
+The import code is in @sec-exfig2-import-unhide below.
+
 In this study, the researchers investigate the control of fat absorption in the intestine by the dorsal motor nucleus of the vagus nerve (DMV) and show that the plant metabolite puerarin mimics this DMV suppression.
 
 The experiment in Extended Figure 2d follows up initial experiments from Figure 1 that show that inactivation of the DMV in mice decreased weight gain on a high fat diet relative to control mice and that DMV-inactive mice had lower plasma triglycerides, higher fat content in the feces, and lower fat absorption in the jejunum part of the small intestine. The DMV was inactivated by Clozapine N-oxide (CNO) binding to a human-designed hM4D(Gi) inhibitory receptor whose expression is controlled by the researchers.
@@ -186,10 +188,11 @@ holm_sidak_check <- function(p, alpha = 0.05){
 
 ```{r}
 #| label: tbl-mult-tests-exfig2_m1
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 #| tbl-cap: Unadjusted *p*-value and Holm-Sidak adjusted *p*-value for the experiment in Extended Figure 2d
+
 m1 <- lm(nefa ~ treatment, data = exfig2)
 m1_emm <- emmeans(m1, specs = "treatment")
 m1_pairs <- contrast(m1_emm,
@@ -262,6 +265,8 @@ A very common research design in experimental bench biology is a design with two
 
 Figure: Figure 5l
 
+The import code is in @sec-fig5l-import-unhide below
+
 The experiment in Fig. 5 follows up experiments that show that the plant metabolite puerarin binds to the GABA receptor encoded by *Gabra1* and increases GABA's inhibitory effect on the target neuron. In the experiment in Fig. 5, the researchers are investigating the mechanism of the effect of DVM-vagus supression on fat absorption in the jejunum. Figure 5c shows that suppressing DMV using COS activation of the designer 4i inhibitory receptor (as above) results in decreased jejunal microvilli length -- the reduced length decreases surface area for absorption. Figure 5d shows that suppressing DMV results in reduced expression of four genes involved in microvilli growth and organization. The design of the experiment in Fig. 5c, d is the same as that in Extended fig 2d above.
 
 Fig. 5l uses a 2 x 2 crossed design to investigate the effect of puerarin with and without a functional *Gabra1* GABA receptor.
@@ -314,7 +319,7 @@ What is the cost of adjustment? In @tbl-mult-tests-fig5_m1 below, for the two fo
 
 ```{r}
 #| label: tbl-mult-tests-fig5_m1
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 #| tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
@@ -419,6 +424,7 @@ Source: [Su, H., Guo, H., Qiu, X. et al. Lipocalin 2 regulates mitochondrial pho
 
 Figure: Figure 3
 
+The import code is in @sec-fig3-import-unhide below
 
 Let's adjust the four *p*-values for each contrast using
 
@@ -540,8 +546,8 @@ fig3[, treatment := factor(treatment, levels = c("Saline", "CL"))]
 
 ```{r}
 #| label: multiple-tests-fig3-ttests
-#| echo: false
-#| eval: false
+#| echo: true
+#| eval: true
 #| message: false
 #| warning: false
 
@@ -586,6 +592,7 @@ for(i in 1:n_cardiolipins){
 pool_contrast <- TRUE
 if(pool_contrast == TRUE){
   # add 8 more cardiolipins not included in the plot
+  # us lm pvalue instead of t test pvalue for increased power
   p_set <- c(p_table[, p.value], rep(0.99, 8 * 4)) # 8 cardiolipins * 4 contrasts
   p_holm <- p.adjust(p_set, "holm")[1:(18 * 4)]
   p_bh <- p.adjust(p_set, "BH")[1:(18 * 4)]
@@ -616,8 +623,8 @@ if(by_contrast == TRUE){
 }
 
 data.table(
-  adjust = c("lm", "ttest", "holm", "fdr_BH", "fdr_BY"),
-  n_lt_5 = c(sum(p_table[, p.value] < 0.05),
+  "Method" = c("lm", "ttest", "holm", "fdr_BH", "fdr_BY"),
+  "N p<0.05" = c(sum(p_table[, p.value] < 0.05),
              sum(p_table[, ttest] < 0.05),
              sum(p_table[, holm] < 0.05),
              sum(p_table[, fdr_bh] < 0.05),
@@ -840,3 +847,138 @@ Notes:
 3. "holm" -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is the Holm modification of Bonferroni and is used to control the FWER. It is more powerful than Bonferroni while still holding FWER at alpha. For most uses of *p*-value adjustment in experimental bench biology, we are less interested in controling the FWER than the FDR.
 4. "bonferroni" -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"}  is the original, general-purpose adjustment for a set of *p*-values to control the FWER. It has less power than the Holm modification, so it's use should be historic only.
 
+## Hidden Import Code
+### Example 1 (exfig2 data) {#sec-exfig2-import-unhide}
+
+```{r}
+#| label: multiple-tests-exfig2-import-unhide
+#| echo: true
+#| message: false
+#| warning: false
+
+data_from <- "A brain-to-gut signal controls intestinal fat absorption"
+file_name <- "41586_2024_7929_MOESM13_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+exfig2_import <- function(phenotype = "xxx", range_in = "xxx"){
+  exfig2_part <- read_excel(file_path,
+                            sheet = "Sheet1",
+                            range = range_in,
+                            col_names = TRUE) |>
+    data.table() |>
+    melt(variable.name = "treatment",
+         value.name = phenotype)
+  return(exfig2_part)
+}
+
+exfig2 <- exfig2_import(phenotype = "nefa",
+                        range = "A47:C57")
+exfig2 <- cbind(exfig2,
+                "fecal_tg" = exfig2_import(phenotype = "fecal_tg",
+                                           range = "A64:C74")$fecal_tg)
+exfig2 <- cbind(exfig2,
+                "jejunal_tg" = exfig2_import(phenotype = "jejunal_tg",
+                                             range = "A81:C91")$jejunal_tg)
+exfig2[, treatment := factor(treatment,
+                             levels = unique(treatment))]
+```
+
+### Example 2 (fig5l data) {#sec-fig5l-import-unhide}
+
+```{r}
+#| label: multiple-tests-fig5l-import-unhide
+#| echo: true
+#| message: false
+#| warning: false
+data_from <- "A brain-to-gut signal controls intestinal fat absorption"
+file_name <- "41586_2024_7929_MOESM11_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+fig5l <- read_excel(file_path,
+                    sheet = "Sheet1",
+                    range = "A133:AG137",
+                    col_names = FALSE) |>
+  data.table() |>
+  transpose(make.names = 1)
+colnames(fig5l)[1] <- c("treatment_orig")
+fig5l[, ezrin := as.numeric(ezrin)]
+fig5l[, cdc42 := as.numeric(cdc42)]
+fig5l[, eps8 := as.numeric(eps8)]
+fig5l[, vil1 := as.numeric(vil1)]
+fig5l[, treatment_orig := fill_down(treatment_orig)]
+fig5l[treatment_orig == "flox-veh", group := "WT Vehicle"]
+fig5l[treatment_orig == "flox-Pue", group := "WT Puerarin"]
+fig5l[treatment_orig == "KO-veh", group := "KO Vehicle"]
+fig5l[treatment_orig == "KO-Pue", group := "KO Puerarin"]
+fig5l[, group := factor(group, levels = unique(group))]
+
+fig5l[, c("genotype", "treatment") := tstrsplit(group, " ")]
+fig5l[, genotype := factor(genotype, levels = c("WT", "KO"))]
+fig5l[, treatment := factor(treatment, levels = c("Vehicle", "Puerarin"))]
+
+```
+
+### Example 3 (fig3 data) {#sec-fig3-import-unhide}
+
+```{r}
+#| label: multiple-tests-fig3-import-unhide
+#| echo: true
+#| message: false
+#| warning: false
+#| eval: false
+
+data_from <- "Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice"
+
+file_name <- "41467_2023_42473_MOESM7_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+
+# note I had to insert rows in the excel file 
+# in between some of the
+# sets because of inconsistency in the file
+fig3_import <- function(range_in = "xxx", lipid_id = "xxx"){
+  fig3_wide <- read_excel(file_path,
+                          sheet = "Fig. 3",
+                          range = range_in) |>
+    data.table()
+  fig3_long <- melt(fig3_wide,
+                    measure.vars = colnames(fig3_wide),
+                    variable.name = "group",
+                    value.name = paste0("cardiolipin_", lipid_id))
+  fig3_long[, group := factor(group,
+                              levels = colnames(fig3_wide))]
+  fig3_long[, mouse_id := .I]
+  return(fig3_long)
+}
+
+fig3 <- data.table(NULL)
+row_1 <- 12
+for(fig_id in letters[4:21]){
+  row_2 <- row_1 + 5
+  range_in <- paste0(
+    "B",row_1,":E",row_2
+  )
+  if(fig_id == letters[4]){
+    fig3 <- fig3_import(range_in, fig_id)
+  }else{
+    fig3_part <- fig3_import(range_in, fig_id)
+    fig3 <- merge(fig3, fig3_part, by = c("mouse_id", "group"))
+  }
+  # fig3 <- rbind(
+  #   fig3,
+  #   data.table(
+  #     figure = fig_id,
+  #     fig3_import(range_in))
+  # )
+  row_1 <- row_2 + 4
+}
+
+# row 5 and 15 have all missing data
+fig3 <- fig3[-c(5,15), ]
+
+fig3[, c("genotype", "treatment") := tstrsplit(group, "-")]
+y_cols <- which(substr(names(fig3), 1, 11) == "cardiolipin")
+fig3 <- fig3[, .SD, .SDcols = c("mouse_id", "group", "genotype", "treatment", names(fig3)[y_cols])]
+
+fig3[, group := factor(group, levels = unique(group))]
+fig3[, genotype := factor(genotype, levels = c("WT", "KO"))]
+fig3[, treatment := factor(treatment, levels = c("Saline", "CL"))]
+
+```
