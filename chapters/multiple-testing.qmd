@@ -14,6 +14,7 @@ library(data.table)
 
 # analysis
 library(emmeans)
+library(qvalue) # qvalues!
 
 # graphics and output
 library(ggplot2)
@@ -121,44 +122,12 @@ There are three contrasts of single treatments ("3q - con", "4i - con", "4i - 3q
 
 This isn't the question addressed by the research. The researchers have one focal question: "does activating the DMV increase fat absorption and consequently, decrease fecal NEFA levels?" Only one test (the contrast "3q - con") answers this question so the family has a single test and there is no need to adjust. The researchers are interested in a second question as a check on the experiment itself. This question is something like "Are we actually getting the known response given the intervention". Only one test (the contrast "4i - con") answers this question so there is no need to adjust.
 
-Let's look at the cost of adjustment. The researchers used the Holm-Sidák method to adjust the two *p*-values. Holm-Sidák is an option in Graphpad Prism but not Base R and is not available in any of the major testing R packages. So, I wrote a function to compute this.
-
-```{r}
-#| label: mult-test-holm-sidak
-#| echo: true
-
-holm_sidak <- function(p, alpha = 0.05){
-  n <- length(p)
-  rank_p <- frank(p)
-  inv_rank_p <- n - rank_p + 1
-  
-  # put pvalues and the inv rankings in rank order
-  p_order <- p[rank_p]
-  inv_rank_order <- inv_rank_p[rank_p]
-  
-  # compute the adjusted p-value
-  p_holm_sidak_order <- (1 - (1 - p_order)^(inv_rank_order))
-  
-  # adjusted p-values of higher rank cannot be less than adjusted p-value of lower rank
-  # so find and adjust these
-  for(j in 2:n){
-    if(p_holm_sidak_order[j] < p_holm_sidak_order[j-1]){
-      p_holm_sidak_order[j] <- p_holm_sidak_order[j-1]
-    }
-  }
-  
-  # any adjusted > 1 make 1
-  p_holm_sidak_order[p_holm_sidak_order > 1.0] <- 1.0
-  
-  # put back into original order
-  p_holm_sidak <- p_holm_sidak_order[rank_p]
-  return(p_holm_sidak)
-}
-```
+Let's look at the cost of adjustment. The researchers used the Holm-Sidák method to adjust the two *p*-values.
 
 ```{r}
 #| label: mult-test-holm-sidak-check
 #| echo: false
+#| eval: false
 
 holm_sidak_check <- function(p, alpha = 0.05){
   n <- length(p)
@@ -278,7 +247,7 @@ fig5l[, treatment := factor(treatment, levels = c("Vehicle", "Puerarin"))]
 ```
 
 
-A very common research design in experimental bench biology is a design with two factors, each with two levels, with mice assigned to all 2 x 2 = 4 combinations of the levels. Analysis of these models for two (or more) factors is the focus of Chapter xxx. The experiment in Figure 5l is a good example of a 2 x 2 design.
+A very common research design in experimental bench biology is a design with two factors, each with two levels, with mice assigned to all 2 x 2 = 4 combinations of the levels. Analysis of these models for two (or more) factors is the focus of @sec-twoway. The experiment in Figure 5l is a good example of a 2 x 2 design.
 
 [Data source](https://www.nature.com/articles/s41586-024-07929-5#MOESM11){target="_blank"}
 
@@ -382,38 +351,6 @@ m1_pvals[c(2,5), ] |>
 
 For each of the contrasts in the Fig. 5l example above, the researchers measured the response in four microvilli-related genes. Each of these genes answers the question posed for a contrast. For example, all four genes answer the question for contrast 1, which is "how does microvilli-related gene expression change when we add puerarin to mice with functional Gabra1?" The family is the four contrasts (WT Puerarin - WT Vehicle) for each of the four genes. The researchers should adjust for the four tests within this family. The next section shows how this is done.
 
-## Example 3 -- Using the FDR method to adjust *p*-values from different fit models, each for a different response (lipocalin fig3 data)
-
-In both the 
-Let's adjust the four *p*-values for each contrast using
-
-1. FDR. This method adjusts *p*-values so that the false discovery rate is 5%.
-2. Holm. This method adjust *p*-values so that the family wise error rate is 5%.
-
-In a sense, FDR is more liberal and Holm is more conservative but they have different goals. When $p < 0.05$, researchers act as if they have discovered or confirmed something, so call $p < 0.05$ a **discovery**. Consider these two situations
-
-1. $p < 0.05$ and the Null Hypothesis is false -- there is a true effect of treatment, or, there is a true difference in means between the two treatment levels. This is a true discovery.
-2. $p < 0.05$ but the Null Hypothesis is true -- there is no true effect of treatment, or, there is no true difference in means between the two treatment levels. This is a false discovery.
-
-The **false discovery rate** in a batch of tests is
-
-$$
-FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + number\;of\;true\;discoveries}
-$$
-In 
-
-
-
-
-1. In 
-
-
-
-
-
-
-One way that R, or any programming language, is more efficient than menu-driven statistical software such as Graphpad Prism is the ability to write scripts to combine analyses, which is what we need to do to adjust *p*-values from multiple fit statistical models.
-
 ```{r}
 #| label: tbl-mult-tests-fig5_all
 #| echo: false
@@ -463,6 +400,50 @@ p_table_out |>
   pack_rows("FDR Adjusted", 1, 4) |>
   pack_rows("Non-adjusted", 5, 8)
 ```
+
+## Example 3 -- Using the FDR method to adjust *p*-values from different fit models, each for a different response (lipocalin fig3 data)
+
+Source: [Su, H., Guo, H., Qiu, X. et al. Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice. Nat Commun 14, 6729 (2023). https://doi.org/10.1038/s41467-023-42473-2](https://www.nature.com/articles/s41467-023-42473-2){target="_blank"}
+
+[Data source](https://www.nature.com/articles/s41467-023-42473-2#Sec31){target="_blank"}
+
+Figure: Figure 3
+
+In this study, the researchers investigate the control of fat absorption in the intestine by the 
+In both the 
+
+
+
+Let's adjust the four *p*-values for each contrast using
+
+1. FDR. This method adjusts *p*-values so that the false discovery rate is 5%.
+2. Holm. This method adjust *p*-values so that the family wise error rate is 5%.
+
+In a sense, FDR is more liberal and Holm is more conservative but they have different goals. When $p < 0.05$, researchers act as if they have discovered or confirmed something, so call $p < 0.05$ a **discovery**. Consider these two situations
+
+1. $p < 0.05$ and the Null Hypothesis is false -- there is a true effect of treatment, or, there is a true difference in means between the two treatment levels. This is a true discovery.
+2. $p < 0.05$ but the Null Hypothesis is true -- there is no true effect of treatment, or, there is no true difference in means between the two treatment levels. This is a false discovery.
+
+The **false discovery rate** in a batch of tests is
+
+$$
+FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + number\;of\;true\;discoveries}
+$$
+In 
+
+
+
+
+1. In 
+
+
+
+
+
+
+One way that R, or any programming language, is more efficient than menu-driven statistical software such as Graphpad Prism is the ability to write scripts to combine analyses, which is what we need to do to adjust *p*-values from multiple fit statistical models.
+
+
 
 
 ```{r}
@@ -535,7 +516,6 @@ fig3[, treatment := factor(treatment, levels = unique(treatment))]
 
 ```
 
-
 ```{r}
 #| label: multiple-tests-fig3-analyze
 #| echo: false
@@ -577,21 +557,35 @@ for(set_i in 1:n_cardiolipins){
   )
 }
 
-  p_table[, holm := p.adjust(ttest, "holm") |> round(3)]
-  p_table[, fdr := p.adjust(ttest, "fdr") |> round(3)]
-  p_table[, ttest := round(ttest, 4)]
-  
-  data.table(
-    adjust = c("lm","ttest", "holm", "fdr"),
-    n_lt_5 = c(sum(p_table[, p.value] < 0.05),
-               sum(p_table[, ttest] < 0.05),
-               sum(p_table[, holm] < 0.05),
-               sum(p_table[, fdr] < 0.05))
-  )
+contrast_list <- unique(p_table$contrast)
+for(contrast_i in 1:length(contrast_list)){
+  p_set <- p_table[contrast == contrast_list[contrast_i], ttest]
+  p_set <- c(p_set, rep(0.99, 8))
+  p_holm <- p.adjust(p_set, "holm")[1:18]
+  p_bh <- p.adjust(p_set, "BH")[1:18]
+  p_by <- p.adjust(p_set, "BY")[1:18]
+  p_table[contrast == contrast_list[contrast_i],
+          holm := p_holm]
+  p_table[contrast == contrast_list[contrast_i],
+          fdr_bh := p_bh]
+  p_table[contrast == contrast_list[contrast_i],
+          fdr_by := p_by]
+}
 
-  p_table |>
-    kable() |>
-    kable_styling()
+data.table(
+  adjust = c("lm", "ttest", "holm", "fdr_BH", "fdr_BY"),
+  n_lt_5 = c(sum(p_table[, p.value] < 0.05),
+             sum(p_table[, ttest] < 0.05),
+             sum(p_table[, holm] < 0.05),
+             sum(p_table[, fdr_bh] < 0.05),
+             sum(p_table[, fdr_by] < 0.05)
+  )
+)
+
+p_table <- doBy::orderBy(~ contrast + lipid_id, p_table)
+p_table |>
+  kable() |>
+  kable_styling()
 ```
 
 ## Better Know FDR
