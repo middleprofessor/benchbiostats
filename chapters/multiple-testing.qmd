@@ -34,11 +34,13 @@ source(here("R/ggplot_the_model.R"))
 
 In many experiments, researchers have multiple treatments or multiple responses. This results in multiple tests against the null. For example, in an experiment with four treatment levels, there are six combinations of contrasts (A - B, A - C, A - D, B - C, B - D, C - D) and a researcher might be interested in all six *p*-values. Or, in an experiment with only two levels, there could be six response variables (expression level in six different genes. Or, six different phenotypes). Here, there are six contrasts (B - A for all six response variables) and six tests. Researchers commonly adjust for multiple testing in examples like these (the exception is multiple phenotype responses. Curiously, researchers almost never adjust for this). What is multiple testing and why do we want to adjust? And, something that doesn't seem to be considered much in the experimental bench biology literature, *when* do we want to adjust?
 
-::: {.callout-note, title= "TL;DR"}
-1. If your experiment has a single response variable (you're not measuring the effect of treatment on multiple phenotypes or gene expression levels), then you probably don't want to adjust for multiple tests.
+::: {.callout-note title="TL;DR"}
+
+1. If your experiment has a single response variable (that is, you're not measuring the effect of treatment on multiple phenotypes or gene expression levels), then you probably don't want to adjust for multiple tests.
 2. Adjusting for multiple tests in the experimental bench biology literature is the norm, because researchers are confused on what a "family" is.
 3. Despite No. 2, researchers almost always fail to adjust for multiple tests when they should, specifically, when there are multiple phenotypes or gene expression levels that answer the same experimental question.
 4. When you do adjust as in No. 3, you should probably use a method that controls the False Discovery Rate (FDR) and not the Family-Wise Error Rate (FWER). The reason isn't because the FDR is more liberal, it's because it's more consistent with the goals of the research.
+
 :::
 
 ## In a family of multiple tests, what is the probability of at least one p-value less than 0.05?
@@ -211,7 +213,7 @@ The cost is about double because there are two tests. If we use $p < 0.05$ to ac
 2. although small, the increased power with not adjusting is free.
 
 
-## Or, maybe we do want to adjust, but not in the way that is usually done
+### Or, maybe we do want to adjust, but not in the way that is usually done
 
 Extended figure 2d presents only one of six response variables that were measured on each mouse. The other response variables were body weight, fecal triglyceride, jejunal triglyceride, duodenal triglyceride, and ileal triglyceride. Some thoughts:
 
@@ -354,7 +356,7 @@ m1_pvals[c(2,5), ] |>
 
 ```
 
-## Or, maybe we do want to adjust, but not in the way that is usually done
+### Or, maybe we do want to adjust, but not in the way that is usually done
 
 For each of the contrasts in the Fig. 5l example above, the researchers measured the response in four microvilli-related genes. Each of these genes answers the question posed for a contrast. For example, all four genes answer the question for contrast 1, which is "how does microvilli-related gene expression change when we add puerarin to mice with functional Gabra1?" The family is the four contrasts (WT Puerarin - WT Vehicle) for each of the four genes. The researchers should adjust for the four tests within this family. The next section shows how this is done.
 
@@ -364,7 +366,8 @@ For each of the contrasts in the Fig. 5l example above, the researchers measured
 #| eval: false
 #| message: false
 #| warning: false
-#| tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
+
+# tbl-cap: Unadjusted *p*-value and Tukey adjusted *p*-value for the experiment in Fig. 5l
 
 gene_list <- c("ezrin", "cdc42", "eps8", "vil1")
 # use a for loop to collect the p-values for each test for each gene
@@ -415,10 +418,6 @@ Source: [Su, H., Guo, H., Qiu, X. et al. Lipocalin 2 regulates mitochondrial pho
 [Data source](https://www.nature.com/articles/s41467-023-42473-2#Sec31){target="_blank"}
 
 Figure: Figure 3
-
-In this study, the researchers investigate the control of fat absorption in the intestine by the 
-In both the 
-
 
 
 Let's adjust the four *p*-values for each contrast using

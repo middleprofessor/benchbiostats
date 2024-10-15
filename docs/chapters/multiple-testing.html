@@ -305,7 +305,24 @@ window.Quarto = {
 
 
 <p>In many experiments, researchers have multiple treatments or multiple responses. This results in multiple tests against the null. For example, in an experiment with four treatment levels, there are six combinations of contrasts (A - B, A - C, A - D, B - C, B - D, C - D) and a researcher might be interested in all six <em>p</em>-values. Or, in an experiment with only two levels, there could be six response variables (expression level in six different genes. Or, six different phenotypes). Here, there are six contrasts (B - A for all six response variables) and six tests. Researchers commonly adjust for multiple testing in examples like these (the exception is multiple phenotype responses. Curiously, researchers almost never adjust for this). What is multiple testing and why do we want to adjust? And, something that doesn’t seem to be considered much in the experimental bench biology literature, <em>when</em> do we want to adjust?</p>
-<p>::: {.callout-note, title= “TL;DR”} 1. If your experiment has a single response variable (you’re not measuring the effect of treatment on multiple phenotypes or gene expression levels), then you probably don’t want to adjust for multiple tests. 2. Adjusting for multiple tests in the experimental bench biology literature is the norm, because researchers are confused on what a “family” is. 3. Despite No.&nbsp;2, researchers almost always fail to adjust for multiple tests when they should, specifically, when there are multiple phenotypes or gene expression levels that answer the same experimental question. 4. When you do adjust as in No.&nbsp;3, you should probably use a method that controls the False Discovery Rate (FDR) and not the Family-Wise Error Rate (FWER). The reason isn’t because the FDR is more liberal, it’s because it’s more consistent with the goals of the research. :::</p>
+<div class="callout callout-style-default callout-note callout-titled" title="TL;DR">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>If your experiment has a single response variable (that is, you’re not measuring the effect of treatment on multiple phenotypes or gene expression levels), then you probably don’t want to adjust for multiple tests.</li>
+<li>Adjusting for multiple tests in the experimental bench biology literature is the norm, because researchers are confused on what a “family” is.</li>
+<li>Despite No.&nbsp;2, researchers almost always fail to adjust for multiple tests when they should, specifically, when there are multiple phenotypes or gene expression levels that answer the same experimental question.</li>
+<li>When you do adjust as in No.&nbsp;3, you should probably use a method that controls the False Discovery Rate (FDR) and not the Family-Wise Error Rate (FWER). The reason isn’t because the FDR is more liberal, it’s because it’s more consistent with the goals of the research.</li>
+</ol>
+</div>
+</div>
 <section id="in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05" class="level2" data-number="12.1">
 <h2 data-number="12.1" class="anchored" data-anchor-id="in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05"><span class="header-section-number">12.1</span> In a family of multiple tests, what is the probability of at least one p-value less than 0.05?</h2>
 <p>A <strong>family</strong> of tests is a set of tests that are used to make some inference about one question. For example, “In this mouse model of diabetes, are any genes differently expressed between diabetes mice and wildtype mice”? <span class="math inline">\(p &lt; 0.05\)</span> for any of the tested genes answers the question. If a researcher only tests one gene, then the probability of <span class="math inline">\(p &lt; 0.05\)</span> if there is no expression difference between phenotypes is 5%. But if a researcher tests two genes, there is a higher probability than 5% that at least one will have <span class="math inline">\(p &lt; 0.05\)</span> if there is no expression difference between phenotypes for both genes. And, if a researcher tests ten genes, there is a much higher probability than 5% that at least one will have <span class="math inline">\(p &lt; 0.05\)</span> if there is no expression difference between phenotypes for any of the ten genes. What are these probabilities?</p>
