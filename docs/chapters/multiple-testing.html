@@ -911,7 +911,7 @@ P value adjustment: BH method for 4 tests </code></pre>
 </div>
 <p>Notes</p>
 <ol type="1">
-<li>This function only computes the Holm-Sidak <em>p</em>-value and not the adjusted CIs. The Holm CI’s will be close. For Holm-Sidak CIs see the function <code>RHSDB::rh.sd.sidak</code></li>
+<li>This function only computes the Holm-Sidak <em>p</em>-value and not the adjusted CIs. The emmeans package uses Bonferroni intervals for the Holm adjustment, and these should be used for the Holm-Sidak adjustment. The function <code>RHSDB::rh.sd.sidak</code> computes CIs in addition to the <em>p</em>-values but I haven’t sleuthed out what these are.</li>
 <li>This function is used exactly like any other R function. Here I compare both Holm and Holm-Sidak for the Lipocalin Fig3 dataset. Just like the Sidak adjustment is slightly more powerful than Bonferroni, the Holm-Sidak is slightly more powerful than Holm. These tiny differences are rather moot, given the TL;DR at the start of this chapter (<a href="#sec-multiple-tests" class="quarto-xref"><span>Chapter 12</span></a>).</li>
 </ol>
 <div class="cell">

@@ -832,7 +832,7 @@ holm_sidak <- function(p){
 
 Notes
 
-1. This function only computes the Holm-Sidak *p*-value and not the adjusted CIs. The Holm CI's will be close. For Holm-Sidak CIs see the function `RHSDB::rh.sd.sidak`
+1. This function only computes the Holm-Sidak *p*-value and not the adjusted CIs. The emmeans package uses Bonferroni intervals for the Holm adjustment, and these should be used for the Holm-Sidak adjustment. The function `RHSDB::rh.sd.sidak` computes CIs in addition to the *p*-values but I haven't sleuthed out what these are.
 2. This function is used exactly like any other R function. Here I compare both Holm and Holm-Sidak for the Lipocalin Fig3 dataset. Just like the Sidak adjustment is slightly more powerful than Bonferroni, the Holm-Sidak is slightly more powerful than Holm. These tiny differences are rather moot, given the TL;DR at the start of this chapter (@sec-multiple-tests).
 
 ```{r}
