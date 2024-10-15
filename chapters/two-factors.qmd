@@ -2324,7 +2324,7 @@ The Tukey correction is applied to all six pairwise tests in the code above.
 3. **Sidak** -- The Sidak correction has increased power relative to Bonferroni but does not explicitly account for correlated tests. It's type I error rate is generally too conservative for 2 x 2 designs.
 4. **Holm** -- The Holm variant of the Bonferroni adjustment has increased power relative to the Bonferroni but does not explicitly account for correlated tests. It's type I error rate is generally too conservative for 2 x 2 designs.
 5. **Mvt** -- The multivariate *t* adjustment corrects for the empirically measured correlation.
-6. **FDR** -- The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See @sec-multiple-tests.
+6. **fdr** -- The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See @sec-multiple-tests.
 
 Further thoughts on multiple adjustment, focussing on the highlighted row in the table.
 
