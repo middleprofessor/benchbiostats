@@ -2237,7 +2237,10 @@ But, if Reviewer 2, or your PI, or an older colleague demands *p*-value adjustme
 
 Here are seven different adjustment methods (including no adjustment) for the simple effects of the `exp2j` data.
 
-```{r twoway-exp2j-p-adjust, echo = FALSE}
+```{r}
+#| label: tbl-twoway-exp2j-p-adjust
+#| echo: false
+
 p_methods <- c("None", "Tukey", "Bonferroni", "Sidak",
                "Holm", "MvT", "FDR")
 
@@ -2315,7 +2318,7 @@ m1_pairs |>
   row_spec(4, background = pal_okabe_ito[1])
 ```
 
-Table \@ref(tab:twoway-exp2j-p-adjust) shows *p*-values adjusted using seven different methods (including no adjustment) for the Experiment 2j glucose uptake data.
+Table @tbl-twoway-exp2j-p-adjust shows *p*-values adjusted using seven different methods (including no adjustment) for the Experiment 2j glucose uptake data.
 
 The Tukey correction is applied to all six pairwise tests in the code above.
 

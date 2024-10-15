@@ -782,16 +782,16 @@ Now, use the `p.adjust()` function
 p_fdr_BH_fig3d <- p.adjust(p_fig3d, "BH")
 p_fdr_BH_fig3d
 ```
-### Methods in p.adjust()
+### Options in p.adjust()
 
-1. "BH" or "fdr" is a method for controlling the FDR using the logic of Benjamini & Hochberg. The BH method assumes independent tests. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
-2. "BY" is a modification of BH using the logic of Benjamini & Yekutieli. The BY method relaxes the independent test assumption and consequently is more consertive than BH. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
-3. "holm" is the Holm modification of Bonferroni and is used to control the FWER. It is more powerful than Bonferroni while still holding FWER at alpha. For most uses of *p*-value adjustment in experimental bench biology, we are less interested in controling the FWER than the FDR.
-4. "bonferroni" is the original, general-purpose adjustment for a set of *p*-values to control the FWER. It has less power than the Holm modification, so it's use should be historic only.
+1. "BH" or "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} using the logic of Benjamini & Hochberg. The BH method assumes independent tests. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
+2. "BY" -- is a modification of BH using the logic of Benjamini & Yekutieli. The BY method relaxes the independent test assumption and consequently is more consertive than BH. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
+3. "holm" -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is the Holm modification of Bonferroni and is used to control the FWER. It is more powerful than Bonferroni while still holding FWER at alpha. For most uses of *p*-value adjustment in experimental bench biology, we are less interested in controling the FWER than the FDR.
+4. "bonferroni" -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"}  is the original, general-purpose adjustment for a set of *p*-values to control the FWER. It has less power than the Holm modification, so it's use should be historic only.
 
 ### Adjusting p values in the emmeans contrast() function
 
-For individual responses, we don't need to use the p.adjust() function because it is built into the contrast() function that we use for inference.
+For individual responses, we don't typicall use the `p.adjust()` function because it is built into the `contrast()` function that we use for inference. The `contrast()` functional has additional adjustment methods useful for experimental designs.
 
 ```{r}
 #| label: multiple-tests-working-p-values
@@ -811,4 +811,11 @@ m1_simple <- contrast(m1_emm,
 p_fig3d_BH <- m1_simple[, p.value]
 p_fig3d_BH
 ```
+
+### Options in emmeans::contrast()
+
+1. "none" -- no adjustment.
+2. "dunnettx" -- [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"} is a method used when comparing all treatments to a single control.
+3. "tukey" -- [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"} is a method used to compare all pairwise comparisons.
+4. "mvt" -- based on the multivariate *t* distribution and using covariance structure of the variables.
 
