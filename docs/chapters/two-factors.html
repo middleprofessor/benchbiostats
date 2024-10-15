@@ -2905,9 +2905,14 @@ Table&nbsp;13.8: Marginal means of the lesian area data computed from the additi
 <p>But, if Reviewer 2, or your PI, or an older colleague demands <em>p</em>-value adjustment, <a href="https://en.wikipedia.org/wiki/Just_Say_No" target="_blank">just say no</a>. If you cannot, then read on.</p>
 <p>Here are seven different adjustment methods (including no adjustment) for the simple effects of the <code>exp2j</code> data.</p>
 <div class="cell">
+<div id="tbl-twoway-exp2j-p-adjust" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-exp2j-p-adjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;13.9: P-values from seven different methods of adjustment. The Tukey-all p-value is from all six pairwise comparisons. All other p-values are from the four simple effects.
+</figcaption>
+<div aria-describedby="tbl-twoway-exp2j-p-adjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<caption>P-values from seven different methods of adjustment. The Tukey-all p-value is from all six pairwise comparisons. All other p-values are from the four simple effects.</caption>
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
@@ -2967,7 +2972,10 @@ Table&nbsp;13.8: Marginal means of the lesian area data computed from the additi
 
 </div>
 </div>
-<p>Table @ref(tab:twoway-exp2j-p-adjust) shows <em>p</em>-values adjusted using seven different methods (including no adjustment) for the Experiment 2j glucose uptake data.</p>
+</figure>
+</div>
+</div>
+<p>Table <a href="#tbl-twoway-exp2j-p-adjust" class="quarto-xref">Table&nbsp;<span>13.9</span></a> shows <em>p</em>-values adjusted using seven different methods (including no adjustment) for the Experiment 2j glucose uptake data.</p>
 <p>The Tukey correction is applied to all six pairwise tests in the code above.</p>
 <ol type="1">
 <li><strong>Tukey</strong> – The Tukey HSD method adjusts for the family including all pairwise comparisons, which is six tests in a 2 x 2 design. This is the most common adjustment for 2 x 2 designs in the bench biology literature. This is also the default adjustment in the emmeans package. <strong>Importantly</strong>, even if using best-practice mindless statistics and reporting only the simple effects, the researcher will lose some power compared to alternative adjustment methods because the family size is six and not four.</li>
@@ -2975,7 +2983,7 @@ Table&nbsp;13.8: Marginal means of the lesian area data computed from the additi
 <li><strong>Sidak</strong> – The Sidak correction has increased power relative to Bonferroni but does not explicitly account for correlated tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
 <li><strong>Holm</strong> – The Holm variant of the Bonferroni adjustment has increased power relative to the Bonferroni but does not explicitly account for correlated tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
 <li><strong>Mvt</strong> – The multivariate <em>t</em> adjustment corrects for the empirically measured correlation.</li>
-<li><strong>FDR</strong> – The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>.</li>
+<li><strong>fdr</strong> – The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>.</li>
 </ol>
 <p>Further thoughts on multiple adjustment, focussing on the highlighted row in the table.</p>
 <ol type="1">
@@ -2997,7 +3005,7 @@ Table&nbsp;13.8: Marginal means of the lesian area data computed from the additi
 <div id="tbl-twoway-anova-explainer" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-anova-explainer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.9: ANOVA table of glucose uptake experiment (Example 1).
+Table&nbsp;13.10: ANOVA table of glucose uptake experiment (Example 1).
 </figcaption>
 <div aria-describedby="tbl-twoway-anova-explainer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -3042,8 +3050,8 @@ Table&nbsp;13.9: ANOVA table of glucose uptake experiment (Example 1).
 <ol type="1">
 <li>This ANOVA table is computed using Type III sum of squares and should match the output from most statistics software including Graphpad Prism. The relevance of this is addressed below.</li>
 <li>In general, an ANOVA table has a row for each term in the underlying linear model. ANOVA is a method for decomposing the total variance into batches and each of these terms is a batch. For the linear model with two crossed factors, there is a term for each factor and a term for the interaction. <code>stimulation</code> and <code>genotype</code> are the <strong>main</strong> (or 1st order) effects. <code>stimulation:genotype</code> is the interaction (or 2nd order) effect. These terms are the row names of the table.</li>
-<li>Some ANOVA functions in R also include a row for the variance of the residuals from the fit model. This row can be useful for learning what the values in ANOVA table are but only one statistic from the row (the residual df) is especially useful for reporting. In <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>13.9</span></a>, this residual df is included in the statistics for each term.</li>
-<li>Many ANOVA tables contain additional SS (sum of squares) and MSE (mean square error) columns. The MSE is the variance of the term and used to compute the <em>F</em> statistic. The SS is used to compute the MSE. Since these columns are used for computation but not reporting, <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>13.9</span></a> excludes these.</li>
+<li>Some ANOVA functions in R also include a row for the variance of the residuals from the fit model. This row can be useful for learning what the values in ANOVA table are but only one statistic from the row (the residual df) is especially useful for reporting. In <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>13.10</span></a>, this residual df is included in the statistics for each term.</li>
+<li>Many ANOVA tables contain additional SS (sum of squares) and MSE (mean square error) columns. The MSE is the variance of the term and used to compute the <em>F</em> statistic. The SS is used to compute the MSE. Since these columns are used for computation but not reporting, <a href="#tbl-twoway-anova-explainer" class="quarto-xref">Table&nbsp;<span>13.10</span></a> excludes these.</li>
 <li><strong>df</strong> (Degree of freedom) – If the term is a factor, the df will equal the number of levels (<span class="math inline">\(k\)</span>) for the factor minus 1. Think of it this way: the contribution of the variance due to a factor is a function of the variability of the <span class="math inline">\(k\)</span> level means around the grand mean. How many degrees of independent variation do these level means have, given that we know the grand mean? The answer is <span class="math inline">\(k-1\)</span> – once the values of <span class="math inline">\(k-1\)</span> level means are written down, the <span class="math inline">\(k\)</span>th level mean has no freedom to vary; its value has to be <span class="math inline">\(k\bar{\bar{Y}} - \sum_i^{k-1}{Y_i}\)</span>. For an interaction term, the df is the product of the df of each of the factors in the interaction.</li>
 <li><strong>F</strong> (<em>F</em>-value or <em>F</em>-ratio) – This is the test statistic. It is the ratio of the MSE for the term divided by the MSE of the residual (this is strictly true for only “Fixed effects” ANOVA, which we have here).</li>
 <li><strong>p.value</strong> – the <em>p</em>-value for the test statistic. <em>F</em> is compared to an <em>F</em>-distribution, which is a distribution of <em>F</em>-values under the null.</li>
@@ -3052,12 +3060,12 @@ Table&nbsp;13.9: ANOVA table of glucose uptake experiment (Example 1).
 <section id="what-do-the-main-effects-in-an-anova-table-mean" class="level3" data-number="13.9.2">
 <h3 data-number="13.9.2" class="anchored" data-anchor-id="what-do-the-main-effects-in-an-anova-table-mean"><span class="header-section-number">13.9.2</span> What do the main effects in an ANOVA table mean?</h3>
 <p>It is very common in the literature to see researchers report the rows of an ANOVA table by stating something like “We found an effect of stimulation on glucose uptake (<span class="math inline">\(F_{1,25} = 26.9\)</span>, <span class="math inline">\(p &lt; 0.0001\)</span>)”. Thinking of a main effect term in an ANOVA table as “an effect” can be misleading. What does “an effect” mean? Afterall, there are <em>two</em> effects of <code>stimulation</code> in this experiment, one in the wildtype mice and one in the TLR9-/- mice.</p>
-<p>Main effects in ANOVA tables are about average effects. A main effect in a two-way ANOVA table is an “overall” marginal effect. Recall that a marginal effect of the level of Factor A is the average of the conditional effects at each level of B (<a href="#sec-twoway-marginal-effects" class="quarto-xref"><span>Section 13.5.3</span></a>). For a <span class="math inline">\(2 \times 2\)</span> table, there is only one marginal effect for each factor and, as a consquence, the <em>p</em> value for the main effect term of <code>stimulation</code> in the ANOVA table (<a href="#tbl-twoway-anova-table" class="quarto-xref">Table&nbsp;<span>13.10</span></a>) is equal to the <em>p</em>-value of the marginal effect of <code>stimulation</code> in the contrast table (<a href="#tbl-twoway-marginal-table" class="quarto-xref">Table&nbsp;<span>13.11</span></a>). The “main term” effect of stimulation is illustrated in <a href="#fig-twoway-anova-explainer-plot" class="quarto-xref">Figure&nbsp;<span>13.7</span></a>.</p>
+<p>Main effects in ANOVA tables are about average effects. A main effect in a two-way ANOVA table is an “overall” marginal effect. Recall that a marginal effect of the level of Factor A is the average of the conditional effects at each level of B (<a href="#sec-twoway-marginal-effects" class="quarto-xref"><span>Section 13.5.3</span></a>). For a <span class="math inline">\(2 \times 2\)</span> table, there is only one marginal effect for each factor and, as a consquence, the <em>p</em> value for the main effect term of <code>stimulation</code> in the ANOVA table (<a href="#tbl-twoway-anova-table" class="quarto-xref">Table&nbsp;<span>13.11</span></a>) is equal to the <em>p</em>-value of the marginal effect of <code>stimulation</code> in the contrast table (<a href="#tbl-twoway-marginal-table" class="quarto-xref">Table&nbsp;<span>13.12</span></a>). The “main term” effect of stimulation is illustrated in <a href="#fig-twoway-anova-explainer-plot" class="quarto-xref">Figure&nbsp;<span>13.7</span></a>.</p>
 <div class="cell">
 <div id="tbl-twoway-anova-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-anova-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.10: Reprinting the ANOVA table of the glucose uptake experiment (Example 1) to show more decimal places of the p-value.
+Table&nbsp;13.11: Reprinting the ANOVA table of the glucose uptake experiment (Example 1) to show more decimal places of the p-value.
 </figcaption>
 <div aria-describedby="tbl-twoway-anova-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -3106,7 +3114,7 @@ Table&nbsp;13.10: Reprinting the ANOVA table of the glucose uptake experiment (E
 <div id="tbl-twoway-marginal-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-twoway-marginal-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.11: Marginal effect of stimulation on glucose uptake.
+Table&nbsp;13.12: Marginal effect of stimulation on glucose uptake.
 </figcaption>
 <div aria-describedby="tbl-twoway-marginal-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
