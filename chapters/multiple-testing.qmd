@@ -365,7 +365,7 @@ p_table_out |>
   pack_rows("Non-adjusted", 5, 8)
 ```
 
-## Example 3 -- Using the FDR method to adjust *p*-values from different fit models, each for a different response (lipocalin fig3 data)
+## Example 3 -- When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)
 
 Source: [Su, H., Guo, H., Qiu, X. et al. Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice. Nat Commun 14, 6729 (2023). https://doi.org/10.1038/s41467-023-42473-2](https://www.nature.com/articles/s41467-023-42473-2){target="_blank"}
 
@@ -374,6 +374,10 @@ Source: [Su, H., Guo, H., Qiu, X. et al. Lipocalin 2 regulates mitochondrial pho
 Figure: Figure 3
 
 The import code is in @sec-fig3-import-unhide below
+
+The researchers are investigating the role of *Lipocalin-2* (*LCN2*) on mitochondrial membrane function. Using a LCN2 knockout and the thermogenic molecule CL316,243, the researchers scanned for differences in levels of 246 lipids between WT and KO mice with and without CL316,243 treatment. Of the different classes of lipids, the biggest differences were found in cardiolipins. The panels in Fig 3d-u show cardiolipin levels among treatment groups for 18 of the 26 cardiolipins with at least one significant *p*-value for a difference between WT and KO mice. The researchers organize the panels into distinct patterns of response to treatment. This suggests the research question is something like, "do we see differeces in CL synthesis under different combinations of LCN2 activity and CL316,243?". There are 4 x 26 contrasts that answer this -- the four simple effects within a cardiolipin response across all 26 cardiolipins tested.
+
+The question is, 
 
 Let's adjust the four *p*-values for each contrast using
 
@@ -713,27 +717,58 @@ p_false <- numeric(n_false)
 ```
 
 ## Working in R
-### Adjusting p values in the emmeans contrast() function
-The base R `p.adjust()` function adjusts a set of *p*-values but we don't typically need this because it is built into the `contrast()` function that we use for inference. The `contrast()` functional has additional adjustment methods useful for experimental designs.
+### The contrast() function has different default adjustment methods for each of the contrast methods
+
+1. Tukey HSD is the default for all pairwise contrasts using either `method = "pairwise"` or `method = "revpairwise"`
 
 ```{r}
-#| label: multiple-tests-working-p-values
+#| label: multiple-tests-working-revpairwise-tukey
 
-m1 <- lm(cardiolipin_d ~ genotype * treatment, data = fig3)
-m1_emm <- emmeans(m1, specs = c("genotype", "treatment"))
-# compute the four simple effect p-values
-m1_simple <- contrast(m1_emm,
-                      method = "revpairwise",
-                      simple = "each",
-                      combine = TRUE,
-                      adjust = "BH")
-# extract the p-values
+# use the exfig2 data to explore this
+m1 <- lm(nefa ~ treatment, data = exfig2)
+m1_emm <- emmeans(m1, specs = "treatment")
+m1_pairs <- contrast(m1_emm,
+                     method = "revpairwise") |>
+  summary(infer = TRUE)
+m1_pairs
+```
+Notes:
 
-m1_simple
-  
+The adjumstment method for both the confidence interval and the *p*-value is given in the contrast object.
+
+2. Dunnett's test is the default for comparing all treatments (non-reference groups) to the control (the reference group). Both `method = "trt.vs.ctrl"` and `method = "dunnett"` work.
+
+```{r}
+#| label: multiple-tests-working-revpairwise-dunnett
+
+# use the exfig2 data to explore this
+m1 <- lm(nefa ~ treatment, data = exfig2)
+m1_emm <- emmeans(m1, specs = "treatment")
+m1_pairs <- contrast(m1_emm,
+                     method = "trt.vs.ctrl") |>
+  summary(infer = TRUE)
+m1_pairs
 ```
 
-#### Options in emmeans::contrast()
+### For non-default adjustment, use the `adjust = ` argument
+
+For no adjustment, use `adjust = "none"`
+
+```{r}
+#| label: multiple-tests-working-revpairwise-none
+
+# use the exfig2 data to explore this
+m1 <- lm(nefa ~ treatment, data = exfig2)
+m1_emm <- emmeans(m1, specs = "treatment")
+m1_pairs <- contrast(m1_emm,
+                     method = "revpairwise",
+                     adjust = "none") |>
+  summary(infer = TRUE)
+m1_pairs
+```
+
+
+### Options in `adjust = `
 
 1. "none" -- no adjustment.
 

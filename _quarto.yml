@@ -17,7 +17,7 @@ book:
     - chapters/inference-errors.qmd
     - chapters/intro-stat-modeling.qmd
     - chapters/continuous_x.qmd
-    - chapters/categorical_x.qmd
+    - chapters/one-factor.qmd
     - chapters/model-checking.qmd
     - chapters/multiple-testing.qmd
     - chapters/two-factors.qmd

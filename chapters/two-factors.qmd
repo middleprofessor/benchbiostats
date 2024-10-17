@@ -14,10 +14,7 @@ library(data.table)
 
 # analysis packages
 library(emmeans)
-library(car) # qqplot, spreadlevel
 library(afex)
-library(lmerTest)
-library(nlme)
 
 # graphing and tabling packages
 library(ggplot2) # ggplot environment

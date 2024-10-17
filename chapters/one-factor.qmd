@@ -12,13 +12,9 @@ library(data.table)
 library(stringr)
 
 # analysis packages
-library(nlme) # gls
-library(lmerTest) # lmm
 library(emmeans)
 library(car) # qqplot, spreadlevel, Anova
 library(afex) #aov4
-# library(lmPerm)
-library(glmmTMB)
 
 # graphing packages
 library(ggplot2) # ggplot environment
