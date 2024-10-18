@@ -43,7 +43,7 @@ In many experiments, researchers have multiple treatments or multiple responses.
 
 :::
 
-## In a family of multiple tests, what is the probability of at least one p-value less than 0.05?
+## In a family of multiple tests, what is the probability of at least one p-value less than 0.05? {#sec-fwer}
 
 A **family** of tests is a set of tests that are used to make some inference about one question. For example, "In this mouse model of diabetes, are any genes differently expressed between diabetes mice and wildtype mice"? $p < 0.05$ for any of the tested genes answers the question. If a researcher only tests one gene, then the probability of $p < 0.05$ if there is no expression difference between phenotypes is 5%. But if a researcher tests two genes, there is a higher probability than 5% that at least one will have $p < 0.05$ if there is no expression difference between phenotypes for both genes. And, if a researcher tests ten genes, there is a much higher probability than 5% that at least one will have $p < 0.05$ if there is no expression difference between phenotypes for any of the ten genes. What are these probabilities?
 
@@ -225,9 +225,9 @@ Here, we'll focus on the first gene, *ezr*, which encodes the protein ezrin.
 The two factors are
 
 1. genotype, with levels "WT" and "KO". KO is the conditional knockout of *Gabra1* in the DMV.
-2. puerarin, with levels "Vehicle" and "Puerarin". Infusion of a saline solution (Vehicle) or a solution with Puerarin.
+2. treatment, with levels "Vehicle" and "Puerarin". Infusion of a saline solution (Vehicle) or a solution with Puerarin.
 
-All levels of both factors are combined to create the four treatment combinations (the design is **fully factorial**)
+All levels of both factors are combined to create the four experimental combinations (the design is **fully factorial**)
 
 1. "WT Vehicle" is the combination "WT" + "Vehicle". This is the negative control.
 2. "WT Puerarin" is the combination "WT" + "Puerarin".
@@ -367,6 +367,28 @@ p_table_out |>
 
 ## Example 3 -- When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)
 
+::: {.callout-note title="Wait What?"}
+When $p < 0.05$, researchers act as if they have discovered or confirmed something, so $p < 0.05$ is evidence of a **discovery**. Consider these two situations
+
+1. $p < 0.05$ and the Null Hypothesis is false -- there is a true effect of treatment, or, there is a true difference in means between the two treatment levels. This is a true discovery.
+2. $p < 0.05$ but the Null Hypothesis is true -- there is no true effect of treatment, or, there is no true difference in means between the two treatment levels. This is a false discovery.
+
+The **false discovery rate** (FDR) in a batch of tests is
+
+$$
+FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + number\;of\;true\;discoveries}
+$$
+
+Remember that the family wise error rate (FWER) is the long term probability of at least one $p < 0.05$ in a batch of tests in which all Null Hypothesis are true -- there are no true effects (@sec-fwer).
+
+Note that the FWER for a single batch of tests is either 1 (there was at least one false positive) or 0 (there were no false positives). By contrast, an omniscient researcher can compute the FDR for a single batch of tests. 
+
+For any batch of tests in which some effects are real, and some are not
+
+1. A FWER method of *p*-value adjustment controls the long-term FWER at $\leq$ 0.05.
+2. An FDR method of *p*-value adjustment controls the long-term FDR at $\leq$ 0.05.
+:::
+
 Source: [Su, H., Guo, H., Qiu, X. et al. Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice. Nat Commun 14, 6729 (2023). https://doi.org/10.1038/s41467-023-42473-2](https://www.nature.com/articles/s41467-023-42473-2){target="_blank"}
 
 [Data source](https://www.nature.com/articles/s41467-023-42473-2#Sec31){target="_blank"}
@@ -375,41 +397,39 @@ Figure: Figure 3
 
 The import code is in @sec-fig3-import-unhide below
 
-The researchers are investigating the role of *Lipocalin-2* (*LCN2*) on mitochondrial membrane function. Using a LCN2 knockout and the thermogenic molecule CL316,243, the researchers scanned for differences in levels of 246 lipids between WT and KO mice with and without CL316,243 treatment. Of the different classes of lipids, the biggest differences were found in cardiolipins. The panels in Fig 3d-u show cardiolipin levels among treatment groups for 18 of the 26 cardiolipins with at least one significant *p*-value for a difference between WT and KO mice. The researchers organize the panels into distinct patterns of response to treatment. This suggests the research question is something like, "do we see differeces in CL synthesis under different combinations of LCN2 activity and CL316,243?". There are 4 x 26 contrasts that answer this -- the four simple effects within a cardiolipin response across all 26 cardiolipins tested.
+The researchers are investigating the role of *Lipocalin-2* (*LCN2*) on mitochondrial membrane function. Using a LCN2 knockout and the thermogenic molecule CL316,243, the researchers scanned for differences in levels of 246 lipids between WT and KO mice with and without CL316,243 treatment. Of the different classes of lipids, the biggest differences were found in cardiolipins. The panels in Fig 3d-u show cardiolipin levels for each of the four groups for 18 of the 26 cardiolipins with at least one significant *p*-value for a difference between WT and KO mice.
 
-The question is, 
+The two factors are
 
-Let's adjust the four *p*-values for each contrast using
+1. genotype, with levels "WT" and "KO", where KO is the LCN2 knockout.
+2. treatment, with levels "Saline" and "CL316243", where CL316243 is administration of CL316,243.
 
-1. FDR. This method adjusts *p*-values so that the false discovery rate is 5%.
-2. Holm. This method adjust *p*-values so that the family wise error rate is 5%.
+All levels of both factors are combined to create the four treatment combinations
 
-In a sense, FDR is more liberal and Holm is more conservative but they have different goals. When $p < 0.05$, researchers act as if they have discovered or confirmed something, so call $p < 0.05$ a **discovery**. Consider these two situations
+1. "WT Saline" is the combination "WT" + "Saline". This is the negative control.
+2. "WT CL316243" is the combination "WT" + "CL316,243".
+3. "KO Saline" is the combination "KO" + "Saline".
+4. "KO CL316243" is the combination "KO" + "CL316,243"
 
-1. $p < 0.05$ and the Null Hypothesis is false -- there is a true effect of treatment, or, there is a true difference in means between the two treatment levels. This is a true discovery.
-2. $p < 0.05$ but the Null Hypothesis is true -- there is no true effect of treatment, or, there is no true difference in means between the two treatment levels. This is a false discovery.
+The researchers do not have a model of how any specific cardiolipin will respond to any specific treatment combination. Instead, the research question seems to be something like, "do we see differences in CL synthesis under different combinations of LCN2 activity and CL316,243?" For each cardiolipin, the four simple effect contrasts answer this question. But the question remains the same for each cardiolipin, so there are 104 (4 x 26)  tests in the family. Even though the researchers only present results for 18 cardiolipins, we have to include the 8 non-presented cardiolipins because these were also analyzed.
 
-The **false discovery rate** in a batch of tests is
+Now this is an example of an experiment where we should adjust *p*-values for multiple testing!
 
-$$
-FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + number\;of\;true\;discoveries}
-$$
-In 
+::: {.callout-note title="Which adjustment method?"}
+1. Holm. This modification of Bonferroni adjusts *p*-values to control the family-wise error rate (FWER) and would be relevant if the researchers were asking the question "does at least one cardiolipin have different synthesis level under any combination of genotype and treatment?"
+2. BH (Benjamini-Hochberg). This method based on Benjamini-Hochberg adjusts *p*-values to control the false discovery rate (FDR) and would be relevant if the researchers were asking "which cardiolipins have different synthesis levels and under which combination of genotype and treatment?"
 
+We control FWER if we want to show that "we have evidence of something happening in this system". We control FDR if we want to show that "we have evidence that we've discovered a specific component in the system".
 
+I don't think the FWER question is very relevant to most experimental bench biology.
 
+In a sense, BH is more liberal and Holm is more conservative but this isn't a good way to think about the these because this is comparing apples and oranges. Instead of using BH to "gain power" or Holm to "be conservative", just use a different alpha. If the cost of false discovery is cheap but the potential for reward is high, increase alpha. If the cost of false discovery is expensive, decrease alpha.
+:::
 
-1. In 
-
-
-
-
-
-
-One way that R, or any programming language, is more efficient than menu-driven statistical software such as Graphpad Prism is the ability to write scripts to combine analyses, which is what we need to do to adjust *p*-values from multiple fit statistical models.
 
 ```{r}
 #| label: multiple-tests-useful-links
+#| echo: false
 
 # https://support.bioconductor.org/p/49864/
 # https://stats.stackexchange.com/questions/397222/what-is-the-difference-between-the-fdr-in-benjamini-hochberg-bonferonni-vs-a-loc
@@ -498,11 +518,12 @@ fig3[, treatment := factor(treatment, levels = c("Saline", "CL"))]
 ```
 
 ```{r}
-#| label: multiple-tests-fig3-ttests
+#| label: multiple-tests-fig3-pvals
 #| echo: true
 #| eval: true
 #| message: false
 #| warning: false
+#| tbl-cap: Number of discoveries (*p* < 0.05) among the 104 tests
 
 cl_cols <- names(fig3)[which(substr(names(fig3), 1, 11) == "cardiolipin")]
 n_cardiolipins <- length(cl_cols)
@@ -545,7 +566,7 @@ for(i in 1:n_cardiolipins){
 pool_contrast <- TRUE
 if(pool_contrast == TRUE){
   # add 8 more cardiolipins not included in the plot
-  # us lm pvalue instead of t test pvalue for increased power
+  # us lm pvalue instead of t test pvalue because t is less efficient
   p_set <- c(p_table[, p.value], rep(0.99, 8 * 4)) # 8 cardiolipins * 4 contrasts
   p_holm <- p.adjust(p_set, "holm")[1:(18 * 4)]
   p_bh <- p.adjust(p_set, "BH")[1:(18 * 4)]
@@ -575,16 +596,6 @@ if(by_contrast == TRUE){
   }
 }
 
-data.table(
-  "Method" = c("lm", "ttest", "holm", "fdr_BH", "fdr_BY"),
-  "N p<0.05" = c(sum(p_table[, p.value] < 0.05),
-             sum(p_table[, ttest] < 0.05),
-             sum(p_table[, holm] < 0.05),
-             sum(p_table[, fdr_bh] < 0.05),
-             sum(p_table[, fdr_by] < 0.05)
-  )
-)
-
 
 # p_table_order <- doBy::orderBy(~ contrast + lipid_id, p_table)
 # p_table_order[, .SD, .SDcols = setdiff(names(p_table), "contrast")] |>
@@ -595,6 +606,7 @@ data.table(
 #   pack_rows(contrast_list[2], 19, 36) |>
 #   pack_rows(contrast_list[3], 37, 54)
 
+# researcher results
 # set1 d-h
 #WT: cl lower
 #KO: cl not lower
@@ -605,38 +617,83 @@ data.table(
 #WT cl higher
 #KO: cl higher in 3/8
 
+data.table(
+  "Method" = c("lm (unadjusted)", "t test (unadjusted)", "BH (FDR)", "BY (FDR)", "Holm (FWER)"),
+  "N (p<0.05)" = c(sum(p_table[, p.value] < 0.05),
+             sum(p_table[, ttest] < 0.05),
+             sum(p_table[, fdr_bh] < 0.05),
+             sum(p_table[, fdr_by] < 0.05),
+             sum(p_table[, holm] < 0.05)
+  )
+) |>
+  kable() |>
+  kable_styling(full_width = FALSE)
+
 
 ```
 
+Notes
+
+@. For these data, there are more discoveries (*p* < 0.05) using the linear model with all four groups than using the pairwise *t*-tests used by the researchers. The linear model is *slightly* more powerful than pairwise *t*-tests because of a smaller SE, but differences in discovery rate between the two methods in any one batch will depend more on patterns of sample variances.
+@. The BH adjustment reduced the number of discoveries by nearly half. The BY adjustment reduced the number of discoveries by nearly 2/3. BY is an FDR method based on Benjamini & Yekutieli that is modified for non-independent tests. The tests here are not independent because the cardiolipin levels are correlated. Consequently, BY will have better control of FDR than BH.
+@. The Holm adjustment reduced the number of discoveries by three-fourths. I include it here simply for comparison. As argued above, Holm, or any FWER, doesn't answer the right question.
+@. The researchers didn't adjust. Should they have? If the goal is discovery on how combinations of LCN2 and CL316,243 effect cardiolipin synthesis, and they don't have working models of the system, then yes, they should adjust.
+@. One way that R, or any programming language, is more efficient than menu-driven statistical software is the ability to write scripts to combine analyses, which is what we need to do to adjust *p*-values from multiple fit statistical models.
+
+
 ## Better Know FDR
+
 
 ```{r}
 #| label: mult-tests-fdr-simulation
-#| echo: false
-#| eval: false
+#| echo: true
+#| eval: true
 #| message: false
 #| warning: false
 
-n_iter <- 1
-n_tests <- 20
+n_iter <- 5000
+n_tests <- 100
 alpha <- 0.05
 
-true_fraction <- 0.80 # fraction of tests with true effect
+true_fraction <- .2 # fraction of tests with true effect
 false_fraction <- 1 - true_fraction # fraction of tests with no effect
 n_true <- true_fraction * n_tests # number of tests with true effect
 n_false <- false_fraction * n_tests # number of tests with no effect
-power_exp <- .6
+power_exp <- .8
 delta <- power.t.test(n = 10, sd = 1, power = power_exp, sig.level = alpha)$delta
 p_true <- numeric(n_true)
 p_false <- numeric(n_false)
+
+true_discoveries_none <- 0.0
+false_nondiscoveries_none <- 0.0
+false_discoveries_none <- 0.0
+true_nondiscoveries_none <- 0.0
+
+true_discoveries_holm <- 0.0
+false_nondiscoveries_holm <- 0.0
+false_discoveries_holm <- 0.0
+true_nondiscoveries_holm <- 0.0
+
+true_discoveries_fdr <- 0.0
+false_nondiscoveries_fdr <- 0.0
+false_discoveries_fdr <- 0.0
+true_nondiscoveries_fdr <- 0.0
+
+FWE_none <- 0.0
+FWE_holm <- 0.0
+FWE_fdr <- 0.0
+type_1 <- 0.0
+power <- 0.0
+
+for(iter in 1:n_iter){
   for(j in 1:n_true){
     p_true[j] <- t.test(rnorm(n = 10), rnorm(n = 10, mean = delta), var.equal = TRUE)$p.value
   }
   for(j in 1:n_false){
     p_false[j] <- t.test(rnorm(n = 10), rnorm(n = 10), var.equal = TRUE)$p.value
   }
-  type_1 <- sum(p_false < 0.05)/n_false
-  power <- sum(p_true < 0.05)/n_true
+  type_1 <- type_1 + sum(p_false < 0.05)/n_false
+  power <- power + sum(p_true < 0.05)/n_true
   
   p_none <- c(p_true, p_false)
   p_holm <- p.adjust(p_none, method = "holm")
@@ -646,50 +703,60 @@ p_false <- numeric(n_false)
   p_false_holm <- p_holm[(n_true + 1):n_tests]
   p_false_fdr <- p_fdr[(n_true + 1):n_tests]
   
-  true_discoveries_none <- sum(p_true < 0.05)
-  false_nondiscoveries_none <- sum(p_true > 0.05)
-  false_discoveries_none <- sum(p_false < 0.05)
-  true_nondiscoveries_none <- sum(p_false > 0.05)
+  if(sum(p_false < 0.05) > 0){FWE_none <- FWE_none + 1}
+  true_discoveries_none <- true_discoveries_none + sum(p_true < 0.05)
+  false_nondiscoveries_none <- false_nondiscoveries_none + sum(p_true > 0.05)
+  false_discoveries_none <- false_discoveries_none + sum(p_false < 0.05)
+  true_nondiscoveries_none <- true_nondiscoveries_none + sum(p_false > 0.05)
+
+  if(sum(p_false_holm < 0.05) > 0){FWE_holm <- FWE_holm + 1}
+  true_discoveries_holm <- true_discoveries_holm + sum(p_true_holm < 0.05)
+  false_nondiscoveries_holm <- false_nondiscoveries_holm + sum(p_true_holm > 0.05)
+  false_discoveries_holm <- false_discoveries_holm + sum(p_false_holm < 0.05)
+  true_nondiscoveries_holm <- true_nondiscoveries_holm + sum(p_false_holm > 0.05)
+  
+  if(sum(p_false_fdr < 0.05) > 0){FWE_fdr <- FWE_fdr + 1}
+  true_discoveries_fdr <- true_discoveries_fdr + sum(p_true_fdr < 0.05)
+  false_nondiscoveries_fdr <- false_nondiscoveries_fdr + sum(p_true_fdr > 0.05)
+  false_discoveries_fdr <- false_discoveries_fdr + sum(p_false_fdr < 0.05)
+  true_nondiscoveries_fdr <- true_nondiscoveries_fdr + sum(p_false_fdr > 0.05)
+}
+
   total_discoveries_none <- true_discoveries_none + false_discoveries_none
   total_non_discoveries_none <- false_nondiscoveries_none + true_nondiscoveries_none
   TDR_none <- true_discoveries_none/total_discoveries_none
   FDR_none <- false_discoveries_none/total_discoveries_none
   FNDR_none <- false_nondiscoveries_none/total_non_discoveries_none
-  type_1_none <- false_discoveries_none/n_false
-  power_none <- true_discoveries_none/n_true
-
-  true_discoveries_holm <- sum(p_true_holm < 0.05)
-  false_nondiscoveries_holm <- sum(p_true_holm > 0.05)
-  false_discoveries_holm <- sum(p_false_holm < 0.05)
-  true_nondiscoveries_holm <- sum(p_false_holm > 0.05)
+  type_1_none <- false_discoveries_none/n_false/n_iter
+  power_none <- true_discoveries_none/n_true/n_iter
+  FWER_none <- FWE_none/n_iter
+  
   total_discoveries_holm <- true_discoveries_holm + false_discoveries_holm
   total_non_discoveries_holm <- false_nondiscoveries_holm + true_nondiscoveries_holm
   TDR_holm <- true_discoveries_holm/total_discoveries_holm
   FDR_holm <- false_discoveries_holm/total_discoveries_holm
   FNDR_holm <- false_nondiscoveries_holm/total_non_discoveries_holm
-  type_1_holm <- false_discoveries_holm/n_false
-  power_holm <- true_discoveries_holm/n_true
+  type_1_holm <- false_discoveries_holm/n_false/n_iter
+  power_holm <- true_discoveries_holm/n_true/n_iter
+  FWER_holm <- FWE_holm/n_iter
 
-  true_discoveries_fdr <- sum(p_true_fdr < 0.05)
-  false_nondiscoveries_fdr <- sum(p_true_fdr > 0.05)
-  false_discoveries_fdr <- sum(p_false_fdr < 0.05)
-  true_nondiscoveries_fdr <- sum(p_false_fdr > 0.05)
   total_discoveries_fdr <- true_discoveries_fdr + false_discoveries_fdr
   total_non_discoveries_fdr <- false_nondiscoveries_fdr + true_nondiscoveries_fdr
   TDR_fdr <- true_discoveries_fdr/total_discoveries_fdr
   FDR_fdr <- false_discoveries_fdr/total_discoveries_fdr
   FNDR_fdr <- false_nondiscoveries_fdr/total_non_discoveries_fdr
-  type_1_fdr <- false_discoveries_fdr/n_false
-  power_fdr <- true_discoveries_fdr/n_true
+  type_1_fdr <- false_discoveries_fdr/n_false/n_iter
+  power_fdr <- true_discoveries_fdr/n_true/n_iter
+  FWER_fdr <- FWE_fdr/n_iter
 
   out_table <- data.table(
-    Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power"),
+    Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power", "FWER"),
     None = c(true_discoveries_none, false_discoveries_none, TDR_none,
-             FDR_none, FNDR_none, type_1_none, power_none),
+             FDR_none, FNDR_none, type_1_none, power_none, FWER_none),
     Holm = c(true_discoveries_holm, false_discoveries_holm, TDR_holm,
-             FDR_holm, FNDR_holm, type_1_holm, power_holm),
+             FDR_holm, FNDR_holm, type_1_holm, power_holm, FWER_holm),
     FDR = c(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,
-            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr)
+            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr, FWER_fdr)
   )
   
   row_digits <- function(df, d){
@@ -707,7 +774,7 @@ p_false <- numeric(n_false)
   }
   
   out_table_round <- row_digits(out_table,
-                                c(0,0,3,3,3,3,2))
+                                c(0,0,3,3,3,3,2,3))
   
   out_table_round |>
     kable() |>

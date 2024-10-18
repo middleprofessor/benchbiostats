@@ -265,7 +265,7 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05" id="toc-in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05" class="nav-link active" data-scroll-target="#in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05"><span class="header-section-number">12.1</span> In a family of multiple tests, what is the probability of at least one p-value less than 0.05?</a></li>
+  <li><a href="#sec-fwer" id="toc-sec-fwer" class="nav-link active" data-scroll-target="#sec-fwer"><span class="header-section-number">12.1</span> In a family of multiple tests, what is the probability of at least one p-value less than 0.05?</a></li>
   <li><a href="#example-1-in-many-experiments-we-dont-want-to-adjust-for-multiple-tests-exfig2d-data" id="toc-example-1-in-many-experiments-we-dont-want-to-adjust-for-multiple-tests-exfig2d-data" class="nav-link" data-scroll-target="#example-1-in-many-experiments-we-dont-want-to-adjust-for-multiple-tests-exfig2d-data"><span class="header-section-number">12.2</span> Example 1 – In many experiments, we don’t want to adjust for multiple tests (exfig2d data)</a>
   <ul>
   <li><a href="#or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done" id="toc-or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done" class="nav-link" data-scroll-target="#or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done"><span class="header-section-number">12.2.1</span> Or, maybe we do want to adjust, but not in the way that is usually done</a></li>
@@ -337,8 +337,8 @@ TL;DR
 </ol>
 </div>
 </div>
-<section id="in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="in-a-family-of-multiple-tests-what-is-the-probability-of-at-least-one-p-value-less-than-0.05"><span class="header-section-number">12.1</span> In a family of multiple tests, what is the probability of at least one p-value less than 0.05?</h2>
+<section id="sec-fwer" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="sec-fwer"><span class="header-section-number">12.1</span> In a family of multiple tests, what is the probability of at least one p-value less than 0.05?</h2>
 <p>A <strong>family</strong> of tests is a set of tests that are used to make some inference about one question. For example, “In this mouse model of diabetes, are any genes differently expressed between diabetes mice and wildtype mice”? <span class="math inline">\(p &lt; 0.05\)</span> for any of the tested genes answers the question. If a researcher only tests one gene, then the probability of <span class="math inline">\(p &lt; 0.05\)</span> if there is no expression difference between phenotypes is 5%. But if a researcher tests two genes, there is a higher probability than 5% that at least one will have <span class="math inline">\(p &lt; 0.05\)</span> if there is no expression difference between phenotypes for both genes. And, if a researcher tests ten genes, there is a much higher probability than 5% that at least one will have <span class="math inline">\(p &lt; 0.05\)</span> if there is no expression difference between phenotypes for any of the ten genes. What are these probabilities?</p>
 <p>The probability of a significant <em>p</em>-value in one test is 0.05, so the probability of no non-significant <em>p</em>-values in one test is 1 - 0.05. The probability of no non-significant <em>p</em>-values in two tests is <span class="math inline">\((1 - 0.05)^2\)</span>, so the probability of at least one significant <em>p</em>-value is <span class="math inline">\(1 - (1 - 0.05)^2\)</span>. The probability of no non-significant <em>p</em>-values in ten tests is <span class="math inline">\((1 - 0.05)^{10}\)</span>, so the probability of at least one significant <em>p</em>-value in ten tests is <span class="math inline">\(1 - (1 - 0.05)^{10}\)</span>. Let’s compute these probabilities, and more.</p>
 <div class="cell">
@@ -494,9 +494,9 @@ Table&nbsp;12.1: Unadjusted <em>p</em>-value and Holm-Sidak adjusted <em>p</em>-
 <p>The two factors are</p>
 <ol type="1">
 <li>genotype, with levels “WT” and “KO”. KO is the conditional knockout of <em>Gabra1</em> in the DMV.</li>
-<li>puerarin, with levels “Vehicle” and “Puerarin”. Infusion of a saline solution (Vehicle) or a solution with Puerarin.</li>
+<li>treatment, with levels “Vehicle” and “Puerarin”. Infusion of a saline solution (Vehicle) or a solution with Puerarin.</li>
 </ol>
-<p>All levels of both factors are combined to create the four treatment combinations (the design is <strong>fully factorial</strong>)</p>
+<p>All levels of both factors are combined to create the four experimental combinations (the design is <strong>fully factorial</strong>)</p>
 <ol type="1">
 <li>“WT Vehicle” is the combination “WT” + “Vehicle”. This is the negative control.</li>
 <li>“WT Puerarin” is the combination “WT” + “Puerarin”.</li>
@@ -639,148 +639,417 @@ Table&nbsp;12.3
 </section>
 <section id="example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data" class="level2" data-number="12.4">
 <h2 data-number="12.4" class="anchored" data-anchor-id="example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data"><span class="header-section-number">12.4</span> Example 3 – When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)</h2>
-<p>Source: <a href="https://www.nature.com/articles/s41467-023-42473-2" target="_blank">Su, H., Guo, H., Qiu, X. et al.&nbsp;Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice. Nat Commun 14, 6729 (2023). https://doi.org/10.1038/s41467-023-42473-2</a></p>
-<p><a href="https://www.nature.com/articles/s41467-023-42473-2#Sec31" target="_blank">Data source</a></p>
-<p>Figure: Figure 3</p>
-<p>The import code is in <a href="#sec-fig3-import-unhide" class="quarto-xref"><span>Section 12.7.3</span></a> below</p>
-<p>The researchers are investigating the role of <em>Lipocalin-2</em> (<em>LCN2</em>) on mitochondrial membrane function. Using a LCN2 knockout and the thermogenic molecule CL316,243, the researchers scanned for differences in levels of 246 lipids between WT and KO mice with and without CL316,243 treatment. Of the different classes of lipids, the biggest differences were found in cardiolipins. The panels in Fig 3d-u show cardiolipin levels among treatment groups for 18 of the 26 cardiolipins with at least one significant <em>p</em>-value for a difference between WT and KO mice. The researchers organize the panels into distinct patterns of response to treatment. This suggests the research question is something like, “do we see differeces in CL synthesis under different combinations of LCN2 activity and CL316,243?”. There are 4 x 26 contrasts that answer this – the four simple effects within a cardiolipin response across all 26 cardiolipins tested.</p>
-<p>The question is,</p>
-<p>Let’s adjust the four <em>p</em>-values for each contrast using</p>
-<ol type="1">
-<li>FDR. This method adjusts <em>p</em>-values so that the false discovery rate is 5%.</li>
-<li>Holm. This method adjust <em>p</em>-values so that the family wise error rate is 5%.</li>
-</ol>
-<p>In a sense, FDR is more liberal and Holm is more conservative but they have different goals. When <span class="math inline">\(p &lt; 0.05\)</span>, researchers act as if they have discovered or confirmed something, so call <span class="math inline">\(p &lt; 0.05\)</span> a <strong>discovery</strong>. Consider these two situations</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Wait What?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Wait What?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When <span class="math inline">\(p &lt; 0.05\)</span>, researchers act as if they have discovered or confirmed something, so <span class="math inline">\(p &lt; 0.05\)</span> is evidence of a <strong>discovery</strong>. Consider these two situations</p>
 <ol type="1">
 <li><span class="math inline">\(p &lt; 0.05\)</span> and the Null Hypothesis is false – there is a true effect of treatment, or, there is a true difference in means between the two treatment levels. This is a true discovery.</li>
 <li><span class="math inline">\(p &lt; 0.05\)</span> but the Null Hypothesis is true – there is no true effect of treatment, or, there is no true difference in means between the two treatment levels. This is a false discovery.</li>
 </ol>
-<p>The <strong>false discovery rate</strong> in a batch of tests is</p>
+<p>The <strong>false discovery rate</strong> (FDR) in a batch of tests is</p>
 <p><span class="math display">\[
 FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + number\;of\;true\;discoveries}
-\]</span> In</p>
+\]</span></p>
+<p>Remember that the family wise error rate (FWER) is the long term probability of at least one <span class="math inline">\(p &lt; 0.05\)</span> in a batch of tests in which all Null Hypothesis are true – there are no true effects (<a href="#sec-fwer" class="quarto-xref"><span>Section 12.1</span></a>).</p>
+<p>Note that the FWER for a single batch of tests is either 1 (there was at least one false positive) or 0 (there were no false positives). By contrast, an omniscient researcher can compute the FDR for a single batch of tests.</p>
+<p>For any batch of tests in which some effects are real, and some are not</p>
 <ol type="1">
-<li>In</li>
+<li>A FWER method of <em>p</em>-value adjustment controls the long-term FWER at <span class="math inline">\(\leq\)</span> 0.05.</li>
+<li>An FDR method of <em>p</em>-value adjustment controls the long-term FDR at <span class="math inline">\(\leq\)</span> 0.05.</li>
 </ol>
-<p>One way that R, or any programming language, is more efficient than menu-driven statistical software such as Graphpad Prism is the ability to write scripts to combine analyses, which is what we need to do to adjust <em>p</em>-values from multiple fit statistical models.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://support.bioconductor.org/p/49864/</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://stats.stackexchange.com/questions/397222/what-is-the-difference-between-the-fdr-in-benjamini-hochberg-bonferonni-vs-a-loc</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://stats.stackexchange.com/questions/438432/plain-language-definition-of-positive-regression-dependency-on-each-one-from-a-s/440516#440516</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># https://stats.stackexchange.com/questions/515854/when-to-care-about-fdr-vs-when-to-care-about-fwer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>Source: <a href="https://www.nature.com/articles/s41467-023-42473-2" target="_blank">Su, H., Guo, H., Qiu, X. et al.&nbsp;Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice. Nat Commun 14, 6729 (2023). https://doi.org/10.1038/s41467-023-42473-2</a></p>
+<p><a href="https://www.nature.com/articles/s41467-023-42473-2#Sec31" target="_blank">Data source</a></p>
+<p>Figure: Figure 3</p>
+<p>The import code is in <a href="#sec-fig3-import-unhide" class="quarto-xref"><span>Section 12.7.3</span></a> below</p>
+<p>The researchers are investigating the role of <em>Lipocalin-2</em> (<em>LCN2</em>) on mitochondrial membrane function. Using a LCN2 knockout and the thermogenic molecule CL316,243, the researchers scanned for differences in levels of 246 lipids between WT and KO mice with and without CL316,243 treatment. Of the different classes of lipids, the biggest differences were found in cardiolipins. The panels in Fig 3d-u show cardiolipin levels for each of the four groups for 18 of the 26 cardiolipins with at least one significant <em>p</em>-value for a difference between WT and KO mice.</p>
+<p>The two factors are</p>
+<ol type="1">
+<li>genotype, with levels “WT” and “KO”, where KO is the LCN2 knockout.</li>
+<li>treatment, with levels “Saline” and “CL316243”, where CL316243 is administration of CL316,243.</li>
+</ol>
+<p>All levels of both factors are combined to create the four treatment combinations</p>
+<ol type="1">
+<li>“WT Saline” is the combination “WT” + “Saline”. This is the negative control.</li>
+<li>“WT CL316243” is the combination “WT” + “CL316,243”.</li>
+<li>“KO Saline” is the combination “KO” + “Saline”.</li>
+<li>“KO CL316243” is the combination “KO” + “CL316,243”</li>
+</ol>
+<p>The researchers do not have a model of how any specific cardiolipin will respond to any specific treatment combination. Instead, the research question seems to be something like, “do we see differences in CL synthesis under different combinations of LCN2 activity and CL316,243?” For each cardiolipin, the four simple effect contrasts answer this question. But the question remains the same for each cardiolipin, so there are 104 (4 x 26) tests in the family. Even though the researchers only present results for 18 cardiolipins, we have to include the 8 non-presented cardiolipins because these were also analyzed.</p>
+<p>Now this is an example of an experiment where we should adjust <em>p</em>-values for multiple testing!</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Which adjustment">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Which adjustment
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Holm. This modification of Bonferroni adjusts <em>p</em>-values to control the family-wise error rate (FWER) and would be relevant if the researchers were asking the question “does at least one cardiolipin have different synthesis level under any combination of genotype and treatment?”</li>
+<li>BH (Benjamini-Hochberg). This method based on Benjamini-Hochberg adjusts <em>p</em>-values to control the false discovery rate (FDR) and would be relevant if the researchers were asking “which cardiolipins have different synthesis levels and under which combination of genotype and treatment?”</li>
+</ol>
+<p>We control FWER if we want to show that “we have evidence of something happening in this system”. We control FDR if we want to show that “we have evidence that we’ve discovered a specific component in the system”.</p>
+<p>I don’t think the FWER question is very relevant to most experimental bench biology.</p>
+<p>In a sense, BH is more liberal and Holm is more conservative but this isn’t a good way to think about the these because this is comparing apples and oranges. Instead of using BH to “gain power” or Holm to “be conservative”, just use a different alpha. If the cost of false discovery is cheap but the potential for reward is high, increase alpha. If the cost of false discovery is expensive, decrease alpha.</p>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cl_cols <span class="ot">&lt;-</span> <span class="fu">names</span>(fig3)[<span class="fu">which</span>(<span class="fu">substr</span>(<span class="fu">names</span>(fig3), <span class="dv">1</span>, <span class="dv">11</span>) <span class="sc">==</span> <span class="st">"cardiolipin"</span>)]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n_cardiolipins <span class="ot">&lt;-</span> <span class="fu">length</span>(cl_cols)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="cn">NULL</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_cardiolipins){</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  lipid_id <span class="ot">&lt;-</span> cl_cols[i]</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  formula_i <span class="ot">&lt;-</span> <span class="fu">paste</span>(lipid_id, <span class="st">"~"</span>, <span class="st">"group"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">formula</span>()</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(formula_i, <span class="at">data =</span> fig3)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  m1_pairs <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"group"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>()</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  m1_pairs <span class="ot">&lt;-</span> m1_pairs[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">5</span>),]</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"WT-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"WT-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  p2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"KO-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"KO-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  p3 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"WT-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"KO-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  p4 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"WT-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"KO-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  p_table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    p_table,</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>(</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"lipid_id"</span> <span class="ot">=</span> lipid_id,</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>      m1_pairs[, .SD, <span class="at">.SDcols =</span> <span class="fu">c</span>(<span class="st">"contrast"</span>, <span class="st">"p.value"</span>)],</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">ttest =</span> <span class="fu">c</span>(p1, p2, p3, p4)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># adjust over all contrasts</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>pool_contrast <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(pool_contrast <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add 8 more cardiolipins not included in the plot</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># us lm pvalue instead of t test pvalue for increased power</span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  p_set <span class="ot">&lt;-</span> <span class="fu">c</span>(p_table[, p.value], <span class="fu">rep</span>(<span class="fl">0.99</span>, <span class="dv">8</span> <span class="sc">*</span> <span class="dv">4</span>)) <span class="co"># 8 cardiolipins * 4 contrasts</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"holm"</span>)[<span class="dv">1</span><span class="sc">:</span>(<span class="dv">18</span> <span class="sc">*</span> <span class="dv">4</span>)]</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  p_bh <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BH"</span>)[<span class="dv">1</span><span class="sc">:</span>(<span class="dv">18</span> <span class="sc">*</span> <span class="dv">4</span>)]</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  p_by <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BY"</span>)[<span class="dv">1</span><span class="sc">:</span>(<span class="dv">18</span> <span class="sc">*</span> <span class="dv">4</span>)]</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  p_table[, holm <span class="sc">:</span><span class="er">=</span> p_holm]</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  p_table[, fdr_bh <span class="sc">:</span><span class="er">=</span> p_bh]</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  p_table[, fdr_by <span class="sc">:</span><span class="er">=</span> p_by]</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co"># adjust within each contrast, not over all contrasts</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>by_contrast <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(by_contrast <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  contrast_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(p_table<span class="sc">$</span>contrast)</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(contrast_i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(contrast_list)){</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    p_set <span class="ot">&lt;-</span> p_table[contrast <span class="sc">==</span> contrast_list[contrast_i], ttest]</span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    p_set <span class="ot">&lt;-</span> <span class="fu">c</span>(p_set, <span class="fu">rep</span>(<span class="fl">0.99</span>, <span class="dv">8</span>))</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"holm"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>]</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    p_bh <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BH"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>]</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    p_by <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BY"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>]</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    p_table[contrast <span class="sc">==</span> contrast_list[contrast_i],</span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>            holm <span class="sc">:</span><span class="er">=</span> p_holm]</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    p_table[contrast <span class="sc">==</span> contrast_list[contrast_i],</span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>            fdr_bh <span class="sc">:</span><span class="er">=</span> p_bh]</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    p_table[contrast <span class="sc">==</span> contrast_list[contrast_i],</span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>            fdr_by <span class="sc">:</span><span class="er">=</span> p_by]</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="fu">data.table</span>(</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Method"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"lm"</span>, <span class="st">"ttest"</span>, <span class="st">"holm"</span>, <span class="st">"fdr_BH"</span>, <span class="st">"fdr_BY"</span>),</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  <span class="st">"N p&lt;0.05"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sum</span>(p_table[, p.value] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, ttest] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, holm] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, fdr_bh] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, fdr_by] <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Method N p&lt;0.05
-   &lt;char&gt;    &lt;int&gt;
-1:     lm       28
-2:  ttest       26
-3:   holm        7
-4: fdr_BH       16
-5: fdr_BY        9</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cl_cols <span class="ot">&lt;-</span> <span class="fu">names</span>(fig3)[<span class="fu">which</span>(<span class="fu">substr</span>(<span class="fu">names</span>(fig3), <span class="dv">1</span>, <span class="dv">11</span>) <span class="sc">==</span> <span class="st">"cardiolipin"</span>)]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n_cardiolipins <span class="ot">&lt;-</span> <span class="fu">length</span>(cl_cols)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="cn">NULL</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_cardiolipins){</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  lipid_id <span class="ot">&lt;-</span> cl_cols[i]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  formula_i <span class="ot">&lt;-</span> <span class="fu">paste</span>(lipid_id, <span class="st">"~"</span>, <span class="st">"group"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">formula</span>()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(formula_i, <span class="at">data =</span> fig3)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  m1_pairs <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"group"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  m1_pairs <span class="ot">&lt;-</span> m1_pairs[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">5</span>),]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"WT-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"WT-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  p2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"KO-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"KO-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  p3 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"WT-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"KO-Saline"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  p4 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(fig3[group <span class="sc">==</span> <span class="st">"WT-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>               fig3[group <span class="sc">==</span> <span class="st">"KO-CL"</span>, <span class="fu">get</span>(lipid_id)],</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>               <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  p_table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    p_table,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>(</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"lipid_id"</span> <span class="ot">=</span> lipid_id,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      m1_pairs[, .SD, <span class="at">.SDcols =</span> <span class="fu">c</span>(<span class="st">"contrast"</span>, <span class="st">"p.value"</span>)],</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">ttest =</span> <span class="fu">c</span>(p1, p2, p3, p4)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># adjust over all contrasts</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>pool_contrast <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(pool_contrast <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add 8 more cardiolipins not included in the plot</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># us lm pvalue instead of t test pvalue because t is less efficient</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  p_set <span class="ot">&lt;-</span> <span class="fu">c</span>(p_table[, p.value], <span class="fu">rep</span>(<span class="fl">0.99</span>, <span class="dv">8</span> <span class="sc">*</span> <span class="dv">4</span>)) <span class="co"># 8 cardiolipins * 4 contrasts</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"holm"</span>)[<span class="dv">1</span><span class="sc">:</span>(<span class="dv">18</span> <span class="sc">*</span> <span class="dv">4</span>)]</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  p_bh <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BH"</span>)[<span class="dv">1</span><span class="sc">:</span>(<span class="dv">18</span> <span class="sc">*</span> <span class="dv">4</span>)]</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  p_by <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BY"</span>)[<span class="dv">1</span><span class="sc">:</span>(<span class="dv">18</span> <span class="sc">*</span> <span class="dv">4</span>)]</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  p_table[, holm <span class="sc">:</span><span class="er">=</span> p_holm]</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  p_table[, fdr_bh <span class="sc">:</span><span class="er">=</span> p_bh]</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  p_table[, fdr_by <span class="sc">:</span><span class="er">=</span> p_by]</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># adjust within each contrast, not over all contrasts</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>by_contrast <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(by_contrast <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  contrast_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(p_table<span class="sc">$</span>contrast)</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(contrast_i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(contrast_list)){</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    p_set <span class="ot">&lt;-</span> p_table[contrast <span class="sc">==</span> contrast_list[contrast_i], ttest]</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    p_set <span class="ot">&lt;-</span> <span class="fu">c</span>(p_set, <span class="fu">rep</span>(<span class="fl">0.99</span>, <span class="dv">8</span>))</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"holm"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>]</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    p_bh <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BH"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>]</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    p_by <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_set, <span class="st">"BY"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>]</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    p_table[contrast <span class="sc">==</span> contrast_list[contrast_i],</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>            holm <span class="sc">:</span><span class="er">=</span> p_holm]</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    p_table[contrast <span class="sc">==</span> contrast_list[contrast_i],</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>            fdr_bh <span class="sc">:</span><span class="er">=</span> p_bh]</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    p_table[contrast <span class="sc">==</span> contrast_list[contrast_i],</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>            fdr_by <span class="sc">:</span><span class="er">=</span> p_by]</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="co"># p_table_order &lt;- doBy::orderBy(~ contrast + lipid_id, p_table)</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="co"># p_table_order[, .SD, .SDcols = setdiff(names(p_table), "contrast")] |&gt;</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="co">#   setnames("lipid_id", "") |&gt;</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="co">#   kable(digits = 3) |&gt;</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a><span class="co">#   kable_styling(full_width = FALSE) |&gt;</span></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="co">#   pack_rows(contrast_list[1], 1, 18) |&gt;</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a><span class="co">#   pack_rows(contrast_list[2], 19, 36) |&gt;</span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="co">#   pack_rows(contrast_list[3], 37, 54)</span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a><span class="co"># researcher results</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="co"># set1 d-h</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a><span class="co">#WT: cl lower</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="co">#KO: cl not lower</span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a><span class="co"># set2 i-m</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a><span class="co">#WT cl not lower</span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="co">#KO: cl lower</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="co"># set3 n-u</span></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a><span class="co">#WT cl higher</span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="co">#KO: cl higher in 3/8</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="fu">data.table</span>(</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Method"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"lm (unadjusted)"</span>, <span class="st">"t test (unadjusted)"</span>, <span class="st">"BH (FDR)"</span>, <span class="st">"BY (FDR)"</span>, <span class="st">"Holm (FWER)"</span>),</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>  <span class="st">"N (p&lt;0.05)"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sum</span>(p_table[, p.value] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, ttest] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, fdr_bh] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, fdr_by] <span class="sc">&lt;</span> <span class="fl">0.05</span>),</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(p_table[, holm] <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Number of discoveries (<em>p</em> &lt; 0.05) among the 104 tests</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Method</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">N (p&lt;0.05)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">lm (unadjusted)</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">t test (unadjusted)</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BH (FDR)</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BY (FDR)</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Holm (FWER)</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p_table_order &lt;- doBy::orderBy(~ contrast + lipid_id, p_table)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># p_table_order[, .SD, .SDcols = setdiff(names(p_table), "contrast")] |&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   setnames("lipid_id", "") |&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   kable(digits = 3) |&gt;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   kable_styling(full_width = FALSE) |&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   pack_rows(contrast_list[1], 1, 18) |&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   pack_rows(contrast_list[2], 19, 36) |&gt;</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   pack_rows(contrast_list[3], 37, 54)</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># set1 d-h</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#WT: cl lower</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#KO: cl not lower</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># set2 i-m</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#WT cl not lower</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#KO: cl lower</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># set3 n-u</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#WT cl higher</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#KO: cl higher in 3/8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Notes</p>
+<ol class="example" type="1">
+<li>For these data, there are more discoveries (<em>p</em> &lt; 0.05) using the linear model with all four groups than using the pairwise <em>t</em>-tests used by the researchers. The linear model is <em>slightly</em> more powerful than pairwise <em>t</em>-tests because of a smaller SE, but differences in discovery rate between the two methods in any one batch will depend more on patterns of sample variances.</li>
+<li>The BH adjustment reduced the number of discoveries by nearly half. The BY adjustment reduced the number of discoveries by nearly 2/3. BY is an FDR method based on Benjamini &amp; Yekutieli that is modified for non-independent tests. The tests here are not independent because the cardiolipin levels are correlated. Consequently, BY will have better control of FDR than BH.</li>
+<li>The Holm adjustment reduced the number of discoveries by three-fourths. I include it here simply for comparison. As argued above, Holm, or any FWER, doesn’t answer the right question.</li>
+<li>The researchers didn’t adjust. Should they have? If the goal is discovery on how combinations of LCN2 and CL316,243 effect cardiolipin synthesis, and they don’t have working models of the system, then yes, they should adjust.</li>
+<li>One way that R, or any programming language, is more efficient than menu-driven statistical software is the ability to write scripts to combine analyses, which is what we need to do to adjust <em>p</em>-values from multiple fit statistical models.</li>
+</ol>
 </section>
 <section id="better-know-fdr" class="level2" data-number="12.5">
 <h2 data-number="12.5" class="anchored" data-anchor-id="better-know-fdr"><span class="header-section-number">12.5</span> Better Know FDR</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n_tests <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>true_fraction <span class="ot">&lt;-</span> .<span class="dv">2</span> <span class="co"># fraction of tests with true effect</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>false_fraction <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_fraction <span class="co"># fraction of tests with no effect</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>n_true <span class="ot">&lt;-</span> true_fraction <span class="sc">*</span> n_tests <span class="co"># number of tests with true effect</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>n_false <span class="ot">&lt;-</span> false_fraction <span class="sc">*</span> n_tests <span class="co"># number of tests with no effect</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>power_exp <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">power =</span> power_exp, <span class="at">sig.level =</span> alpha)<span class="sc">$</span>delta</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_true)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>p_false <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_false)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>true_discoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>false_nondiscoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>false_discoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>true_nondiscoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>true_discoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>false_nondiscoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>false_discoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>true_nondiscoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>true_discoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>false_nondiscoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>false_discoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>true_nondiscoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>FWE_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>FWE_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>FWE_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>type_1 <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_true){</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    p_true[j] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> delta), <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_false){</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    p_false[j] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  type_1 <span class="ot">&lt;-</span> type_1 <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_false</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  power <span class="ot">&lt;-</span> power <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_true</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  p_none <span class="ot">&lt;-</span> <span class="fu">c</span>(p_true, p_false)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_none, <span class="at">method =</span> <span class="st">"holm"</span>)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  p_fdr <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_none, <span class="at">method =</span> <span class="st">"BH"</span>)</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  p_true_holm <span class="ot">&lt;-</span> p_holm[<span class="dv">1</span><span class="sc">:</span>n_true]</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  p_true_fdr <span class="ot">&lt;-</span> p_fdr[<span class="dv">1</span><span class="sc">:</span>n_true]</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  p_false_holm <span class="ot">&lt;-</span> p_holm[(n_true <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_tests]</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  p_false_fdr <span class="ot">&lt;-</span> p_fdr[(n_true <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_tests]</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_none <span class="ot">&lt;-</span> FWE_none <span class="sc">+</span> <span class="dv">1</span>}</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  true_discoveries_none <span class="ot">&lt;-</span> true_discoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  false_nondiscoveries_none <span class="ot">&lt;-</span> false_nondiscoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  false_discoveries_none <span class="ot">&lt;-</span> false_discoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  true_nondiscoveries_none <span class="ot">&lt;-</span> true_nondiscoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(p_false_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_holm <span class="ot">&lt;-</span> FWE_holm <span class="sc">+</span> <span class="dv">1</span>}</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  true_discoveries_holm <span class="ot">&lt;-</span> true_discoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_true_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  false_nondiscoveries_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_true_holm <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  false_discoveries_holm <span class="ot">&lt;-</span> false_discoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_false_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  true_nondiscoveries_holm <span class="ot">&lt;-</span> true_nondiscoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_false_holm <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(p_false_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_fdr <span class="ot">&lt;-</span> FWE_fdr <span class="sc">+</span> <span class="dv">1</span>}</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  true_discoveries_fdr <span class="ot">&lt;-</span> true_discoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_true_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  false_nondiscoveries_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_true_fdr <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>  false_discoveries_fdr <span class="ot">&lt;-</span> false_discoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_false_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  true_nondiscoveries_fdr <span class="ot">&lt;-</span> true_nondiscoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_false_fdr <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>  total_discoveries_none <span class="ot">&lt;-</span> true_discoveries_none <span class="sc">+</span> false_discoveries_none</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  total_non_discoveries_none <span class="ot">&lt;-</span> false_nondiscoveries_none <span class="sc">+</span> true_nondiscoveries_none</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  TDR_none <span class="ot">&lt;-</span> true_discoveries_none<span class="sc">/</span>total_discoveries_none</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  FDR_none <span class="ot">&lt;-</span> false_discoveries_none<span class="sc">/</span>total_discoveries_none</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>  FNDR_none <span class="ot">&lt;-</span> false_nondiscoveries_none<span class="sc">/</span>total_non_discoveries_none</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  type_1_none <span class="ot">&lt;-</span> false_discoveries_none<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  power_none <span class="ot">&lt;-</span> true_discoveries_none<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  FWER_none <span class="ot">&lt;-</span> FWE_none<span class="sc">/</span>n_iter</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  total_discoveries_holm <span class="ot">&lt;-</span> true_discoveries_holm <span class="sc">+</span> false_discoveries_holm</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>  total_non_discoveries_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm <span class="sc">+</span> true_nondiscoveries_holm</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>  TDR_holm <span class="ot">&lt;-</span> true_discoveries_holm<span class="sc">/</span>total_discoveries_holm</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>  FDR_holm <span class="ot">&lt;-</span> false_discoveries_holm<span class="sc">/</span>total_discoveries_holm</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  FNDR_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm<span class="sc">/</span>total_non_discoveries_holm</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>  type_1_holm <span class="ot">&lt;-</span> false_discoveries_holm<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>  power_holm <span class="ot">&lt;-</span> true_discoveries_holm<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>  FWER_holm <span class="ot">&lt;-</span> FWE_holm<span class="sc">/</span>n_iter</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>  total_discoveries_fdr <span class="ot">&lt;-</span> true_discoveries_fdr <span class="sc">+</span> false_discoveries_fdr</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>  total_non_discoveries_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr <span class="sc">+</span> true_nondiscoveries_fdr</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  TDR_fdr <span class="ot">&lt;-</span> true_discoveries_fdr<span class="sc">/</span>total_discoveries_fdr</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>  FDR_fdr <span class="ot">&lt;-</span> false_discoveries_fdr<span class="sc">/</span>total_discoveries_fdr</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>  FNDR_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr<span class="sc">/</span>total_non_discoveries_fdr</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>  type_1_fdr <span class="ot">&lt;-</span> false_discoveries_fdr<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>  power_fdr <span class="ot">&lt;-</span> true_discoveries_fdr<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>  FWER_fdr <span class="ot">&lt;-</span> FWE_fdr<span class="sc">/</span>n_iter</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>  out_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">Stat =</span> <span class="fu">c</span>(<span class="st">"TD"</span>, <span class="st">"FD"</span>, <span class="st">"TDR"</span>, <span class="st">"FDR"</span>, <span class="st">"FNDR"</span>, <span class="st">"Type1"</span>, <span class="st">"power"</span>, <span class="st">"FWER"</span>),</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">None =</span> <span class="fu">c</span>(true_discoveries_none, false_discoveries_none, TDR_none,</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>             FDR_none, FNDR_none, type_1_none, power_none, FWER_none),</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">Holm =</span> <span class="fu">c</span>(true_discoveries_holm, false_discoveries_holm, TDR_holm,</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>             FDR_holm, FNDR_holm, type_1_holm, power_holm, FWER_holm),</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">FDR =</span> <span class="fu">c</span>(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr, FWER_fdr)</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>  row_digits <span class="ot">&lt;-</span> <span class="cf">function</span>(df, d){</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    <span class="co"># df is a data.frame or data.table</span></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># d is a single value for all rows or vector of digits for each row</span></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>    inc <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(df, is.numeric)))</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">Filter</span>(is.numeric, df), d)<span class="sc">|&gt;</span></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(<span class="dv">2</span>, as.character) <span class="sc">|&gt;</span></span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>()</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>    df_out <span class="ot">&lt;-</span> <span class="fu">apply</span>(df, <span class="dv">2</span>, as.character) <span class="sc">|&gt;</span></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>()</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>    df_out[, inc] <span class="ot">&lt;-</span> x</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(df_out)</span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>  out_table_round <span class="ot">&lt;-</span> <span class="fu">row_digits</span>(out_table,</span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>  out_table_round <span class="sc">|&gt;</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Stat</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">None</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Holm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">FDR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">TD</td>
+<td style="text-align: left;">80011</td>
+<td style="text-align: left;">16409</td>
+<td style="text-align: left;">42705</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FD</td>
+<td style="text-align: left;">19937</td>
+<td style="text-align: left;">196</td>
+<td style="text-align: left;">2160</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TDR</td>
+<td style="text-align: left;">0.801</td>
+<td style="text-align: left;">0.988</td>
+<td style="text-align: left;">0.952</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FDR</td>
+<td style="text-align: left;">0.199</td>
+<td style="text-align: left;">0.012</td>
+<td style="text-align: left;">0.048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FNDR</td>
+<td style="text-align: left;">0.05</td>
+<td style="text-align: left;">0.173</td>
+<td style="text-align: left;">0.126</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Type1</td>
+<td style="text-align: left;">0.05</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0.005</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">power</td>
+<td style="text-align: left;">0.8</td>
+<td style="text-align: left;">0.16</td>
+<td style="text-align: left;">0.43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FWER</td>
+<td style="text-align: left;">0.982</td>
+<td style="text-align: left;">0.039</td>
+<td style="text-align: left;">0.33</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
 </section>
 <section id="working-in-r" class="level2" data-number="12.6">
 <h2 data-number="12.6" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">12.6</span> Working in R</h2>
@@ -790,13 +1059,13 @@ FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + num
 <li>Tukey HSD is the default for all pairwise contrasts using either <code>method = "pairwise"</code> or <code>method = "revpairwise"</code></li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the exfig2 data to explore this</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nefa <span class="sc">~</span> treatment, <span class="at">data =</span> exfig2)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the exfig2 data to explore this</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nefa <span class="sc">~</span> treatment, <span class="at">data =</span> exfig2)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
  3q - con    -1.09 0.407 26  -2.1011  -0.0793  -2.680  0.0327
@@ -814,13 +1083,13 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 <li>Dunnett’s test is the default for comparing all treatments (non-reference groups) to the control (the reference group). Both <code>method = "trt.vs.ctrl"</code> and <code>method = "dunnett"</code> work.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the exfig2 data to explore this</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nefa <span class="sc">~</span> treatment, <span class="at">data =</span> exfig2)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"trt.vs.ctrl"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the exfig2 data to explore this</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nefa <span class="sc">~</span> treatment, <span class="at">data =</span> exfig2)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"trt.vs.ctrl"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
  3q - con    -1.09 0.407 26   -2.047   -0.133  -2.680  0.0241
@@ -836,14 +1105,14 @@ P value adjustment: dunnettx method for 2 tests </code></pre>
 <h3 data-number="12.6.2" class="anchored" data-anchor-id="for-non-default-adjustment-use-the-adjust-argument"><span class="header-section-number">12.6.2</span> For non-default adjustment, use the <code>adjust =</code> argument</h3>
 <p>For no adjustment, use <code>adjust = "none"</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the exfig2 data to explore this</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nefa <span class="sc">~</span> treatment, <span class="at">data =</span> exfig2)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the exfig2 data to explore this</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nefa <span class="sc">~</span> treatment, <span class="at">data =</span> exfig2)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
  3q - con    -1.09 0.407 26   -1.926   -0.254  -2.680  0.0126
@@ -881,28 +1150,28 @@ Confidence level used: 0.95 </code></pre>
 <p>We use the base R <code>p.adjust()</code> function to adjust a set of <em>p</em>-values that were computed from different models, as in Example 3 above.</p>
 <p>But to show a very simple example of using the <code>p.adjust()</code> function, let’s use the lipocalin Fig3 data. First get the p values for the four simple effects on the cardiolipin in panel d.&nbsp;Be sure to use the <code>adjust = "none</code> argument because we want to adjust unadjusted <em>p</em>-values!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiolipin_d <span class="sc">~</span> genotype <span class="sc">*</span> treatment, <span class="at">data =</span> fig3)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>))</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the four simple effect p-values</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">simple =</span> <span class="st">"each"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the p-values</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>p_fig3d <span class="ot">&lt;-</span> m1_simple[, p.value]</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>p_fig3d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiolipin_d <span class="sc">~</span> genotype <span class="sc">*</span> treatment, <span class="at">data =</span> fig3)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the four simple effect p-values</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">simple =</span> <span class="st">"each"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the p-values</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>p_fig3d <span class="ot">&lt;-</span> m1_simple[, p.value]</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>p_fig3d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.034802754 0.497327407 0.003147072 0.668086400</code></pre>
 </div>
 </div>
 <p>Now, use the <code>p.adjust()</code> function</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p_fdr_BH_fig3d <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_fig3d, <span class="st">"BH"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>p_fdr_BH_fig3d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p_fdr_BH_fig3d <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_fig3d, <span class="st">"BH"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p_fdr_BH_fig3d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.06960551 0.66310321 0.01258829 0.66808640</code></pre>
 </div>
@@ -925,34 +1194,34 @@ Confidence level used: 0.95 </code></pre>
 <section id="a-holm-sidak-function-for-reproducing-graphpad-prism-results" class="level3" data-number="12.6.5">
 <h3 data-number="12.6.5" class="anchored" data-anchor-id="a-holm-sidak-function-for-reproducing-graphpad-prism-results"><span class="header-section-number">12.6.5</span> A Holm-Sidak function for reproducing GraphPad Prism results</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>holm_sidak <span class="ot">&lt;-</span> <span class="cf">function</span>(p){</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assume alpha = 0.05</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(p)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  rank_p <span class="ot">&lt;-</span> <span class="fu">frank</span>(p)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  inv_rank_p <span class="ot">&lt;-</span> n <span class="sc">-</span> rank_p <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># put pvalues and the inv rankings in rank order</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  p_order <span class="ot">&lt;-</span> p[<span class="fu">order</span>(p)]</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  inv_rank_order <span class="ot">&lt;-</span> inv_rank_p[<span class="fu">order</span>(p)]</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute the adjusted p-value</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  p_holm_sidak_order <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> p_order)<span class="sc">^</span>(inv_rank_order))</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adjusted p-values of higher rank cannot be less than adjusted p-value of lower rank</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># so find and adjust these</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n){</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(p_holm_sidak_order[j] <span class="sc">&lt;</span> p_holm_sidak_order[j<span class="dv">-1</span>]){</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>      p_holm_sidak_order[j] <span class="ot">&lt;-</span> p_holm_sidak_order[j<span class="dv">-1</span>]</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># any adjusted &gt; 1 make 1</span></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  p_holm_sidak_order[p_holm_sidak_order <span class="sc">&gt;</span> <span class="fl">1.0</span>] <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># put back into original order</span></span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  p_holm_sidak <span class="ot">&lt;-</span> p_holm_sidak_order[rank_p]</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p_holm_sidak)</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>holm_sidak <span class="ot">&lt;-</span> <span class="cf">function</span>(p){</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assume alpha = 0.05</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(p)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  rank_p <span class="ot">&lt;-</span> <span class="fu">frank</span>(p)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  inv_rank_p <span class="ot">&lt;-</span> n <span class="sc">-</span> rank_p <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># put pvalues and the inv rankings in rank order</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  p_order <span class="ot">&lt;-</span> p[<span class="fu">order</span>(p)]</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  inv_rank_order <span class="ot">&lt;-</span> inv_rank_p[<span class="fu">order</span>(p)]</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute the adjusted p-value</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  p_holm_sidak_order <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> p_order)<span class="sc">^</span>(inv_rank_order))</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adjusted p-values of higher rank cannot be less than adjusted p-value of lower rank</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># so find and adjust these</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n){</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(p_holm_sidak_order[j] <span class="sc">&lt;</span> p_holm_sidak_order[j<span class="dv">-1</span>]){</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      p_holm_sidak_order[j] <span class="ot">&lt;-</span> p_holm_sidak_order[j<span class="dv">-1</span>]</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># any adjusted &gt; 1 make 1</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  p_holm_sidak_order[p_holm_sidak_order <span class="sc">&gt;</span> <span class="fl">1.0</span>] <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># put back into original order</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  p_holm_sidak <span class="ot">&lt;-</span> p_holm_sidak_order[rank_p]</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p_holm_sidak)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notes</p>
 <ol type="1">
@@ -960,25 +1229,25 @@ Confidence level used: 0.95 </code></pre>
 <li>This function is used exactly like any other R function. Here I compare both Holm and Holm-Sidak for the Lipocalin Fig3 dataset. Just like the Sidak adjustment is slightly more powerful than Bonferroni, the Holm-Sidak is slightly more powerful than Holm. These tiny differences are rather moot, given the TL;DR at the start of this chapter (<a href="#sec-multiple-tests" class="quarto-xref"><span>Chapter 12</span></a>).</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiolipin_d <span class="sc">~</span> genotype <span class="sc">*</span> treatment, <span class="at">data =</span> fig3)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>))</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the four simple effect p-values</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">simple =</span> <span class="st">"each"</span>,</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># compute holm</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>m1_simple[, holm <span class="sc">:</span><span class="er">=</span> <span class="fu">p.adjust</span>(p.value, <span class="st">"holm"</span>)]</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># compute holm-sidak</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>m1_simple[, holm_sidak <span class="sc">:</span><span class="er">=</span> <span class="fu">holm_sidak</span>(p.value)]</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="sc">|&gt;</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">4</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiolipin_d <span class="sc">~</span> genotype <span class="sc">*</span> treatment, <span class="at">data =</span> fig3)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the four simple effect p-values</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">simple =</span> <span class="st">"each"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># compute holm</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>m1_simple[, holm <span class="sc">:</span><span class="er">=</span> <span class="fu">p.adjust</span>(p.value, <span class="st">"holm"</span>)]</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># compute holm-sidak</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>m1_simple[, holm_sidak <span class="sc">:</span><span class="er">=</span> <span class="fu">holm_sidak</span>(p.value)]</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="sc">|&gt;</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">4</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -1067,119 +1336,119 @@ Confidence level used: 0.95 </code></pre>
 <section id="sec-exfig2-import-unhide" class="level3" data-number="12.7.1">
 <h3 data-number="12.7.1" class="anchored" data-anchor-id="sec-exfig2-import-unhide"><span class="header-section-number">12.7.1</span> Example 1 (exfig2 data)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"A brain-to-gut signal controls intestinal fat absorption"</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2024_7929_MOESM13_ESM.xlsx"</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>exfig2_import <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">phenotype =</span> <span class="st">"xxx"</span>, <span class="at">range_in =</span> <span class="st">"xxx"</span>){</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  exfig2_part <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">sheet =</span> <span class="st">"Sheet1"</span>,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">range =</span> range_in,</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">melt</span>(<span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">value.name =</span> phenotype)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(exfig2_part)</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>exfig2 <span class="ot">&lt;-</span> <span class="fu">exfig2_import</span>(<span class="at">phenotype =</span> <span class="st">"nefa"</span>,</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">range =</span> <span class="st">"A47:C57"</span>)</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>exfig2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(exfig2,</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"fecal_tg"</span> <span class="ot">=</span> <span class="fu">exfig2_import</span>(<span class="at">phenotype =</span> <span class="st">"fecal_tg"</span>,</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">range =</span> <span class="st">"A64:C74"</span>)<span class="sc">$</span>fecal_tg)</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>exfig2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(exfig2,</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">"jejunal_tg"</span> <span class="ot">=</span> <span class="fu">exfig2_import</span>(<span class="at">phenotype =</span> <span class="st">"jejunal_tg"</span>,</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">range =</span> <span class="st">"A81:C91"</span>)<span class="sc">$</span>jejunal_tg)</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>exfig2[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment,</span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">unique</span>(treatment))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"A brain-to-gut signal controls intestinal fat absorption"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2024_7929_MOESM13_ESM.xlsx"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>exfig2_import <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">phenotype =</span> <span class="st">"xxx"</span>, <span class="at">range_in =</span> <span class="st">"xxx"</span>){</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  exfig2_part <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">sheet =</span> <span class="st">"Sheet1"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">range =</span> range_in,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">melt</span>(<span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">value.name =</span> phenotype)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(exfig2_part)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>exfig2 <span class="ot">&lt;-</span> <span class="fu">exfig2_import</span>(<span class="at">phenotype =</span> <span class="st">"nefa"</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">range =</span> <span class="st">"A47:C57"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>exfig2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(exfig2,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"fecal_tg"</span> <span class="ot">=</span> <span class="fu">exfig2_import</span>(<span class="at">phenotype =</span> <span class="st">"fecal_tg"</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">range =</span> <span class="st">"A64:C74"</span>)<span class="sc">$</span>fecal_tg)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>exfig2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(exfig2,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">"jejunal_tg"</span> <span class="ot">=</span> <span class="fu">exfig2_import</span>(<span class="at">phenotype =</span> <span class="st">"jejunal_tg"</span>,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">range =</span> <span class="st">"A81:C91"</span>)<span class="sc">$</span>jejunal_tg)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>exfig2[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">unique</span>(treatment))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-fig5l-import-unhide" class="level3" data-number="12.7.2">
 <h3 data-number="12.7.2" class="anchored" data-anchor-id="sec-fig5l-import-unhide"><span class="header-section-number">12.7.2</span> Example 2 (fig5l data)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"A brain-to-gut signal controls intestinal fat absorption"</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2024_7929_MOESM11_ESM.xlsx"</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>fig5l <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sheet =</span> <span class="st">"Sheet1"</span>,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">range =</span> <span class="st">"A133:AG137"</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transpose</span>(<span class="at">make.names =</span> <span class="dv">1</span>)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fig5l)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"treatment_orig"</span>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>fig5l[, ezrin <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(ezrin)]</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>fig5l[, cdc42 <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(cdc42)]</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>fig5l[, eps8 <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(eps8)]</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>fig5l[, vil1 <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(vil1)]</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>fig5l[, treatment_orig <span class="sc">:</span><span class="er">=</span> <span class="fu">fill_down</span>(treatment_orig)]</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"flox-veh"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"WT Vehicle"</span>]</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"flox-Pue"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"WT Puerarin"</span>]</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"KO-veh"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"KO Vehicle"</span>]</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"KO-Pue"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"KO Puerarin"</span>]</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>fig5l[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">unique</span>(group))]</span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>fig5l[, <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(group, <span class="st">" "</span>)]</span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>fig5l[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>))]</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>fig5l[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"Puerarin"</span>))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"A brain-to-gut signal controls intestinal fat absorption"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2024_7929_MOESM11_ESM.xlsx"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>fig5l <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sheet =</span> <span class="st">"Sheet1"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">range =</span> <span class="st">"A133:AG137"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transpose</span>(<span class="at">make.names =</span> <span class="dv">1</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fig5l)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"treatment_orig"</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>fig5l[, ezrin <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(ezrin)]</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>fig5l[, cdc42 <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(cdc42)]</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>fig5l[, eps8 <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(eps8)]</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>fig5l[, vil1 <span class="sc">:</span><span class="er">=</span> <span class="fu">as.numeric</span>(vil1)]</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>fig5l[, treatment_orig <span class="sc">:</span><span class="er">=</span> <span class="fu">fill_down</span>(treatment_orig)]</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"flox-veh"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"WT Vehicle"</span>]</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"flox-Pue"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"WT Puerarin"</span>]</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"KO-veh"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"KO Vehicle"</span>]</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>fig5l[treatment_orig <span class="sc">==</span> <span class="st">"KO-Pue"</span>, group <span class="sc">:</span><span class="er">=</span> <span class="st">"KO Puerarin"</span>]</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>fig5l[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">unique</span>(group))]</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>fig5l[, <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(group, <span class="st">" "</span>)]</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>fig5l[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>))]</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>fig5l[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"Puerarin"</span>))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-fig3-import-unhide" class="level3" data-number="12.7.3">
 <h3 data-number="12.7.3" class="anchored" data-anchor-id="sec-fig3-import-unhide"><span class="header-section-number">12.7.3</span> Example 3 (fig3 data)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice"</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2023_42473_MOESM7_ESM.xlsx"</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># note I had to insert rows in the excel file </span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># in between some of the</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># sets because of inconsistency in the file</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>fig3_import <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">range_in =</span> <span class="st">"xxx"</span>, <span class="at">lipid_id =</span> <span class="st">"xxx"</span>){</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  fig3_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"Fig. 3"</span>,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">range =</span> range_in) <span class="sc">|&gt;</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>()</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  fig3_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(fig3_wide,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">measure.vars =</span> <span class="fu">colnames</span>(fig3_wide),</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">variable.name =</span> <span class="st">"group"</span>,</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">value.name =</span> <span class="fu">paste0</span>(<span class="st">"cardiolipin_"</span>, lipid_id))</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  fig3_long[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group,</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">colnames</span>(fig3_wide))]</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  fig3_long[, mouse_id <span class="sc">:</span><span class="er">=</span> .I]</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(fig3_long)</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="cn">NULL</span>)</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>row_1 <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(fig_id <span class="cf">in</span> letters[<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>]){</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  row_2 <span class="ot">&lt;-</span> row_1 <span class="sc">+</span> <span class="dv">5</span></span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  range_in <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"B"</span>,row_1,<span class="st">":E"</span>,row_2</span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(fig_id <span class="sc">==</span> letters[<span class="dv">4</span>]){</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    fig3 <span class="ot">&lt;-</span> <span class="fu">fig3_import</span>(range_in, fig_id)</span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>    fig3_part <span class="ot">&lt;-</span> <span class="fu">fig3_import</span>(range_in, fig_id)</span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>    fig3 <span class="ot">&lt;-</span> <span class="fu">merge</span>(fig3, fig3_part, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"mouse_id"</span>, <span class="st">"group"</span>))</span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fig3 &lt;- rbind(</span></span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   fig3,</span></span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   data.table(</span></span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     figure = fig_id,</span></span>
-<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     fig3_import(range_in))</span></span>
-<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># )</span></span>
-<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>  row_1 <span class="ot">&lt;-</span> row_2 <span class="sc">+</span> <span class="dv">4</span></span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="co"># row 5 and 15 have all missing data</span></span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> fig3[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">15</span>), ]</span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>fig3[, <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(group, <span class="st">"-"</span>)]</span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>y_cols <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">substr</span>(<span class="fu">names</span>(fig3), <span class="dv">1</span>, <span class="dv">11</span>) <span class="sc">==</span> <span class="st">"cardiolipin"</span>)</span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> fig3[, .SD, .SDcols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"mouse_id"</span>, <span class="st">"group"</span>, <span class="st">"genotype"</span>, <span class="st">"treatment"</span>, <span class="fu">names</span>(fig3)[y_cols])]</span>
-<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>fig3[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">unique</span>(group))]</span>
-<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>fig3[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>))]</span>
-<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>fig3[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Saline"</span>, <span class="st">"CL"</span>))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Lipocalin 2 regulates mitochondrial phospholipidome remodeling, dynamics, and function in brown adipose tissue in male mice"</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2023_42473_MOESM7_ESM.xlsx"</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># note I had to insert rows in the excel file </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># in between some of the</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># sets because of inconsistency in the file</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>fig3_import <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">range_in =</span> <span class="st">"xxx"</span>, <span class="at">lipid_id =</span> <span class="st">"xxx"</span>){</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  fig3_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"Fig. 3"</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">range =</span> range_in) <span class="sc">|&gt;</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.table</span>()</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  fig3_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(fig3_wide,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">measure.vars =</span> <span class="fu">colnames</span>(fig3_wide),</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">variable.name =</span> <span class="st">"group"</span>,</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">value.name =</span> <span class="fu">paste0</span>(<span class="st">"cardiolipin_"</span>, lipid_id))</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  fig3_long[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">colnames</span>(fig3_wide))]</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  fig3_long[, mouse_id <span class="sc">:</span><span class="er">=</span> .I]</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(fig3_long)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="cn">NULL</span>)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>row_1 <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(fig_id <span class="cf">in</span> letters[<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>]){</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>  row_2 <span class="ot">&lt;-</span> row_1 <span class="sc">+</span> <span class="dv">5</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>  range_in <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"B"</span>,row_1,<span class="st">":E"</span>,row_2</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(fig_id <span class="sc">==</span> letters[<span class="dv">4</span>]){</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>    fig3 <span class="ot">&lt;-</span> <span class="fu">fig3_import</span>(range_in, fig_id)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    fig3_part <span class="ot">&lt;-</span> <span class="fu">fig3_import</span>(range_in, fig_id)</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>    fig3 <span class="ot">&lt;-</span> <span class="fu">merge</span>(fig3, fig3_part, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"mouse_id"</span>, <span class="st">"group"</span>))</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fig3 &lt;- rbind(</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   fig3,</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   data.table(</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     figure = fig_id,</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     fig3_import(range_in))</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># )</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>  row_1 <span class="ot">&lt;-</span> row_2 <span class="sc">+</span> <span class="dv">4</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="co"># row 5 and 15 have all missing data</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> fig3[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">15</span>), ]</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>fig3[, <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"treatment"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(group, <span class="st">"-"</span>)]</span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>y_cols <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">substr</span>(<span class="fu">names</span>(fig3), <span class="dv">1</span>, <span class="dv">11</span>) <span class="sc">==</span> <span class="st">"cardiolipin"</span>)</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> fig3[, .SD, .SDcols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"mouse_id"</span>, <span class="st">"group"</span>, <span class="st">"genotype"</span>, <span class="st">"treatment"</span>, <span class="fu">names</span>(fig3)[y_cols])]</span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>fig3[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">unique</span>(group))]</span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>fig3[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>))]</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>fig3[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Saline"</span>, <span class="st">"CL"</span>))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
