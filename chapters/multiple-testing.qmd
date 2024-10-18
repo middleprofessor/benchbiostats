@@ -173,7 +173,7 @@ Extended figure 2d presents only one of six response variables that were measure
 2. jejunal, duodenal, and ileal triglyceride effectively answer the same focal question "does activating the DMV increase fat absorption in a specific part of the small intestine". So adjusting for three tests is probably justified here, but again, the adjustment is for the same contrast ("3q - con") from the model fit to three different response variables.
 3. Adjustment for multiple responses is common in some subfields of experimental bench biology that are measuring thousands of responses (gene expression, functional MRI) but I I haven't seen adjustment for multiple phenotypic responses from a single experiment.
 
-## Example 2 -- Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data)
+## Example 2 -- Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data) {#sec-mult-tests-tukey}
 
 ```{r}
 #| label: multiple-tests-fig5l-import
@@ -365,7 +365,7 @@ p_table_out |>
   pack_rows("Non-adjusted", 5, 8)
 ```
 
-## Example 3 -- When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)
+## Example 3 -- When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data) {#sec-mult-tests-eg3-fdr}
 
 ::: {.callout-note title="Wait What?"}
 When $p < 0.05$, researchers act as if they have discovered or confirmed something, so $p < 0.05$ is evidence of a **discovery**. Consider these two situations
@@ -518,7 +518,7 @@ fig3[, treatment := factor(treatment, levels = c("Saline", "CL"))]
 ```
 
 ```{r}
-#| label: multiple-tests-fig3-pvals
+#| label: tbl-multiple-tests-fig3-pvals
 #| echo: true
 #| eval: true
 #| message: false
@@ -632,7 +632,7 @@ data.table(
 
 ```
 
-Notes
+Notes on @tbl-multiple-tests-fig3-pvals
 
 @. For these data, there are more discoveries (*p* < 0.05) using the linear model with all four groups than using the pairwise *t*-tests used by the researchers. The linear model is *slightly* more powerful than pairwise *t*-tests because of a smaller SE, but differences in discovery rate between the two methods in any one batch will depend more on patterns of sample variances.
 @. The BH adjustment reduced the number of discoveries by nearly half. The BY adjustment reduced the number of discoveries by nearly 2/3. BY is an FDR method based on Benjamini & Yekutieli that is modified for non-independent tests. The tests here are not independent because the cardiolipin levels are correlated. Consequently, BY will have better control of FDR than BH.
@@ -641,124 +641,144 @@ Notes
 @. One way that R, or any programming language, is more efficient than menu-driven statistical software is the ability to write scripts to combine analyses, which is what we need to do to adjust *p*-values from multiple fit statistical models.
 
 
-## Better Know FDR
+## Better Know FDR {sec-mult-tests-fdr}
 
+Use this simulation to explore FDR, FWER, and Type I error. Here, I use it to explore how the BH adjustment behaves in a batch of 100 tests in which only 20% have true effects, and a batch in which 80% have true effects. I use BH because the tests are independent in this simulation.
 
 ```{r}
-#| label: mult-tests-fdr-simulation
+#| label: tbl-mult-tests-fdr-simulation
 #| echo: true
 #| eval: true
 #| message: false
 #| warning: false
+#| tbl-cap: Performance statistics for no adjustment, BH adjustment, and Holm adjustment for a batch of 100 independent tests with two different fractions of true effects. FNDR is the False Non-Discovery Rate, the fraction of false non-discoveries (p > 0.05 but the effect is true) to the total number of non-discoveries (p > 0.05). We want this fraction to be low.
 
-n_iter <- 5000
+set.seed(1)
+fileout_path <- here("output", "chap_mult_tests_fdr_sim.Rds")
+do_it <- FALSE
+
+n_iter <- 10000
 n_tests <- 100
 alpha <- 0.05
 
-true_fraction <- .2 # fraction of tests with true effect
-false_fraction <- 1 - true_fraction # fraction of tests with no effect
-n_true <- true_fraction * n_tests # number of tests with true effect
-n_false <- false_fraction * n_tests # number of tests with no effect
-power_exp <- .8
-delta <- power.t.test(n = 10, sd = 1, power = power_exp, sig.level = alpha)$delta
-p_true <- numeric(n_true)
-p_false <- numeric(n_false)
-
-true_discoveries_none <- 0.0
-false_nondiscoveries_none <- 0.0
-false_discoveries_none <- 0.0
-true_nondiscoveries_none <- 0.0
-
-true_discoveries_holm <- 0.0
-false_nondiscoveries_holm <- 0.0
-false_discoveries_holm <- 0.0
-true_nondiscoveries_holm <- 0.0
-
-true_discoveries_fdr <- 0.0
-false_nondiscoveries_fdr <- 0.0
-false_discoveries_fdr <- 0.0
-true_nondiscoveries_fdr <- 0.0
-
-FWE_none <- 0.0
-FWE_holm <- 0.0
-FWE_fdr <- 0.0
-type_1 <- 0.0
-power <- 0.0
-
-for(iter in 1:n_iter){
-  for(j in 1:n_true){
-    p_true[j] <- t.test(rnorm(n = 10), rnorm(n = 10, mean = delta), var.equal = TRUE)$p.value
-  }
-  for(j in 1:n_false){
-    p_false[j] <- t.test(rnorm(n = 10), rnorm(n = 10), var.equal = TRUE)$p.value
-  }
-  type_1 <- type_1 + sum(p_false < 0.05)/n_false
-  power <- power + sum(p_true < 0.05)/n_true
-  
-  p_none <- c(p_true, p_false)
-  p_holm <- p.adjust(p_none, method = "holm")
-  p_fdr <- p.adjust(p_none, method = "BH")
-  p_true_holm <- p_holm[1:n_true]
-  p_true_fdr <- p_fdr[1:n_true]
-  p_false_holm <- p_holm[(n_true + 1):n_tests]
-  p_false_fdr <- p_fdr[(n_true + 1):n_tests]
-  
-  if(sum(p_false < 0.05) > 0){FWE_none <- FWE_none + 1}
-  true_discoveries_none <- true_discoveries_none + sum(p_true < 0.05)
-  false_nondiscoveries_none <- false_nondiscoveries_none + sum(p_true > 0.05)
-  false_discoveries_none <- false_discoveries_none + sum(p_false < 0.05)
-  true_nondiscoveries_none <- true_nondiscoveries_none + sum(p_false > 0.05)
-
-  if(sum(p_false_holm < 0.05) > 0){FWE_holm <- FWE_holm + 1}
-  true_discoveries_holm <- true_discoveries_holm + sum(p_true_holm < 0.05)
-  false_nondiscoveries_holm <- false_nondiscoveries_holm + sum(p_true_holm > 0.05)
-  false_discoveries_holm <- false_discoveries_holm + sum(p_false_holm < 0.05)
-  true_nondiscoveries_holm <- true_nondiscoveries_holm + sum(p_false_holm > 0.05)
-  
-  if(sum(p_false_fdr < 0.05) > 0){FWE_fdr <- FWE_fdr + 1}
-  true_discoveries_fdr <- true_discoveries_fdr + sum(p_true_fdr < 0.05)
-  false_nondiscoveries_fdr <- false_nondiscoveries_fdr + sum(p_true_fdr > 0.05)
-  false_discoveries_fdr <- false_discoveries_fdr + sum(p_false_fdr < 0.05)
-  true_nondiscoveries_fdr <- true_nondiscoveries_fdr + sum(p_false_fdr > 0.05)
+if(do_it){
+  out_table <- data.table(NULL)
+  for(true_fraction in c(.2, 0.8)){
+    # true_fraction <- .2 # fraction of tests with true effect
+    false_fraction <- 1 - true_fraction # fraction of tests with no effect
+    n_true <- true_fraction * n_tests # number of tests with true effect
+    n_false <- false_fraction * n_tests # number of tests with no effect
+    power_exp <- .8
+    delta <- power.t.test(n = 10, sd = 1, power = power_exp, sig.level = alpha)$delta
+    p_true <- numeric(n_true)
+    p_false <- numeric(n_false)
+    
+    true_discoveries_none <- 0.0
+    false_nondiscoveries_none <- 0.0
+    false_discoveries_none <- 0.0
+    true_nondiscoveries_none <- 0.0
+    
+    true_discoveries_holm <- 0.0
+    false_nondiscoveries_holm <- 0.0
+    false_discoveries_holm <- 0.0
+    true_nondiscoveries_holm <- 0.0
+    
+    true_discoveries_fdr <- 0.0
+    false_nondiscoveries_fdr <- 0.0
+    false_discoveries_fdr <- 0.0
+    true_nondiscoveries_fdr <- 0.0
+    
+    FWE_none <- 0.0
+    FWE_holm <- 0.0
+    FWE_fdr <- 0.0
+    type_1 <- 0.0
+    power <- 0.0
+    
+    for(iter in 1:n_iter){
+      for(j in 1:n_true){
+        p_true[j] <- t.test(rnorm(n = 10), rnorm(n = 10, mean = delta), var.equal = TRUE)$p.value
+      }
+      for(j in 1:n_false){
+        p_false[j] <- t.test(rnorm(n = 10), rnorm(n = 10), var.equal = TRUE)$p.value
+      }
+      type_1 <- type_1 + sum(p_false < 0.05)/n_false
+      power <- power + sum(p_true < 0.05)/n_true
+      
+      p_none <- c(p_true, p_false)
+      p_holm <- p.adjust(p_none, method = "holm")
+      p_fdr <- p.adjust(p_none, method = "BH")
+      p_true_holm <- p_holm[1:n_true]
+      p_true_fdr <- p_fdr[1:n_true]
+      p_false_holm <- p_holm[(n_true + 1):n_tests]
+      p_false_fdr <- p_fdr[(n_true + 1):n_tests]
+      
+      if(sum(p_false < 0.05) > 0){FWE_none <- FWE_none + 1}
+      true_discoveries_none <- true_discoveries_none + sum(p_true < 0.05)
+      false_nondiscoveries_none <- false_nondiscoveries_none + sum(p_true > 0.05)
+      false_discoveries_none <- false_discoveries_none + sum(p_false < 0.05)
+      true_nondiscoveries_none <- true_nondiscoveries_none + sum(p_false > 0.05)
+      
+      if(sum(p_false_holm < 0.05) > 0){FWE_holm <- FWE_holm + 1}
+      true_discoveries_holm <- true_discoveries_holm + sum(p_true_holm < 0.05)
+      false_nondiscoveries_holm <- false_nondiscoveries_holm + sum(p_true_holm > 0.05)
+      false_discoveries_holm <- false_discoveries_holm + sum(p_false_holm < 0.05)
+      true_nondiscoveries_holm <- true_nondiscoveries_holm + sum(p_false_holm > 0.05)
+      
+      if(sum(p_false_fdr < 0.05) > 0){FWE_fdr <- FWE_fdr + 1}
+      true_discoveries_fdr <- true_discoveries_fdr + sum(p_true_fdr < 0.05)
+      false_nondiscoveries_fdr <- false_nondiscoveries_fdr + sum(p_true_fdr > 0.05)
+      false_discoveries_fdr <- false_discoveries_fdr + sum(p_false_fdr < 0.05)
+      true_nondiscoveries_fdr <- true_nondiscoveries_fdr + sum(p_false_fdr > 0.05)
+    }
+    
+    total_discoveries_none <- true_discoveries_none + false_discoveries_none
+    total_non_discoveries_none <- false_nondiscoveries_none + true_nondiscoveries_none
+    TDR_none <- true_discoveries_none/total_discoveries_none
+    FDR_none <- false_discoveries_none/total_discoveries_none
+    FNDR_none <- false_nondiscoveries_none/total_non_discoveries_none
+    type_1_none <- false_discoveries_none/n_false/n_iter
+    power_none <- true_discoveries_none/n_true/n_iter
+    FWER_none <- FWE_none/n_iter
+    
+    total_discoveries_holm <- true_discoveries_holm + false_discoveries_holm
+    total_non_discoveries_holm <- false_nondiscoveries_holm + true_nondiscoveries_holm
+    TDR_holm <- true_discoveries_holm/total_discoveries_holm
+    FDR_holm <- false_discoveries_holm/total_discoveries_holm
+    FNDR_holm <- false_nondiscoveries_holm/total_non_discoveries_holm
+    type_1_holm <- false_discoveries_holm/n_false/n_iter
+    power_holm <- true_discoveries_holm/n_true/n_iter
+    FWER_holm <- FWE_holm/n_iter
+    
+    total_discoveries_fdr <- true_discoveries_fdr + false_discoveries_fdr
+    total_non_discoveries_fdr <- false_nondiscoveries_fdr + true_nondiscoveries_fdr
+    TDR_fdr <- true_discoveries_fdr/total_discoveries_fdr
+    FDR_fdr <- false_discoveries_fdr/total_discoveries_fdr
+    FNDR_fdr <- false_nondiscoveries_fdr/total_non_discoveries_fdr
+    type_1_fdr <- false_discoveries_fdr/n_false/n_iter
+    power_fdr <- true_discoveries_fdr/n_true/n_iter
+    FWER_fdr <- FWE_fdr/n_iter
+    
+    out_table <- rbind(
+      out_table,
+      data.table(
+        true_frac = true_fraction,
+        Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power", "FWER"),
+        None = c(true_discoveries_none, false_discoveries_none, TDR_none,
+                 FDR_none, FNDR_none, type_1_none, power_none, FWER_none),
+        Holm = c(true_discoveries_holm, false_discoveries_holm, TDR_holm,
+                 FDR_holm, FNDR_holm, type_1_holm, power_holm, FWER_holm),
+        FDR = c(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,
+                FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr, FWER_fdr)
+      )
+    )
+    saveRDS(out_table, fileout_path)
+  } 
+}else{
+  out_table <- readRDS(fileout_path)
 }
 
-  total_discoveries_none <- true_discoveries_none + false_discoveries_none
-  total_non_discoveries_none <- false_nondiscoveries_none + true_nondiscoveries_none
-  TDR_none <- true_discoveries_none/total_discoveries_none
-  FDR_none <- false_discoveries_none/total_discoveries_none
-  FNDR_none <- false_nondiscoveries_none/total_non_discoveries_none
-  type_1_none <- false_discoveries_none/n_false/n_iter
-  power_none <- true_discoveries_none/n_true/n_iter
-  FWER_none <- FWE_none/n_iter
-  
-  total_discoveries_holm <- true_discoveries_holm + false_discoveries_holm
-  total_non_discoveries_holm <- false_nondiscoveries_holm + true_nondiscoveries_holm
-  TDR_holm <- true_discoveries_holm/total_discoveries_holm
-  FDR_holm <- false_discoveries_holm/total_discoveries_holm
-  FNDR_holm <- false_nondiscoveries_holm/total_non_discoveries_holm
-  type_1_holm <- false_discoveries_holm/n_false/n_iter
-  power_holm <- true_discoveries_holm/n_true/n_iter
-  FWER_holm <- FWE_holm/n_iter
+  out_table_keep <- out_table[Stat %in% c("FDR", "FNDR", "Type1", "power", "FWER"), ]
 
-  total_discoveries_fdr <- true_discoveries_fdr + false_discoveries_fdr
-  total_non_discoveries_fdr <- false_nondiscoveries_fdr + true_nondiscoveries_fdr
-  TDR_fdr <- true_discoveries_fdr/total_discoveries_fdr
-  FDR_fdr <- false_discoveries_fdr/total_discoveries_fdr
-  FNDR_fdr <- false_nondiscoveries_fdr/total_non_discoveries_fdr
-  type_1_fdr <- false_discoveries_fdr/n_false/n_iter
-  power_fdr <- true_discoveries_fdr/n_true/n_iter
-  FWER_fdr <- FWE_fdr/n_iter
-
-  out_table <- data.table(
-    Stat = c("TD", "FD", "TDR", "FDR", "FNDR", "Type1", "power", "FWER"),
-    None = c(true_discoveries_none, false_discoveries_none, TDR_none,
-             FDR_none, FNDR_none, type_1_none, power_none, FWER_none),
-    Holm = c(true_discoveries_holm, false_discoveries_holm, TDR_holm,
-             FDR_holm, FNDR_holm, type_1_holm, power_holm, FWER_holm),
-    FDR = c(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,
-            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr, FWER_fdr)
-  )
-  
   row_digits <- function(df, d){
     # df is a data.frame or data.table
     # d is a single value for all rows or vector of digits for each row
@@ -773,15 +793,26 @@ for(iter in 1:n_iter){
     return(df_out)
   }
   
-  out_table_round <- row_digits(out_table,
-                                c(0,0,3,3,3,3,2,3))
-  
-  out_table_round |>
-    kable() |>
-    kable_styling()
+    options(knitr.kable.NA = '')
 
+#  out_table_keep[, .SD, .SDcols = c("Stat", "None", "Holm", "FDR")] |>
+  out_table_keep[, true_frac := " "]
+  setnames(out_table_keep, "true_frac", " ")
+  out_table_keep |>
+    kable(digits = c(1, 1,3,3,3)) |>
+    kable_styling(full_width = FALSE) |>
+    pack_rows("True Fraction = 0.2", 1, 5) |>
+    pack_rows("True Fraction = 0.8", 6, 10)
+  
 
 ```
+
+Notes on @tbl-mult-tests-fdr-simulation
+
+1. Note that it's not the Type I error rate that increases with multiple tests, it's the FWER that increases. It's important to understand this difference. If every test answers a different question, all we care about is the Type I error rate.
+2. If a batch of tests contains both true effects and null (zero) effects, the fraction of tests with true effects  doesn't effect the Type I error rate because the denominator is not the number of tests but the number of tests with no true effect.
+3. If a batch of tests contains both true effects and null effects, the fraction of tests with true effects **does** effect the FDR because there are more false discoveries relative to true discoveries as the fraction of tests with true effects goes to zero. Remember, the denominator is the sum of false and true discoveries. If there are no true effects, 100% of the discoveries are false! If there are only true effects, 0% of the discoveries are false!
+
 
 ## Working in R
 ### The contrast() function has different default adjustment methods for each of the contrast methods
@@ -801,8 +832,7 @@ m1_pairs
 ```
 Notes:
 
-The adjumstment method for both the confidence interval and the *p*-value is given in the contrast object.
-
+1. The adjustment method for both the confidence interval and the *p*-value is given in the contrast object.
 2. Dunnett's test is the default for comparing all treatments (non-reference groups) to the control (the reference group). Both `method = "trt.vs.ctrl"` and `method = "dunnett"` work.
 
 ```{r}
@@ -835,7 +865,7 @@ m1_pairs
 ```
 
 
-### Options in `adjust = `
+### Options in `adjust = ` {#sec-mult-tests-adjust-options}
 
 1. "none" -- no adjustment.
 
@@ -932,7 +962,7 @@ holm_sidak <- function(p){
 
 ```
 
-Notes
+Notes:
 
 1. This function only computes the Holm-Sidak *p*-value and not the adjusted CIs. The emmeans package uses Bonferroni intervals for the Holm adjustment, and these should be used for the Holm-Sidak adjustment. The function `RHSDB::rh.sd.sidak` computes CIs in addition to the *p*-values but I haven't sleuthed out what these are.
 2. This function is used exactly like any other R function. Here I compare both Holm and Holm-Sidak for the Lipocalin Fig3 dataset. Just like the Sidak adjustment is slightly more powerful than Bonferroni, the Holm-Sidak is slightly more powerful than Holm. These tiny differences are rather moot, given the TL;DR at the start of this chapter (@sec-multiple-tests).

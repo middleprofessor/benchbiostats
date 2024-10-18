@@ -2917,12 +2917,12 @@ Table&nbsp;13.9: P-values from seven different methods of adjustment. The Tukey-
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">None</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Tukey</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Tukey-all</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Bonferroni</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Sidak</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Holm</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">MvT</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">FDR</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BH</th>
 </tr>
 </thead>
 <tbody>
@@ -2975,17 +2975,16 @@ Table&nbsp;13.9: P-values from seven different methods of adjustment. The Tukey-
 </figure>
 </div>
 </div>
-<p>Table <a href="#tbl-twoway-exp2j-p-adjust" class="quarto-xref">Table&nbsp;<span>13.9</span></a> shows <em>p</em>-values adjusted using seven different methods (including no adjustment) for the Experiment 2j glucose uptake data.</p>
-<p>The Tukey correction is applied to all six pairwise tests in the code above.</p>
 <ol type="1">
-<li><strong>Tukey</strong> – The Tukey HSD method adjusts for the family including all pairwise comparisons, which is six tests in a 2 x 2 design. This is the most common adjustment for 2 x 2 designs in the bench biology literature. This is also the default adjustment in the emmeans package. <strong>Importantly</strong>, even if using best-practice mindless statistics and reporting only the simple effects, the researcher will lose some power compared to alternative adjustment methods because the family size is six and not four.</li>
-<li><strong>Bonferroni</strong> – Bonferroni is less common than Tukey in the experimental bench biology literature but is never recommended because the Holm modification (see below) has higher power without inflated Type I error. The Bonferroni adjustment assumes independence among the tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
-<li><strong>Sidak</strong> – The Sidak correction has increased power relative to Bonferroni but does not explicitly account for correlated tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
-<li><strong>Holm</strong> – The Holm variant of the Bonferroni adjustment has increased power relative to the Bonferroni but does not explicitly account for correlated tests. It’s type I error rate is generally too conservative for 2 x 2 designs.</li>
-<li><strong>Mvt</strong> – The multivariate <em>t</em> adjustment corrects for the empirically measured correlation.</li>
-<li><strong>fdr</strong> – The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>.</li>
+<li><strong>None</strong> – no adjustment</li>
+<li><strong>Tukey</strong> – <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a> is the most common method used to compare all pairwise comparisons.</li>
+<li><strong>Bonferroni</strong> – <a href="https://en.wikipedia.org/wiki/Bonferroni_correction" target="_blank">Bonferroni</a> is a general purpose method to compare any set of multiple tests. The test is conservative. Use the Holm modification instead.</li>
+<li><strong>Sidak</strong> – <a href="https://en.wikipedia.org/wiki/Šidák_correction" target="_blank">Sidak correction</a> is a modification of Bonferroni with slightly more power.</li>
+<li><strong>Holm</strong> – <a href="https://en.wikipedia.org/wiki/Holm–Bonferroni_method" target="_blank">Holm-Bonferroni</a> is a modification of Bonferroni with more power. Use this instead of Bonferroni.</li>
+<li><strong>BH</strong> – controls the <a href="https://en.wikipedia.org/wiki/False_discovery_rate" target="_blank">false discovery rate</a> not the Type I error rate for a family of tests. See <span class="quarto-unresolved-ref">?sec-mult-tests-fdr</span> for full explanation of FDR and when we would want to use it.</li>
+<li><strong>Mvt</strong> – based on the multivariate <em>t</em> distribution and using covariance structure of the variables.</li>
 </ol>
-<p>Further thoughts on multiple adjustment, focussing on the highlighted row in the table.</p>
+<p>Further thoughts on multiple adjustment, focusing on the highlighted row in the table.</p>
 <ol type="1">
 <li>Report the focal p-values on the figure. Then, report all pairwise and interaction, <em>p</em>-values in a supplement. Reporting all <em>p</em>-values on the figure overwhelms the principal message of a figure. There should be a table of these for every experiment in the supplement.</li>
 <li>If you’re following best practice, report the focal <em>none-adjusted</em> p-values in the figure. Then, in the supplement, report the none-adjusted and adjusted value for all pairwise comparisons <strong>and interaction effects</strong>.</li>
@@ -3810,15 +3809,31 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </section>
 <section id="adjustment-for-multiple-tests" class="level4" data-number="13.11.3.6">
 <h4 data-number="13.11.3.6" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">13.11.3.6</span> Adjustment for multiple tests</h4>
+<div class="callout callout-style-default callout-warning callout-titled" title="NHST Blues">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+NHST Blues
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>See <a href="multiple-testing.html#sec-mult-tests-tukey" class="quarto-xref"><span>Section 12.3</span></a> for why Tukey (or any) <em>p</em>-value adjustment for multiple tests <strong>is unjustified</strong> in many bench biology experiments, even though adjustment is the norm</p>
+<p>See <a href="multiple-testing.html#sec-mult-tests-eg3-fdr" class="quarto-xref"><span>Section 12.4</span></a> for why we often want to use a FDR method to adjust <em>p</em>-values in many bench biology experiments, even though not adjusting is the norm.</p>
+<p>Seriously, you’d be better off ignoring what’s below and clicking these links or just reading all of <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a></p>
+</div>
+</div>
 <p>set the <code>adjust =</code> argument to</p>
 <ol type="1">
-<li>“none” – no adjustment</li>
-<li>“dunnettx” – <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a> is a method used when comparing all treatments to a single control. For a factorial design, this only makes sense for a flattened analysis.</li>
-<li>“tukey” – <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a> is a method used to compare all pairwise comparisons.</li>
-<li>“bonferroni” – <a href="https://en.wikipedia.org/wiki/Bonferroni_correction" target="_blank">Bonferroni</a> is a general purpose method to compare any set of multiple tests. The test is conservative. A better method is “holm”</li>
-<li>“holm” – <a href="https://en.wikipedia.org/wiki/Holm–Bonferroni_method" target="_blank">Holm-Bonferroni</a> is a general purpose method like the Bonferroni but is more powerful.</li>
-<li>“fdr” – controls the <a href="https://en.wikipedia.org/wiki/False_discovery_rate" target="_blank">false discovery rate</a> not the Type I error rate for a family of tests. One might use this in an exploratory experiment.</li>
+<li>“none” – no adjustment.</li>
+<li>“BH” or “fdr” – controls the <a href="https://en.wikipedia.org/wiki/False_discovery_rate" target="_blank">false discovery rate</a> using the logic of Benjamini &amp; Hochberg. The BH method assumes independent tests. This or BY should be used for most uses of <em>p</em>-value adjustment in experimental bench biology.</li>
+<li>“BY” – is a modification of BH using the logic of Benjamini &amp; Yekutieli. The BY method relaxes the independent test assumption and consequently is more consertive than BH. This or BY should be used for most uses of <em>p</em>-value adjustment in experimental bench biology.</li>
+<li>“holm” – <a href="https://en.wikipedia.org/wiki/Holm–Bonferroni_method" target="_blank">Holm-Bonferroni</a> is the Holm modification of Bonferroni and is used to control the FWER. It is more powerful than Bonferroni while still holding FWER at or below alpha. For most uses of <em>p</em>-value adjustment in experimental bench biology, we are less interested in controling the FWER than the FDR.</li>
+<li>“bonferroni” – <a href="https://en.wikipedia.org/wiki/Bonferroni_correction" target="_blank">Bonferroni</a> is the original, general-purpose adjustment for a set of <em>p</em>-values to control the FWER. It has less power than the Holm modification, so it’s use should be historic only.</li>
 <li>“mvt” – based on the multivariate <em>t</em> distribution and using covariance structure of the variables.</li>
+<li>“dunnettx” – <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a> is a method used when comparing all treatments to a single control.</li>
+<li>“tukey” – <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a> is the most common method used to compare all pairwise comparisons.</li>
 </ol>
 </section>
 </section>

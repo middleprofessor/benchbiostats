@@ -679,6 +679,10 @@ fig2a_m1_planned|>
   kable_styling()
 ```
 
+Notes:
+
+1. the `adjust =` argument is used to choose the method of *p*-value adjustment. This is a big topic and this book has a hot-take, which is all covered in @sec-multiple-tests.
+
 #### plot the model
 
 The usual response plot...
@@ -874,10 +878,6 @@ The *t* and *p*-values computed from three separate tests differ from the *t* an
 1. Most importantly, **never** do both methods, look at the *p*-values, and then convince yourself that the method with the *p*-values that match your hypothesis is the correct method. Human brains are very, very good at doing this. This is called p-hacking. When you p-hack, the interpretation of the *p*-value is effectively meaningless. P-hacking leads to irreproducible science.
 2. In general, using the linear model is a better practice than the separate *t*-tests. The reason is the homogeneity of variance assumption. If we assume homogeneity of variances, then we can think of the sample standard deviation of all three groups as an estimate of $\sigma$. In the linear model, we use three groups to estimate $\sigma$ but in each separate *t*-test, we use only two groups. Consequently, our estimate of $\sigma$ in the linear model is more precise than that in the *t*-tests. While the difference can be large with any individual data set (it's pretty big with the fig2a data), the long-run advantage of using the linear model instead of separate *t*-tests is pretty small, especially with only three groups (the precision increases with more groups).
 3. We can drop the homogeneity of variance assumption with either the linear model or the three, separate *t*-tests. This is outlined below in "Heterogeneity of variance". In this case, the *t* and *p*-values for the three comparisons are the same. Still, the linear model (that models heterogenity) is better practice than the separate *t*-tests because the linear model is much more flexible and expandable. 
-
-#### The contrasts table -- when there are more than two levels in $X$ -- has multiple p-values. How to handle this "multiple testing" is highly controversial
-
-**Multiple testing** is the practice of adjusting *p*-values and confidence intervals to account for the expected increase in the frequency of Type I error in a batch, or *family*, of tests. Multiple testing is a concept that exists because of Neyman-Pearson hypothesis testing strategy. If multiple tests are used to answer the same question then, these are in the same family. Issues surrounding multiple testing are fleshed out in more detail in Chapter xxx "Best Practices". Computing adjusted values is covered below in the "Working in R" section.
 
 ## Working in R
 ### Fit the model
@@ -1095,7 +1095,7 @@ The `method =` argument is used to control the set of contrasts that are compute
 
 @. `method = "revpairwise"` computes all pairwise contrasts. The contrasts that include the reference are in the direction $nonreference - reference$, which is the direction prferred in this text since the result is the effect if you add the treatment. The default *p*-value adjustment is "tukey", which is the [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"}
 @. `method = "pairwise"` is the default method. "pairwise" computes all pairwise contrasts but in the direction opposite to "revpairwise". The default *p*-value adjustment is "tukey."
-@. `method = "trt.vs.ctrl"` computes all non-reference minus reference contrasts. This method was used in the "Inference" section because it gives the two contrasts of the planned comparisons identified in the "understand the experimental design" step. The default *p*-value adjustment for multiple tests is "dunnettx", which is [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"}.
+@. `method = "trt.vs.ctrl"` and `method = "dunnett"` are the same. These compute all non-reference minus reference contrasts. This method was used in the "Inference" section because it gives the two contrasts of the planned comparisons identified in the "understand the experimental design" step. The default *p*-value adjustment for multiple tests is "dunnettx", which is [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"}.
 
 Here are all pairwise contrasts using "revpairwise"
 
@@ -1157,14 +1157,16 @@ Mindless *p*-values waste research time and money so contrasts take thought. Not
 
 #### Adjustment for multiple tests
 
-See the Section \@ref(twoway-multiple-tests) in the chapter "Linear models with two categorical $X$ -- Factorial linear models" for a more thorough explanation of the *p*-value adjustment for multiple tests that arise if an experiment has more than two treatment groups. Here, I just outline choices available in the `emmeans::contrast` function.
+@sec-multiple-tests explains the hot-take -- why there is no justification for adjusting *p*-values in many bench biology experiments that do adjust, but there is justification for adjusting *p*-values in many bench biology experiments that do not adjust!
+
+Here, I just outline choices available in the `emmeans::contrast` function using the argument `adjust = `.
 
 1. "none" -- no adjustment
 2. "dunnettx" -- [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"} is a method used when comparing all treatments to a single control.
 3. "tukey" -- [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"} is a method used to compare all pairwise comparisons.
 4. "bonferroni" -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"} is a general purpose method to compare any set of multiple tests. The test is conservative. A better method is "holm"
 5. "holm" -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is a general purpose method like the Bonferroni but is more powerful.
-6. "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} not the Type I error rate for a family of tests. One might use this in an exploratory experiment.
+6. "BH" or "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} not the Type I error rate for a family of tests.
 7. "mvt" -- based on the multivariate *t* distribution and using covariance structure of the variables.
 
 ### How to generate ANOVA tables

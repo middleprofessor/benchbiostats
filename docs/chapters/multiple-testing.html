@@ -270,17 +270,17 @@ window.Quarto = {
   <ul>
   <li><a href="#or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done" id="toc-or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done" class="nav-link" data-scroll-target="#or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done"><span class="header-section-number">12.2.1</span> Or, maybe we do want to adjust, but not in the way that is usually done</a></li>
   </ul></li>
-  <li><a href="#example-2-tukey-adjustment-is-extremely-common-and-mostly-unjustified-fig5l-data" id="toc-example-2-tukey-adjustment-is-extremely-common-and-mostly-unjustified-fig5l-data" class="nav-link" data-scroll-target="#example-2-tukey-adjustment-is-extremely-common-and-mostly-unjustified-fig5l-data"><span class="header-section-number">12.3</span> Example 2 – Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data)</a>
+  <li><a href="#sec-mult-tests-tukey" id="toc-sec-mult-tests-tukey" class="nav-link" data-scroll-target="#sec-mult-tests-tukey"><span class="header-section-number">12.3</span> Example 2 – Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data)</a>
   <ul>
   <li><a href="#or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done-1" id="toc-or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done-1" class="nav-link" data-scroll-target="#or-maybe-we-do-want-to-adjust-but-not-in-the-way-that-is-usually-done-1"><span class="header-section-number">12.3.1</span> Or, maybe we do want to adjust, but not in the way that is usually done</a></li>
   </ul></li>
-  <li><a href="#example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data" id="toc-example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data" class="nav-link" data-scroll-target="#example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data"><span class="header-section-number">12.4</span> Example 3 – When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)</a></li>
-  <li><a href="#better-know-fdr" id="toc-better-know-fdr" class="nav-link" data-scroll-target="#better-know-fdr"><span class="header-section-number">12.5</span> Better Know FDR</a></li>
+  <li><a href="#sec-mult-tests-eg3-fdr" id="toc-sec-mult-tests-eg3-fdr" class="nav-link" data-scroll-target="#sec-mult-tests-eg3-fdr"><span class="header-section-number">12.4</span> Example 3 – When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)</a></li>
+  <li><a href="#better-know-fdr-sec-mult-tests-fdr" id="toc-better-know-fdr-sec-mult-tests-fdr" class="nav-link" data-scroll-target="#better-know-fdr-sec-mult-tests-fdr"><span class="header-section-number">12.5</span> Better Know FDR {sec-mult-tests-fdr}</a></li>
   <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">12.6</span> Working in R</a>
   <ul>
   <li><a href="#the-contrast-function-has-different-default-adjustment-methods-for-each-of-the-contrast-methods" id="toc-the-contrast-function-has-different-default-adjustment-methods-for-each-of-the-contrast-methods" class="nav-link" data-scroll-target="#the-contrast-function-has-different-default-adjustment-methods-for-each-of-the-contrast-methods"><span class="header-section-number">12.6.1</span> The contrast() function has different default adjustment methods for each of the contrast methods</a></li>
   <li><a href="#for-non-default-adjustment-use-the-adjust-argument" id="toc-for-non-default-adjustment-use-the-adjust-argument" class="nav-link" data-scroll-target="#for-non-default-adjustment-use-the-adjust-argument"><span class="header-section-number">12.6.2</span> For non-default adjustment, use the <code>adjust =</code> argument</a></li>
-  <li><a href="#options-in-adjust" id="toc-options-in-adjust" class="nav-link" data-scroll-target="#options-in-adjust"><span class="header-section-number">12.6.3</span> Options in <code>adjust =</code></a></li>
+  <li><a href="#sec-mult-tests-adjust-options" id="toc-sec-mult-tests-adjust-options" class="nav-link" data-scroll-target="#sec-mult-tests-adjust-options"><span class="header-section-number">12.6.3</span> Options in <code>adjust =</code></a></li>
   <li><a href="#using-the-p.adjust-function" id="toc-using-the-p.adjust-function" class="nav-link" data-scroll-target="#using-the-p.adjust-function"><span class="header-section-number">12.6.4</span> Using the p.adjust() function</a>
   <ul class="collapse">
   <li><a href="#options-in-p.adjust" id="toc-options-in-p.adjust" class="nav-link" data-scroll-target="#options-in-p.adjust"><span class="header-section-number">12.6.4.1</span> Options in p.adjust()</a></li>
@@ -482,8 +482,8 @@ Table&nbsp;12.1: Unadjusted <em>p</em>-value and Holm-Sidak adjusted <em>p</em>-
 </ol>
 </section>
 </section>
-<section id="example-2-tukey-adjustment-is-extremely-common-and-mostly-unjustified-fig5l-data" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="example-2-tukey-adjustment-is-extremely-common-and-mostly-unjustified-fig5l-data"><span class="header-section-number">12.3</span> Example 2 – Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data)</h2>
+<section id="sec-mult-tests-tukey" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="sec-mult-tests-tukey"><span class="header-section-number">12.3</span> Example 2 – Tukey adjustment is extremely common, and (mostly) unjustified (fig5l data)</h2>
 <p>A very common research design in experimental bench biology is a design with two factors, each with two levels, with mice assigned to all 2 x 2 = 4 combinations of the levels. Analysis of these models for two (or more) factors is the focus of <a href="two-factors.html" class="quarto-xref"><span>Chapter 13</span></a>. The experiment in Figure 5l is a good example of a 2 x 2 design.</p>
 <p><a href="https://www.nature.com/articles/s41586-024-07929-5#MOESM11" target="_blank">Data source</a></p>
 <p>Figure: Figure 5l</p>
@@ -637,8 +637,8 @@ Table&nbsp;12.3
 </div>
 </section>
 </section>
-<section id="example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="example-3-when-we-do-want-to-adjust-we-often-want-to-use-a-method-that-controls-the-false-discovery-rate-fdr-lipocalin-fig3-data"><span class="header-section-number">12.4</span> Example 3 – When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)</h2>
+<section id="sec-mult-tests-eg3-fdr" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="sec-mult-tests-eg3-fdr"><span class="header-section-number">12.4</span> Example 3 – When we do want to adjust, we often want to use a method that controls the False Discovery Rate (FDR) (lipocalin fig3 data)</h2>
 <div class="callout callout-style-default callout-note callout-titled" title="Wait What?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -686,13 +686,13 @@ FDR = \frac{number\;of\;false\;discoveries}{number\;of\;false\;discoveries + num
 </ol>
 <p>The researchers do not have a model of how any specific cardiolipin will respond to any specific treatment combination. Instead, the research question seems to be something like, “do we see differences in CL synthesis under different combinations of LCN2 activity and CL316,243?” For each cardiolipin, the four simple effect contrasts answer this question. But the question remains the same for each cardiolipin, so there are 104 (4 x 26) tests in the family. Even though the researchers only present results for 18 cardiolipins, we have to include the 8 non-presented cardiolipins because these were also analyzed.</p>
 <p>Now this is an example of an experiment where we should adjust <em>p</em>-values for multiple testing!</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Which adjustment">
+<div class="callout callout-style-default callout-note callout-titled" title="Which adjustment method?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Which adjustment
+Which adjustment method?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -809,9 +809,14 @@ Which adjustment
 <span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
 <span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">|&gt;</span></span>
 <span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-multiple-tests-fig3-pvals" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multiple-tests-fig3-pvals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.4: Number of discoveries (<em>p</em> &lt; 0.05) among the 104 tests
+</figcaption>
+<div aria-describedby="tbl-multiple-tests-fig3-pvals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<caption>Number of discoveries (<em>p</em> &lt; 0.05) among the 104 tests</caption>
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Method</th>
@@ -845,7 +850,10 @@ Which adjustment
 
 </div>
 </div>
-<p>Notes</p>
+</figure>
+</div>
+</div>
+<p>Notes on <a href="#tbl-multiple-tests-fig3-pvals" class="quarto-xref">Table&nbsp;<span>12.4</span></a></p>
 <ol class="example" type="1">
 <li>For these data, there are more discoveries (<em>p</em> &lt; 0.05) using the linear model with all four groups than using the pairwise <em>t</em>-tests used by the researchers. The linear model is <em>slightly</em> more powerful than pairwise <em>t</em>-tests because of a smaller SE, but differences in discovery rate between the two methods in any one batch will depend more on patterns of sample variances.</li>
 <li>The BH adjustment reduced the number of discoveries by nearly half. The BY adjustment reduced the number of discoveries by nearly 2/3. BY is an FDR method based on Benjamini &amp; Yekutieli that is modified for non-independent tests. The tests here are not independent because the cardiolipin levels are correlated. Consequently, BY will have better control of FDR than BH.</li>
@@ -854,195 +862,253 @@ Which adjustment
 <li>One way that R, or any programming language, is more efficient than menu-driven statistical software is the ability to write scripts to combine analyses, which is what we need to do to adjust <em>p</em>-values from multiple fit statistical models.</li>
 </ol>
 </section>
-<section id="better-know-fdr" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="better-know-fdr"><span class="header-section-number">12.5</span> Better Know FDR</h2>
+<section id="better-know-fdr-sec-mult-tests-fdr" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="better-know-fdr-sec-mult-tests-fdr"><span class="header-section-number">12.5</span> Better Know FDR {sec-mult-tests-fdr}</h2>
+<p>Use this simulation to explore FDR, FWER, and Type I error. Here, I use it to explore how the BH adjustment behaves in a batch of 100 tests in which only 20% have true effects, and a batch in which 80% have true effects. I use BH because the tests are independent in this simulation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n_tests <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fileout_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_mult_tests_fdr_sim.Rds"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>true_fraction <span class="ot">&lt;-</span> .<span class="dv">2</span> <span class="co"># fraction of tests with true effect</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>false_fraction <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_fraction <span class="co"># fraction of tests with no effect</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>n_true <span class="ot">&lt;-</span> true_fraction <span class="sc">*</span> n_tests <span class="co"># number of tests with true effect</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>n_false <span class="ot">&lt;-</span> false_fraction <span class="sc">*</span> n_tests <span class="co"># number of tests with no effect</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>power_exp <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">power =</span> power_exp, <span class="at">sig.level =</span> alpha)<span class="sc">$</span>delta</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_true)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>p_false <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_false)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>true_discoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>false_nondiscoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>false_discoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>true_nondiscoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>true_discoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>false_nondiscoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>false_discoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>true_nondiscoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>true_discoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>false_nondiscoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>false_discoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>true_nondiscoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>FWE_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>FWE_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>FWE_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>type_1 <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_true){</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    p_true[j] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> delta), <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_false){</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    p_false[j] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  type_1 <span class="ot">&lt;-</span> type_1 <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_false</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  power <span class="ot">&lt;-</span> power <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_true</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  p_none <span class="ot">&lt;-</span> <span class="fu">c</span>(p_true, p_false)</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_none, <span class="at">method =</span> <span class="st">"holm"</span>)</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  p_fdr <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_none, <span class="at">method =</span> <span class="st">"BH"</span>)</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  p_true_holm <span class="ot">&lt;-</span> p_holm[<span class="dv">1</span><span class="sc">:</span>n_true]</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  p_true_fdr <span class="ot">&lt;-</span> p_fdr[<span class="dv">1</span><span class="sc">:</span>n_true]</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  p_false_holm <span class="ot">&lt;-</span> p_holm[(n_true <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_tests]</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  p_false_fdr <span class="ot">&lt;-</span> p_fdr[(n_true <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_tests]</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_none <span class="ot">&lt;-</span> FWE_none <span class="sc">+</span> <span class="dv">1</span>}</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  true_discoveries_none <span class="ot">&lt;-</span> true_discoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  false_nondiscoveries_none <span class="ot">&lt;-</span> false_nondiscoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  false_discoveries_none <span class="ot">&lt;-</span> false_discoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  true_nondiscoveries_none <span class="ot">&lt;-</span> true_nondiscoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(p_false_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_holm <span class="ot">&lt;-</span> FWE_holm <span class="sc">+</span> <span class="dv">1</span>}</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  true_discoveries_holm <span class="ot">&lt;-</span> true_discoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_true_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  false_nondiscoveries_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_true_holm <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  false_discoveries_holm <span class="ot">&lt;-</span> false_discoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_false_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  true_nondiscoveries_holm <span class="ot">&lt;-</span> true_nondiscoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_false_holm <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(p_false_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_fdr <span class="ot">&lt;-</span> FWE_fdr <span class="sc">+</span> <span class="dv">1</span>}</span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  true_discoveries_fdr <span class="ot">&lt;-</span> true_discoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_true_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  false_nondiscoveries_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_true_fdr <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>  false_discoveries_fdr <span class="ot">&lt;-</span> false_discoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_false_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  true_nondiscoveries_fdr <span class="ot">&lt;-</span> true_nondiscoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_false_fdr <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>  total_discoveries_none <span class="ot">&lt;-</span> true_discoveries_none <span class="sc">+</span> false_discoveries_none</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  total_non_discoveries_none <span class="ot">&lt;-</span> false_nondiscoveries_none <span class="sc">+</span> true_nondiscoveries_none</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  TDR_none <span class="ot">&lt;-</span> true_discoveries_none<span class="sc">/</span>total_discoveries_none</span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  FDR_none <span class="ot">&lt;-</span> false_discoveries_none<span class="sc">/</span>total_discoveries_none</span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>  FNDR_none <span class="ot">&lt;-</span> false_nondiscoveries_none<span class="sc">/</span>total_non_discoveries_none</span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  type_1_none <span class="ot">&lt;-</span> false_discoveries_none<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  power_none <span class="ot">&lt;-</span> true_discoveries_none<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  FWER_none <span class="ot">&lt;-</span> FWE_none<span class="sc">/</span>n_iter</span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  total_discoveries_holm <span class="ot">&lt;-</span> true_discoveries_holm <span class="sc">+</span> false_discoveries_holm</span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>  total_non_discoveries_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm <span class="sc">+</span> true_nondiscoveries_holm</span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>  TDR_holm <span class="ot">&lt;-</span> true_discoveries_holm<span class="sc">/</span>total_discoveries_holm</span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>  FDR_holm <span class="ot">&lt;-</span> false_discoveries_holm<span class="sc">/</span>total_discoveries_holm</span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  FNDR_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm<span class="sc">/</span>total_non_discoveries_holm</span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>  type_1_holm <span class="ot">&lt;-</span> false_discoveries_holm<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>  power_holm <span class="ot">&lt;-</span> true_discoveries_holm<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>  FWER_holm <span class="ot">&lt;-</span> FWE_holm<span class="sc">/</span>n_iter</span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>  total_discoveries_fdr <span class="ot">&lt;-</span> true_discoveries_fdr <span class="sc">+</span> false_discoveries_fdr</span>
-<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>  total_non_discoveries_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr <span class="sc">+</span> true_nondiscoveries_fdr</span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  TDR_fdr <span class="ot">&lt;-</span> true_discoveries_fdr<span class="sc">/</span>total_discoveries_fdr</span>
-<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>  FDR_fdr <span class="ot">&lt;-</span> false_discoveries_fdr<span class="sc">/</span>total_discoveries_fdr</span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>  FNDR_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr<span class="sc">/</span>total_non_discoveries_fdr</span>
-<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>  type_1_fdr <span class="ot">&lt;-</span> false_discoveries_fdr<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>  power_fdr <span class="ot">&lt;-</span> true_discoveries_fdr<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>  FWER_fdr <span class="ot">&lt;-</span> FWE_fdr<span class="sc">/</span>n_iter</span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>  out_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
-<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">Stat =</span> <span class="fu">c</span>(<span class="st">"TD"</span>, <span class="st">"FD"</span>, <span class="st">"TDR"</span>, <span class="st">"FDR"</span>, <span class="st">"FNDR"</span>, <span class="st">"Type1"</span>, <span class="st">"power"</span>, <span class="st">"FWER"</span>),</span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">None =</span> <span class="fu">c</span>(true_discoveries_none, false_discoveries_none, TDR_none,</span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>             FDR_none, FNDR_none, type_1_none, power_none, FWER_none),</span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">Holm =</span> <span class="fu">c</span>(true_discoveries_holm, false_discoveries_holm, TDR_holm,</span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>             FDR_holm, FNDR_holm, type_1_holm, power_holm, FWER_holm),</span>
-<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">FDR =</span> <span class="fu">c</span>(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>            FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr, FWER_fdr)</span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>  row_digits <span class="ot">&lt;-</span> <span class="cf">function</span>(df, d){</span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    <span class="co"># df is a data.frame or data.table</span></span>
-<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># d is a single value for all rows or vector of digits for each row</span></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>    inc <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(df, is.numeric)))</span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">Filter</span>(is.numeric, df), d)<span class="sc">|&gt;</span></span>
-<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(<span class="dv">2</span>, as.character) <span class="sc">|&gt;</span></span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>()</span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>    df_out <span class="ot">&lt;-</span> <span class="fu">apply</span>(df, <span class="dv">2</span>, as.character) <span class="sc">|&gt;</span></span>
-<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>()</span>
-<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>    df_out[, inc] <span class="ot">&lt;-</span> x</span>
-<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(df_out)</span>
-<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>  out_table_round <span class="ot">&lt;-</span> <span class="fu">row_digits</span>(out_table,</span>
-<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>  out_table_round <span class="sc">|&gt;</span></span>
-<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>n_tests <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  out_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="cn">NULL</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(true_fraction <span class="cf">in</span> <span class="fu">c</span>(.<span class="dv">2</span>, <span class="fl">0.8</span>)){</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># true_fraction &lt;- .2 # fraction of tests with true effect</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    false_fraction <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_fraction <span class="co"># fraction of tests with no effect</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    n_true <span class="ot">&lt;-</span> true_fraction <span class="sc">*</span> n_tests <span class="co"># number of tests with true effect</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    n_false <span class="ot">&lt;-</span> false_fraction <span class="sc">*</span> n_tests <span class="co"># number of tests with no effect</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    power_exp <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    delta <span class="ot">&lt;-</span> <span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">power =</span> power_exp, <span class="at">sig.level =</span> alpha)<span class="sc">$</span>delta</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    p_true <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_true)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    p_false <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_false)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    true_discoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    false_nondiscoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    false_discoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    true_nondiscoveries_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    true_discoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    false_nondiscoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    false_discoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    true_nondiscoveries_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    true_discoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    false_nondiscoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    false_discoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    true_nondiscoveries_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    FWE_none <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    FWE_holm <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    FWE_fdr <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    type_1 <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    power <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_true){</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>        p_true[j] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> delta), <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_false){</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        p_false[j] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">var.equal =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>      type_1 <span class="ot">&lt;-</span> type_1 <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_false</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>      power <span class="ot">&lt;-</span> power <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_true</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>      p_none <span class="ot">&lt;-</span> <span class="fu">c</span>(p_true, p_false)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>      p_holm <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_none, <span class="at">method =</span> <span class="st">"holm"</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>      p_fdr <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(p_none, <span class="at">method =</span> <span class="st">"BH"</span>)</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>      p_true_holm <span class="ot">&lt;-</span> p_holm[<span class="dv">1</span><span class="sc">:</span>n_true]</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>      p_true_fdr <span class="ot">&lt;-</span> p_fdr[<span class="dv">1</span><span class="sc">:</span>n_true]</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>      p_false_holm <span class="ot">&lt;-</span> p_holm[(n_true <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_tests]</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>      p_false_fdr <span class="ot">&lt;-</span> p_fdr[(n_true <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_tests]</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_none <span class="ot">&lt;-</span> FWE_none <span class="sc">+</span> <span class="dv">1</span>}</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>      true_discoveries_none <span class="ot">&lt;-</span> true_discoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>      false_nondiscoveries_none <span class="ot">&lt;-</span> false_nondiscoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_true <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>      false_discoveries_none <span class="ot">&lt;-</span> false_discoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>      true_nondiscoveries_none <span class="ot">&lt;-</span> true_nondiscoveries_none <span class="sc">+</span> <span class="fu">sum</span>(p_false <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">sum</span>(p_false_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_holm <span class="ot">&lt;-</span> FWE_holm <span class="sc">+</span> <span class="dv">1</span>}</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>      true_discoveries_holm <span class="ot">&lt;-</span> true_discoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_true_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>      false_nondiscoveries_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_true_holm <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>      false_discoveries_holm <span class="ot">&lt;-</span> false_discoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_false_holm <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>      true_nondiscoveries_holm <span class="ot">&lt;-</span> true_nondiscoveries_holm <span class="sc">+</span> <span class="fu">sum</span>(p_false_holm <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">sum</span>(p_false_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">&gt;</span> <span class="dv">0</span>){FWE_fdr <span class="ot">&lt;-</span> FWE_fdr <span class="sc">+</span> <span class="dv">1</span>}</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>      true_discoveries_fdr <span class="ot">&lt;-</span> true_discoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_true_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>      false_nondiscoveries_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_true_fdr <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>      false_discoveries_fdr <span class="ot">&lt;-</span> false_discoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_false_fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>      true_nondiscoveries_fdr <span class="ot">&lt;-</span> true_nondiscoveries_fdr <span class="sc">+</span> <span class="fu">sum</span>(p_false_fdr <span class="sc">&gt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    total_discoveries_none <span class="ot">&lt;-</span> true_discoveries_none <span class="sc">+</span> false_discoveries_none</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    total_non_discoveries_none <span class="ot">&lt;-</span> false_nondiscoveries_none <span class="sc">+</span> true_nondiscoveries_none</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    TDR_none <span class="ot">&lt;-</span> true_discoveries_none<span class="sc">/</span>total_discoveries_none</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>    FDR_none <span class="ot">&lt;-</span> false_discoveries_none<span class="sc">/</span>total_discoveries_none</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    FNDR_none <span class="ot">&lt;-</span> false_nondiscoveries_none<span class="sc">/</span>total_non_discoveries_none</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>    type_1_none <span class="ot">&lt;-</span> false_discoveries_none<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>    power_none <span class="ot">&lt;-</span> true_discoveries_none<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>    FWER_none <span class="ot">&lt;-</span> FWE_none<span class="sc">/</span>n_iter</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    total_discoveries_holm <span class="ot">&lt;-</span> true_discoveries_holm <span class="sc">+</span> false_discoveries_holm</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    total_non_discoveries_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm <span class="sc">+</span> true_nondiscoveries_holm</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    TDR_holm <span class="ot">&lt;-</span> true_discoveries_holm<span class="sc">/</span>total_discoveries_holm</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    FDR_holm <span class="ot">&lt;-</span> false_discoveries_holm<span class="sc">/</span>total_discoveries_holm</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    FNDR_holm <span class="ot">&lt;-</span> false_nondiscoveries_holm<span class="sc">/</span>total_non_discoveries_holm</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    type_1_holm <span class="ot">&lt;-</span> false_discoveries_holm<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    power_holm <span class="ot">&lt;-</span> true_discoveries_holm<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    FWER_holm <span class="ot">&lt;-</span> FWE_holm<span class="sc">/</span>n_iter</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    total_discoveries_fdr <span class="ot">&lt;-</span> true_discoveries_fdr <span class="sc">+</span> false_discoveries_fdr</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>    total_non_discoveries_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr <span class="sc">+</span> true_nondiscoveries_fdr</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    TDR_fdr <span class="ot">&lt;-</span> true_discoveries_fdr<span class="sc">/</span>total_discoveries_fdr</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    FDR_fdr <span class="ot">&lt;-</span> false_discoveries_fdr<span class="sc">/</span>total_discoveries_fdr</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    FNDR_fdr <span class="ot">&lt;-</span> false_nondiscoveries_fdr<span class="sc">/</span>total_non_discoveries_fdr</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>    type_1_fdr <span class="ot">&lt;-</span> false_discoveries_fdr<span class="sc">/</span>n_false<span class="sc">/</span>n_iter</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    power_fdr <span class="ot">&lt;-</span> true_discoveries_fdr<span class="sc">/</span>n_true<span class="sc">/</span>n_iter</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    FWER_fdr <span class="ot">&lt;-</span> FWE_fdr<span class="sc">/</span>n_iter</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    out_table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>      out_table,</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>(</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>        <span class="at">true_frac =</span> true_fraction,</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>        <span class="at">Stat =</span> <span class="fu">c</span>(<span class="st">"TD"</span>, <span class="st">"FD"</span>, <span class="st">"TDR"</span>, <span class="st">"FDR"</span>, <span class="st">"FNDR"</span>, <span class="st">"Type1"</span>, <span class="st">"power"</span>, <span class="st">"FWER"</span>),</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>        <span class="at">None =</span> <span class="fu">c</span>(true_discoveries_none, false_discoveries_none, TDR_none,</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>                 FDR_none, FNDR_none, type_1_none, power_none, FWER_none),</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>        <span class="at">Holm =</span> <span class="fu">c</span>(true_discoveries_holm, false_discoveries_holm, TDR_holm,</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>                 FDR_holm, FNDR_holm, type_1_holm, power_holm, FWER_holm),</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">FDR =</span> <span class="fu">c</span>(true_discoveries_fdr, false_discoveries_fdr, TDR_fdr,</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>                FDR_fdr, FNDR_fdr, type_1_fdr, power_fdr, FWER_fdr)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>    <span class="fu">saveRDS</span>(out_table, fileout_path)</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>  out_table <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(fileout_path)</span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>  out_table_keep <span class="ot">&lt;-</span> out_table[Stat <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"FDR"</span>, <span class="st">"FNDR"</span>, <span class="st">"Type1"</span>, <span class="st">"power"</span>, <span class="st">"FWER"</span>), ]</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>  row_digits <span class="ot">&lt;-</span> <span class="cf">function</span>(df, d){</span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>    <span class="co"># df is a data.frame or data.table</span></span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>    <span class="co"># d is a single value for all rows or vector of digits for each row</span></span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>    inc <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(df, is.numeric)))</span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">Filter</span>(is.numeric, df), d)<span class="sc">|&gt;</span></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(<span class="dv">2</span>, as.character) <span class="sc">|&gt;</span></span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>()</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>    df_out <span class="ot">&lt;-</span> <span class="fu">apply</span>(df, <span class="dv">2</span>, as.character) <span class="sc">|&gt;</span></span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.table</span>()</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>    df_out[, inc] <span class="ot">&lt;-</span> x</span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(df_out)</span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>    <span class="fu">options</span>(<span class="at">knitr.kable.NA =</span> <span class="st">''</span>)</span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a><span class="co">#  out_table_keep[, .SD, .SDcols = c("Stat", "None", "Holm", "FDR")] |&gt;</span></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>  out_table_keep[, true_frac <span class="sc">:</span><span class="er">=</span> <span class="st">" "</span>]</span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setnames</span>(out_table_keep, <span class="st">"true_frac"</span>, <span class="st">" "</span>)</span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>  out_table_keep <span class="sc">|&gt;</span></span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pack_rows</span>(<span class="st">"True Fraction = 0.2"</span>, <span class="dv">1</span>, <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pack_rows</span>(<span class="st">"True Fraction = 0.8"</span>, <span class="dv">6</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-mult-tests-fdr-simulation" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mult-tests-fdr-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.5: Performance statistics for no adjustment, BH adjustment, and Holm adjustment for a batch of 100 independent tests with two different fractions of true effects. FNDR is the False Non-Discovery Rate, the fraction of false non-discoveries (p &gt; 0.05 but the effect is true) to the total number of non-discoveries (p &gt; 0.05). We want this fraction to be low.
+</figcaption>
+<div aria-describedby="tbl-mult-tests-fdr-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Stat</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">None</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Holm</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">FDR</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">None</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Holm</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">FDR</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">TD</td>
-<td style="text-align: left;">80011</td>
-<td style="text-align: left;">16409</td>
-<td style="text-align: left;">42705</td>
+<tr class="odd" data-grouplength="5">
+<td colspan="5" style="border-bottom: 1px solid"><strong>True Fraction = 0.2</strong></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">FD</td>
-<td style="text-align: left;">19937</td>
-<td style="text-align: left;">196</td>
-<td style="text-align: left;">2160</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">TDR</td>
-<td style="text-align: left;">0.801</td>
-<td style="text-align: left;">0.988</td>
-<td style="text-align: left;">0.952</td>
-</tr>
-<tr class="even">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
 <td style="text-align: left;">FDR</td>
-<td style="text-align: left;">0.199</td>
-<td style="text-align: left;">0.012</td>
-<td style="text-align: left;">0.048</td>
+<td style="text-align: right;">0.200</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.047</td>
 </tr>
 <tr class="odd">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
 <td style="text-align: left;">FNDR</td>
-<td style="text-align: left;">0.05</td>
-<td style="text-align: left;">0.173</td>
-<td style="text-align: left;">0.126</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.173</td>
+<td style="text-align: right;">0.126</td>
 </tr>
 <tr class="even">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
 <td style="text-align: left;">Type1</td>
-<td style="text-align: left;">0.05</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0.005</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.005</td>
 </tr>
 <tr class="odd">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
 <td style="text-align: left;">power</td>
-<td style="text-align: left;">0.8</td>
-<td style="text-align: left;">0.16</td>
-<td style="text-align: left;">0.43</td>
+<td style="text-align: right;">0.801</td>
+<td style="text-align: right;">0.164</td>
+<td style="text-align: right;">0.424</td>
 </tr>
 <tr class="even">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
 <td style="text-align: left;">FWER</td>
-<td style="text-align: left;">0.982</td>
-<td style="text-align: left;">0.039</td>
-<td style="text-align: left;">0.33</td>
+<td style="text-align: right;">0.985</td>
+<td style="text-align: right;">0.040</td>
+<td style="text-align: right;">0.324</td>
+</tr>
+<tr class="odd" data-grouplength="5">
+<td colspan="5" style="border-bottom: 1px solid"><strong>True Fraction = 0.8</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
+<td style="text-align: left;">FDR</td>
+<td style="text-align: right;">0.015</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
+<td style="text-align: left;">FNDR</td>
+<td style="text-align: right;">0.457</td>
+<td style="text-align: right;">0.768</td>
+<td style="text-align: right;">0.536</td>
+</tr>
+<tr class="even">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
+<td style="text-align: left;">Type1</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.030</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
+<td style="text-align: left;">power</td>
+<td style="text-align: right;">0.801</td>
+<td style="text-align: right;">0.174</td>
+<td style="text-align: right;">0.720</td>
+</tr>
+<tr class="even">
+<td style="text-align: right; padding-left: 2em;" data-indentlevel="1"></td>
+<td style="text-align: left;">FWER</td>
+<td style="text-align: right;">0.641</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.449</td>
 </tr>
 </tbody>
 </table>
@@ -1050,6 +1116,15 @@ Which adjustment
 
 </div>
 </div>
+</figure>
+</div>
+</div>
+<p>Notes on <a href="#tbl-mult-tests-fdr-simulation" class="quarto-xref">Table&nbsp;<span>12.5</span></a></p>
+<ol type="1">
+<li>Note that it’s not the Type I error rate that increases with multiple tests, it’s the FWER that increases. It’s important to understand this difference. If every test answers a different question, all we care about is the Type I error rate.</li>
+<li>If a batch of tests contains both true effects and null (zero) effects, the fraction of tests with true effects doesn’t effect the Type I error rate because the denominator is not the number of tests but the number of tests with no true effect.</li>
+<li>If a batch of tests contains both true effects and null effects, the fraction of tests with true effects <strong>does</strong> effect the FDR because there are more false discoveries relative to true discoveries as the fraction of tests with true effects goes to zero. Remember, the denominator is the sum of false and true discoveries. If there are no true effects, 100% of the discoveries are false! If there are only true effects, 0% of the discoveries are false!</li>
+</ol>
 </section>
 <section id="working-in-r" class="level2" data-number="12.6">
 <h2 data-number="12.6" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">12.6</span> Working in R</h2>
@@ -1078,8 +1153,8 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 </div>
 </div>
 <p>Notes:</p>
-<p>The adjumstment method for both the confidence interval and the <em>p</em>-value is given in the contrast object.</p>
-<ol start="2" type="1">
+<ol type="1">
+<li>The adjustment method for both the confidence interval and the <em>p</em>-value is given in the contrast object.</li>
 <li>Dunnett’s test is the default for comparing all treatments (non-reference groups) to the control (the reference group). Both <code>method = "trt.vs.ctrl"</code> and <code>method = "dunnett"</code> work.</li>
 </ol>
 <div class="cell">
@@ -1123,8 +1198,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 </section>
-<section id="options-in-adjust" class="level3" data-number="12.6.3">
-<h3 data-number="12.6.3" class="anchored" data-anchor-id="options-in-adjust"><span class="header-section-number">12.6.3</span> Options in <code>adjust =</code></h3>
+<section id="sec-mult-tests-adjust-options" class="level3" data-number="12.6.3">
+<h3 data-number="12.6.3" class="anchored" data-anchor-id="sec-mult-tests-adjust-options"><span class="header-section-number">12.6.3</span> Options in <code>adjust =</code></h3>
 <ol type="1">
 <li>“none” – no adjustment.</li>
 </ol>
@@ -1223,7 +1298,7 @@ Confidence level used: 0.95 </code></pre>
 <span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p_holm_sidak)</span>
 <span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Notes</p>
+<p>Notes:</p>
 <ol type="1">
 <li>This function only computes the Holm-Sidak <em>p</em>-value and not the adjusted CIs. The emmeans package uses Bonferroni intervals for the Holm adjustment, and these should be used for the Holm-Sidak adjustment. The function <code>RHSDB::rh.sd.sidak</code> computes CIs in addition to the <em>p</em>-values but I haven’t sleuthed out what these are.</li>
 <li>This function is used exactly like any other R function. Here I compare both Holm and Holm-Sidak for the Lipocalin Fig3 dataset. Just like the Sidak adjustment is slightly more powerful than Bonferroni, the Holm-Sidak is slightly more powerful than Holm. These tiny differences are rather moot, given the TL;DR at the start of this chapter (<a href="#sec-multiple-tests" class="quarto-xref"><span>Chapter 12</span></a>).</li>

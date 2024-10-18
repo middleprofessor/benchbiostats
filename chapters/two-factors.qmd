@@ -2238,8 +2238,8 @@ Here are seven different adjustment methods (including no adjustment) for the si
 #| label: tbl-twoway-exp2j-p-adjust
 #| echo: false
 
-p_methods <- c("None", "Tukey", "Bonferroni", "Sidak",
-               "Holm", "MvT", "FDR")
+p_methods <- c("None", "Tukey-all", "Bonferroni", "Sidak",
+               "Holm", "MvT", "BH")
 
 p_mat <- matrix(as.numeric(NA), nrow = 4, ncol = length(p_methods))
 colnames(p_mat) <- p_methods
@@ -2258,7 +2258,7 @@ m1_pairs <- contrast(exp2j_m1_emm,
                      adjust = "tukey") |> # tukey is the default so this argument isn't needed in the arguments
   summary() |>
   dplyr::slice(c(1,6,2,5))
-p_mat[, "Tukey"] <- m1_pairs[, "p.value"]
+p_mat[, "Tukey-all"] <- m1_pairs[, "p.value"]
 
 m1_pairs <- contrast(exp2j_m1_emm,
          method = "revpairwise",
@@ -2289,9 +2289,9 @@ m1_pairs <- contrast(exp2j_m1_emm,
          method = "revpairwise",
          simple = "each",
          combine = TRUE,
-         adjust = "fdr") |>
+         adjust = "BH") |>
   summary()
-p_mat[, "FDR"] <- m1_pairs[, "p.value"]
+p_mat[, "BH"] <- m1_pairs[, "p.value"]
 
 m1_pairs <- contrast(exp2j_m1_emm,
          method = "revpairwise",
@@ -2315,18 +2315,16 @@ m1_pairs |>
   row_spec(4, background = pal_okabe_ito[1])
 ```
 
-Table @tbl-twoway-exp2j-p-adjust shows *p*-values adjusted using seven different methods (including no adjustment) for the Experiment 2j glucose uptake data.
+1. **None** -- no adjustment
+2. **Tukey** -- [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"} is the most common method used to compare all pairwise comparisons.
+3. **Bonferroni** -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"} is a general purpose method to compare any set of multiple tests. The test is conservative. Use the Holm modification instead.
+4. **Sidak** -- [Sidak correction](https://en.wikipedia.org/wiki/Šidák_correction){target="_blank"} is a modification of Bonferroni with slightly more power.
+5. **Holm** -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is a modification of Bonferroni with more power. Use this instead of Bonferroni.
+6. **BH** -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} not the Type I error rate for a family of tests. See @sec-mult-tests-fdr for full explanation of FDR and when we would want to use it.
+7. **Mvt** -- based on the multivariate *t* distribution and using covariance structure of the variables.
 
-The Tukey correction is applied to all six pairwise tests in the code above.
 
-1. **Tukey** -- The Tukey HSD method adjusts for the family including all pairwise comparisons, which is six tests in a 2 x 2 design. This is the most common adjustment for 2 x 2 designs in the bench biology literature. This is also the default adjustment in the emmeans package. **Importantly**, even if using best-practice mindless statistics and reporting only the simple effects, the researcher will lose some power compared to alternative adjustment methods because the family size is six and not four. 
-2. **Bonferroni** -- Bonferroni is less common than Tukey in the experimental bench biology literature but is never recommended because the Holm modification (see below) has higher power without inflated Type I error. The Bonferroni adjustment assumes independence among the tests. It's type I error rate is generally too conservative for 2 x 2 designs.
-3. **Sidak** -- The Sidak correction has increased power relative to Bonferroni but does not explicitly account for correlated tests. It's type I error rate is generally too conservative for 2 x 2 designs.
-4. **Holm** -- The Holm variant of the Bonferroni adjustment has increased power relative to the Bonferroni but does not explicitly account for correlated tests. It's type I error rate is generally too conservative for 2 x 2 designs.
-5. **Mvt** -- The multivariate *t* adjustment corrects for the empirically measured correlation.
-6. **fdr** -- The FDR adjustment does not attempt to correct for Type I error but for the False Discovery Rate. The difference between these concepts is important. See @sec-multiple-tests.
-
-Further thoughts on multiple adjustment, focussing on the highlighted row in the table.
+Further thoughts on multiple adjustment, focusing on the highlighted row in the table.
 
 1. Report the focal p-values on the figure. Then, report all pairwise and interaction, *p*-values in a supplement. Reporting all *p*-values on the figure overwhelms the principal message of a figure. There should be a table of these for every experiment in the supplement.
 2. If you're following best practice, report the focal *none-adjusted* p-values in the figure. Then, in the supplement, report the none-adjusted and adjusted value for all pairwise comparisons **and interaction effects**.
@@ -2792,15 +2790,24 @@ Notes
 
 #### Adjustment for multiple tests
 
+::: {.callout-warning title="NHST Blues"}
+See @sec-mult-tests-tukey for why Tukey (or any) *p*-value adjustment for multiple tests **is unjustified** in many bench biology experiments, even though adjustment is the norm
+
+See @sec-mult-tests-eg3-fdr for why we often want to use a FDR method to adjust *p*-values in many bench biology experiments, even though not adjusting is the norm.
+
+Seriously, you'd be better off ignoring what's below and clicking these links or just reading all of @sec-multiple-tests
+:::
+
 set the `adjust =` argument to 
 
-1. "none" -- no adjustment
-2. "dunnettx" -- [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"} is a method used when comparing all treatments to a single control. For a factorial design, this only makes sense for a flattened analysis.
-3. "tukey" -- [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"} is a method used to compare all pairwise comparisons.
-4. "bonferroni" -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"} is a general purpose method to compare any set of multiple tests. The test is conservative. A better method is "holm"
-5. "holm" -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is a general purpose method like the Bonferroni but is more powerful.
-6. "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} not the Type I error rate for a family of tests. One might use this in an exploratory experiment.
-7. "mvt" -- based on the multivariate *t* distribution and using covariance structure of the variables.
+1. "none" -- no adjustment.
+2. "BH" or "fdr" -- controls the [false discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate){target="_blank"} using the logic of Benjamini & Hochberg. The BH method assumes independent tests. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
+3. "BY" -- is a modification of BH using the logic of Benjamini & Yekutieli. The BY method relaxes the independent test assumption and consequently is more consertive than BH. This or BY should be used for most uses of *p*-value adjustment in experimental bench biology.
+4. "holm" -- [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm–Bonferroni_method){target="_blank"} is the Holm modification of Bonferroni and is used to control the FWER. It is more powerful than Bonferroni while still holding FWER at or below alpha. For most uses of *p*-value adjustment in experimental bench biology, we are less interested in controling the FWER than the FDR.
+5. "bonferroni" -- [Bonferroni](https://en.wikipedia.org/wiki/Bonferroni_correction){target="_blank"}  is the original, general-purpose adjustment for a set of *p*-values to control the FWER. It has less power than the Holm modification, so it's use should be historic only.
+6. "mvt" -- based on the multivariate *t* distribution and using covariance structure of the variables.
+7. "dunnettx" -- [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"} is a method used when comparing all treatments to a single control.
+8. "tukey" -- [Tukey's HSD method](https://en.wikipedia.org/wiki/Tukey%27s_range_test){target="_blank"} is the most common method used to compare all pairwise comparisons.
 
 ### Practice safe ANOVA
 

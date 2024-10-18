@@ -303,7 +303,6 @@ window.Quarto = {
   <li><a href="#the-emmeans-table" id="toc-the-emmeans-table" class="nav-link" data-scroll-target="#the-emmeans-table"><span class="header-section-number">10.1.4.2</span> The emmeans table</a></li>
   <li><a href="#the-contrasts-table" id="toc-the-contrasts-table" class="nav-link" data-scroll-target="#the-contrasts-table"><span class="header-section-number">10.1.4.3</span> The contrasts table</a></li>
   <li><a href="#oneway-ttest" id="toc-oneway-ttest" class="nav-link" data-scroll-target="#oneway-ttest"><span class="header-section-number">10.1.4.4</span> <em>t</em> and <em>p</em> from the contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – are not the same as those from pairwise <em>t</em>-tests among pairs of groups</a></li>
-  <li><a href="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" id="toc-the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="nav-link" data-scroll-target="#the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">10.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">10.2</span> Working in R</a>
@@ -1511,6 +1510,10 @@ Better Know: model sigma
 
 </div>
 </div>
+<p>Notes:</p>
+<ol type="1">
+<li>the <code>adjust =</code> argument is used to choose the method of <em>p</em>-value adjustment. This is a big topic and this book has a hot-take, which is all covered in <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>.</li>
+</ol>
 </section>
 </section>
 <section id="plot-the-model" class="level4" data-number="10.1.3.5">
@@ -1883,10 +1886,6 @@ diHOME_i = b_0 + b_1 treatment_{Cold,i} + b_2 treatment_{NE,i} + e_i
 <li>We can drop the homogeneity of variance assumption with either the linear model or the three, separate <em>t</em>-tests. This is outlined below in “Heterogeneity of variance”. In this case, the <em>t</em> and <em>p</em>-values for the three comparisons are the same. Still, the linear model (that models heterogenity) is better practice than the separate <em>t</em>-tests because the linear model is much more flexible and expandable.</li>
 </ol>
 </section>
-<section id="the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial" class="level4" data-number="10.1.4.5">
-<h4 data-number="10.1.4.5" class="anchored" data-anchor-id="the-contrasts-table-when-there-are-more-than-two-levels-in-x-has-multiple-p-values.-how-to-handle-this-multiple-testing-is-highly-controversial"><span class="header-section-number">10.1.4.5</span> The contrasts table – when there are more than two levels in <span class="math inline">\(X\)</span> – has multiple p-values. How to handle this “multiple testing” is highly controversial</h4>
-<p><strong>Multiple testing</strong> is the practice of adjusting <em>p</em>-values and confidence intervals to account for the expected increase in the frequency of Type I error in a batch, or <em>family</em>, of tests. Multiple testing is a concept that exists because of Neyman-Pearson hypothesis testing strategy. If multiple tests are used to answer the same question then, these are in the same family. Issues surrounding multiple testing are fleshed out in more detail in Chapter xxx “Best Practices”. Computing adjusted values is covered below in the “Working in R” section.</p>
-</section>
 </section>
 </section>
 <section id="working-in-r" class="level2" data-number="10.2">
@@ -2237,7 +2236,7 @@ Confidence level used: 0.95 </code></pre>
 <ol start="14" class="example" type="1">
 <li><code>method = "revpairwise"</code> computes all pairwise contrasts. The contrasts that include the reference are in the direction <span class="math inline">\(nonreference - reference\)</span>, which is the direction prferred in this text since the result is the effect if you add the treatment. The default <em>p</em>-value adjustment is “tukey”, which is the <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a></li>
 <li><code>method = "pairwise"</code> is the default method. “pairwise” computes all pairwise contrasts but in the direction opposite to “revpairwise”. The default <em>p</em>-value adjustment is “tukey.”</li>
-<li><code>method = "trt.vs.ctrl"</code> computes all non-reference minus reference contrasts. This method was used in the “Inference” section because it gives the two contrasts of the planned comparisons identified in the “understand the experimental design” step. The default <em>p</em>-value adjustment for multiple tests is “dunnettx”, which is <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a>.</li>
+<li><code>method = "trt.vs.ctrl"</code> and <code>method = "dunnett"</code> are the same. These compute all non-reference minus reference contrasts. This method was used in the “Inference” section because it gives the two contrasts of the planned comparisons identified in the “understand the experimental design” step. The default <em>p</em>-value adjustment for multiple tests is “dunnettx”, which is <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a>.</li>
 </ol>
 <p>Here are all pairwise contrasts using “revpairwise”</p>
 <div class="cell">
@@ -2335,14 +2334,15 @@ Tip
 </section>
 <section id="adjustment-for-multiple-tests" class="level4" data-number="10.2.4.3">
 <h4 data-number="10.2.4.3" class="anchored" data-anchor-id="adjustment-for-multiple-tests"><span class="header-section-number">10.2.4.3</span> Adjustment for multiple tests</h4>
-<p>See the Section @ref(twoway-multiple-tests) in the chapter “Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models” for a more thorough explanation of the <em>p</em>-value adjustment for multiple tests that arise if an experiment has more than two treatment groups. Here, I just outline choices available in the <code>emmeans::contrast</code> function.</p>
+<p><a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a> explains the hot-take – why there is no justification for adjusting <em>p</em>-values in many bench biology experiments that do adjust, but there is justification for adjusting <em>p</em>-values in many bench biology experiments that do not adjust!</p>
+<p>Here, I just outline choices available in the <code>emmeans::contrast</code> function using the argument <code>adjust =</code>.</p>
 <ol type="1">
 <li>“none” – no adjustment</li>
 <li>“dunnettx” – <a href="https://en.wikipedia.org/wiki/Dunnett%27s_test" target="_blank">Dunnett’s test</a> is a method used when comparing all treatments to a single control.</li>
 <li>“tukey” – <a href="https://en.wikipedia.org/wiki/Tukey%27s_range_test" target="_blank">Tukey’s HSD method</a> is a method used to compare all pairwise comparisons.</li>
 <li>“bonferroni” – <a href="https://en.wikipedia.org/wiki/Bonferroni_correction" target="_blank">Bonferroni</a> is a general purpose method to compare any set of multiple tests. The test is conservative. A better method is “holm”</li>
 <li>“holm” – <a href="https://en.wikipedia.org/wiki/Holm–Bonferroni_method" target="_blank">Holm-Bonferroni</a> is a general purpose method like the Bonferroni but is more powerful.</li>
-<li>“fdr” – controls the <a href="https://en.wikipedia.org/wiki/False_discovery_rate" target="_blank">false discovery rate</a> not the Type I error rate for a family of tests. One might use this in an exploratory experiment.</li>
+<li>“BH” or “fdr” – controls the <a href="https://en.wikipedia.org/wiki/False_discovery_rate" target="_blank">false discovery rate</a> not the Type I error rate for a family of tests.</li>
 <li>“mvt” – based on the multivariate <em>t</em> distribution and using covariance structure of the variables.</li>
 </ol>
 </section>
