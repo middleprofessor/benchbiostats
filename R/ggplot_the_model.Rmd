@@ -1072,7 +1072,10 @@ response_plot <- function(
   palette = pal_okabe_ito,
   legend_position = "top",
   flip_horizontal = FALSE,
-  group_lines = FALSE
+  group_lines = FALSE,
+  block_label = NULL,
+  join_blocks = FALSE
+  
 ){
 
   # if(is.null(data)){
@@ -1137,6 +1140,11 @@ response_plot <- function(
                             y = get(y_col),
                             color = get(color_col)))
   # plot points
+  if(join_blocks == TRUE){
+    gg <- gg + geom_line(aes(x = get(x_col),
+                             y = get(y_col),
+                             group = block_label))
+  }
   if(dots == "sina"){
     gg <- gg + geom_sina(alpha = 0.5,
                          position = pd,
@@ -1353,7 +1361,9 @@ ggplot_the_response <- function(
     palette = pal_okabe_ito,
     legend_position = "top",
     flip_horizontal = FALSE,
-    group_lines = FALSE  
+    group_lines = FALSE,
+    block_label = NULL,
+    join_blocks = FALSE
 ){
   
   # base plot
@@ -1371,7 +1381,9 @@ ggplot_the_response <- function(
     palette = palette,
     legend_position = legend_position,
     flip_horizontal = flip_horizontal,
-    group_lines = group_lines    
+    group_lines = group_lines,
+    block_label = block_label,
+    join_blocks = join_blocks
   )
   
   # add p-values
