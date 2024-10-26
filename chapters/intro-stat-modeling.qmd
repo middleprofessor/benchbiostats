@@ -36,6 +36,21 @@ output_folder <- "output"
 
 ```
 
+```{r}
+#| label: intro-fig-sizes
+#| echo: true
+#| message: false
+#| warning: false
+
+dpi <- 72
+std_ar <- 5/7 # .71
+one_response_plot_width = 3
+one_response_plot_height = 3
+two_response_plot_width = 6
+two_response_plot_height = 3
+
+```
+
 All students are familiar with the idea of a linear model from learning the equation of a line, which is
 
 $$
@@ -50,11 +65,15 @@ line2 <- function(x){
 }
 ```
 
-A linear model is a function, like that in equation (@eq-line), that is fit to a set of data, often to model a process that generated the data or something like the data. The line in Figure (@fig-line)A is just that, a line, but the line in Figure (@fig-line)B is a linear model fit to the data in Figure (@fig-line)B.
+A linear model is a function, like that in @eq-line, that is fit to a set of data, often to model a process that generated the data or something like the data. The line in @fig-line A is just that, a line, but the line in @fig-line B is a linear model fit to the data in @fig-line B.
 
-```{r line, echo=FALSE, message=FALSE}
 
+```{r}
 #| label: fig-line
+#| echo: false
+#| message: false
+#| fig-width: 6
+#| fig-height: 3
 #| fig-cap: "A line vs. a linear model. (A) the line $y=-3.48X + 105.7$ is drawn. (B) A linear model fit to the data. The model coefficients are numerically equal to the slope and intercept of the line in A."
 
 set.seed(1)
@@ -142,9 +161,9 @@ data.table(X = x,
            "Y (conditional draw)" = y_conditional_draw)
 ```
 
-<div style="background-color:#cccccc; text-align:left; vertical-align: middle; padding:20px 47px;">
-What's that code? `rnorm()` is a pseudorandom number generator that simulates random draws from a normal distribution with the specified mean and variance. The algorithm to generate the numbers is entirely deterministic -- the numbers are not truly random but are "pseudorandom". The list of numbers returned closely approximates a set of true, random numbers. The sequence of numbers returned is determined by the "seed", which can be set with the `set.seed()` function (R will use an internal seed if not set by the user).
-</div> 
+::: {.callout-note title="Pseudorandom"}
+`rnorm()` is a pseudorandom number generator that simulates random draws from a normal distribution with the specified mean and variance. The algorithm to generate the numbers is entirely deterministic -- the numbers are not truly random but are "pseudorandom". The list of numbers returned closely approximates a set of true, random numbers. The sequence of numbers returned is determined by the "seed", which can be set with the `set.seed()` function (R will use an internal seed if not set by the user).
+:::
 
 The error-draw specification is not very useful for thinking about data generation for data analyzed by generalized linear models, which are models that allow one to specify distribution families other than Normal (such as the binomial, Poisson, and Gamma families). In fact, thinking about a model as a predictor plus error can lead to the misconception that, in a generalized linear model, the error (or residuals from the fit) has a distribution from the non-Normal distribution modeled. This cannot be true because the distributions modeled using generalized linear models (other than the Normal) do not have negative values (some residuals must have negative values since the mean of the residuals is zero). Introductory biostatistics textbooks typically only introduce the error-draw specification because introductory textbooks recommend data transformation or non-parametric tests if the data are not approximately normal. This is unfortunate because generalized linear models are extremely useful for real biological data.
 
@@ -168,31 +187,44 @@ In the linear model fit to the data in Figure (@fig-line)B, the $X$ variable is 
 
 ### Fitting linear models to experimental data in which the $X$ variable is continuous or discrete
 
-A linear model fit to data with a numeric (continous or discrete) $X$ is classical **regression** and the result is typically communicated by a regression line. The experiment introduced in Chapter (@linear-models-with-a-single-continuous-x) [Linear models with a single, continuous *X*] is a good example. In this experiment, the researchers designed an experiment to measure the effect of warming on the timing of photosynthetic activity. Temperature was experimentally controlled at one of five settings (0, 2.25, 4.5, 6.75, or 9 °C above ambient temperature) within twelve, large enclosures. The response variable in the illustrated example is Autumn "green-down", which is the day of year (DOY) of the transition to loss of photosynthesis. The intercept and slope parameters of the regression line (Figure (@fig-intro-linear-models-cont-slope)) are the coefficients of the linear model. The slope (4.98 days per 1 °C added warmth) estimates the **effect** of warming on green-down DOY. What is not often appreciated at the introductory biostatistics level is that **the slope is a difference in conditional means**. Any point on a regression line is the expected value of $Y$ at a specified value of $X$, that is, the conditional mean $\mathrm{E}(Y|X)$. **The slope is the difference in expected values for a pair of points that differ in $X$ by one unit**.
+A linear model fit to data with a numeric (continous or discrete) $X$ is classical **regression** and the result is typically communicated by a regression line. The experiment introduced in @linear-models-with-a-single-continuous-x [Linear models with a single, continuous *X*] is a good example. In this experiment, the researchers designed an experiment to measure the effect of warming on the timing of photosynthetic activity. Temperature was experimentally controlled at one of five settings (0, 2.25, 4.5, 6.75, or 9 °C above ambient temperature) within twelve, large enclosures. The response variable in the illustrated example is Autumn "green-down", which is the day of year (DOY) of the transition to loss of photosynthesis. The intercept and slope parameters of the regression line (Figure (@fig-intro-linear-models-cont-slope)) are the coefficients of the linear model. The slope (4.98 days per 1 °C added warmth) estimates the **effect** of warming on green-down DOY. What is not often appreciated at the introductory biostatistics level is that **the slope is a difference in conditional means**. Any point on a regression line is the expected value of $Y$ at a specified value of $X$, that is, the conditional mean $\mathrm{E}(Y|X)$. **The slope is the difference in expected values for a pair of points that differ in $X$ by one unit**.
 
 $$
 b_1 = \mathrm{E}(Y|X=x+1) - \mathrm{E}(Y|X=x+1)
 $$
 
-I show this in Figure (@fig-intro-linear-models-cont-slope) using the points on the regression line at $x = 5$ and $x = 6$. Thinking about a regression coefficient as a difference in conditional means is especially useful for understanding the coefficients of a categorical $X$ variable, as described below.  
+I show this in @fig-intro-linear-models-cont-slope using the points on the regression line at $x = 5$ and $x = 6$. Thinking about a regression coefficient as a difference in conditional means is especially useful for understanding the coefficients of a categorical $X$ variable, as described below.  
 
-```{r intro-linear-models-cont-slope, echo=FALSE, warning = FALSE, message = FALSE, fig.cap="Illustration of the slope in a linear model with a numeric X. The slope (the coefficient of X) is the difference in expected value for any two X that are one unit apart. This is illustrated for the points on the line at x = 5 and x = 6."}
+![Illustration of the slope in a linear model with a numeric X. The slope (the coefficient of X) is the difference in expected value for any two X that are one unit apart. This is illustrated for the points on the line at x = 5 and x = 6.](../images/fig_2c_explainer.png){width=500 height=350 #fig-intro-linear-models-cont-slope}
 
-# image_path <- here("output", "fig_2c_explainer.Rds")
-# fig_2c_explainer <- readRDS(image_path)
-image_path <- here("images", "fig_2c_explainer.png")
-fig_2c_explainer <- knitr::include_graphics(image_path)
-fig_2c_explainer
+```{r}
+#| label: fig-intro-linear-models-cont-slope
+#| echo: false
+#| eval: false
+#| warning: false
+#| message: false
+#| fig.cap: "Illustration of the slope in a linear model with a numeric X. The slope (the coefficient of X) is the difference in expected value for any two X that are one unit apart. This is illustrated for the points on the line at x = 5 and x = 6."
+#| fig-width: 3
+#| fig-height: 3
+
+image_path <- here("output", "fig2i_explainer.Rds")
+fig_2c_explainer <- readRDS(image_path)
+plot_grid(fig_2c_explainer)
+
+#image_path <- here("images", "fig_2c_explainer.png")
+
 
 ```
 
 ### Fitting linear models to experimental data in which the $X$ variable is categorical {#slope}
 
-Linear models can be fit to experimental data in which the $X$ variable is categorical -- this is the focus of this text! For the model fit to the data in Figure (@fig-line)B, the coefficient of $X$ is the slope of the line. Perhaps surprisingly, 1) we can fit a model like @eq-error-spec to data in which the $X$ variable is categorical and 2) the coefficient of $X$ *is* a slope. How is this possible? The slope of a line is $\frac{y_2 - y_1}{x_2 - x_1}$ where $(x_1, y_1)$ and $(x_2, y_2)$ are the graph coordinates of any two points on the line. What is the denominator of the slope function $(x_2 - x_1)$ when $X$ is categorical?
+Linear models can be fit to experimental data in which the $X$ variable is categorical -- this is the focus of this text! For the model fit to the data in @fig-line B, the coefficient of $X$ is the slope of the line. Perhaps surprisingly, 1) we can fit a model like @eq-error-spec to data in which the $X$ variable is categorical and 2) the coefficient of $X$ *is* a slope. How is this possible? The slope of a line is $\frac{y_2 - y_1}{x_2 - x_1}$ where $(x_1, y_1)$ and $(x_2, y_2)$ are the graph coordinates of any two points on the line. What is the denominator of the slope function $(x_2 - x_1)$ when $X$ is categorical?
 
-The solution to using a linear model with categorical $X$ is to recode the factor levels into numbers. An example of this was outlined in Chapter @sec-intro. The value of $X$ for individual mouse *i* is a number that indicates the treatment assignment -- a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (Figure (@fig-intro-linear-models-cat-slope)). With the (0, 1) coding, $\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1$, so the denominator of the slope is equal to one and the slope is simply equal to the numerator $\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}$. The coefficient (which is a slope!) *is* the difference in conditional means.
+The solution to using a linear model with categorical $X$ is to recode the factor levels into numbers. An example of this was outlined in Chapter @sec-intro. The value of $X$ for individual mouse *i* is a number that indicates the treatment assignment -- a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (@fig-intro-linear-models-cat-slope). With the (0, 1) coding, $\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1$, so the denominator of the slope is equal to one and the slope is simply equal to the numerator $\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}$. The coefficient (which is a slope!) *is* the difference in conditional means.
 
-```{r intro-linear-models-cat-slope, echo=FALSE, warning = FALSE, message = FALSE, fig.cap="Illustration of the slope in a linear model with categorical X. The slope (the coefficient of X) is the difference in conditional means."}
+![Illustration of the slope in a linear model with categorical X. The slope (the coefficient of X) is the difference in conditional means.](../images/intro-linear-models-cat-slope-1.png){width=500 height=350 #fig-intro-linear-models-cat-slope}
+
+```{r intro-linear-models-cat-slope, echo=FALSE, eval=FALSE, warning = FALSE, message = FALSE, fig.cap="Illustration of the slope in a linear model with categorical X. The slope (the coefficient of X) is the difference in conditional means."}
 set.seed(3)
 # image_path <- here("output", "fig_2i_explainer.Rds")
 # fig_2i_explainer <- readRDS(image_path)
@@ -272,7 +304,7 @@ The conditional means are typically called **fitted values**, if the $X$ are the
 
 ## Inference from the model
 
-If our goal is inference, we want to use the fit parameters to learn, with uncertainty, about the system. Using equation (@eq-y-i), the coefficients $b_0$ and $b_1$ are **point estimates** of the true, generating parameters $\beta_0$ and $\beta_1$, the $e_i$ are estimates of $\varepsilon_i$ (the true, biological "noise"), and $\frac{\sum{e_i^2}}{N-2}$ is an estimate of the true, population variance $\sigma^2$ (this will be covered more in chapter xxx but you may recognize that $\frac{\sum{e_i^2}}{N-2}$ is the formula for a variance). And, using equation (@eq-yhat), $\hat{y}_i$ is the point estimate of the parameter $\mu_i$ (the true mean conditional on $X=x_i$). Throughout this text, Greek letters refer to a theoretical parameter and Roman letters refer to point estimates.
+If our goal is inference, we want to use the fit parameters to learn, with uncertainty, about the system. Using @eq-y-i, the coefficients $b_0$ and $b_1$ are **point estimates** of the true, generating parameters $\beta_0$ and $\beta_1$, the $e_i$ are estimates of $\varepsilon_i$ (the true, biological "noise"), and $\frac{\sum{e_i^2}}{N-2}$ is an estimate of the true, population variance $\sigma^2$ (this will be covered more in @sec-oneway but you may recognize that $\frac{\sum{e_i^2}}{N-2}$ is the formula for a variance). And, using @eq-yhat, $\hat{y}_i$ is the point estimate of the parameter $\mu_i$ (the true mean conditional on $X=x_i$). Throughout this text, Greek letters refer to a theoretical parameter and Roman letters refer to point estimates.
 
 Our uncertainty in the estimates of the parameters due to sampling is the standard error of the estimate. It is routine to report standard errors of means and coefficients of the model. While a standard error of the estimate of $\sigma$ is available, this is effectively never reported, at least in the experimental biology literature, presumably because the variance is thought of as a nuisance parameter (noise) and not something worthy of study. This is a pity. Certainly treatments can effect the variance in addition to the mean.
 
@@ -296,7 +328,7 @@ $$
 \mathrm{E}(Y|X) = \mathbf{X}\boldsymbol{\beta}
 $$
 
-where $mathbf{X}$ is the **model matrix** and $\boldsymbol{\beta}$ is the vector of parameters. We discuss these more in chapter xxx.
+where $mathbf{X}$ is the **model matrix** and $\boldsymbol{\beta}$ is the vector of parameters.
 
 A **Generalized Linear Model** (GLM) has the form $g(\mu_i) = \eta_i$ where $\eta$ (the Greek letter "eta") is the linear predictor
 
@@ -314,7 +346,7 @@ that is non-linear in the parameters because the parts are not added together. T
 
 2. The draws from the probability distribution are **independent**. Independence implies **uncorrelated** $Y$ conditional on the $X$, that is, for any two $Y$ with the same value of $X$, we cannot predict the value of one given the value of the other. For example, in the ASK1 data above, "uncorrelated" implies that we cannot predict the glucose level of one mouse within a specific treatment combination given the glucose level of another mouse in that combination. For linear models, this assumption is often stated as "independent errors" (the $\varepsilon$ in model (@eq-error-spec)) instead of independent observations.
 
-There are lots of reasons that conditional responses might be correlated. In the mouse example, correlation within treatment group could arise if subsets of mice in a treatment group are siblings or are housed in the same cage. More generally, if there are measures both within and among experimental units (field sites or humans or rats) then we'd expect the measures within the same unit to err from the model in the same direction. Multiple measures within experimental units (a site or individual) creates "clustered" observations. Lack of independence or clustered observations can be modeled using models with **random effects**. These models go by many names including linear mixed models (common in Ecology), hierarchical models, multilevel models, and random effects models. A linear mixed model is a variation of model (@eq-error-spec). This text introduces linear mixed models in chapter xxx.
+There are lots of reasons that conditional responses might be correlated. In the mouse example, correlation within treatment group could arise if subsets of mice in a treatment group are siblings or are housed in the same cage. More generally, if there are measures both within and among experimental units (field sites or humans or rats) then we'd expect the measures within the same unit to err from the model in the same direction. Multiple measures within experimental units (a site or individual) creates "clustered" observations. Lack of independence or clustered observations can be modeled using models with **random effects**. These models go by many names including linear mixed models (common in Ecology), hierarchical models, multilevel models, and random effects models. A linear mixed model is a variation of model @eq-error-spec. This text introduces linear mixed models in @sec-lmm.
 
 Measures that are taken from sites that are closer together or measures taken closer in time or measures from more closely related biological species will tend to have more similar values than measures taken from sites that are further apart or from times that are further apart or from species that are less closely related. Space and time and phylogeny create **spatial and temporal and phylogenetic autocorrelation**. Correlated error due to space or time or phylogeny can be modeled with **Generalized Least Squares** (GLS) models. A GLS model is a variation of model (@eq-error-spec).
 

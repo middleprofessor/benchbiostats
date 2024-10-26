@@ -1064,7 +1064,7 @@ m1_emm
 Notes
 
 @. Note that printing the `emmeans` object displays useful information. Here, this information includes the confidence level used. If the object is printed using `kable` (as in the "Inference" and "Understanding" sections above), only the table is printed and the additional information is lost.
-@. emmeans` computes the modeled means of all combinations of the levels of the factor variables specified in the argument `specs`.
+@. emmeans computes the modeled means of all combinations of the levels of the factor variables specified in the argument `specs`.
 @. An important argument of the emmeans function is `type =`, which controls the "space" of the response variable.
 @. Output options are more complex if there are two or more X variables. This will be covered in the chapter "Models for two (or more) categorical X variables".
 @. If there are continuous covariates in the model, the modeled means are computed at the average values of these covariates. These covariates do not need to be passed to the `specs` argument.
