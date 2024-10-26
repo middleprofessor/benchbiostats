@@ -639,7 +639,7 @@ sigma_exp.block.treat_matrix <- matrix(c(
   c(0.5, .25, 0.05),
   c(0, 0, 0),
   c(0, 0, 0)
-), nrow = 3, ncol = 4) %>%
+), nrow = 3, ncol = 4) |>
   t()
 colnames(sigma_exp.block.treat_matrix) <- treatment_levels
 
@@ -663,7 +663,7 @@ big_table <- data.table(NULL)
 if(do_sim == TRUE){
   for(param_set in 1:nrow(param_set_matrix)){
     sigma_exp.block_i <- param_set_matrix[param_set, sigma_block]
-    sigma_exp.block.treat_i <- param_set_matrix[param_set, .SD, .SDcols = treatment_levels] %>% as.numeric()
+    sigma_exp.block.treat_i <- param_set_matrix[param_set, .SD, .SDcols = treatment_levels] |> as.numeric()
     sigma_ss_i <- param_set_matrix[param_set, sigma_ss]
     sigma_rep_i <- 0.1
     sigma_exp.treat_i <- 0
@@ -704,11 +704,11 @@ if(do_sim == TRUE){
     for(i in 1:n_sims){
       
       # models
-      form_lm0 <- paste(paste0("sim_", i), "~ treatment") %>%
+      form_lm0 <- paste(paste0("sim_", i), "~ treatment") |>
         formula()
-      form_lm1 <- paste(paste0("sim_", i), "~ treatment + experiment") %>%
+      form_lm1 <- paste(paste0("sim_", i), "~ treatment + experiment") |>
         formula()
-      form_aov <- paste(paste0("sim_", i), "~ treatment + (treatment | experiment)") %>%
+      form_aov <- paste(paste0("sim_", i), "~ treatment + (treatment | experiment)") |>
         formula()
       lm0 <- lm(form_lm0, data = fake_rcbd)
       lm1 <- lm(form_lm1, data = fake_rcbd)
@@ -716,7 +716,7 @@ if(do_sim == TRUE){
                   random = ~1 | experiment,
                   correlation = corSymm(form = ~ 1 | experiment),
                   weights = varIdent(form = ~ 1 | treatment),
-                  data = fake_rcbd) %>%
+                  data = fake_rcbd) |>
         try()
       if(inherits(lmm2, "try-error")){
         lmm2 <- NULL
@@ -735,13 +735,13 @@ if(do_sim == TRUE){
                               id_col = "experiment",
                               data = fake_rcbd_means)
       
-      lm0_pairs <- emmeans(lm0, specs = "treatment") %>%
+      lm0_pairs <- emmeans(lm0, specs = "treatment") |>
         contrast(method = "revpairwise", adjust = "none")
-      lm1_pairs <- emmeans(lm1, specs = "treatment") %>%
+      lm1_pairs <- emmeans(lm1, specs = "treatment") |>
         contrast(method = "revpairwise", adjust = "none")
-      aov1_pairs <- emmeans(aov2, specs = "treatment", model = "multivariate") %>%
+      aov1_pairs <- emmeans(aov2, specs = "treatment", model = "multivariate") |>
         contrast(method = "revpairwise", adjust = "none")
-      aov2_pairs <- emmeans(aov2, specs = "treatment", model = "univariate") %>%
+      aov2_pairs <- emmeans(aov2, specs = "treatment", model = "univariate") |>
         contrast(method = "revpairwise", adjust = "none")
       
       fake_rcbd[, y_res := residuals(lm0)]
@@ -778,7 +778,7 @@ if(do_sim == TRUE){
       p3_mat[i, 5] <- pptt_p[3]
       
       if(!is.null(lmm2)){
-        lmm2_pairs <- emmeans(lmm2, specs = "treatment") %>%
+        lmm2_pairs <- emmeans(lmm2, specs = "treatment") |>
           contrast(method = "revpairwise", adjust = "none")
         p1_mat[i, 6] <- summary(lmm2_pairs)[1, "p.value"]
         p2_mat[i, 6] <- summary(lmm2_pairs)[2, "p.value"]
@@ -846,13 +846,13 @@ for(param_set in 1:nrow(param_set_matrix)){
 setnames(out_table,
          names(out_table),
          c("Contrast", "Cor Error", model_levels))
-out_table %>%
+out_table |>
   kable(digits = c(1, 3, 3, 3, 3, 3, 3, 4),
-        caption = "Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.") %>%
-  kable_styling() %>%
-  pack_rows("sim 1 - high correlated error", 1, 3) %>%
-  pack_rows("sim 2 - low correlated error", 4, 6) %>%
-  pack_rows("sim 3 - equal correlated error", 7, 9) %>%
+        caption = "Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.") |>
+  kable_styling() |>
+  pack_rows("sim 1 - high correlated error", 1, 3) |>
+  pack_rows("sim 2 - low correlated error", 4, 6) |>
+  pack_rows("sim 3 - equal correlated error", 7, 9) |>
   pack_rows("sim 4 - zero correlated error", 10, 12)
 
 ```
@@ -865,7 +865,7 @@ max_r <- 0.2
 p_mat <- big_table[sim_id == 1 & abs(r21) < max_r & abs(r31) < max_r & abs(r32) < max_r, .SD, .SDcols = paste0(model_levels, "_contrast_3")]
 p_mat <- big_table[sim_id == 1, .SD, .SDcols = paste0(model_levels, "_contrast_1")]
 
-p_mat %>%
+p_mat |>
   apply(2, pless)
 
 big_table[, pless_aov1_contrast_1 := ifelse(aov1_contrast_1 < 0.05, 1, 0)]
@@ -910,8 +910,8 @@ m1 <- glm(pless_aov2_contrast_1 ~ r21,
 sim1_table[, aov2_contrast_1_sim4 := predict(m1, sim1_table,
                    type = "response")]
 
-sim1_table %>%
-  kable(digits = 3) %>%
+sim1_table |>
+  kable(digits = 3) |>
   kable_styling()
 ```
 
@@ -1086,59 +1086,59 @@ if(doit == TRUE){
     # aov1 <- aov_4(y ~ tr1_main * tr2_sub + (tr1_main | block),
     #               data = fake_i)
     # 
-    lm0_pairs <- emmeans(lm0, specs = c("tr1_main", "tr2_sub")) %>%
+    lm0_pairs <- emmeans(lm0, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lm0_p[i,] <- lm0_pairs[, "p.value"]
     
-    lm1_pairs <- emmeans(lm1, specs = c("tr1_main", "tr2_sub")) %>%
+    lm1_pairs <- emmeans(lm1, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lm1_p[i,] <- lm1_pairs[, "p.value"]
     
-    lmm1_pairs <- emmeans(lmm1, specs = c("tr1_main", "tr2_sub")) %>%
+    lmm1_pairs <- emmeans(lmm1, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lmm1_p[i,] <- lmm1_pairs[, "p.value"]
     
-    lmm3_pairs <- emmeans(lmm3, specs = c("tr1_main", "tr2_sub")) %>%
+    lmm3_pairs <- emmeans(lmm3, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lmm3_p[i,] <- lmm3_pairs[, "p.value"]
 
-    lmm4_pairs <- emmeans(lmm4, specs = c("tr1_main", "tr2_sub")) %>%
+    lmm4_pairs <- emmeans(lmm4, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lmm4_p[i,] <- lmm4_pairs[, "p.value"]
     
-    lmm5_pairs <- emmeans(lmm5, specs = c("tr1_main", "tr2_sub")) %>%
+    lmm5_pairs <- emmeans(lmm5, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lmm5_p[i,] <- lmm5_pairs[, "p.value"]
     
-    lmm6_pairs <- emmeans(lmm6, specs = c("tr1_main", "tr2_sub")) %>%
+    lmm6_pairs <- emmeans(lmm6, specs = c("tr1_main", "tr2_sub")) |>
       contrast(method = "revpairwise",
                simple = "each",
                combine = TRUE,
-               adjust = "none") %>%
+               adjust = "none") |>
       summary(infer = TRUE)
     lmm6_p[i,] <- lmm6_pairs[, "p.value"]
 
@@ -1270,14 +1270,14 @@ if(readit == TRUE){
     
   }
   
-  res_out %>%
+  res_out |>
     kable(digits = c(0,2,2,2,2,1,3,3,3,3,3,3,3,3),
           caption = "Type I error rate for the RSPD statistical models under different models of random variance. The design is 2 (main plot: WT, KO) x 3 (subplot: Cn, Tr1, Tr2) with ten blocks. All four simulations have a component of variance due to block. Sim 1 includes a block:main plot component, Sim 2  includes a block:sub plot component, Sim 3 includes both block:main and block:sub components. Type I error rates for the 9 simple effect contrasts were averaged within the two sets: contrast = main is the aggregate of the single main plot contrast (KO - WT) at each level of the subplot factor. contrast = sub is the aggregate of the three subplot contrasts (Tr1 - Cn, Tr2 - Cn, Tr2 - Tr1) at each level of the main plot factor. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text."
-    ) %>%
-    kable_styling() %>%
-    pack_rows("sim 1 - block:main plot", 1, 2) %>%
-    pack_rows("sim 2 - block:sub plot", 3, 4) %>%
-    pack_rows("sim 3 - block:main + block:sub", 5, 6) %>%
+    ) |>
+    kable_styling() |>
+    pack_rows("sim 1 - block:main plot", 1, 2) |>
+    pack_rows("sim 2 - block:sub plot", 3, 4) |>
+    pack_rows("sim 3 - block:main + block:sub", 5, 6) |>
     pack_rows("sim 4 - block only", 7, 8)
 }
 
@@ -1334,6 +1334,151 @@ Best practices
 7. lm1 -- fixed effect model on all block:treatment:rep means
 8. pptt -- pairwise, paired t-test on block:treatment:rep means
 
+## Example 1: CRD with subsampling (classical equivalent: Nested ANOVA)
+
+Source article: [A new mouse model of Charcot-Marie-Tooth 2J neuropathy replicates human axonopathy and suggest alteration in axo-glia communication](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010477){target="_blank"}
+
+Published methods: Nested ANOVA
+
+Fig: 5b
+
+Design: 3 x 1 CRDS
+
+```{r lmm-5b-import, message=FALSE, warning=FALSE, echo=FALSE}
+data_from <- "A new mouse model of Charcot-Marie-Tooth 2J neuropathy replicates human axonopathy and suggest alteration in axo-glia communication"
+file_name <- "journal.pgen.1010477.s014.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+
+fig5b_wide <- read_excel(file_path,
+                    sheet = "5B",
+                    range = "A1:O138") |>
+  data.table()
+genotype_levels <- c("WT", "TM/+", "TM/TM")
+new_cols <- paste(rep(genotype_levels, each = 5), 1:5)
+setnames(fig5b_wide, old = names(fig5b_wide), new = new_cols)
+fig5b <- melt(fig5b_wide,
+              measure_vars = new_cols,
+              variable.name = "mouse",
+              value.name = "caspr_length")
+fig5b[, genotype := tstrsplit(mouse, " ", keep = 1)]
+fig5b[, genotype := factor(genotype, levels = genotype_levels)]
+fig5b <- na.omit(fig5b)
+```
+
+
+```{r}
+#| label: tab-lmm-fig5b-sample-size
+#| echo: false
+#| tbl-cap: Number of paranodes measured per mouse. Each measurement is a subsampled replicate. Each mouse is a treatment replicate.
+
+fig5b[, .(N = .N), by = .(genotype, mouse)] |>
+  kable() |>
+  kable_styling()
+```
+
+
+
+### Model fit and inference
+#### Model fit
+```{r lmm5b-fit}
+fig5b_lmm <- lmer(caspr_length ~ genotype + (1 | mouse), data = fig5b)
+```
+
+Notes
+
+1. This model is called a "random intercept" model. The factor $\texttt{mouse}$ is a random factor and is added to the model as a random intercept. Random factors are added inside parentheses. A random intercept is specified with a 1 in front of the bar.
+
+#### Inference
+
+```{r lmm5b-inference}
+fig5b_lmm_emm <- emmeans(fig5b_lmm, specs = "genotype")
+fig5b_lmm_pairs <- contrast(fig5b_lmm_emm, method = "revpairwise", adjust = "tukey") |>
+  summary(infer = TRUE)
+fig5b_lmm_pairs |>
+  kable(digits = c(1,2,2,1,2,2,1,4)) |>
+  kable_styling()
+```
+
+
+Notes
+
+1. . I would not adjust the *p*-values (see @sec-multiple-tests) but I have adjusted using Tukey HSD to compare to researcher's results in next section
+
+#### Plot the model
+
+```{r lmm5b-plot}
+set.seed(1)
+ggptm(fig5b_lmm, fig5b_lmm_emm, fig5b_lmm_pairs,
+      show_nest_data = TRUE,
+      nest_id = "mouse",
+      hide_pairs = 3,
+      y_label = "Caspr Length (µm)",
+      palette = "pal_okabe_ito_blue")
+```
+
+
+### What the researchers did: Classical nested ANOVA
+
+```{r}
+#| message: false
+fig5b_aov <- aov_4(caspr_length ~ genotype + (1 | mouse), 
+                   fun_aggregate = mean,
+                   data = fig5b)
+fig5b_aov_emm <- emmeans(fig5b_aov, specs = "genotype")
+fig5b_aov_pairs <- contrast(fig5b_aov_emm, method = "revpairwise", adjust = "tukey") |>
+  summary(infer = TRUE) |>
+  data.table()
+fig5b_aov_pairs |>
+  kable(digits = c(1,2,2,1,2,2,1,4)) |>
+  kable_styling()
+
+```
+
+Notes
+
+1. If the design is balanced (all units have the same sample size), classical nested ANOVA and the linear mixed model with a random intercept are equivalent.
+2. In general, ANOVA doesn't handle lack of balance well (different sample sizes per unit). If there were the same number of measures per mouse, The *t* and *p* values of this nested anova would be the same as these values fit by the linear mixed model. As is, the *t* value is slightly smaller and the *p*-value is slightly larger in the nested ANOVA.
+
+### What if the researchers had ignored the non-independence?
+
+```{r}
+fig5b_lm <- lm(caspr_length ~ genotype, data = fig5b)
+fig5b_lm_emm <- emmeans(fig5b_lm, specs = "genotype")
+fig5b_lm_pairs <- contrast(fig5b_lm_emm, method = "revpairwise", adjust = "tukey") |>
+  summary(infer = TRUE) |>
+  data.table()
+fig5b_lm_pairs[, p.value := format(p.value, digits = 3)]
+fig5b_lm_pairs |>
+  kable(digits = c(1,2,2,1,2,2,1,2)) |>
+  kable_styling()
+
+```
+
+Notes
+
+1. The *p*-values are extremely small because the model "thinks" the data are independent. This is an example of pseudoreplication -- using technical replicates as treatment replicates.
+
+### A deeper dive into the random intercepts
+
+Remember, intercepts are means. A random intercept model computes a mean for each level of the random factor, so here, the model is computing a mean for each mouse. The mouse means *are not* the mean you would compute using a calculator. Instead the modeled mean of each mouse within a treatment is a little closer to the treatment mean than the sample mean of each mouse. That is, the deviation between the mouse mean and the treatment mean are "shrunk toward zero".
+
+It is easy to show these shrunken estimates of the cluster means. Here are the modeled means of each WT mouse, and the deviation from the modeled treatment mean.
+
+```{r}
+lmm_means_table <- data.table(
+  mouse = unique(fig5b[genotype == "WT", mouse]),
+  intercept = coef(fig5b_lmm)$mouse[1:4, "(Intercept)"])
+lmm_means_table[, deviation := intercept - coef(summary(fig5b_lmm))[1, "Estimate"]]
+lmm_means_table
+```
+
+Here are the sample means of each WT mouse and the deviation from the treatment mean
+
+```{r}
+sample_means_table <- fig5b[genotype == "WT", .(mean = (mean(caspr_length))), by = .(mouse)]
+sample_means_table[, deviation := mean - mean(mean)]
+sample_means_table
+```
 
 ## Example 2: RCBD with >2 groups (classical equivalent: repeated measures ANOVA) (fig6g) {#sec-lmm-example2}
 
@@ -1355,8 +1500,8 @@ file_path <- here(data_folder, data_from, file_name)
 fig6g_wide <- read_excel(file_path,
                          sheet = "fig6g",
                          range = "A3:E10",
-                         col_names = TRUE) %>%
-  data.table() %>%
+                         col_names = TRUE) |>
+  data.table() |>
   clean_names()
 
 treatment_levels <- c("Lesion", "Saline", "CNO", "Post_CNO")
@@ -1419,8 +1564,8 @@ fig6g_m1b overparameterizes, report fig6g_m1a (see [Alternative models for fig6g
 fig6g_m1_coef <- cbind(coef(summary(fig6g_m1)),
                        confint(fig6g_m1)[-c(1:2),])
 
-# exp5c_m1_coef %>%
-#   kable(digits = c(2,3,1,1,4,2,2)) %>%
+# exp5c_m1_coef |>
+#   kable(digits = c(2,3,1,1,4,2,2)) |>
 #   kable_styling()
 ```
 
@@ -1430,8 +1575,8 @@ fig6g_m1_emm <- emmeans(fig6g_m1, specs = c("treatment"))
 
 
 ```{r lmm-6g_m1_emm-show, echo=FALSE}
-fig6g_m1_emm %>%
-  kable(digits = c(1,1,2,1,1,2,2)) %>%
+fig6g_m1_emm |>
+  kable(digits = c(1,1,2,1,1,2,2)) |>
   kable_styling()
 ```
 
@@ -1450,13 +1595,13 @@ fig6g_m1_planned <- contrast(fig6g_m1_emm,
                          "Post_CNO - CNO" = c(post_cno - cno)
                        ),
                        adjust = "none"
-) %>%
+) |>
   summary(infer = TRUE)
 ```
 
 ```{r lmm-6g_m1_planned-show, echo=FALSE}
-fig6g_m1_planned %>%
-  kable(digits = c(1,2,3,3,2,2,2,5)) %>%
+fig6g_m1_planned |>
+  kable(digits = c(1,2,3,3,2,2,2,5)) |>
   kable_styling()
 ```
 
@@ -1549,8 +1694,8 @@ file_path <- here(data_folder, data_from, file_name)
 exp5c_wide <- read_excel(file_path,
                          sheet = "Fig5c",
                          range = "A2:M3",
-                         col_names = FALSE) %>%
-  data.table() %>%
+                         col_names = FALSE) |>
+  data.table() |>
   transpose(make.names = 1)
 
 activity_levels <- c("Basal", "EPS")
@@ -1643,8 +1788,8 @@ exp5c_m1_coef <- cbind(coef(summary(exp5c_m1)),
 
 
 ```{r lmm-exp5c_emm_coef-show, message=FALSE}
-exp5c_m1_coef %>%
-  kable(digits = c(2,3,1,1,4,2,2)) %>%
+exp5c_m1_coef |>
+  kable(digits = c(2,3,1,1,4,2,2)) |>
   kable_styling()
 ```
 
@@ -1653,8 +1798,8 @@ exp5c_m1_emm <- emmeans(exp5c_m1, specs = c("treatment", "activity"))
 ```
 
 ```{r lmm-exp5c_emm-show, echo=FALSE}
-exp5c_m1_emm %>%
-  kable(digits = c(1,1,2,3,1,2,2)) %>%
+exp5c_m1_emm |>
+  kable(digits = c(1,1,2,3,1,2,2)) |>
   kable_styling()
 ```
 
@@ -1675,13 +1820,13 @@ exp5c_m1_planned <- contrast(exp5c_m1_emm,
                            
                        ),
                        adjust = "none"
-) %>%
+) |>
   summary(infer = TRUE)
 ```
 
 ```{r lmm-exp5c-planned-show, echo=FALSE}
-exp5c_m1_planned %>%
-  kable(digits = c(1,2,3,3,2,2,2,3)) %>%
+exp5c_m1_planned |>
+  kable(digits = c(1,2,3,3,2,2,2,3)) |>
   kable_styling()
 ```
 
@@ -1689,8 +1834,8 @@ exp5c_m1_planned %>%
 
 ```{r echo=FALSE}
 # add treatment column to emmeans table
-exp5c_m1_emm_dt <- summary(exp5c_m1_emm) %>%
-  data.table
+exp5c_m1_emm_dt <- summary(exp5c_m1_emm) |>
+  data.table()
 exp5c_m1_emm_dt[, t.by.a := paste(treatment, activity)]
 exp5c_m1_emm_dt[, t.by.a := factor(t.by.a,
                                       levels = levels(exp5c$t.by.a))]
@@ -1805,8 +1950,8 @@ Figure \@ref(fig:lmm-exp5c-why) shows the modeled means of the four treatment co
 
 m1 <- lm(glucose_uptake ~ treatment * activity,
            data = exp5c)
-m1_emm_dt <- emmeans(m1, specs = c("treatment", "activity")) %>%
-  summary() %>%
+m1_emm_dt <- emmeans(m1, specs = c("treatment", "activity")) |>
+  summary() |>
   data.table()
 m1_emm_dt[, t.by.a:= paste(treatment, activity)]
 m1_emm_dt[, t.by.a:= factor(t.by.a, t.by.a)]
@@ -1857,7 +2002,7 @@ exp5c_m2_planned <- contrast(exp5c_m2_emm,
                            
                        ),
                        adjust = "none"
-) %>%
+) |>
   summary(infer = TRUE)
 ```
 
@@ -1897,7 +2042,7 @@ exp1g_wide <- read_excel(file_path,
                          sheet = "Fig 1g",
                          range = "B4:E25",
                          col_types = c("numeric"),
-                         col_names = FALSE) %>%
+                         col_names = FALSE) |>
   data.table()
 
 genotype_levels <- c("Gpr174+", "Gpr174-")
@@ -1913,7 +2058,7 @@ exp1g <- melt(exp1g_wide,
               id.vars = "experiment_id",
               measure.vars = g.by.s_levels,
               variable.name = "treatment",
-              value.name = "gc") %>% # cell count
+              value.name = "gc") |> # cell count
   na.omit()
 
 exp1g[, c("genotype", "sex"):= tstrsplit(treatment,
@@ -2032,14 +2177,14 @@ exp1g_contrasts <- list(
 exp1g_m1_planned <- contrast(exp1g_m1_emm,
                        method = exp1g_contrasts,
                        adjust = "none"
-) %>%
+) |>
   summary(infer = TRUE)
 ```
 
 
 ```{r lmm-exp1g-pairs-show, echo=FALSE}
-exp1g_m1_planned %>%
-  kable(digits = c(1,2,3,3,2,2,2,3)) %>%
+exp1g_m1_planned |>
+  kable(digits = c(1,2,3,3,2,2,2,3)) |>
   kable_styling()
 ```
 
@@ -2059,8 +2204,8 @@ exp1g_effects <- ggplot_the_effects(exp1g_m1_emm,
 
 ```{r echo=FALSE}
 # add treatment column to emmeans table
-exp1g_m1_emm_dt <- summary(exp1g_m1_emm) %>%
-  data.table
+exp1g_m1_emm_dt <- summary(exp1g_m1_emm) |>
+  data.table()
 exp1g_m1_emm_dt[, treatment := paste(genotype, sex)]
 exp1g_m1_emm_dt[, treatment := factor(treatment,
                                       levels = levels(exp1g$treatment))]
@@ -2235,12 +2380,12 @@ options(knitr.kable.NA = '')
 vc <- rbind(varcor(VarCorr(exp1g_m1a)$experiment_id),
             varcor(VarCorr(exp1g_m1b)$experiment_id))
 
-vc %>%
+vc |>
   kable(col.names = rep("", 4),
         digits = 4,
-        caption = "The Varcorr matrix. Standard deviations of random effects on the diagonal. Correlations of random effects on the off-diagonal.") %>%
-  kable_styling() %>%
-  pack_rows("exp1g_m1a", 1, 4) %>%
+        caption = "The Varcorr matrix. Standard deviations of random effects on the diagonal. Correlations of random effects on the off-diagonal.") |>
+  kable_styling() |>
+  pack_rows("exp1g_m1a", 1, 4) |>
   pack_rows("exp1g_m1b", 5, 8)
   
 ```
@@ -2255,18 +2400,18 @@ exp1g_m2 <- lm(gc ~ sex * genotype,
 ```
 
 ```{r lmm-exp1g-lm2-planned, echo=FALSE}
-exp1g_m2_planned <- emmeans(exp1g_m2, specs = c("sex", "genotype")) %>%
+exp1g_m2_planned <- emmeans(exp1g_m2, specs = c("sex", "genotype")) |>
   contrast(method = exp1g_contrasts,
            adjust = "none"
-  ) %>%
+  ) |>
   summary(infer = TRUE)
 
 pairs_dt <- rbind(exp1g_m1_planned, exp1g_m2_planned)
 
-pairs_dt %>%
-  kable(digits = c(1,2,3,1,2,2,2,3), caption = "Planned contrasts for the linear mixed model exp1g_m1 and the fixed effects model of experiment means exp1g_m2.") %>%
-  kable_styling() %>%
-  pack_rows("exp1g_m1 (lmm)", 1, 3) %>%
+pairs_dt |>
+  kable(digits = c(1,2,3,1,2,2,2,3), caption = "Planned contrasts for the linear mixed model exp1g_m1 and the fixed effects model of experiment means exp1g_m2.") |>
+  kable_styling() |>
+  pack_rows("exp1g_m1 (lmm)", 1, 3) |>
   pack_rows("exp1g_m2 (lm means pooling)", 4, 6)
 ```
 
@@ -2284,18 +2429,18 @@ exp1g_m3 <- lm(gc ~ sex * genotype,
 ```
 
 ```{r lmm-exp1g_m3-compare, echo=FALSE}
-exp1g_m3_planned <- emmeans(exp1g_m3, specs = c("sex", "genotype")) %>%
+exp1g_m3_planned <- emmeans(exp1g_m3, specs = c("sex", "genotype")) |>
   contrast(method = exp1g_contrasts,
            adjust = "none"
-  ) %>%
+  ) |>
   summary(infer = TRUE)
 
 pairs_dt <- rbind(exp1g_m1_planned, exp1g_m3_planned)
 
-pairs_dt %>%
-  kable(digits = c(1,2,3,1,2,2,2,3), caption = "Planned contrasts for the linear mixed model exp1g_m1 and the fixed effects model exp1g_m3 with complete pooling.") %>%
-  kable_styling() %>%
-  pack_rows("exp1g_m1 (lmm)", 1, 3) %>%
+pairs_dt |>
+  kable(digits = c(1,2,3,1,2,2,2,3), caption = "Planned contrasts for the linear mixed model exp1g_m1 and the fixed effects model exp1g_m3 with complete pooling.") |>
+  kable_styling() |>
+  pack_rows("exp1g_m1 (lmm)", 1, 3) |>
   pack_rows("exp1g_m3 (lm complete pooling)", 4, 6)
 ```
 
@@ -2319,30 +2464,30 @@ Notes
 3. The mixed-effect ANOVA is equivalent to the linear mixed model `exp1g_m1c` if there are the same number of replicates in each treatment combination and the same number of subsamples in all treatment by $\texttt{experiment\_id}$ combinations. The design is not balanced in this example.
 
 ```{r lmm-exp1g_m1_aov-pairs, echo=FALSE}
-pairs_a <- emmeans(exp1g_m1_aov, specs = c("sex", "genotype")) %>%
+pairs_a <- emmeans(exp1g_m1_aov, specs = c("sex", "genotype")) |>
   contrast(method = exp1g_contrasts,
            adjust = "none"
-  )%>%
+  )|>
   summary(infer = TRUE)
-pairs_b <- emmeans(exp1g_m1c, specs = c("sex", "genotype")) %>%
+pairs_b <- emmeans(exp1g_m1c, specs = c("sex", "genotype")) |>
   contrast(method = exp1g_contrasts,
            adjust = "none"
-  )%>%
+  )|>
   summary(infer = TRUE)
-pairs_c <- emmeans(exp1g_m1d, specs = c("sex", "genotype")) %>%
+pairs_c <- emmeans(exp1g_m1d, specs = c("sex", "genotype")) |>
   contrast(method = exp1g_contrasts,
            adjust = "none"
-  )%>%
+  )|>
   summary(infer = TRUE)
 
 
 pairs_dt <- rbind(pairs_a, pairs_b, pairs_c)
 
-pairs_dt %>%
-  kable(digits = c(1,2,3,3,2,2,2,3), caption = "Planned contrasts from mixed ANOVA compared to lmm equivalent of mixed ANOVA and lowest AIC lmm.") %>%
-  kable_styling() %>%
-  pack_rows("exp1g_m1_aov (mixed ANOVA)", 1, 3) %>%
-  pack_rows("exp1g_m1_c (lmm equivalent of mixed ANOVA)", 4, 6) %>%
+pairs_dt |>
+  kable(digits = c(1,2,3,3,2,2,2,3), caption = "Planned contrasts from mixed ANOVA compared to lmm equivalent of mixed ANOVA and lowest AIC lmm.") |>
+  kable_styling() |>
+  pack_rows("exp1g_m1_aov (mixed ANOVA)", 1, 3) |>
+  pack_rows("exp1g_m1_c (lmm equivalent of mixed ANOVA)", 4, 6) |>
   pack_rows("exp1g_md (lmm with min AIC)", 7, 9)
 ```
 
@@ -2458,8 +2603,8 @@ Data wrangling necessary for plot:
 
 ```{r}
 # add treatment column to emmeans table
-exp1g_m1_emm_dt <- summary(exp1g_m1_emm) %>%
-  data.table
+exp1g_m1_emm_dt <- summary(exp1g_m1_emm) |>
+  data.table()
 exp1g_m1_emm_dt[, treatment := paste(genotype, sex)]
 exp1g_m1_emm_dt[, treatment := factor(treatment,
                                       levels = levels(exp1g$treatment))]
@@ -2709,7 +2854,7 @@ Notes
 
 # exp5c_aov was fit with the default -- multivariate model only
 emmeans(exp5c_aov,
-        specs = c("treatment", "activity")) %>%
+        specs = c("treatment", "activity")) |>
   contrast(method = "revpairwise",
            simple = "each",
            combine = TRUE,
@@ -2717,7 +2862,7 @@ emmeans(exp5c_aov,
 
 # exp5c_aov included the univariate model but the default is still the multivariate model
 emmeans(exp5c_aov1,
-        specs = c("treatment", "activity")) %>%
+        specs = c("treatment", "activity")) |>
   contrast(method = "revpairwise",
            simple = "each",
            combine = TRUE,
@@ -2726,7 +2871,7 @@ emmeans(exp5c_aov1,
 # passing `model = "multivariate"` makes the model choice transparent
 emmeans(exp5c_aov1,
         specs = c("treatment", "activity"),
-        model = "multivariate") %>%
+        model = "multivariate") |>
   contrast(method = "revpairwise",
            simple = "each",
            combine = TRUE,
@@ -2743,7 +2888,7 @@ Notes
 
 ```{r}
 # get the univariate model results using $aov
-emmeans(exp5c_aov1$aov, specs = c("treatment", "activity")) %>%
+emmeans(exp5c_aov1$aov, specs = c("treatment", "activity")) |>
   contrast(method = "revpairwise",
            simple = "each",
            combine = TRUE,
@@ -2777,8 +2922,8 @@ file_path <- here(data_folder, data_from, file_name)
 exp5c_wide <- read_excel(file_path,
                          sheet = "Fig5c",
                          range = "A2:M3",
-                         col_names = FALSE) %>%
-  data.table() %>%
+                         col_names = FALSE) |>
+  data.table() |>
   transpose(make.names = 1)
 
 activity_levels <- c("Basal", "EPS")
@@ -2806,7 +2951,7 @@ exp1g_wide <- read_excel(file_path,
                          sheet = "Fig 1g",
                          range = "B4:E25",
                          col_types = c("numeric"),
-                         col_names = FALSE) %>%
+                         col_names = FALSE) |>
   data.table()
 
 genotype_levels <- c("Gpr174+", "Gpr174-")
@@ -2822,7 +2967,7 @@ exp1g <- melt(exp1g_wide,
               id.vars = "experiment_id",
               measure.vars = g.by.s_levels,
               variable.name = "treatment",
-              value.name = "gc") %>% # cell count
+              value.name = "gc") |> # cell count
   na.omit()
 
 exp1g[, c("genotype", "sex"):= tstrsplit(treatment,
