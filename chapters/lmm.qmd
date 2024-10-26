@@ -348,8 +348,9 @@ In pseudoreplication, the degrees of freedom used to compute the test statistic 
 
 Given the basic principles above, let's consider the kinds of experimental designs seen in experimental bench biology (@fig-lmm-designs).
 
-![Experimental designs in experimental bench biology. Images created with BioRender.com](../images/experimental_designs/designs_1.png){width=800 #fig-lmm-designs}
-![](../images/experimental_designs/designs_2.png){width=550}
+![](../images/experimental_designs/designs_1.png){width=800}
+
+![Experimental designs in experimental bench biology. Images created with BioRender.com](../images/experimental_designs/designs_2.png){width=550 #fig-lmm-designs}
 
 
 ### Completely Randomized Design (CRD)
