@@ -3899,7 +3899,7 @@ NHST Blues
 <p>Notes</p>
 <ol type="1">
 <li>The afex package has three function names for generating the same ANOVA table and statistics – here I’m using <code>aov_4</code> because this functions uses a linear model formula argument (specifically, that used in the lme4 package), which is consistent with the rest of this text.</li>
-<li>The formula includes the addition of a random factor (<code>(1|id)</code>) even though there really is no random factor in this model. See <a href="lmm.html">Models with random factors – Blocking and pseudoreplication</a> for more information on random factors. The random factor (the factor variable “id” created in the line before the fit model line) identifies the individual mouse from which the response variable was measured. Because the response was only measured once on each individual mouse, “id” is not really a random factor but the addition of this in the model formula is necessary for the <code>aov_4</code> function to work.</li>
+<li>The formula includes the addition of a random factor (<code>(1|id)</code>) even though there really is no random factor in this model. See <a href="#lmm">Models with random factors – Blocking and pseudoreplication</a> for more information on random factors. The random factor (the factor variable “id” created in the line before the fit model line) identifies the individual mouse from which the response variable was measured. Because the response was only measured once on each individual mouse, “id” is not really a random factor but the addition of this in the model formula is necessary for the <code>aov_4</code> function to work.</li>
 </ol>
 </section>
 <section id="twoway-car-anova" class="level4" data-number="13.11.4.2">
