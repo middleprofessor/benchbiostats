@@ -28,13 +28,11 @@ source(here::here("R/ggplot_the_model.R"))
 source(here::here("R/ggptm.R"))
 source(here::here("simulations/grcbds/simulator.R"))
 
-here <- here::here
 clean_names <- janitor::clean_names
-data_folder <- "data"
 minus <- "\u2013"
 
 here <- here::here
-data_path <- "data"
+data_folder <- "data"
 image_folder <- "images"
 ```
 
@@ -599,7 +597,7 @@ Assumptions:
 Notes:
 
 1. lmm1 is the standard. If the number of treatments = 2, then lmm1 is eqivalent with a paired t-test.
-2. If the design is balanced (all blocks have a single value for both treatments) AND the number of treatments = 2 then *all six methods are numerically equivalent*.
+2. If the design is balanced AND the number of treatments = 2 then *all six methods are numerically equivalent*.
 3. If the design is balanced AND the number of treatments > 2, then
     * lmm1, lm1, and aov2 are numerically equivalent
     * lmm2, aov1, pptt result in the same estimates and SE but lmm2 has more df, so the CIs, and p-values of lmm2 are less conservative.
@@ -609,22 +607,57 @@ Notes:
 7. the lmm models are very flexible -- covariates can be added or these can be used as generalized lmms for non-normal distributions.
 8. the lmm models and especially lmm2 sometimes (often?) fail to converge, especially with small samples (small number of blocks) or if the among-block component of variance is small.
 
-Performance:
+#### So, which model, and why? A simulation to help decide
+
+Two linear mixed modeling strategies would be
+
+1. Fit the most complete model first, if the model fails or has boundary warning because of too little variance at some level, then fit the next most complete model, and so on. This order would be lmm2, lmm1, lm1 (lmm1 and lm1 are equivalent if the design is balanced).
+2. Fit all linear mixed models (lmm2, lmm1) and use a model selection method to choose the best model that balances completeness (controling type I error) and overfitting.
+
+I suggest a third strategy, which I prefer. This is,
+
+3. use simulation to compare the performance (Type I error and Power) of each model under differ combinations of the structure of the variances of the levels of the random factor. Use these results to guide the strategy
+
+
+Here I use a simulation to measure the performance of the RCBD statistical models under four conditions of correlated error among the blocks between two treatment levels.
+
+1. High correlated error. There is heterogenous correlated error among the three pairs of treatments, with one high, one intermediate, and one low correlation
+2. Low correlated error. There is heterogenous correlated error among the three pairs of treatments, all with low correlation.
+3. Homogenous correlated error. There is high correlated errror among the three pairs of treatment, all with the same expected level
+4. There is no correlated error.
 
 ```{r rcbd-performance-sim, warning=FALSE, message=FALSE, error=FALSE, echo = FALSE}
 seed_starter <- 1
-n_sims <- 2000
+n_sims <- 1
 do_sim <- FALSE
+temp <- TRUE
+correlated_model <- FALSE
 
 data_from <- "simulations/grcbds/data"
 error_type <- "power" 
 if(error_type == "type1"){
-  outfile_name <- "rcbd_type1.Rds"
+  if(temp){
+    outfile_name <- NULL
+  }
+  if(correlated_model & temp == FALSE){
+    outfile_name <- "rcbd_type1-cor-model.Rds"
+  }
+  if(correlated_model == FALSE & temp == FALSE){
+    outfile_name <- "rcbd_type1-cor-model.Rds"
+  }
   # parameters
   beta_i = c(10, 0, 0)
 }
 if(error_type == "power"){
-  outfile_name <- "rcbd_power.Rds"
+  if(temp){
+    outfile_name <- NULL
+  }
+  if(correlated_model & temp == FALSE){
+    outfile_name <- "rcbd_power-cor-model.Rds"
+  }
+  if(correlated_model == FALSE & temp == FALSE){
+    outfile_name <- "rcbd_power-cor-model.Rds"
+  }
   # parameters
   beta_i = c(10, 0, 1.2)
 }
@@ -718,10 +751,13 @@ if(do_sim == TRUE){
         formula()
       form_lm1 <- paste(paste0("sim_", i), "~ treatment + experiment") |>
         formula()
+      form_lmm1 <- paste(paste0("sim_", i), "~ treatment + (1 | experiment)") |>
+        formula()
       form_aov <- paste(paste0("sim_", i), "~ treatment + (treatment | experiment)") |>
         formula()
       lm0 <- lm(form_lm0, data = fake_rcbd)
       lm1 <- lm(form_lm1, data = fake_rcbd)
+      # lmm1 <- lmer(form_lmm1, data = fake_rcbd)
       lmm2 <- lme(form_lm0,
                   random = ~1 | experiment,
                   correlation = corSymm(form = ~ 1 | experiment),
@@ -740,11 +776,6 @@ if(do_sim == TRUE){
       fake_rcbd_means <- fake_rcbd[, .(sim_1 = mean(get(paste0("sim_", i)))),
                                    by = .(treatment, experiment)]
       
-      pptt_pairs <- pairwise_paired_tt(y_col = "sim_1",
-                              g_col = "treatment",
-                              id_col = "experiment",
-                              data = fake_rcbd_means)
-      
       lm0_pairs <- emmeans(lm0, specs = "treatment") |>
         contrast(method = "revpairwise", adjust = "none")
       lm1_pairs <- emmeans(lm1, specs = "treatment") |>
@@ -753,7 +784,9 @@ if(do_sim == TRUE){
         contrast(method = "revpairwise", adjust = "none")
       aov2_pairs <- emmeans(aov2, specs = "treatment", model = "univariate") |>
         contrast(method = "revpairwise", adjust = "none")
+      pptt_pairs <- pptt(form_lmm1, data = fake_rcbd_means)
       
+     
       fake_rcbd[, y_res := residuals(lm0)]
       fake_rcbd_wide <- dcast(fake_rcbd,
                               experiment + rep ~ treatment,
@@ -828,7 +861,7 @@ if(do_sim == TRUE){
       )
     )
   } # end paramset
-  saveRDS(object = big_table, file = save_file_path)
+  if(!is.null(outfile_name)){saveRDS(object = big_table, file = save_file_path)}
 }
 ```
 
@@ -852,7 +885,7 @@ for(param_set in 1:nrow(param_set_matrix)){
   out_table <- rbind(
     out_table,
     data.table(
-      contrast = c("Cn, Tr1", "Cn, Tr2", "Tr1, Tr2"),
+      contrast = c("Tr1 - Cn", "Tr2 - Cn", "Tr2 - Tr1"),
       cor = apply(r_mat, 2, mean),
       rbind(apply(p1_mat, 2, pless),
             apply(p2_mat, 2, pless),
@@ -875,8 +908,11 @@ out_table |>
 
 Notes
 
-1. lmm1/aov1/pptt, and lmm2 have well-behaved type I error rates (lmm2 is a little anti-conservative) regardless of correlation structure -- False discoveries should be well controlled.
-2. lm1, lmm1, and aov2 have poorly-behaved type I error rates when there is a block:treatment interaction (sim 1 and 2), resulting in heterogenous correlation structure (remember that this is moot when there are only two treatment levels) -- this consequence is small when the block and block:treatment variance is small (small correlations in residuals). When there is block:treatment interaction, these models are conservative in contrasts associated with large residual correlation, resulting in low power, and anti-conservative in contrasts associated with small residual correlations, resulting in high false discovery rates.
+1. When there is zero correlated error, all methods have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).
+2. When there is equal correlated error, all methods have reasonable type I error control (lmm2 is a very slightly anti-conservative).
+3. When there is heterogenous correlated error, only aov1/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov1 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.
+
+Combined, these results suggest that aov1/pptt should be our preferred model, if we only take Type I control into consideration.
 
 ```{r}
 #| label: tbl-lmm-rcbd-power
@@ -897,7 +933,7 @@ for(param_set in 1:nrow(param_set_matrix)){
   out_table <- rbind(
     out_table,
     data.table(
-      contrast = c("Cn, Tr1", "Cn, Tr2", "Tr1, Tr2"),
+      contrast = c("Tr1 - Cn", "Tr2 - Cn", "Tr2 - Tr1"),
       cor = apply(r_mat, 2, mean),
       rbind(apply(p1_mat, 2, pless),
             apply(p2_mat, 2, pless),
@@ -917,6 +953,27 @@ out_table |>
   pack_rows("sim 4 - zero correlated error", 10, 12)
 
 ```
+
+Notes
+
+1. When there is zero correlated error, lmm2 has slightly higher power than lmm1/aov2/lm1. And lmm1/aov2/lm1 have slightly higher power than aov1/pptt.
+2. When there is equal correlated error, lmm2 and lmm1/aov2/lm1 have slightly higher power than aov1/pptt.
+3. When there is heterogenous correlated error, lmm1/aov2/lmm1 have non-trivially higher power than aov1/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast.
+
+These results suggest lmm2 is the preferred model. If lmm2 fails, then it's a toss-up between aov1/pptt and lmm1/aov2/lmm1.
+
+But, combining the Type I and power simulations, lmm1/aov2/lmm1 have poor type I error control under some conditions while lmm2 and aov1/pptt have good error control under all conditions.
+
+#### So, which model, and why? A simulator's guide to best practices
+
+1. If the number of treatments = 2 and
+    * the design is balanced: it doesn't matter which method you use.
+    * the design is not balanced: use lmm1, since this will use all of the data
+2. If the number of treatments > 2 
+    * use lmm2. If the model fit fails then
+    * if the design is balanced: use aov1/pptt.
+    * the design is not balanced: pptt is attractive if there are few missing values. 
+3. If there are covariates, then start with lmm2. Use lmeControl if lmm2 fails. If this fails, use pairwise lmm1, which is the same as pairwise t-tests but allows covariates to be added to the model. Note that the covariate will be modeled independently in each pair, which effectively models the consequence of a treatment:covariate interaction.
 
 
 ```{r rcbd-perforance-dissection, eval = FALSE, echo = FALSE}
@@ -974,15 +1031,6 @@ sim1_table |>
   kable_styling()
 ```
 
-Best Practices:
-
-1. If the number of treatments = 2 and
-    * the design is balanced: it doesn't matter which method you use.
-    * the design is not balanced: use lmm1 or lmm2
-2. If the number of treatments > 2 and
-    * the design is balanced: use aov1/pptt (these are numerically equivalent). lmm1 is the standard but it assumes equal correlated error among treatment levels and equal standard errors among contrasts. lmm2 explicitly models heterogeneity of correlations and variances but 1) the model often fails and 2) has slightly anti-conservative Type I error.
-    * the design is not balanced: lmm2 is attractive if the model runs. pptt is attractive if there are few missing values. 
-3. If there are covariates, then start with lmm2. Use lmeControl if lmm2 fails. If this fails, use pairwise lmm1, which is the same as pairwise t-tests but allows covariates to be added to the model. Note that the covariate will be modeled independently in each pair, which effectively models the consequence of a treatment:covariate interaction.
 
 ### RSPD
 
@@ -1538,6 +1586,258 @@ sample_means_table <- fig5b[genotype == "WT", .(mean = (mean(caspr_length))), by
 sample_means_table[, deviation := mean - mean(mean)]
 sample_means_table
 ```
+
+## Example 2: RCBD with 2 groups (classical equivalent: paired *t*-test)
+
+source: [Chen, J., López-Moyado, I.F., Seo, H., Lio, C.W.J., Hempleman, L.J., Sekiya, T., Yoshimura, A., Scott-Browne, J.P. and Rao, A., 2019. NR4A transcription factors limit CAR T cell function in solid tumours. Nature, 567(7749), pp.530-534.](https://www.nature.com/articles/s41586-019-0985-x)
+
+Source Figure: Fig 2C upper left (NR4A1 using CAR)
+
+Response variable: NR4A expression measured as MFI (mean flourescence intensity)
+
+Treatment: CAR PD-1hi TIM3hi TILs, CAR PD-1hi TIM3lo TILs (so differ in density of TIM3 receptors)
+
+Experimental Design: Randomized Complete Block Design (RCBD). Three preparations (experiments). Experiment is the block.
+
+Background: CAR-T are T cells expressing chimeric antigen receptors and target/kill solid tumor cells. TILs are tumor infiltrating lymphocytes. NR are nuclear receptors that function as transcription factors. PD-1 and TIM3 are inhibitory receptors. CAR PD-1hi TIM3hi TILs are "highly exhausted", CAR PD-1hi TIM3lo TILs are "antigen-specific memory precursor"
+
+```{r lmm-fig2c-import, echo=FALSE, message=FALSE}
+data_from <- "NR4A transcription factors limit CAR T cell function in solid tumours"
+file_name <- "41586_2019_985_MOESM8_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+
+fig2c_import <- function(range_in = "xxx", response_in = ""){
+  fig2c_wide <- read_excel(file_path,
+                           sheet = "Fig 2",
+                           range = range_in,
+                           col_names = TRUE) |>
+    data.table()
+  genotype_levels <- c("TIM3+", "TIM3-")
+  colnames(fig2c_wide) <- genotype_levels
+  fig2c_wide[, experiment_id := paste("exp_", .I)]
+  fig2c_in <- melt(fig2c_wide,
+                   id.vars = "experiment_id",
+                   variable.name = "genotype",
+                   value.name = response_in)
+  fig2c_in[, genotype := factor(genotype,
+                                levels = genotype_levels)]
+  return(fig2c_in)
+}
+fig2c <- fig2c_import(range_in = "B3:C6", response_in = "nr4a1")
+fig2c <- merge(fig2c, 
+               fig2c_import(range_in = "B8:C11", response_in = "nr4a2"),
+               by = c("genotype", "experiment_id"))
+fig2c <- merge(fig2c, 
+               fig2c_import(range_in = "B13:C16", response_in = "nr4a3"),
+               by = c("genotype", "experiment_id"))
+```
+
+### lmm1 -- random intercept model
+
+```{r}
+lmm1 <- lmer(nr4a1 ~ genotype + (1 | experiment_id), data = fig2c)
+lmm1_emm <- emmeans(lmm1, specs = "genotype")
+lmm1_pairs <- contrast(lmm1_emm, method = "revpairwise") |>
+  summary(infer = TRUE)
+lmm1_pairs
+```
+
+
+### aov1 -- repeated measures ANOVA (RM-ANOVA)
+
+```{r}
+aov1 <- aov_4(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c)
+aov1_emm <- emmeans(aov1, specs = "genotype")
+aov1_pairs <- contrast(aov1_emm, method = "revpairwise") |>
+  summary(infer = TRUE)
+aov1_pairs
+```
+
+### pptt -- pairwise paired t-test
+
+```{r}
+# t.test(fig2c[genotype == "TIM3-", nr4a1], fig2c[genotype == "TIM3+", nr4a1], paired = TRUE)
+pptt1 <- pptt(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c)
+print(pptt1)
+```
+
+### Notes on the three models
+ 
+1. All inferential statistics are the same in all three models.
+2. A RM-ANOVA with two groups is equivalent to a random intercept linear mixed model. A paired *t*-test is a special case of a linear mixed model.
+3. aov1 fits an ANOVA model even though there are only two groups. Yes ANOVA can be used with only two groups, and the statistics are exactly the same as with a *t*-test, but most people choose *t*-test and not ANOVA when there are only two groups.
+4. The random component of the model formula for the linear mixed model using `lmer` is `(1 | experiment_id)`. This is the notation for adding a random intercept. $\texttt{experiment\_id$ is a random factor and is added as a random intercept.
+5. There is potential for confusion in the formula for the RM-ANOVA model using `aov_4`. The afex package has three equivalent functions for fitting repeated measures ANOVA models, each function is targeted to users with different statistics backgrounds. This text uses the `aov_4` function which uses the `lmer` formula notation. For an RCBD experimental design, `aov_4` uses the `lmer` formula notation for a random intercept AND a random slope, which is `(genotype | experiment_id)`. No random intercept or slope is estimated in an ANOVA model but the notation is necessary to aggregate multiple values of $\texttt{experiment\_id}$ only within and not among $\texttt{genotype}$.
+
+### Plot the model
+
+```{r}
+plot_response(lmm1, lmm1_emm, lmm1_pairs,
+              join_blocks = TRUE,
+              block_id = "experiment_id")
+```
+
+### Better Know the linear mixed model
+
+Intraclass correlation
+
+```{r}
+VarCorr(lmm1)
+```
+
+```{r}
+lmm1_vc <- VarCorr(lmm1) |>
+  data.frame() |>
+  data.table()
+among_var <- lmm1_vc[1, vcov]
+within_var <- lmm1_vc[2, vcov]
+icc <- among_var/(among_var + within_var)
+icc
+```
+
+```{r lmm-fig3-import-analysis, echo=FALSE, eval=FALSE}
+file_name <- "41586_2019_985_MOESM9_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+genotype_levels <- c("WT", "TKO")
+fig3e_wide <- read_excel(file_path,
+                         sheet = "Fig 3",
+                         range = "G77:H83",
+                         col_names = TRUE) |>
+  data.table()
+fig3e_wide[, experiment_id := paste("exp", .I)]
+fig3e <- melt(fig3e_wide,
+              id.vars = "experiment_id",
+              measure.vars = genotype_levels,
+              variable.name = "genotype",
+              value.name = "pd1_mfi")
+fig3e[, genotype := factor(genotype, levels = genotype_levels)]
+
+lmm1 <- lmer(pd1_mfi ~ genotype + (1 | experiment_id), data = fig3e)
+lmm1_emm <- emmeans(lmm1, specs = "genotype")
+lmm1_pairs <- contrast(lmm1_emm, method = "revpairwise") |>
+  summary(infer = TRUE)
+plot_response(lmm1, lmm1_emm, lmm1_pairs,
+              join_blocks = TRUE,
+              block_id = "experiment_id")
+VarCorr(lmm1)
+3396.6^2/(3396.6^2 + 1327^2)
+
+aov1 <- aov_4(pd1_mfi ~ genotype + (genotype | experiment_id), data = fig3e)
+aov1_emm <- emmeans(aov1, specs = "genotype")
+aov1_pairs <- contrast(aov1_emm, method = "revpairwise") |>
+  summary(infer = TRUE)
+
+lmm1_pairs
+aov1_pairs
+
+lm0 <- lm(pd1_mfi ~ genotype, data = fig3e)
+summary(lm0)$sigma
+sqrt(3396.6^2 + 1327^2)
+```
+
+## Example 3: RCBD with > 2 groups (classical equivalent: repeated measures ANOVA) (fig6g) {#sec-lmm-example2}
+
+```{r lmm-fig2c-right-import, echo=FALSE, message=FALSE}
+data_from <- "NR4A transcription factors limit CAR T cell function in solid tumours"
+file_name <- "41586_2019_985_MOESM8_ESM.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+
+fig2c_r_import <- function(range_in = "xxx", response_in = ""){
+  fig2c_wide <- read_excel(file_path,
+                           sheet = "Fig 2",
+                           range = range_in,
+                           col_names = TRUE) |>
+    data.table()
+  genotype_levels <- c("PD1+TIM3+", "PD1+TIM3-", "PD1-TIM3-")
+  colnames(fig2c_wide) <- genotype_levels
+  fig2c_wide[, experiment_id := paste("exp_", .I)]
+  fig2c_in <- melt(fig2c_wide,
+                   id.vars = "experiment_id",
+                   variable.name = "genotype",
+                   value.name = response_in)
+  fig2c_in[, genotype := factor(genotype,
+                                levels = genotype_levels)]
+  return(fig2c_in)
+}
+fig2c_r <- fig2c_r_import(range_in = "F3:H6", response_in = "nr4a1")
+fig2c_r <- merge(fig2c_r, 
+               fig2c_r_import(range_in = "F8:H11", response_in = "nr4a2"),
+               by = c("genotype", "experiment_id"))
+fig2c_r <- merge(fig2c_r, 
+               fig2c_r_import(range_in = "F13:H16", response_in = "nr4a3"),
+               by = c("genotype", "experiment_id"))
+```
+
+### lmm1 -- random intercept model
+
+```{r}
+lmm1 <- lmer(nr4a1 ~ genotype + (1 | experiment_id), data = fig2c_r)
+lmm1_emm <- emmeans(lmm1, specs = "genotype")
+lmm1_pairs <- contrast(lmm1_emm, method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+lmm1_pairs
+```
+### lmm2 -- linear model for correlated error
+
+```{r}
+# lmm3 <- lme(nr4a1 ~ genotype,
+#                 random = ~1|experiment_id,
+#                 correlation = corSymm(form = ~ 1 | experiment_id),
+#                 weights = varIdent(form = ~ 1 | genotype),
+#                 data = fig2c_r)
+```
+
+
+### aov1 -- repeated measures ANOVA (RM-ANOVA), multivariate model
+
+```{r}
+aov1 <- aov_4(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c_r)
+aov1_emm <- emmeans(aov1, specs = "genotype")
+aov1_pairs <- contrast(aov1_emm, method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+aov1_pairs
+```
+
+### aov2 -- repeated measures ANOVA (RM-ANOVA), univariate model
+
+```{r}
+aov1 <- aov_4(nr4a1 ~ genotype + (genotype | experiment_id),
+              data = fig2c_r,
+              include_aov = TRUE)
+aov1_emm <- emmeans(aov1,
+                    specs = "genotype",
+                    model = "univariate")
+aov1_pairs <- contrast(aov1_emm,
+                       method = "revpairwise",
+                       adjust = "none") |>
+  summary(infer = TRUE)
+aov1_pairs
+```
+
+### pptt -- pairwise paired t-test
+
+```{r}
+pptt1 <- pptt(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c_r)
+print(pptt1)
+```
+
+### Notes on the three models
+ 
+1. aov1 and pptt1 are equivalent. This is generally true if there are no missing data (genotype:experiment_id combinations). Both aov1 and pptt1 require balance but pptt1 is a pairwise procedure while aov1 analyzes all treatment levels simulataneously. Consequently pptt1 will exlude fewer measures and will have slightly more power than aov1. 
+2. aov1 and lmm1 are not equivalent and this is generally true. 
+3. aov2 and lmm1 are equivalent and this is generally true if there are no missing data.
+4. The lmm equivalent of aov1 is lmm3 (random intercept and slopte model) but this model cannot be fit without replication with genotype:experiment_id combinations.
+5. One reasonable conclusion of item 4 is that aov1 effectively overfits the data and we should use aov2/lmm1 as the model of choice. The simulation under RCBD above argues against this. Instead, aov1/lmm3 is preferred (although lmm3 cannot be fit without replication)
+6. Item 5 raises the question, why bother with linear mixed models in a RCBD?
+
+### Plot the model
+
+```{r}
+plot_response(aov1, aov1_emm, aov1_pairs,
+              join_blocks = TRUE,
+              block_id = "experiment_id")
+```
+
 
 ## Example 2: RCBD with >2 groups (classical equivalent: repeated measures ANOVA) (fig6g) {#sec-lmm-example2}
 
