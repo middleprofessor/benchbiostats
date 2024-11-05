@@ -908,6 +908,9 @@ outfile_name <- "rcbd_power-2.Rds"
 save_file_path <- here(data_from, outfile_name)
 big_table <- readRDS(file = save_file_path)
 
+treatment_levels <- c("Cn", "Tr1", "Tr2")
+model_levels <- c("lm0", "lm1", "aov2", "aov1", "pptt", "lmm2")
+
 out_table <- data.table(NULL)
 for(param_set in 1:nrow(param_set_matrix)){
   r_mat <- big_table[sim_id == param_set, .SD, .SDcols = c("r21", "r31", "r32")]
@@ -940,6 +943,7 @@ out_table |>
 
 Notes
 
+1. 
 1. When there is zero correlated error, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
 2. When there is equal correlated error, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
 3. When there is heterogenous correlated error, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.
