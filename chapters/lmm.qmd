@@ -960,6 +960,387 @@ But, combining the Type I and power simulations, lmm1/aov1/lmm1 have poor type I
 3. If there are covariates, then start with lmm2. Use lmeControl if lmm2 fails. If this fails, use pairwise lmm1, which is the same as pairwise t-tests but allows covariates to be added to the model. Note that the covariate will be modeled independently in each pair, which effectively models the consequence of a treatment:covariate interaction.
 
 
+```{r rcbd-performance-2x2, warning=FALSE, message=FALSE, error=FALSE, echo = FALSE}
+seed_starter <- 0
+n_sims <- 500
+do_sim <- TRUE
+
+data_from <- "simulations/grcbds/data"
+error_type <- "power" 
+if(error_type == "type1"){
+  outfile_name <- "rcbd_type1-2x2.Rds"
+  # parameters
+  beta_i = c(10, 0, 0, 0)
+}
+if(error_type == "power"){
+    outfile_name <- "rcbd_power-2x2.Rds"
+  # parameters
+  beta_i = c(10, 1, 0.6, 0)
+}
+save_file_path <- here(data_from, outfile_name)
+
+
+param_sets <- 3
+fac1_levels <- c("CD", "HFD")
+fac2_levels <- c("Sal", "Treat")
+fac_table <- expand.grid(fac1_levels, fac2_levels)
+treatment_levels <- paste(fac_table[, 1], fac_table[, 2])
+model_levels <- c("lm0", "lm1", "aov2", "aov1", "aov1_flat", "pptt", "lmm2")
+
+p1_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+p2_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+p3_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+p4_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+r_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = 4)
+
+# each row is different param_set
+sigma_exp.block.treat_matrix <- matrix(c(
+  c(0.75, .45, .075, .225),
+  c(0.5, .3, .05, 0.15),
+  c(0, 0, 0, 0),
+  c(0, 0, 0, 0)
+), nrow = 4, ncol = 4) |>
+  t()
+colnames(sigma_exp.block.treat_matrix) <- treatment_levels
+
+# each value is different param_set
+sigma_exp.block_list <- c(0.5, 0.25, 0.8, 0)
+
+# each value is different param_set
+sigma_ss_list <- c(.35, .45, .4, 1)
+
+param_set_matrix <- data.table(
+  sim_id = 1:length(sigma_exp.block_list),
+  sigma_block = sigma_exp.block_list,
+  sigma_exp.block.treat_matrix,
+  sigma_ss = sigma_ss_list
+)
+
+res_table <- matrix(as.numeric(NA), nrow = nrow(param_set_matrix), ncol = 15)
+sim_table <- data.table(NULL)
+big_table <- data.table(NULL)
+
+if(do_sim == TRUE){
+  for(param_set in 1:nrow(param_set_matrix)){
+    seed_starter <- seed_starter + 1
+    mod <- c(1,1,1,1)
+    if(param_set == 2){
+      mod <- c(1, 0.8, 0.8, 1)
+    }
+    if(param_set == 3){
+      mod <- c(1, 0.5, 0.5, 1)
+    }
+    if(param_set == 4){
+      mod <- c(1, 1.4, 1.4, 1)
+    }
+    sigma_exp.block_i <- param_set_matrix[param_set, sigma_block]
+    sigma_exp.block.fac1_i <- param_set_matrix[param_set, .SD, .SDcols = treatment_levels[1:2]] |> as.numeric()
+    sigma_exp.block.fac2_i <- param_set_matrix[param_set, .SD, .SDcols = treatment_levels[3:4]] |> as.numeric()
+    sigma_ss_i <- param_set_matrix[param_set, sigma_ss]
+    sigma_rep_i <- 0.1
+    sigma_exp.fac1_i <- 0
+    sigma_exp.fac2_i <- 0
+    sigma_exp_i <- 0
+    n_treat_i <- length(fac1_levels)
+    n_block_i <- 10
+    n_rep_i <- 1
+    n_ss_i <- 1
+    fake_rcbd <- simulator_2(
+      seed_i = seed_starter,
+      n_sim = n_sims,
+      n_factors = 2,
+      n_levels = n_treat_i, # number of treatment levels
+      n_block = n_block_i, # number of litters (blocks)
+      n_rep = n_rep_i, # number of mice per litter:treatment
+      n_ss = n_ss_i, # number of subsamples
+      design = "rcbd",
+      beta = beta_i * mod,
+      sigma_exp = sigma_exp_i, # sd among experiments
+      sigma_exp.block = sigma_exp.block_i, # sd among exp:block (or block if n_exp = 1)
+      sigma_exp.fac1 = sigma_exp.fac1_i, # sd among exp:treat
+      sigma_exp.fac2 = sigma_exp.fac2_i, # sd among exp:treat
+      sigma_exp.block.fac1 = sigma_exp.block.fac1_i, # sd among exp:block:treat
+      sigma_exp.block.fac2 = sigma_exp.block.fac2_i, # sd among exp:block:treat
+      sigma_rep = sigma_rep_i,
+      sigma_ss = sigma_ss_i, # sd among subsamples within replication of treatment:block
+      # sigma_exp = 0, # sd among experiments
+      # sigma_exp.block = 0.1, # sd among exp:block (or block if n_exp = 1)
+      # sigma_exp.treat = 0, # sd among exp:treat
+      # sigma_exp.block.treat = c(0.1, 0.1, 0.1), # sd among exp:block:treat
+      # sigma_rep = 0.1,
+      # sigma_ss = 1, # sd among subsamples within replication of treatment:block
+      fac1_names = fac1_levels,
+      fac2_names = fac2_levels,
+      block_name = "litter",
+      rep_name = "mouse",
+      ss_name = "ss",
+    )
+    
+#    fake_rcbd[, c("diet", "drug") := tstrsplit(treatment, "-")]
+    fake_rcbd[, diet := fac1]
+    fake_rcbd[, drug := fac2]
+    fake_rcbd[, treatment := paste(diet, drug)]
+    treatment_levels <- unique(fake_rcbd$treatment)
+    fake_rcbd[, treatment := factor(treatment, levels = treatment_levels)]
+    for(i in 1:n_sims){
+      
+      # models
+      form_lm0 <- paste(paste0("sim_", i), "~ diet * drug") |>
+        formula()
+      form_lm1 <- paste(paste0("sim_", i), "~ diet * drug + litter") |>
+        formula()
+      form_lmm1 <- paste(paste0("sim_", i), "~ diet * drug + (1 | litter)") |>
+        formula()
+      form_pptt <- paste(paste0("sim_1"), "~ treatment + (1 | litter)") |>
+        formula()
+      form_aov <- paste(paste0("sim_", i), "~ diet * drug + (diet * drug | litter)") |>
+        formula()
+      form_aov_flat <- paste(paste0("sim_", i), "~ treatment + (treatment | litter)") |>
+        formula()
+     
+      lm0 <- lm(form_lm0, data = fake_rcbd)
+      lm1 <- lm(form_lm1, data = fake_rcbd)
+      # lmm1 <- lmer(form_lmm1, data = fake_rcbd)
+      lmm2 <- lme(form_lm0,
+                  random = ~1 | litter,
+                  correlation = corSymm(form = ~ 1 | litter),
+                  weights = varIdent(form = ~ 1 | diet * drug),
+                  data = fake_rcbd) |>
+        try()
+      if(inherits(lmm2, "try-error")){
+        lmm2 <- NULL
+      }
+      
+      # aov1 used for both multivariate (aov2) and univariate (aov1)
+      aov1 <- aov_4(form_aov,
+                    fun_aggregate = mean,
+                    include_aov = TRUE,
+                    data = fake_rcbd)
+      aov1_flat <- aov_4(form_aov_flat,
+                      include_aov = TRUE,
+                      data = fake_rcbd)
+      
+      lm0_pairs <- emmeans(lm0, specs = c("diet", "drug")) |>
+        contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+      lm1_pairs <- emmeans(lm1, specs = c("diet", "drug")) |>
+        contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+      aov2_pairs <- emmeans(aov1, specs = c("diet", "drug"), model = "multivariate") |>
+        contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+      aov1_pairs <- emmeans(aov1, specs = c("diet", "drug"), model = "univariate") |>
+        contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+      aov1_flat_pairs <- emmeans(aov1_flat, specs = c("treatment"), model = "univariate") |>
+        contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+  
+      form_pptt <- paste(paste0("sim_1"), "~ treatment + (1 | litter)") |>
+        formula()
+      fake_rcbd_means <- fake_rcbd[, .(sim_1 = mean(get(paste0("sim_", i)))),
+                                   by = .(treatment, litter)]
+      pptt_pairs <- pptt(form_pptt, data = fake_rcbd_means)
+      
+      fake_rcbd[, y_res := residuals(lm0)]
+      fake_rcbd_wide <- dcast(fake_rcbd,
+                              litter + rep ~ treatment,
+                              value.var = "y_res")
+      residual_correlations <- cor(fake_rcbd_wide[, .SD, .SDcols = treatment_levels])
+      r_mat[i, 1] <- residual_correlations[2, 1]
+      r_mat[i, 2] <- residual_correlations[4, 3]
+      r_mat[i, 3] <- residual_correlations[3, 1]
+      r_mat[i, 4] <- residual_correlations[4, 2]
+
+      lm0_p <- summary(lm0_pairs)[, "p.value"]
+      lm1_p <- summary(lm1_pairs)[, "p.value"]
+      aov2_p <- summary(aov2_pairs)[, "p.value"]
+      aov1_p <- summary(aov1_pairs)[, "p.value"]
+      aov1_flat_p <- summary(aov1_flat_pairs)[, "p.value"]
+      pptt_p <- pptt_pairs[, p.value]
+      
+      p1_mat[i, 1] <- lm0_p[1]
+      p1_mat[i, 2] <- lm1_p[1]
+      p1_mat[i, 3] <- aov2_p[1]
+      p1_mat[i, 4] <- aov1_p[1]
+      p1_mat[i, 5] <- aov1_flat_p[1]
+      p1_mat[i, 6] <- pptt_p[1]
+      
+      p2_mat[i, 1] <- lm0_p[2]
+      p2_mat[i, 2] <- lm1_p[2]
+      p2_mat[i, 3] <- aov2_p[2]
+      p2_mat[i, 4] <- aov1_p[2]
+      p2_mat[i, 5] <- aov1_flat_p[6]
+      p2_mat[i, 6] <- pptt_p[6]
+      
+      p3_mat[i, 1] <- lm0_p[3]
+      p3_mat[i, 2] <- lm1_p[3]
+      p3_mat[i, 3] <- aov2_p[3]
+      p3_mat[i, 4] <- aov1_p[3]
+      p3_mat[i, 5] <- aov1_flat_p[2]
+      p3_mat[i, 6] <- pptt_p[2]
+
+      p4_mat[i, 1] <- lm0_p[4]
+      p4_mat[i, 2] <- lm1_p[4]
+      p4_mat[i, 3] <- aov2_p[4]
+      p4_mat[i, 4] <- aov1_p[4]
+      p4_mat[i, 5] <- aov1_flat_p[5]
+      p4_mat[i, 6] <- pptt_p[5]
+      
+      if(!is.null(lmm2)){
+        lmm2_pairs <- emmeans(lmm2, specs = c("diet", "drug")) |>
+          contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+        p1_mat[i, 7] <- summary(lmm2_pairs)[1, "p.value"]
+        p2_mat[i, 7] <- summary(lmm2_pairs)[2, "p.value"]
+        p3_mat[i, 7] <- summary(lmm2_pairs)[3, "p.value"]
+        p4_mat[i, 7] <- summary(lmm2_pairs)[4, "p.value"]
+      }else{
+        p1_mat[i, 7] <- NA
+        p2_mat[i, 7] <- NA
+        p3_mat[i, 7] <- NA
+        p4_mat[i, 7] <- NA
+      }
+      
+      
+    } # n_sims
+    
+    sim_table <- cbind(r_mat, p1_mat, p2_mat, p3_mat, p4_mat)
+    contrast_names <- c("HFD Sal - CD Sal", "HFD Treat - CD Treat",
+                                   "CD Treat - CD Sal", "HFD Treat - HFD Sal")
+    sim_table_names <- paste(rep(model_levels, 3),
+                             rep(contrast_names,
+                                 each = length(model_levels)),
+                             sep = "_")
+    colnames(sim_table) <- c("r11", "r12", "r21", "r22", sim_table_names)
+    
+    big_table <- rbind(
+      big_table,
+      data.table(
+        sim_id = param_set,
+        n_treat = n_treat_i,
+        n_block = n_block_i,
+        n_rep = n_rep_i,
+        n_ss = n_ss_i,
+        sigma_block = sigma_exp.block_i,
+        sigma_block.fac1_1 = sigma_exp.block.fac1_i[1],
+        sigma_block.fac1_2 = sigma_exp.block.fac1_i[2],
+        sigma_block.fac2_1 = sigma_exp.block.fac2_i[1],
+        sigma_block.fac2_2 = sigma_exp.block.fac2_i[2],
+        sigma_exp.treat = sigma_exp.fac1_i,
+        sigma_rep = sigma_rep_i,
+        sigma_exp = sigma_exp_i,
+        sigma_ss = sigma_ss_i,
+        sim_table
+      )
+    )
+  } # end paramset
+  if(!is.null(outfile_name)){saveRDS(object = big_table, file = save_file_path)}
+}
+```
+
+```{r}
+#| label: tbl-lmm-rcbd-type1-2x2
+#| echo: false
+#| tbl-cap: Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+
+data_from <- "simulations/grcbds/data"
+# power
+outfile_name <- "rcbd_type1-2x2.Rds"
+save_file_path <- here(data_from, outfile_name)
+big_table <- readRDS(file = save_file_path)
+
+contrast_names <- c("HFD Sal - CD Sal", "HFD Treat - CD Treat",
+                                   "CD Treat - CD Sal", "HFD Treat - HFD Sal")
+out_table <- data.table(NULL)
+for(param_set in 1:nrow(param_set_matrix)){
+  r_mat <- big_table[sim_id == param_set, .SD, .SDcols = c("r11", "r12", "r21", "r22")]
+  p1_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_", contrast_names[1])]
+  p2_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_",  contrast_names[2])]
+  p3_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_",  contrast_names[3])]
+  p4_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_",  contrast_names[4])]
+  out_table <- rbind(
+    out_table,
+    data.table(
+      contrast = contrast_names,
+      cor = apply(r_mat, 2, mean),
+      rbind(apply(p1_mat, 2, pless),
+            apply(p2_mat, 2, pless),
+            apply(p3_mat, 2, pless),
+            apply(p4_mat, 2, pless))
+    ))
+}
+
+setnames(out_table,
+         names(out_table),
+         c("Contrast", "Cor Error", model_levels))
+out_table |>
+  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 4)) |>
+  kable_styling() |>
+  pack_rows("sim 1 - high correlated error", 1, 4) |>
+  pack_rows("sim 2 - low correlated error", 5, 8) |>
+  pack_rows("sim 3 - equal correlated error", 9, 12) |>
+  pack_rows("sim 4 - zero correlated error", 13, 16)
+
+```
+
+Notes
+
+1. When there is zero correlated error, all methods have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).
+2. When there is equal correlated error, all methods have reasonable type I error control (lmm2 is a very slightly anti-conservative).
+3. When there is heterogenous correlated error, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.
+
+Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration.
+
+```{r}
+#| label: tbl-lmm-rcbd-power-2x2
+#| echo: false
+#| tbl-cap: Power of the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+
+data_from <- "simulations/grcbds/data"
+outfile_name <- "rcbd_power-2x2.Rds"
+save_file_path <- here(data_from, outfile_name)
+big_table <- readRDS(file = save_file_path)
+
+contrast_names <- c("HFD Sal - CD Sal", "HFD Treat - CD Treat",
+                                   "CD Treat - CD Sal", "HFD Treat - HFD Sal")
+out_table <- data.table(NULL)
+for(param_set in 1:nrow(param_set_matrix)){
+  r_mat <- big_table[sim_id == param_set, .SD, .SDcols = c("r11", "r12", "r21", "r22")]
+  p1_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_", contrast_names[1])]
+  p2_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_",  contrast_names[2])]
+  p3_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_",  contrast_names[3])]
+  p4_mat <- big_table[sim_id == param_set, .SD,
+                      .SDcols = paste0(model_levels, "_",  contrast_names[4])]
+  
+  inc <- which(!is.na(p1_mat[, 7]))
+  out_table <- rbind(
+    out_table,
+    data.table(
+      contrast = contrast_names,
+      cor = apply(r_mat, 2, mean),
+      rbind(apply(p1_mat[inc,], 2, pless),
+            apply(p2_mat[inc,], 2, pless),
+            apply(p3_mat[inc,], 2, pless),
+            apply(p4_mat[inc,], 2, pless))
+    ))
+}
+
+setnames(out_table,
+         names(out_table),
+         c("Contrast", "Cor Error", model_levels))
+out_table |>
+  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 3, 3)) |>
+  kable_styling() |>
+  pack_rows("sim 1 - high correlated error", 1, 4) |>
+  pack_rows("sim 2 - low correlated error", 5, 8) |>
+  pack_rows("sim 3 - equal correlated error", 9, 12) |>
+  pack_rows("sim 4 - zero correlated error", 13, 16)
+
+```
+
+
 ```{r rcbd-perforance-dissection, eval = FALSE, echo = FALSE}
 max_r <- 0.2
 p_mat <- big_table[sim_id == 1 & abs(r21) < max_r & abs(r31) < max_r & abs(r32) < max_r, .SD, .SDcols = paste0(model_levels, "_contrast_3")]
@@ -1493,7 +1874,7 @@ fig5b_lmm_pairs |>
 
 Notes
 
-1. . I would not adjust the *p*-values (see @sec-multiple-tests) but I have adjusted using Tukey HSD to compare to researcher's results in next section
+1. I would not adjust the *p*-values (see @sec-multiple-tests) but I have adjusted using Tukey HSD to compare to researcher's results in next section
 
 #### Plot the model
 
