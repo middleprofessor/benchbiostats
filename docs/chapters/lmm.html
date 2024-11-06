@@ -302,7 +302,8 @@ window.Quarto = {
   <li><a href="#rcbd" id="toc-rcbd" class="nav-link" data-scroll-target="#rcbd"><span class="header-section-number">14.7.3</span> RCBD</a>
   <ul class="collapse">
   <li><a href="#so-which-model-and-why-a-simulation-to-help-decide" id="toc-so-which-model-and-why-a-simulation-to-help-decide" class="nav-link" data-scroll-target="#so-which-model-and-why-a-simulation-to-help-decide"><span class="header-section-number">14.7.3.1</span> So, which model, and why? A simulation to help decide</a></li>
-  <li><a href="#so-which-model-and-why-a-simulators-guide-to-best-practices" id="toc-so-which-model-and-why-a-simulators-guide-to-best-practices" class="nav-link" data-scroll-target="#so-which-model-and-why-a-simulators-guide-to-best-practices"><span class="header-section-number">14.7.3.2</span> So, which model, and why? A simulator’s guide to best practices</a></li>
+  <li><a href="#are-these-results-robust-for-a-2-x-2-design" id="toc-are-these-results-robust-for-a-2-x-2-design" class="nav-link" data-scroll-target="#are-these-results-robust-for-a-2-x-2-design"><span class="header-section-number">14.7.3.2</span> Are these results robust for a 2 x 2 design?</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">14.7.3.3</span> TL;DR</a></li>
   </ul></li>
   <li><a href="#rspd" id="toc-rspd" class="nav-link" data-scroll-target="#rspd"><span class="header-section-number">14.7.4</span> RSPD</a></li>
   <li><a href="#rcbds" id="toc-rcbds" class="nav-link" data-scroll-target="#rcbds"><span class="header-section-number">14.7.5</span> RCBDS</a></li>
@@ -993,13 +994,17 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 </figure>
 </div>
 </div>
-<p>Notes</p>
+<p>The major result is</p>
 <ol type="1">
-<li>When there is zero correlated error, all methods have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).</li>
-<li>When there is equal correlated error, all methods have reasonable type I error control (lmm2 is a very slightly anti-conservative).</li>
-<li>When there is heterogenous correlated error, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.</li>
+<li>The naive linear model, which doesn’t model the non-independence, can be slightly to extremely conservative. There is only good Type I error behavior only when there is something close to zero correlated error.</li>
 </ol>
-<p>Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration.</p>
+<p>Results to inform our decision about which model for non-independence</p>
+<ol start="2" type="1">
+<li>When there is zero correlated error, of the methods that model non-independence, all have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).</li>
+<li>When there is equal correlated error, of the methods that model non-independence, all have reasonable type I error control (lmm2 is a very slightly anti-conservative).</li>
+<li>When there is heterogenous correlated error, of the methods that model non-independence, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.</li>
+</ol>
+<p>Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration. But we should definitely consider Power.</p>
 <div class="cell">
 <div id="tbl-lmm-rcbd-power" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1163,17 +1168,494 @@ Table&nbsp;14.2: Power of the RCBD statistical models under different levels of 
 </figure>
 </div>
 </div>
-<p>Notes</p>
+<p>The major result is</p>
 <ol type="1">
-<li>When there is zero correlated error, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.</li>
-<li>When there is equal correlated error, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.</li>
-<li>When there is heterogenous correlated error, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.</li>
+<li>The naive linear model (lm1) has less power than methods that model non-independence. lm1 only has about the same power as methods that model non-independence if there is something close to zero correlated error. This is why we want to use models for non-independence when we have a blocked experimental design.</li>
+</ol>
+<p>Results to inform our decision about which model for non-independence</p>
+<ol start="2" type="1">
+<li>When there is zero correlated error, of the methods that model non-independence, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.</li>
+<li>When there is equal correlated error, of the methods that model non-independence, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.</li>
+<li>When there is heterogenous correlated error, of the methods that model non-independence, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.</li>
 </ol>
 <p>These results suggest lmm2 is the preferred model. If lmm2 fails, then it’s a toss-up between aov2/pptt and lmm1/aov1/lmm1.</p>
 <p>But, combining the Type I and power simulations, lmm1/aov1/lmm1 have poor type I error control under some conditions while lmm2 and aov2/pptt have good error control under all conditions.</p>
 </section>
-<section id="so-which-model-and-why-a-simulators-guide-to-best-practices" class="level4" data-number="14.7.3.2">
-<h4 data-number="14.7.3.2" class="anchored" data-anchor-id="so-which-model-and-why-a-simulators-guide-to-best-practices"><span class="header-section-number">14.7.3.2</span> So, which model, and why? A simulator’s guide to best practices</h4>
+<section id="are-these-results-robust-for-a-2-x-2-design" class="level4" data-number="14.7.3.2">
+<h4 data-number="14.7.3.2" class="anchored" data-anchor-id="are-these-results-robust-for-a-2-x-2-design"><span class="header-section-number">14.7.3.2</span> Are these results robust for a 2 x 2 design?</h4>
+<p>This simulation is similar to that above.</p>
+<ol type="1">
+<li>High correlated error. There is heterogenous treatment:block variance giving rise to heterogenous correlated error among the pairs of treatments, ranging from intermediate to high magnitude.</li>
+<li>Low correlated error. There is heterogenous treatment:block variance giving rise to heterogenous correlated error among the pairs of treatments, ranging from small to intermediate magnitude.</li>
+<li>Homogenous correlated error. There is no homogenous treatment:block variance giving rise to high correlated error among the pairs of treatment, all with the same expected level.</li>
+<li>There is no among block or treatment:block variance, giving rise to zero correlated error.</li>
+</ol>
+<div class="cell">
+<div id="tbl-lmm-rcbd-type1-2x2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lmm-rcbd-type1-2x2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;14.3: Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+</figcaption>
+<div aria-describedby="tbl-lmm-rcbd-type1-2x2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Cor Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lm0</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lm1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">aov2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">aov1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">aov1_flat</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pptt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lmm2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 1 - high correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">0.326</td>
+<td style="text-align: right;">0.028</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.084</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.359</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.078</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.078</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.066</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.825</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.072</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.731</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.078</td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 2 - low correlated error</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">0.136</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">0.066</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">0.082</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.170</td>
+<td style="text-align: right;">0.034</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.060</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.572</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.074</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.403</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.016</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.040</td>
+<td style="text-align: right;">0.016</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.074</td>
+</tr>
+<tr class="odd" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 3 - equal correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">0.777</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.767</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">0.059</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.780</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.082</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.777</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.061</td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 4 - zero correlated error</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">-0.006</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.066</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.082</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.014</td>
+<td style="text-align: right;">0.080</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.094</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.007</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.088</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.029</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.080</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The major result is</p>
+<ol type="1">
+<li>The naive linear model, which doesn’t model the non-independence, can be slightly to extremely conservative. There is only good Type I error behavior only when there is something close to zero correlated error.</li>
+</ol>
+<p>Results to inform our decision about which model for non-independence</p>
+<ol start="2" type="1">
+<li>When there is zero correlated error, of the methods that model non-independence, all have reasonable type I error control, except lmm2, which is anticonservative.</li>
+<li>When there is equal correlated error, of the methods that model non-independence, all have reasonable type I error control, except lmm2, which is anticonservative.</li>
+<li>When there is heterogenous correlated error, of the methods that model non-independence, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.</li>
+</ol>
+<p>Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration. But we should definitely consider Power.</p>
+<div class="cell">
+<div id="tbl-lmm-rcbd-power-2x2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lmm-rcbd-power-2x2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;14.4: Power of the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+</figcaption>
+<div aria-describedby="tbl-lmm-rcbd-power-2x2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Cor Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lm0</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lm1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">aov2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">aov1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">aov1_flat</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pptt</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lmm2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 1 - high correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">0.326</td>
+<td style="text-align: right;">0.717</td>
+<td style="text-align: right;">0.894</td>
+<td style="text-align: right;">0.800</td>
+<td style="text-align: right;">0.804</td>
+<td style="text-align: right;">0.894</td>
+<td style="text-align: right;">0.800</td>
+<td style="text-align: right;">0.852</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.359</td>
+<td style="text-align: right;">0.721</td>
+<td style="text-align: right;">0.888</td>
+<td style="text-align: right;">0.784</td>
+<td style="text-align: right;">0.822</td>
+<td style="text-align: right;">0.888</td>
+<td style="text-align: right;">0.784</td>
+<td style="text-align: right;">0.852</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.825</td>
+<td style="text-align: right;">0.186</td>
+<td style="text-align: right;">0.563</td>
+<td style="text-align: right;">0.850</td>
+<td style="text-align: right;">0.890</td>
+<td style="text-align: right;">0.563</td>
+<td style="text-align: right;">0.850</td>
+<td style="text-align: right;">0.890</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.731</td>
+<td style="text-align: right;">0.192</td>
+<td style="text-align: right;">0.569</td>
+<td style="text-align: right;">0.864</td>
+<td style="text-align: right;">0.876</td>
+<td style="text-align: right;">0.569</td>
+<td style="text-align: right;">0.864</td>
+<td style="text-align: right;">0.894</td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 2 - low correlated error</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">0.136</td>
+<td style="text-align: right;">0.742</td>
+<td style="text-align: right;">0.832</td>
+<td style="text-align: right;">0.732</td>
+<td style="text-align: right;">0.756</td>
+<td style="text-align: right;">0.832</td>
+<td style="text-align: right;">0.732</td>
+<td style="text-align: right;">0.782</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.170</td>
+<td style="text-align: right;">0.748</td>
+<td style="text-align: right;">0.852</td>
+<td style="text-align: right;">0.724</td>
+<td style="text-align: right;">0.770</td>
+<td style="text-align: right;">0.852</td>
+<td style="text-align: right;">0.724</td>
+<td style="text-align: right;">0.802</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.572</td>
+<td style="text-align: right;">0.290</td>
+<td style="text-align: right;">0.424</td>
+<td style="text-align: right;">0.520</td>
+<td style="text-align: right;">0.580</td>
+<td style="text-align: right;">0.424</td>
+<td style="text-align: right;">0.520</td>
+<td style="text-align: right;">0.584</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.403</td>
+<td style="text-align: right;">0.308</td>
+<td style="text-align: right;">0.432</td>
+<td style="text-align: right;">0.556</td>
+<td style="text-align: right;">0.594</td>
+<td style="text-align: right;">0.432</td>
+<td style="text-align: right;">0.556</td>
+<td style="text-align: right;">0.626</td>
+</tr>
+<tr class="odd" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 3 - equal correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">0.777</td>
+<td style="text-align: right;">0.126</td>
+<td style="text-align: right;">0.741</td>
+<td style="text-align: right;">0.676</td>
+<td style="text-align: right;">0.713</td>
+<td style="text-align: right;">0.741</td>
+<td style="text-align: right;">0.676</td>
+<td style="text-align: right;">0.738</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.767</td>
+<td style="text-align: right;">0.107</td>
+<td style="text-align: right;">0.770</td>
+<td style="text-align: right;">0.684</td>
+<td style="text-align: right;">0.741</td>
+<td style="text-align: right;">0.770</td>
+<td style="text-align: right;">0.684</td>
+<td style="text-align: right;">0.749</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.780</td>
+<td style="text-align: right;">0.025</td>
+<td style="text-align: right;">0.391</td>
+<td style="text-align: right;">0.331</td>
+<td style="text-align: right;">0.372</td>
+<td style="text-align: right;">0.391</td>
+<td style="text-align: right;">0.331</td>
+<td style="text-align: right;">0.416</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.777</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;">0.351</td>
+<td style="text-align: right;">0.391</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;">0.351</td>
+<td style="text-align: right;">0.421</td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="9" style="border-bottom: 1px solid"><strong>sim 4 - zero correlated error</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Sal - CD Sal</td>
+<td style="text-align: right;">-0.006</td>
+<td style="text-align: right;">0.856</td>
+<td style="text-align: right;">0.866</td>
+<td style="text-align: right;">0.810</td>
+<td style="text-align: right;">0.854</td>
+<td style="text-align: right;">0.866</td>
+<td style="text-align: right;">0.810</td>
+<td style="text-align: right;">0.850</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - CD Treat</td>
+<td style="text-align: right;">0.014</td>
+<td style="text-align: right;">0.868</td>
+<td style="text-align: right;">0.854</td>
+<td style="text-align: right;">0.812</td>
+<td style="text-align: right;">0.832</td>
+<td style="text-align: right;">0.854</td>
+<td style="text-align: right;">0.812</td>
+<td style="text-align: right;">0.850</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">CD Treat - CD Sal</td>
+<td style="text-align: right;">0.007</td>
+<td style="text-align: right;">0.440</td>
+<td style="text-align: right;">0.416</td>
+<td style="text-align: right;">0.398</td>
+<td style="text-align: right;">0.436</td>
+<td style="text-align: right;">0.416</td>
+<td style="text-align: right;">0.398</td>
+<td style="text-align: right;">0.470</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">HFD Treat - HFD Sal</td>
+<td style="text-align: right;">0.029</td>
+<td style="text-align: right;">0.446</td>
+<td style="text-align: right;">0.442</td>
+<td style="text-align: right;">0.416</td>
+<td style="text-align: right;">0.426</td>
+<td style="text-align: right;">0.442</td>
+<td style="text-align: right;">0.416</td>
+<td style="text-align: right;">0.490</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The major result is</p>
+<ol type="1">
+<li>The naive linear model (lm1) has less power than methods that model non-independence. lm1 only has about the same power as methods that model non-independence if there is something close to zero correlated error. This is why we want to use models for non-independence when we have a blocked experimental design.</li>
+</ol>
+<p>Results to inform our decision about which model for non-independence</p>
+<ol start="2" type="1">
+<li>When there is zero correlated error, of the methods that model non-independence, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.</li>
+<li>When there is equal correlated error, of the methods that model non-independence, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.</li>
+<li>When there is heterogenous correlated error, of the methods that model non-independence, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.</li>
+</ol>
+<p>These results suggest lmm2 is the preferred model. If lmm2 fails, then it’s a toss-up between aov2/pptt and lmm1/aov1/lmm1.</p>
+<p>But, combining the Type I and power simulations, lmm1/aov1/lmm1 have poor type I error control under some conditions while lmm2 and aov2/pptt have good error control under all conditions.</p>
+</section>
+<section id="tldr" class="level4" data-number="14.7.3.3">
+<h4 data-number="14.7.3.3" class="anchored" data-anchor-id="tldr"><span class="header-section-number">14.7.3.3</span> TL;DR</h4>
 <ol type="1">
 <li>If the number of treatments = 2 and
 <ul>
@@ -1592,7 +2074,7 @@ Table&nbsp;14.2: Power of the RCBD statistical models under different levels of 
 </div>
 <p>Notes</p>
 <ol type="1">
-<li>. I would not adjust the <em>p</em>-values (see <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>) but I have adjusted using Tukey HSD to compare to researcher’s results in next section</li>
+<li>I would not adjust the <em>p</em>-values (see <a href="multiple-testing.html" class="quarto-xref"><span>Chapter 12</span></a>) but I have adjusted using Tukey HSD to compare to researcher’s results in next section</li>
 </ol>
 </section>
 <section id="plot-the-model" class="level4" data-number="14.8.1.3">
@@ -2383,7 +2865,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="576"></p>
 <figcaption>Treatment effect on glucose uptake. Gray dots connected by lines are individual donors.</figcaption>
 </figure>
 </div>
@@ -2640,7 +3122,7 @@ genotypeGpr174-:sexF -5.304752   1.013552 5.918159 -5.233823 0.002033657</code><
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="576"></p>
 <figcaption>Treatment effect on germinal center (GC) formation. Small, pale, colored dots are independent experiments. Intermediate size colored dots are experiment means.</figcaption>
 </figure>
 </div>
@@ -3221,7 +3703,7 @@ To turn off this warning, pass `fun_aggregate = mean` explicitly.</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3412,7 +3894,7 @@ To turn off this warning, pass `fun_aggregate = mean` explicitly.</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid figure-img" width="1066"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid figure-img" width="1066"></p>
 </figure>
 </div>
 </div>

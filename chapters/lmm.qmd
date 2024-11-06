@@ -890,13 +890,17 @@ out_table |>
 
 ```
 
-Notes
+The major result is
 
-1. When there is zero correlated error, all methods have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).
-2. When there is equal correlated error, all methods have reasonable type I error control (lmm2 is a very slightly anti-conservative).
-3. When there is heterogenous correlated error, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.
+1. The naive linear model, which doesn't model the non-independence, can be slightly to extremely conservative. There is only good Type I error behavior only when there is something close to zero correlated error.
 
-Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration.
+Results to inform our decision about which model for non-independence
+
+2. When there is zero correlated error, of the methods that model non-independence, all have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).
+3. When there is equal correlated error, of the methods that model non-independence, all have reasonable type I error control (lmm2 is a very slightly anti-conservative).
+4. When there is heterogenous correlated error, of the methods that model non-independence, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.
+
+Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration. But we should definitely consider Power.
 
 ```{r}
 #| label: tbl-lmm-rcbd-power
@@ -941,36 +945,37 @@ out_table |>
 
 ```
 
-Notes
+The major result is
 
-1. 
-1. When there is zero correlated error, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
-2. When there is equal correlated error, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
-3. When there is heterogenous correlated error, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.
+1. The naive linear model (lm1) has less power than methods that model non-independence. lm1 only has about the same power as methods that model non-independence if there is something close to zero correlated error. This is why we want to use models for non-independence when we have a blocked experimental design.
+
+Results to inform our decision about which model for non-independence
+
+2. When there is zero correlated error, of the methods that model non-independence, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
+3. When there is equal correlated error, of the methods that model non-independence, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
+4. When there is heterogenous correlated error, of the methods that model non-independence, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.
 
 These results suggest lmm2 is the preferred model. If lmm2 fails, then it's a toss-up between aov2/pptt and lmm1/aov1/lmm1.
 
 But, combining the Type I and power simulations, lmm1/aov1/lmm1 have poor type I error control under some conditions while lmm2 and aov2/pptt have good error control under all conditions.
 
-#### So, which model, and why? A simulator's guide to best practices
+#### Are these results robust for a 2 x 2 design?
 
-1. If the number of treatments = 2 and
-    * the design is balanced: it doesn't matter which method you use.
-    * the design is not balanced: use lmm1, since this will use all of the data
-2. If the number of treatments > 2 
-    * use lmm2. If the model fit fails then
-    * if the design is balanced: use aov2/pptt.
-    * the design is not balanced: pptt is attractive if there are few missing values.
-3. If there are covariates, then start with lmm2. Use lmeControl if lmm2 fails. If this fails, use pairwise lmm1, which is the same as pairwise t-tests but allows covariates to be added to the model. Note that the covariate will be modeled independently in each pair, which effectively models the consequence of a treatment:covariate interaction.
+This simulation is similar to that above.
+
+1. High correlated error. There is heterogenous treatment:block variance giving rise to heterogenous correlated error among the pairs of treatments, ranging from intermediate to high magnitude.
+2. Low correlated error. There is heterogenous treatment:block variance giving rise to heterogenous correlated error among the pairs of treatments, ranging from small to intermediate magnitude.
+3. Homogenous correlated error. There is no homogenous treatment:block variance giving rise to high correlated error among the pairs of treatment, all with the same expected level.
+4. There is no among block or treatment:block variance, giving rise to zero correlated error.
 
 
 ```{r rcbd-performance-2x2, warning=FALSE, message=FALSE, error=FALSE, echo = FALSE}
 seed_starter <- 0
 n_sims <- 500
-do_sim <- TRUE
+do_sim <- FALSE
 
 data_from <- "simulations/grcbds/data"
-error_type <- "power" 
+error_type <- "type1" 
 if(error_type == "type1"){
   outfile_name <- "rcbd_type1-2x2.Rds"
   # parameters
@@ -1277,7 +1282,7 @@ setnames(out_table,
          names(out_table),
          c("Contrast", "Cor Error", model_levels))
 out_table |>
-  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 4)) |>
+  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 3, 3)) |>
   kable_styling() |>
   pack_rows("sim 1 - high correlated error", 1, 4) |>
   pack_rows("sim 2 - low correlated error", 5, 8) |>
@@ -1286,13 +1291,17 @@ out_table |>
 
 ```
 
-Notes
+The major result is
 
-1. When there is zero correlated error, all methods have reasonable type I error control. Perhaps lmm2 is very slightly anticonservative (one of the error rates is 0.07).
-2. When there is equal correlated error, all methods have reasonable type I error control (lmm2 is a very slightly anti-conservative).
-3. When there is heterogenous correlated error, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is very slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.
+1. The naive linear model, which doesn't model the non-independence, can be slightly to extremely conservative. There is only good Type I error behavior only when there is something close to zero correlated error.
 
-Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration.
+Results to inform our decision about which model for non-independence
+
+2. When there is zero correlated error, of the methods that model non-independence, all have reasonable type I error control, except lmm2, which is anticonservative.
+3. When there is equal correlated error, of the methods that model non-independence, all have reasonable type I error control, except lmm2, which is anticonservative.
+4. When there is heterogenous correlated error, of the methods that model non-independence, only aov2/pptt/lmm2 have reasonable type I error control (again, lmm2 is slightly anticonservative). lmm1/aov2 have liberal Type I control in contrasts with low correlated error and conservative Type I control in contrasts with high correlated error.
+
+Combined, these results suggest that aov2/pptt should be our preferred model, if we only take Type I control into consideration. But we should definitely consider Power.
 
 ```{r}
 #| label: tbl-lmm-rcbd-power-2x2
@@ -1399,6 +1408,33 @@ sim1_table |>
   kable(digits = 3) |>
   kable_styling()
 ```
+
+The major result is
+
+1. The naive linear model (lm1) has less power than methods that model non-independence. lm1 only has about the same power as methods that model non-independence if there is something close to zero correlated error. This is why we want to use models for non-independence when we have a blocked experimental design.
+
+Results to inform our decision about which model for non-independence
+
+2. When there is zero correlated error, of the methods that model non-independence, lmm2 has slightly higher power than lmm1/aov1/lm1. And lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
+3. When there is equal correlated error, of the methods that model non-independence, lmm2 and lmm1/aov1/lm1 have slightly higher power than aov2/pptt.
+4. When there is heterogenous correlated error, of the methods that model non-independence, lmm1/aov1/lm1 have non-trivially higher power than aov2/pptt in the contrast with the lower correlated error is but non-trivially lower power in the contrast with the higher correlated error. lmm2 has relatively high power regardless of the correlated error of the contrast. The major issue in experimental bench biology is that sample sizes are generally far too low to have good estimates of these correlations or of variance components.
+
+These results suggest lmm2 is the preferred model. If lmm2 fails, then it's a toss-up between aov2/pptt and lmm1/aov1/lmm1.
+
+But, combining the Type I and power simulations, lmm1/aov1/lmm1 have poor type I error control under some conditions while lmm2 and aov2/pptt have good error control under all conditions.
+
+
+#### TL;DR
+
+1. If the number of treatments = 2 and
+    * the design is balanced: it doesn't matter which method you use.
+    * the design is not balanced: use lmm1, since this will use all of the data
+2. If the number of treatments > 2 
+    * use lmm2. If the model fit fails then
+    * if the design is balanced: use aov2/pptt.
+    * the design is not balanced: pptt is attractive if there are few missing values.
+3. If there are covariates, then start with lmm2. Use lmeControl if lmm2 fails. If this fails, use pairwise lmm1, which is the same as pairwise t-tests but allows covariates to be added to the model. Note that the covariate will be modeled independently in each pair, which effectively models the consequence of a treatment:covariate interaction.
+
 
 
 ### RSPD

@@ -1,4 +1,4 @@
-## ----setup, warning=FALSE, message=FALSE-----------------------------------------------------------------------------------------
+## ----setup, warning=FALSE, message=FALSE---------------------------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 
 library(data.table)
@@ -8,23 +8,23 @@ library(MASS) # negative binomial and some other functions
 
 
 
-## ----lmer_check------------------------------------------------------------------------------------------------------------------
+## ----lmer_check----------------------------------------------------------------------------------------------
 lmer_check <- function(fit){
   return(fit@optinfo$conv$lme4$messages)
 }
 
 
-## ----safelme, echo=FALSE, eval=FALSE---------------------------------------------------------------------------------------------
+## ----safelme, echo=FALSE, eval=FALSE-------------------------------------------------------------------------
 ## safelme <- safely(lme, otherwise = NA)
 
 
-## ----lmer-check, echo=FALSE------------------------------------------------------------------------------------------------------
+## ----lmer-check, echo=FALSE----------------------------------------------------------------------------------
 lmer_check <- function(fit){
   return(fit@optinfo$conv$lme4$messages)
 }
 
 
-## ----simulator_seed_params-------------------------------------------------------------------------------------------------------
+## ----simulator_seed_params-----------------------------------------------------------------------------------
   seed_i = 1
   n_sim = 1
   n_treat = 3 # tau
@@ -52,12 +52,13 @@ lmer_check <- function(fit){
   ss_name = "ss"
 
 
-## ----simulator-------------------------------------------------------------------------------------------------------------------
+## ----simulator-----------------------------------------------------------------------------------------------
 # this is the official simulator function. Any changes should be copied into ggplot_the_model.Rmd for compilation
 simulator <- function(
   seed_i = 1,
   n_sim = 1,
   family = "gaussian",
+  n_factors = 1, # number of factors
   n_treat = 3, # tau
   n_block = 6, # beta_1, number of (nested) blocks
   n_rep = 1, # eta, number of experimental replicates
@@ -399,7 +400,209 @@ simulator <- function(
 }
 
 
-## ----output-as-R-file------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------------
+simulator_2 <- function(
+  seed_i = 1,
+  n_sim = 1,
+  family = "gaussian",
+  n_factors = 2, # number of factors
+  n_levels = 2, # number of levels per factor
+  n_block = 6, # beta_1, number of blocks
+  n_rep = 1, # eta, number of experimental replicates
+  n_ss = 1, # epsilon, number of subsamples within each block:treatment.
+  n_exp = 1, # number of experiments
+  design = "rcbd", # if rcbd, then all treatments within block. If "pseudoreplicated", then single treatment per block and all replicates within block are subsamples.
+  beta = c(10, 0, 0, 0), # effects
+  sigma_exp = 0, # sd among experiments
+  sigma_exp.block = 1, # sd among exp:block (or block if n_exp = 1)
+  sigma_exp.fac1 = 0, # sd among exp:fac1
+  sigma_exp.fac2 = 0, # sd among exp:fac2
+  sigma_exp.block.fac1 = c(0, 0), # sd among exp:block:fac1
+  sigma_exp.block.fac2 = c(0, 0), # sd among exp:block:fac2
+  sigma_rep = 0, # sd among experimental replicates of treatment:block
+  sigma_ss = 0.3, # sd among subsamples within replication of treatment:block. This is just sigma
+  equal_n = TRUE,
+  fac1_names = NULL,
+  fac2_names = NULL,
+  exp_name = "exp",
+  block_name = "block",
+  rep_name = "rep",
+  ss_name = "ss"
+  ){
+  
+  
+  N_reps <- n_block * n_factors * n_levels * n_rep * n_exp
+  N <- N_reps * n_ss
+  # returns N by n_sim matrix of fake data. Each sim is in its own column. The first two columns are treatment and block
+  if(is.null(fac1_names)){
+    fac1_levels <- c("Cn", "Tr1", "Tr2", "Tr3")[1:n_levels]
+  }else{
+    fac1_levels <- c(fac1_names)[1:n_levels]
+  }
+  if(n_factors == 2){
+    if(is.null(fac2_names)){
+      fac2_levels <- c("Cn", "Tr1", "Tr2", "Tr3")[1:n_levels]
+    }else{
+      fac2_levels <- c(fac2_names)[1:n_levels]
+    }
+  }
+  
+  # if reps in blocks are experimental
+  if(design == "rcbd"){
+    exp_levels <- paste0(exp_name,
+                         sprintf("%02d", 1:n_exp))
+    block_levels <- paste0(block_name,
+                           sprintf("%02d", 1:n_block))
+    block.fac1 <- do.call(paste, expand.grid(block_levels,
+                                             fac1_levels))
+    rep_levels <- paste0(rep_name,
+                         sprintf("%02d", 1:n_rep))
+  }
+  ss_levels <- paste0(ss_name,
+                      sprintf("%02d", 1:n_ss))
+  groups <- do.call(paste, expand.grid(exp_levels,
+                                       block.fac1,
+                                       fac2_levels,
+                                       rep_levels,
+                                       ss_levels
+  ))
+
+
+  fake_data_all <- data.table(NULL)
+  fake_data_all[, c("exp", "block", "fac1", "fac2", "rep", "ss") :=
+                  tstrsplit(groups, " ", fixed = TRUE)]
+  # setorder(fake_data_all, exp, block, fac1, fac2, rep, ss)
+  
+  fake_data_all[, exp_id := paste(
+    exp_name,
+    sprintf("%02d",
+            as.integer(factor(exp))),
+    sep = "_")]
+  fake_data_all[, block_id := paste(
+    block_name,
+    sprintf("%02d",
+            as.integer(factor(paste(exp, block)))),
+    sep = "_")]
+  fake_data_all[, rep_id := paste(
+    rep_name,
+    sprintf("%02d",
+            as.integer(factor(paste(block_id, fac1, rep)))),
+    sep = "_")]
+  fake_data_all[, ss_id := paste(
+    ss_name,
+    sprintf("%03d",
+            as.integer(factor(paste(rep_id, ss)))),
+    sep = "_")]
+  
+  
+  # make specific to experiment
+  if(exp_name != "exp"){
+    setnames(fake_data_all, "exp_id", exp_name)
+  }
+  if(block_name != "block"){
+    setnames(fake_data_all, "block_id", block_name)
+  }
+  if(rep_name != "rep"){
+    setnames(fake_data_all, "rep_id", rep_name)
+  }
+  if(ss_name != "ss"){
+    setnames(fake_data_all, "ss_id", ss_name)
+  }
+  
+  # order factor levels
+  fake_data_all[, fac1 := factor(fac1,
+                                 levels = fac1_levels)]
+  if(n_factors == 2){
+    fake_data_all[, fac2 := factor(fac2,
+                                   levels = fac2_levels)]
+  }
+  
+  
+  model_form <- ifelse(n_factors == 1,
+                     "~ fac1",
+                     "~ fac1 * fac2"
+                     ) |>
+    as.formula()
+
+  fd_mat <- matrix(as.numeric(NA), nrow = N, ncol = n_sim)
+  colnames(fd_mat) <- paste0("sim_", 1:n_sim)
+  
+  for(sim_i in 1:n_sim){
+    seed_i <- seed_i + 1
+    sim_seed <- seed_i
+    set.seed(sim_seed)
+    
+    # fixed component
+    X <- model.matrix(model_form,
+                      data = fake_data_all)
+    y_fixed <- (X %*% beta)[,1]
+    
+    # Random Design Matrix
+    # block:treatment intercept intercept functions as slope
+    # and is independent of block intercept
+    # this generates combination columns for *all* treatment levels
+    # differs from random intercept and slope which only generates
+    # slope coefs for non ref levels
+    
+    Z2 <- NULL # this will add more later
+    u2 <- NULL # add more later
+    
+    # random intercepts
+    Z1a <- model.matrix(~ 0 + block, data = fake_data_all)
+    
+    # random interaction intercepts
+    # this is no different than a treatment with 4 levels
+    Z1b <- model.matrix(~ 0 + block:fac1, data = fake_data_all)
+    if(n_factors == 2){
+      Z1b <- model.matrix(~ 0 + block:fac1:fac2, data = fake_data_all)
+    }
+    Z1 <- cbind(Z1a, Z1b)
+    
+    # random interaction intercepts
+    Z1b <- model.matrix(~ 0 + block:fac1, data = fake_data_all)
+    Z1 <- cbind(Z1a, Z1b)
+    if(n_factors == 2){
+      Z1c <- model.matrix(~ 0 + block:fac2, data = fake_data_all)
+      Z1 <- cbind(Z1, Z1c)
+    }
+
+    
+    # Random Intercepts
+    # Random block intercepts
+    u1_block <- rnorm(n_block, mean = 0,
+                  sd = sigma_exp.block)
+    
+    # Random block:treatment interaction intercepts, one for each combination
+    # the order is all blocks for treat 1, all blocks for fac1 level 1, all blocks for
+    # fac1 level 2 ...
+    u1_block_fac1 <- rnorm(n_block*n_levels, mean = 0,
+                           sd = rep(sigma_exp.block.fac1[1:n_levels], each = n_block))
+    u1 <- c(u1_block, u1_block_fac1)
+    
+    if(n_factors == 2){
+      u1_block_fac2 <- rnorm(n_block*n_levels, mean = 0,
+                             sd = rep(sigma_exp.block.fac2[1:n_levels], each = n_block))
+      u1 <- c(u1, u1_block_fac2)
+    }
+    
+    Z <- cbind(Z1, Z2)
+    u <- c(u1, u2)
+    
+    if(family == "gaussian" | family == "normal"){
+      e_ss <- rnorm(N, mean = 0, sd = sigma_ss[1])
+      y_rand <- (Z %*% u)[,1] + e_ss
+      y <- y_fixed + y_rand
+    }
+
+    fd_mat[, sim_i] <- y
+  }
+  fake_data_all <- cbind(fake_data_all,
+                         fd_mat)
+  return(fake_data_all)
+}
+
+
+## ----output-as-R-file----------------------------------------------------------------------------------------
 # highlight and run to put update into R folder
 # knitr::purl("simulator.Rmd")
 
