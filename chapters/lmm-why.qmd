@@ -1,0 +1,370 @@
+# Models for non-independence -- Which model and why {#sec-lmm-why}
+
+```{r lmm-setup, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(here)
+library(janitor)
+library(readxl)
+library(data.table)
+
+# analysis packages
+library(mvtnorm)
+library(emmeans)
+library(car) # qqplot, spreadlevel
+library(afex)
+library(lmerTest)
+library(nlme)
+library(quantreg)
+
+# graphing and tabling packages
+library(ggplot2) # ggplot environment
+library(ggsci) # color palettes
+library(ggpubr) # publication ready plots
+library(cowplot) # combine plots
+library(knitr)
+library(kableExtra) #tables
+
+source(here::here("R/ggplot_the_model.R"))
+source(here::here("R/ggptm.R"))
+source(here::here("simulations/grcbds/simulator.R"))
+
+clean_names <- janitor::clean_names
+minus <- "\u2013"
+
+here <- here::here
+data_folder <- "data"
+image_folder <- "images"
+```
+
+```{r lmm-fig-sizes, echo=FALSE}
+dpi <- 72
+# width of bookdown page is 800 pix
+# width of standard bookdown fig is 560 pix or 70% of page
+std_width <- 504/dpi # 7 in
+full_width <- 800/dpi
+small_scale = 6/7
+small_width <- std_width*small_scale # 6 in
+
+# standard aspect ratio is .7 so
+std_ar <- 5/7 # .71
+response_ar <- .8 # for use with response plots with p-values
+effect_ar <- 0.6 # for effects
+harrell_ar <- 1 # for harrell effect & response plots
+
+# dims (width, height)
+small_dim <- c(small_width, small_width*std_ar)
+std_dim <- c(std_width, std_width*std_ar)
+response_dim <- c(std_width, std_width*response_ar)
+effect_dim <- c(std_width, std_width*effect_ar)
+harrell_dim <- c(std_width, std_width*harrell_ar)
+full_dim_three_eights <- c(full_width, full_width * 3/8)
+full_dim_three_eights <- c(full_width, full_width * 0.5)
+
+# out.width percents
+out.width_std <- paste0(std_width/full_width*100, "%")
+out.width_small <- paste0(small_width/full_width*100, "%")
+
+```
+
+
+```{r lmer-check, echo=FALSE}
+lmer_check <- function(fit){
+  return(fit@optinfo$conv$lme4$messages)
+}
+```
+
+```{r echo=FALSE}
+varcor <- function(res){
+  # vc is the value from VarCorr(m1)
+  vc <- cov2cor(res)
+  diag(vc) <- sqrt(diag(res))
+  colnames(vc) <- rep(NA, ncol(vc))
+  vc[upper.tri(vc)] <- NA
+  return(vc)
+}
+
+```
+
+
+```{r pless, echo=FALSE}
+  pless <- function(x){
+    value <- sum(x < 0.05, na.rm=TRUE)/length(na.omit(x))
+    return(value)
+  }
+
+```
+
+## RCBD
+
+```{r}
+#| label: fig-lmm-why-rcbd
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 8
+#| fig-height: 3
+#| fig-cap: "RCBD"
+
+# https://www.nature.com/articles/s41467-024-49159-3
+sigma_among <- 0.11
+sigma_within = 0.06
+n_sim <- 1
+fake_rcbd <- simulator(
+  n_sim <- n_sim,
+  seed_i = 1,
+  n_treat = 3, # number of treatment levels
+  n_block = 10, # number of litters (blocks)
+  n_ss = 1, # number of subsamples
+  design = "rcbd",
+  beta = c(0.4, -0.12, 0),
+  sigma_exp.block = sigma_among, # sd among exp:block (or block if n_exp = 1)
+  sigma_exp.block.treat = c(0), # sd among exp:block:treat
+  sigma_ss = sigma_within, # sd among subsamples within replication of treatment:block
+  group_names = c("CN", "GC", "BSO"),
+  block_name = "litter",
+  rep_name = "mouse",
+  ss_name = "ss"
+)
+
+fake_rcbd <- fake_rcbd[, .SD, .SDcols = c("litter", "mouse", "treatment","sim_1")]
+
+# a linear mixed model to account for shared variance. On initial experiment
+lm.fe <- lm(sim_1 ~ treatment + litter, data = fake_rcbd)
+lm.fe_pairs <- emmeans(lm.fe, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+lmm.ri <- lmer(sim_1 ~ treatment + (1 | litter), data = fake_rcbd)
+lmm.ri_pairs <- emmeans(lmm.ri, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+rmaov <- aov_4(sim_1 ~ treatment + (treatment | litter),
+               include_aov = TRUE,
+               data = fake_rcbd)
+rmaov.uni1_pairs <- emmeans(rmaov, specs = "treatment", model = "univariate") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+rmaov.mul_pairs <- emmeans(rmaov, specs = "treatment", model = "multivariate") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+lmm.ce <- lme(sim_1 ~ treatment,
+             random = ~1 | litter,
+             correlation = corSymm(form = ~ 1 | litter),
+             weights = varIdent(form = ~ 1 | treatment),
+             data = fake_rcbd)
+lmm.ce_pairs <- emmeans(lmm.ce, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+ppttm <- pptt(sim_1 ~ treatment + (1 | litter), data = fake_rcbd)
+
+table_out <- rbind(
+  lm.fe_pairs,
+  lmm.ri_pairs,
+  rmaov.uni1_pairs,
+  rmaov.mul_pairs,
+  ppttm,
+  lmm.ce_pairs
+)
+
+table_out |>
+  kable(digits = 4,
+        caption = "xxx") |>
+  kable_styling() |>
+  pack_rows("lm.fe fixed effect model", 1, 3) |>
+  pack_rows("lmm.ri lmm random intercept model", 4, 6) |>
+  pack_rows("rmaov.uni1 RM-ANOVA univariate model", 7, 9) |>
+  pack_rows("rmaov.mul RM-ANOVA multivariate model", 10, 12) |>
+  pack_rows("ppttm pairwise, paired t-tests", 13, 15) |>
+  pack_rows("lmm.ce correlated error model", 16, 18)
+
+
+```
+## RCBDS
+
+```{r}
+#| label: fig-lmm-why-rcbds
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 8
+#| fig-height: 3
+#| fig-cap: "RCBD"
+
+# https://www.nature.com/articles/s41467-024-49159-3
+sigma_among <- 0.11
+sigma_within = 0.06
+n_sim <- 1
+fake_rcbd <- simulator(
+  n_sim <- n_sim,
+  seed_i = 1,
+  n_treat = 3, # number of treatment levels
+  n_block = 10, # number of litters (blocks)
+  n_ss = 10, # number of subsamples
+  design = "rcbd",
+  beta = c(0.4, -0.12, 0),
+  sigma_exp.block = sigma_among, # sd among exp:block (or block if n_exp = 1)
+  sigma_exp.block.treat = c(0.1, 0.05, 0.01), # sd among exp:block:treat
+  sigma_ss = sigma_within, # sd among subsamples within replication of treatment:block
+  group_names = c("CN", "GC", "BSO"),
+  block_name = "litter",
+  rep_name = "mouse",
+  ss_name = "ss"
+)
+
+fake_rcbd <- fake_rcbd[, .SD, .SDcols = c("litter", "mouse", "treatment","sim_1")]
+
+# aggragate subsamples
+fake_rcbd_agg <- fake_rcbd[, .(sim_1 = mean(sim_1)), by = .(litter, treatment)]
+
+lm.fe <- lm(sim_1 ~ treatment + litter, data = fake_rcbd_agg)
+lm.fe_pairs <- emmeans(lm.fe, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+lmm.ri <- lmer(sim_1 ~ treatment + (1 | litter), data = fake_rcbd_agg)
+lmm.ri_pairs <- emmeans(lmm.ri, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+lmm.ris <- lmer(sim_1 ~ treatment + (treatment | litter), data = fake_rcbd)
+lmm.ris_pairs <- emmeans(lmm.ris, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+# lmm.ris_pairs <- emmeans(lmm.ris, specs = "treatment", lmer.df = "satterthwaite") |>
+#   contrast(method = "revpairwise", adjust = "none") |>
+#   summary(infer = TRUE)
+
+rmaov <- aov_4(sim_1 ~ treatment + (treatment | litter),
+               include_aov = TRUE,
+               data = fake_rcbd)
+rmaov.uni1_pairs <- emmeans(rmaov, specs = "treatment", model = "univariate") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+rmaov.mul_pairs <- emmeans(rmaov, specs = "treatment", model = "multivariate") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+ppttm <- pptt(sim_1 ~ treatment + (1 | litter), data = fake_rcbd)
+
+table_out <- rbind(
+  lm.fe_pairs,
+  lmm.ri_pairs,
+  rmaov.uni1_pairs,
+  lmm.ris_pairs,
+  rmaov.mul_pairs,
+  ppttm
+)
+
+table_out |>
+  kable(digits = 4,
+        caption = "xxx") |>
+  kable_styling() |>
+  pack_rows("lm.fe fixed effect model", 1, 3) |>
+  pack_rows("lmm.ri lmm random intercept model", 4, 6) |>
+  pack_rows("rmaov.uni1 RM-ANOVA univariate model", 7, 9) |>
+  pack_rows("lmm.ris lmm random intercept and slope model", 10, 12) |>
+  pack_rows("rmaov.mul RM-ANOVA multivariate model", 13, 15) |>
+  pack_rows("ppttm pairwise, paired t-tests", 16, 18)
+
+
+```
+
+Notes
+
+1. lmm.ris and rmaov.mul are generally close but not exact
+
+## GRCBD
+
+```{r}
+#| label: fig-lmm-why-grcbd
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 8
+#| fig-height: 3
+#| fig-cap: "GRCBD"
+
+# https://www.nature.com/articles/s41467-024-49159-3
+sigma_among <- 0.11
+sigma_within = 0.06
+n_sim <- 1
+fake_rcbd <- simulator(
+  n_sim <- n_sim,
+  seed_i = 1,
+  n_treat = 3, # number of treatment levels
+  n_block = 10, # number of litters (blocks)
+  n_rep = 2, # eta, number of experimental replicates
+  n_ss = 1, # number of subsamples
+  design = "rcbd",
+  beta = c(0.4, -0.12, 0),
+  sigma_exp.block = sigma_among, # sd among exp:block (or block if n_exp = 1)
+  sigma_exp.block.treat = c(0.1, 0.05, 0.01), # sd among exp:block:treat
+  sigma_ss = sigma_within, # sd among subsamples within replication of treatment:block
+  group_names = c("CN", "GC", "BSO"),
+  block_name = "litter",
+  rep_name = "mouse",
+  ss_name = "ss"
+)
+
+fake_rcbd <- fake_rcbd[, .SD, .SDcols = c("litter", "mouse", "treatment","sim_1")]
+
+# aggragate subsamples
+fake_rcbd_agg <- fake_rcbd[, .(sim_1 = mean(sim_1)), by = .(litter, treatment)]
+
+lm.fe <- lm(sim_1 ~ treatment + litter, data = fake_rcbd_agg)
+lm.fe_pairs <- emmeans(lm.fe, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+lmm.ri <- lmer(sim_1 ~ treatment + (1 | litter), data = fake_rcbd_agg)
+lmm.ri_pairs <- emmeans(lmm.ri, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+lmm.ris <- lmer(sim_1 ~ treatment + (treatment | litter), data = fake_rcbd)
+lmm.ris_pairs <- emmeans(lmm.ris, specs = "treatment") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+# lmm.ris_pairs <- emmeans(lmm.ris, specs = "treatment", lmer.df = "satterthwaite") |>
+#   contrast(method = "revpairwise", adjust = "none") |>
+#   summary(infer = TRUE)
+
+rmaov <- aov_4(sim_1 ~ treatment + (treatment | litter),
+               include_aov = TRUE,
+               data = fake_rcbd)
+rmaov.uni1_pairs <- emmeans(rmaov, specs = "treatment", model = "univariate") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+rmaov.mul_pairs <- emmeans(rmaov, specs = "treatment", model = "multivariate") |>
+  contrast(method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+ppttm <- pptt(sim_1 ~ treatment + (1 | litter), data = fake_rcbd)
+
+table_out <- rbind(
+  lm.fe_pairs,
+  lmm.ri_pairs,
+  rmaov.uni1_pairs,
+  lmm.ris_pairs,
+  rmaov.mul_pairs,
+  ppttm
+)
+
+table_out |>
+  kable(digits = 4,
+        caption = "xxx") |>
+  kable_styling() |>
+  pack_rows("lm.fe fixed effect model", 1, 3) |>
+  pack_rows("lmm.ri lmm random intercept model", 4, 6) |>
+  pack_rows("rmaov.uni1 RM-ANOVA univariate model", 7, 9) |>
+  pack_rows("lmm.ris lmm random intercept and slope model", 10, 12) |>
+  pack_rows("rmaov.mul RM-ANOVA multivariate model", 13, 15) |>
+  pack_rows("ppttm pairwise, paired t-tests", 16, 18)
+
+
+```
+
+
