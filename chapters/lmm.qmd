@@ -529,7 +529,7 @@ lmm.sp1 <-  lmer(y ~ factor1 * factor2 + (1 | main_plot_id),
 
 ```
 
-##### RCBD split plot model
+##### Replicated split plot model
 
 ```{r, class.source = "fold-show", eval=FALSE}
 # factor1 is the main plot
@@ -949,8 +949,9 @@ print(ppttm)
 
 ```{r echo=FALSE, eval=FALSE}
 ggptm(lmm.ri, lmm.ri_emm, lmm.ri_pairs,
-              join_blocks = TRUE,
-              block_id = "experiment_id")
+      join_blocks = TRUE,
+      block_id = "experiment_id",
+      jitter_width = .2)
 ```
 
 ```{r}
@@ -1175,7 +1176,7 @@ print(ppttm)
 ### Plot the model
 
 ```{r lmm-fig2c_r_ggplot-auto, echo=FALSE, eval=FALSE}
-plot_response(rmaov.mul, rmaov.mul_emm, rmaov.mul_pairs,
+ggptm(rmaov.mul, rmaov.mul_emm, rmaov.mul_pairs,
               join_blocks = TRUE,
               block_id = "experiment_id")
 ```
@@ -1248,9 +1249,9 @@ Notes
 1. The blocks are connected by the gray lines
 2. The modeled SE of the treatment means are large relative to the spread of the treatment replicates. The modeled SE of the treatment means are not a good guide to differences among the treatments in a model with random factors if the sample size (number of blocks) is small.
 
-## Example 4 -- RCBD with two factors (exp5c)
+## Example 4 -- RCBD with two factors (fig5c)
 
-Example 3 is similar to example 2 in that there is no subsampling replication and we cannot add random slopes to the linear mixed model. But, because example 3 is a factorial design with two factors, there is replication within each factor within a block. Consequently, there are several alternative models with different sets of random intercepts. The reported model includes two random intercepts, one of which models differences in batch effects among treatment levels (treatment by batch interactions). This **interaction intercept** is an alternative to random slope for modeling treatment by batch interactions.
+Example 4 is similar to example 2 in that there is no subsampling replication and we cannot add random slopes to the linear mixed model. But, because example 3 is a factorial design with two factors, there is replication within each factor within a block. Consequently, there are several alternative models with different sets of random intercepts. The reported model includes two random intercepts, one of which models differences in batch effects among treatment levels (treatment by batch interactions). This **interaction intercept** is an alternative to random slope for modeling treatment by batch interactions.
 
 [Transcriptomic profiling of skeletal muscle adaptations to exercise and inactivity](https://www.nature.com/articles/s41467-019-13869-w){target="_blank"}
 
@@ -1259,12 +1260,12 @@ Source figure: [Fig. 5c](https://www.nature.com/articles/s41467-019-13869-w#Fig5
 Source data: [Source Data Fig. 5](https://www.nature.com/articles/s41467-019-13869-w#Sec27){target="_blank"}
 
 
-```{r lmm-exp5c-import, echo = FALSE}
+```{r lmm-fig5c-import, echo = FALSE}
 data_from <- "Transcriptomic profiling of skeletal muscle adaptations to exercise and inactivity"
 file_name <- "41467_2019_13869_MOESM6_ESM.xlsx"
 file_path <- here(data_folder, data_from, file_name)
 
-exp5c_wide <- read_excel(file_path,
+fig5c_wide <- read_excel(file_path,
                          sheet = "Fig5c",
                          range = "A2:M3",
                          col_names = FALSE) |>
@@ -1272,17 +1273,17 @@ exp5c_wide <- read_excel(file_path,
   transpose(make.names = 1)
 
 activity_levels <- c("Basal", "EPS")
-treatment_levels <- names(exp5c_wide)[1:2]
-exp5c_wide[, activity := rep(activity_levels, each = 6)]
-exp5c_wide[, activity := factor(activity, levels = activity_levels)]
+treatment_levels <- names(fig5c_wide)[1:2]
+fig5c_wide[, activity := rep(activity_levels, each = 6)]
+fig5c_wide[, activity := factor(activity, levels = activity_levels)]
 
-exp5c <- melt(exp5c_wide,
+fig5c <- melt(fig5c_wide,
               id.vars = "activity",
               variable.name = "treatment",
               value.name = "glucose_uptake")
-exp5c[, treatment := factor(treatment, levels = treatment_levels)]
+fig5c[, treatment := factor(treatment, levels = treatment_levels)]
 
-exp5c[, donor := rep(paste0("donor_", 1:6), 4)]
+fig5c[, donor := rep(paste0("donor_", 1:6), 4)]
 ```
 
 ### Understand the data
@@ -1293,13 +1294,13 @@ The design is a $2 \times 2$ [Randomized complete block with no subsampling](htt
 
 ### Examine the data
 
-```{r lmm-exp5c-examine, echo = FALSE}
-exp5c[, t.by.a := paste(treatment, activity)]
-t.by.a_levels <- c("Scr Basal", "Scr EPS", "siNR4A3 Basal", "siNR4A3 EPS")
-exp5c[, t.by.a := factor(t.by.a, levels = t.by.a_levels)]
+```{r lmm-fig5c-examine, echo = FALSE}
+fig5c[, treatment_flat := paste(treatment, activity)]
+treatment_flat_levels <- c("Scr Basal", "Scr EPS", "siNR4A3 Basal", "siNR4A3 EPS")
+fig5c[, treatment_flat := factor(treatment_flat, levels = treatment_flat_levels)]
 
-ggplot(data = exp5c,
-       aes(x = t.by.a,
+ggplot(data = fig5c,
+       aes(x = treatment_flat,
            y = glucose_uptake,
            color = donor)) +
   geom_point() +
@@ -1308,89 +1309,117 @@ ggplot(data = exp5c,
 
 The plot shows a strong donor effect.
 
-### Model fit and inference {#lmm-exp5c-m1}
+### Model fit and inference {#lmm-fig5c-m1}
 
-```{r lmm-exp5c_m1}
-exp5c_m1a <- lmer(glucose_uptake ~ treatment * activity +
+```{r lmm-fig5c_m1}
+fig5c.ri <- lmer(glucose_uptake ~ treatment * activity +
                    (1 | donor),
-                 data = exp5c)
+                 data = fig5c)
 
-exp5c_m1b <- lmer(glucose_uptake ~ treatment * activity +
+fig5c.rii <- lmer(glucose_uptake ~ treatment * activity +
                    (1 | donor) +
                    (1 | donor:treatment) +
                    (1 | donor:activity),
-                 data = exp5c)
+                 data = fig5c)
+# boundary warning
 
-exp5c_m1c <- lmer(glucose_uptake ~ treatment * activity +
+fig5c.rii2 <- lmer(glucose_uptake ~ treatment * activity +
                    (1 | donor) +
                    (1 | donor:treatment),
-                 data = exp5c)
+                 data = fig5c)
 
-exp5c_m1d <- lme(glucose_uptake ~ treatment * activity,
+fig5c.rii3 <- lmer(glucose_uptake ~ treatment * activity +
+                   (1 | donor) +
+                   (1 | donor:activity),
+                 data = fig5c)
+# boundary warning
+
+fig5c.ce <- lme(glucose_uptake ~ treatment * activity,
                  random =  ~ 1 | donor,
-                 correlation = corSymm(form = ~ 1 | donor),
-                 weights = varIdent(form = ~ 1|t.by.a),
-                 data = exp5c)
+                 correlation = corCompSymm(form = ~ 1 | donor),
+                 weights = varIdent(form = ~ 1|treatment_flat),
+                 data = fig5c)
 
-exp5c_rmaov.mul <- aov_4(glucose_uptake ~ treatment * activity +
+fig5c.rmaov <- aov_4(glucose_uptake ~ treatment * activity +
                    (treatment * activity | donor),
-                 data = exp5c)
+                 data = fig5c)
 
 # check AIC
-AIC(exp5c_m1a, exp5c_m1b, exp5c_m1c, exp5c_m1d)
+AIC(fig5c.ri, fig5c.rii2, fig5c.ce)
 
 # check VarCorr model c
-VarCorr(exp5c_m1c) # fine
+VarCorr(fig5c.rii2) # fine
 
-# report 1c (based on AIC and VarCorr check)
-exp5c_m1 <- exp5c_m1c
+# report fig5c_lmm2.rii (based on AIC and VarCorr check)
+fig5c_m1 <- fig5c.ce
 
 
 ```
 
-exp5c_m1b is singular fit. don't use. Trivial difference in AIC between exp5c_m1a and exp5c_m1c. Nothing in VarCorr with exp5c_m1c raises red flags. Report exp5c_m1c.
 
-#### Check the model
+The boundary warnings indicate a variance component with no estimated variance, so these are excluded. There is trivial difference in AIC between fig5c_lmm.ri and fig5c_lmm2.rii and fig5c_ce <2 units from these. I recommend choosing to report the most maximal model (fig5c_ce or fig5c_rmaov.mul).
 
-```{r lmm-exp5c_m1-check}
-ggcheck_the_model(exp5c_m1)
+### Inference comparison among models
+
+```{r}
+fig5c.ri_emm <- emmeans(fig5c.ri, specs = c("treatment", "activity"))
+fig5c.ri_pairs <- contrast(fig5c.ri_emm,
+                               method = "revpairwise",
+                               simple = "each",
+                               combine = TRUE,
+                               adjust = "none") |>
+  summary(infer = TRUE)
+
+fig5c.rii2_emm <- emmeans(fig5c.rii2, specs = c("treatment", "activity"))
+fig5c.rii2_pairs <- contrast(fig5c.rii2_emm,
+                               method = "revpairwise",
+                               simple = "each",
+                               combine = TRUE,
+                               adjust = "none") |>
+  summary(infer = TRUE)
+
+fig5c.ce_emm <- emmeans(fig5c.ce, specs = c("treatment", "activity"))
+fig5c.ce_pairs <- contrast(fig5c.ce_emm,
+                               method = "revpairwise",
+                               simple = "each",
+                               combine = TRUE,
+                               adjust = "none") |>
+  summary(infer = TRUE)
+
+fig5c.rmaov_emm <- emmeans(fig5c.rmaov, specs = c("treatment", "activity"))
+fig5c.rmaov_pairs <- contrast(fig5c.rmaov_emm,
+                               method = "revpairwise",
+                               simple = "each",
+                               combine = TRUE,
+                               adjust = "none") |>
+  summary(infer = TRUE)
+
+fig5c.ri_pairs
+fig5c.rii2_pairs
+fig5c.ce_pairs
+fig5c.rmaov_pairs
 ```
 
-fine.
 
-#### Inference from the model
-
-```{r lmm-exp5c_emm_coef, message=FALSE}
-exp5c_m1_coef <- cbind(coef(summary(exp5c_m1)),
-                       confint(exp5c_m1)[-c(1:3),])
+```{r lmm-fig5c_emm}
+fig5c_m1_emm <- emmeans(fig5c_m1, specs = c("treatment", "activity"))
 ```
 
-
-```{r lmm-exp5c_emm_coef-show, message=FALSE}
-exp5c_m1_coef |>
-  kable(digits = c(2,3,1,1,4,2,2)) |>
-  kable_styling()
-```
-
-```{r lmm-exp5c_emm}
-exp5c_m1_emm <- emmeans(exp5c_m1, specs = c("treatment", "activity"))
-```
-
-```{r lmm-exp5c_emm-show, echo=FALSE}
-exp5c_m1_emm |>
+```{r lmm-fig5c_emm-show, echo=FALSE}
+fig5c_m1_emm |>
   kable(digits = c(1,1,2,3,1,2,2)) |>
   kable_styling()
 ```
 
-```{r lmm-exp5c_planned}
-# exp5c_emm # print in console to get row numbers
+```{r lmm-fig5c_planned}
+# fig5c_emm # print in console to get row numbers
 # set the mean as the row number from the emmeans table
 scr_basal <- c(1,0,0,0)
 siNR4A3_basal <- c(0,1,0,0)
 scr_eps <- c(0,0,1,0)
 siNR4A3_eps <- c(0,0,0,1)
 
-exp5c_m1_planned <- contrast(exp5c_m1_emm,
+fig5c_m1_planned <- contrast(fig5c_m1_emm,
                        method = list(
                          "(Scr EPS) - (Scr Basal)" = c(scr_eps - scr_basal),
                          "(siNR4A3 EPS) - (siNR4A3 Basal)" = c(siNR4A3_eps - siNR4A3_basal),
@@ -1403,41 +1432,41 @@ exp5c_m1_planned <- contrast(exp5c_m1_emm,
   summary(infer = TRUE)
 ```
 
-```{r lmm-exp5c-planned-show, echo=FALSE}
-exp5c_m1_planned |>
+```{r lmm-fig5c-planned-show, echo=FALSE}
+fig5c_m1_planned |>
   kable(digits = c(1,2,3,3,2,2,2,3)) |>
   kable_styling()
 ```
 
-#### Plot the model {#lmm-exp5c-plotthemodel}
+#### Plot the model {#lmm-fig5c-plotthemodel}
 
 ```{r echo=FALSE}
 # add treatment column to emmeans table
-exp5c_m1_emm_dt <- summary(exp5c_m1_emm) |>
+fig5c_m1_emm_dt <- summary(fig5c_m1_emm) |>
   data.table()
-exp5c_m1_emm_dt[, t.by.a := paste(treatment, activity)]
-exp5c_m1_emm_dt[, t.by.a := factor(t.by.a,
-                                      levels = levels(exp5c$t.by.a))]
+fig5c_m1_emm_dt[, treatment_flat := paste(treatment, activity)]
+fig5c_m1_emm_dt[, treatment_flat := factor(treatment_flat,
+                                      levels = levels(fig5c$treatment_flat))]
 
 # add group1 and group2 columns to exp6g_m1_planned
-exp5c_m1_planned_dt <- data.table(exp5c_m1_planned)
-exp5c_m1_planned_dt[, pretty_p := pvalString(p.value)]
-exp5c_m1_planned_dt[, group1 := c("Scr EPS", "siNR4A3 EPS", "")]
-exp5c_m1_planned_dt[, group2 := c("Scr Basal", "siNR4A3 Basal", "")]
+fig5c_m1_planned_dt <- data.table(fig5c_m1_planned)
+fig5c_m1_planned_dt[, pretty_p := pvalString(p.value)]
+fig5c_m1_planned_dt[, group1 := c("Scr EPS", "siNR4A3 EPS", "")]
+fig5c_m1_planned_dt[, group2 := c("Scr Basal", "siNR4A3 Basal", "")]
 
 ```
 
 ```{r echo=FALSE}
-exp5c_effects <- ggplot_the_effects(exp5c_m1_emm,
-                   exp5c_m1_planned,
+fig5c_effects <- ggplot_the_effects(fig5c_m1_emm,
+                   fig5c_m1_planned,
                    effect_label = "Difference in Glucose uptake\n(pmol per min)")
-# exp5c_effects
+# fig5c_effects
 ```
 
 ```{r echo=FALSE}
 
-exp5c_response <- ggplot(data = exp5c,
-              aes(x = t.by.a,
+fig5c_response <- ggplot(data = fig5c,
+              aes(x = treatment_flat,
                   y = glucose_uptake)) +
   geom_point(aes(group = donor),
              position = position_dodge(width = 0.2),
@@ -1445,11 +1474,11 @@ exp5c_response <- ggplot(data = exp5c,
   geom_line(aes(group = donor),
             position = position_dodge(width = 0.2),
             color = "gray80") +
-  geom_point(data = exp5c_m1_emm_dt,
+  geom_point(data = fig5c_m1_emm_dt,
              aes(y = emmean,
              color = activity),
              size = 3) +
-  geom_errorbar(data = exp5c_m1_emm_dt,
+  geom_errorbar(data = fig5c_m1_emm_dt,
              aes(y = emmean,
                  ymin = lower.CL,
                  ymax = upper.CL,
@@ -1465,13 +1494,21 @@ exp5c_response <- ggplot(data = exp5c,
   ) + 
   NULL
 
-exp5c_response <- factor_wrap(exp5c_response)
+fig5c_response <- factor_wrap(fig5c_response)
 
-#exp5c_response
+#fig5c_response
 ```
 
-```{r echo = FALSE, fig.dim=harrell_dim*small_scale, fig.cap="Treatment effect on glucose uptake. Gray dots connected by lines are individual donors."}
-plot_grid(exp5c_effects, exp5c_response,
+```{r}
+#| label: fig-lmm-5c-effects
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 8
+#| fig-height: 4
+#| fig-cap: "Treatment effect on glucose uptake. Gray dots connected by lines are individual donors."
+#| 
+plot_grid(fig5c_effects, fig5c_response,
           nrow=2,
           align = "v",
           axis = "lr",
@@ -1480,19 +1517,27 @@ plot_grid(exp5c_effects, exp5c_response,
 
 #### Alternaplot the model
 
-```{r lmm-exp5c-alternaplot, fig.dim=response_dim*small_scale, echo=FALSE, fig.cap = "Glucose response to different treatments. Gray dots connected by lines are individual donors. Dashed gray line is expected additive mean of \"siNR4A3 EPS\"."}
+```{r}
+#| label: fig-lmm-fig5c-alternaplot
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 6
+#| fig-height: 3
+#| fig-cap: "Glucose response to different treatments. Gray dots connected by lines are individual donors. Dashed gray line is expected additive mean of \"siNR4A3 EPS\"."
+#| 
 
 # get coefficients of model
-b <- coef(summary(exp5c_m1))[, "Estimate"]
+b <- coef(summary(fig5c_m1))[, "Value"]
 
 # get interaction p
-p_ixn <- exp5c_m1_planned_dt[contrast == "Interaction", pretty_p] # check!
+p_ixn <- fig5c_m1_planned_dt[contrast == "Interaction", pretty_p] # check!
 
 dodge_width <- 0.4
 
-gg <- exp5c_response +
+gg <- fig5c_response +
   # pvalue brackets
-  stat_pvalue_manual(exp5c_m1_planned_dt[1:2],
+  stat_pvalue_manual(fig5c_m1_planned_dt[1:2],
                      label = "pretty_p",
                      y.position = c(2.1, 2.1),
                      size = 2.5,
@@ -1519,25 +1564,40 @@ gg
 
 Notes
 
-1. Many researchers might look at the wide confidence intervals relative to the short distance between the means and think "no effect". The confidence intervals are correct, they simply are *not* meant to be tools for inferring anything about differences in means. This is one of many reasons why plots of means and error bars can be misleading for inference, despite the ubiquity of their use for communicating results. And, its why I prefer the [effects-and-response plots](#lmm-exp5c-plotthemodel), which explicitly communicate correct inference about effects.
+1. Many researchers might look at the wide confidence intervals relative to the short distance between the means and think "no effect". The confidence intervals are correct, they simply are *not* meant to be tools for inferring anything about differences in means. This is one of many reasons why plots of means and error bars can be misleading for inference, despite the ubiquity of their use for communicating results. And, its why I prefer the [effects-and-response plots](@fig-lmm-fig5c-effects), which explicitly communicate correct inference about effects.
 
-### Why we care about modeling batch in exp5c
+### Why we care about modeling batch in fig5c
 
-Figure \@ref(fig:lmm-exp5c-why) shows the modeled means of the four treatment combinations and the individual values colored by donor. It is pretty easy to see that the glucose uptake values for donors 4 and 5 are well above the mean for all four treatments. And, the values for donors 1, 2, and 3 are well below the mean for all four treatments. The values for donor 6 are near the mean for all four treatments.
+@fig-lmm-fig5c-why shows the modeled means of the four treatment combinations and the individual values colored by donor. It is pretty easy to see that the glucose uptake values for donors 4 and 5 are well above the mean for all four treatments. And, the values for donors 1, 2, and 3 are well below the mean for all four treatments. The values for donor 6 are near the mean for all four treatments.
 
-```{r lmm-exp5c-why, echo= FALSE, fig.dim=std_dim, fig.cap = "Why we care about blocking. The black dots are the modeled means of each treatment combination. The colored dots are the measured values of the response for each donor. The position of a donor relative to the mean is easy to see with these data."}
+```{r echo=FALSE, eval=FALSE}
+ggptm(fig5c_m1, fig5c_m1_emm, fig5c_m1_planned[1:2,],
+      join_blocks = TRUE,
+      block_id = "donor")
+```
+
+
+```{r}
+#| label: fig-lmm-fig5c-why
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 7
+#| fig-height: 3
+#| fig-cap: "Why we care about blocking. The black dots are the modeled means of each treatment combination. The colored dots are the measured values of the response for each donor. The position of a donor relative to the mean is easy to see with these data."
+#| 
 
 m1 <- lm(glucose_uptake ~ treatment * activity,
-           data = exp5c)
+           data = fig5c)
 m1_emm_dt <- emmeans(m1, specs = c("treatment", "activity")) |>
   summary() |>
   data.table()
-m1_emm_dt[, t.by.a:= paste(treatment, activity)]
-m1_emm_dt[, t.by.a:= factor(t.by.a, t.by.a)]
+m1_emm_dt[, treatment_flat:= paste(treatment, activity)]
+m1_emm_dt[, treatment_flat:= factor(treatment_flat, treatment_flat)]
 
 pd_width <- 0.4
-gg <- ggplot(data = exp5c,
-       aes(x = t.by.a,
+gg <- ggplot(data = fig5c,
+       aes(x = treatment_flat,
            y = glucose_uptake,
            color = donor)) +
   
@@ -1550,7 +1610,7 @@ gg <- ggplot(data = exp5c,
   scale_color_manual(values = pal_okabe_ito_blue) +
   
   geom_point(data = m1_emm_dt,
-             aes(x = t.by.a,
+             aes(x = treatment_flat,
                  y = emmean),
              color = "black",
              size = 3) +
@@ -1562,17 +1622,17 @@ gg <- ggplot(data = exp5c,
 gg
 ```
 
-Let's compare the effects estimated by the linear mixed model `exp5c_m1` with a linear model that ignores donor.
+Let's compare the effects estimated by the linear mixed model `fig5c_m1` with a linear model that ignores donor.
 
-```{r lmm-exp5c-m2, echo=TRUE}
-exp5c_m2 <- lm(glucose_uptake ~ treatment * activity,
-           data = exp5c)
+```{r lmm-fig5c-m2, echo=TRUE}
+fig5c_m2 <- lm(glucose_uptake ~ treatment * activity,
+           data = fig5c)
 
 ```
 
-```{r lmm-exp5c_fixed, echo = FALSE}
-exp5c_m2_emm <- emmeans(exp5c_m2, specs = c("treatment", "activity"))
-exp5c_m2_planned <- contrast(exp5c_m2_emm,
+```{r lmm-fig5c_fixed, echo = FALSE}
+fig5c_m2_emm <- emmeans(fig5c_m2, specs = c("treatment", "activity"))
+fig5c_m2_planned <- contrast(fig5c_m2_emm,
                        method = list(
                          "(Scr EPS) - (Scr Basal)" = c(scr_eps - scr_basal),
                          "(siNR4A3 EPS) - (siNR4A3 Basal)" = c(siNR4A3_eps - siNR4A3_basal),
@@ -1585,20 +1645,28 @@ exp5c_m2_planned <- contrast(exp5c_m2_emm,
   summary(infer = TRUE)
 ```
 
-```{r lmm-exp5c-why2, echo=FALSE, fig.cap="A. Inference from a linear mixed model with blocking factor (donor) added as a random intercept. B. Inference from a fixed effects model."}
-gg1 <- ggplot_the_effects(exp5c_m1,
-                 exp5c_m1_planned,
+```{r}
+#| label: fig-lmm-fig5c-why2
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 7
+#| fig-height: 3
+#| fig-cap: "A. Inference from a linear mixed model with blocking factor (donor) added as a random intercept. B. Inference from a fixed effects model."
+#| 
+gg1 <- ggplot_the_effects(fig5c_m1,
+                 fig5c_m1_planned,
                  effect_label = "Difference in Glucose uptake\n(pmol per min)")
 
-gg2 <- ggplot_the_effects(exp5c_m2,
-                 exp5c_m2_planned,
+gg2 <- ggplot_the_effects(fig5c_m2,
+                 fig5c_m2_planned,
                  effect_label = "Difference in Glucose uptake\n(pmol per min)")
 
 plot_grid(gg1, gg2, ncol=1, labels = "AUTO")
 
 ```
 
-Figure \@ref(fig:lmm-exp5c-why2)A is a plot of the effects from the linear mixed model that models the correlated error due to donor. Figure \@ref(fig:lmm-exp5c-why2)B is a plot of the effects from the fixed effect model that ignores the correlated error due to donor. Adding $\texttt{donor}$ as a factor to the linear model increases the precision of the estimate of the treatment effects by eliminating the among-donor component of variance from the error variance.
+@fig-lmm-fig5c-why2 A is a plot of the effects from the linear mixed model that models the correlated error due to donor. @fig-lmm-fig5c-why2 B is a plot of the effects from the fixed effect model that ignores the correlated error due to donor. Adding $\texttt{donor}$ as a factor to the linear model increases the precision of the estimate of the treatment effects by eliminating the among-donor component of variance from the error variance.
 
 ## Example 5 -- GRCBD Experiments with replication (exp1g) {#sec-lmm-example4}
 
@@ -1852,7 +1920,15 @@ exp1g_response <- factor_wrap(exp1g_response)
 # exp1g_response
 ```
 
-```{r echo = FALSE, fig.dim=harrell_dim*small_scale, fig.cap="Treatment effect on germinal center (GC) formation. Small, pale, colored dots are independent experiments. Intermediate size colored dots are experiment means."}
+```{r}
+#| label: fig-lmm-1g
+#| echo: false
+#| warning: false
+#| eval: true
+#| fig-width: 8
+#| fig-height: 4
+#| fig-cap: "Treatment effect on germinal center (GC) formation. Small, pale, colored dots are independent experiments. Intermediate size colored dots are experiment means."
+#| 
 plot_grid(exp1g_effects, exp1g_response,
           nrow=2,
           align = "v",
@@ -2084,22 +2160,22 @@ Source figure: Figure 1f
 
 The experiment for Fig. is a 3 x 2 factorial designed arranged as a split plot design. Donor cells are randomly assigned to one of three levels of the factor `treatment` (αGFP, αpm, αpm+HM). Within a donor, cells are divided into two levels of the factor `glucose` (low, high). In the languague of Split Plot experiments, `treatment` is the Main Plot factor, because each replication is a unique donor. And, `glucose` is the Subplot factor, because both levels are within each Main plot. Note that in a split plot design, non-independence is only within a level of the Main Plot. If the design were blocked, a donor would be split between all combinations of `treatment:glucose` but here, a donor is only split among glucose *within* a `treatment` level (aGFP or aPM or aPM_HM).
 
-Factor variables
+**Factor variables**
 
 1. Factor 1 (Main plot): `treatment`
-* αGFP -- the control (gfp inserted via virus)
-* αpm -- PDX1 + MAFA (inserted via virus)
-* αpm+HM -- αpm + HM
+* αGFP -- the control
+* αpm -- PDX1 + MAFA.
+* αpm+HM -- αpm + HM. 
 2. Factor 2 (Subplot) `glucose`
 * low -- 3 mmol glucose
 * high -- 20 mmol glucose
 
 Response variable: c-peptide (fmol per $10^3$ cells per hour)
 
-Background
+**Biological Background**
 
-1. [Pdx1](https://en.wikipedia.org/wiki/PDX1) and [MafA](https://en.wikipedia.org/wiki/MAFA_(gene)) are transcription factors that stimulate differentiation of pancreatic cells into insulin-secreting beta cells.
-2. HM is a combination of human mesenchymal stem cells (MSCs) and human umbilical vein endothelial cells (HUVECs)
+1. [Pdx1](https://en.wikipedia.org/wiki/PDX1) and [MafA](https://en.wikipedia.org/wiki/MAFA_(gene)) are transcription factors that stimulate differentiation of pancreatic alpha cells into insulin-secreting beta cells.
+2. HM is a combination of human mesenchymal stem cells (MSCs) and human umbilical vein endothelial cells (HUVECs) and provide the appropriate environment for the alpha cells to produce insulin.
 3. c-peptide is a stretch of amino-acids in between the alpha and beta subunits of insulin in the pro-insulin protein. Within the secretory vesicle, the c-peptide is cleaved leaving the alpha and beta subunits to form the insulin protein. c-peptide and insulin are secreted 1:1 so measures of c-peptide are markers of insulin secretion.
 
 ```{r import}
@@ -3269,7 +3345,7 @@ plot_grid(exp1g_plot_a, exp1g_plot_b, ncol=2)
 # this is the rm-ANOVA
 m1 <- aov_4(glucose_uptake ~ treatment * activity +
               (treatment * activity | donor),
-            data = exp5c)
+            data = fig5c)
 
 # lmm equivalent
 
@@ -3277,14 +3353,14 @@ m2 <- lmer(glucose_uptake ~ treatment * activity +
          (1 | donor) +
          (1 | donor:treatment) +
          (1 | donor:activity),
-       data = exp5c)
+       data = fig5c)
 
 # random intercept and slope model that is *not* equivalent
 # this isn't solvable because there is no subsampling
 
 m3 <- lmer(glucose_uptake ~ treatment * activity +
               (treatment * activity | donor),
-            data = exp5c)
+            data = fig5c)
 
 ```
 
@@ -3300,20 +3376,20 @@ Use the multivariate model unless you want to replicate the result of someone wh
 
 ```{r}
 # default mode -- should be multivariate
-exp5c_aov <- aov_4(glucose_uptake ~ treatment * activity +
+fig5c_aov <- aov_4(glucose_uptake ~ treatment * activity +
                     (treatment * activity | donor),
-                  data = exp5c)
+                  data = fig5c)
 
 # force aov_4 to compute univariate model
-exp5c_rmaov.mul <- aov_4(glucose_uptake ~ treatment * activity +
+fig5c_rmaov.mul <- aov_4(glucose_uptake ~ treatment * activity +
                     (treatment * activity | donor),
-                  data = exp5c,
+                  data = fig5c,
                   include_aov = TRUE)
 
 # explicitly exclude the univariate model
-exp5c_aov1 <- aov_4(glucose_uptake ~ treatment * activity +
+fig5c_aov1 <- aov_4(glucose_uptake ~ treatment * activity +
                     (treatment * activity | donor),
-                  data = exp5c,
+                  data = fig5c,
                   include_aov = FALSE)
 ```
 
@@ -3327,16 +3403,16 @@ Notes
 ```{r}
 # These three should give equivalent results
 
-# exp5c_aov was fit with the default -- multivariate model only
-emmeans(exp5c_aov,
+# fig5c_aov was fit with the default -- multivariate model only
+emmeans(fig5c_aov,
         specs = c("treatment", "activity")) |>
   contrast(method = "revpairwise",
            simple = "each",
            combine = TRUE,
            adjust = "none")
 
-# exp5c_aov included the univariate model but the default is still the multivariate model
-emmeans(exp5c_rmaov.mul,
+# fig5c_aov included the univariate model but the default is still the multivariate model
+emmeans(fig5c_rmaov.mul,
         specs = c("treatment", "activity")) |>
   contrast(method = "revpairwise",
            simple = "each",
@@ -3344,7 +3420,7 @@ emmeans(exp5c_rmaov.mul,
            adjust = "none")
 
 # passing `model = "multivariate"` makes the model choice transparent
-emmeans(exp5c_rmaov.mul,
+emmeans(fig5c_rmaov.mul,
         specs = c("treatment", "activity"),
         model = "multivariate") |>
   contrast(method = "revpairwise",
@@ -3357,13 +3433,13 @@ emmeans(exp5c_rmaov.mul,
 
 Notes
 
-1. If our rmANOVA model is fit with the default specification (`exp5c_rmaov.mul`), we can get the multivariate output using the `model = "multivariate"` argument within `emmeans` (not the `contrast` function!). Or, if our fit excluded the univariate model (`exp5c_aov1`), then we don't need the `model` argument.
+1. If our rmANOVA model is fit with the default specification (`fig5c_rmaov.mul`), we can get the multivariate output using the `model = "multivariate"` argument within `emmeans` (not the `contrast` function!). Or, if our fit excluded the univariate model (`fig5c_aov1`), then we don't need the `model` argument.
 
 **contrasts from univariate model**
 
 ```{r}
 # get the univariate model results using $aov
-emmeans(exp5c_rmaov.mul$aov, specs = c("treatment", "activity")) |>
+emmeans(fig5c_rmaov.mul$aov, specs = c("treatment", "activity")) |>
   contrast(method = "revpairwise",
            simple = "each",
            combine = TRUE,
@@ -3372,13 +3448,13 @@ emmeans(exp5c_rmaov.mul$aov, specs = c("treatment", "activity")) |>
 
 Notes
 
-1. Passing `exp5c_rmaov.mul` to `emmeans` will return the contrasts from the multivariate. change this to the univariate model by passing `exp5c_rmaov.mul$aov`.
+1. Passing `fig5c_rmaov.mul` to `emmeans` will return the contrasts from the multivariate. change this to the univariate model by passing `fig5c_rmaov.mul$aov`.
 
 #### The ANOVA table
 
 ```{r}
-nice(exp5c_rmaov.mul, correction = "GG")
-nice(exp5c_rmaov.mul, correction = "none")
+nice(fig5c_rmaov.mul, correction = "GG")
+nice(fig5c_rmaov.mul, correction = "none")
 ```
 
 Notes
@@ -3733,14 +3809,14 @@ if(readit == TRUE){
 ```
 
 ## Hidden code
-### Import exp5c
+### Import fig5c
 
-```{r lmm-exp5c-import-show, echo = TRUE}
+```{r lmm-fig5c-import-show, echo = TRUE}
 data_from <- "Transcriptomic profiling of skeletal muscle adaptations to exercise and inactivity"
 file_name <- "41467_2019_13869_MOESM6_ESM.xlsx"
 file_path <- here(data_folder, data_from, file_name)
 
-exp5c_wide <- read_excel(file_path,
+fig5c_wide <- read_excel(file_path,
                          sheet = "Fig5c",
                          range = "A2:M3",
                          col_names = FALSE) |>
@@ -3748,17 +3824,17 @@ exp5c_wide <- read_excel(file_path,
   transpose(make.names = 1)
 
 activity_levels <- c("Basal", "EPS")
-treatment_levels <- names(exp5c_wide)
-exp5c_wide[, activity := rep(activity_levels, each = 6)]
-exp5c_wide[, activity := factor(activity, levels = activity_levels)]
+treatment_levels <- names(fig5c_wide)
+fig5c_wide[, activity := rep(activity_levels, each = 6)]
+fig5c_wide[, activity := factor(activity, levels = activity_levels)]
 
-exp5c <- melt(exp5c_wide,
+fig5c <- melt(fig5c_wide,
               id.vars = "activity",
               variable.name = "treatment",
               value.name = "glucose_uptake")
-exp5c[, treatment := factor(treatment, levels = treatment_levels)]
+fig5c[, treatment := factor(treatment, levels = treatment_levels)]
 
-exp5c[, donor := rep(paste0("donor_", 1:6), 4)]
+fig5c[, donor := rep(paste0("donor_", 1:6), 4)]
 ```
 
 ### Import exp1g
