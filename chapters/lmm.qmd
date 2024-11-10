@@ -1260,7 +1260,7 @@ Source figure: [Fig. 5c](https://www.nature.com/articles/s41467-019-13869-w#Fig5
 Source data: [Source Data Fig. 5](https://www.nature.com/articles/s41467-019-13869-w#Sec27){target="_blank"}
 
 
-```{r lmm-fig5c-import, echo = FALSE}
+```{r lmm-fig5c-import, echo = FALSE, message=FALSE, warning=FALSE}
 data_from <- "Transcriptomic profiling of skeletal muscle adaptations to exercise and inactivity"
 file_name <- "41467_2019_13869_MOESM6_ESM.xlsx"
 file_path <- here(data_folder, data_from, file_name)
@@ -1311,7 +1311,7 @@ The plot shows a strong donor effect.
 
 ### Model fit and inference {#lmm-fig5c-m1}
 
-```{r lmm-fig5c_m1}
+```{r lmm-fig5c_m1, warning=FALSE, message=FALSE}
 fig5c.ri <- lmer(glucose_uptake ~ treatment * activity +
                    (1 | donor),
                  data = fig5c)
@@ -1359,9 +1359,8 @@ fig5c_m1 <- fig5c.ce
 
 The boundary warnings indicate a variance component with no estimated variance, so these are excluded. There is trivial difference in AIC between fig5c_lmm.ri and fig5c_lmm2.rii and fig5c_ce <2 units from these. I recommend choosing to report the most maximal model (fig5c_ce or fig5c_rmaov.mul).
 
-### Inference comparison among models
 
-```{r}
+```{r, echo=FALSE, eval=FALSE}
 fig5c.ri_emm <- emmeans(fig5c.ri, specs = c("treatment", "activity"))
 fig5c.ri_pairs <- contrast(fig5c.ri_emm,
                                method = "revpairwise",
@@ -1399,7 +1398,6 @@ fig5c.rii2_pairs
 fig5c.ce_pairs
 fig5c.rmaov_pairs
 ```
-
 
 ```{r lmm-fig5c_emm}
 fig5c_m1_emm <- emmeans(fig5c_m1, specs = c("treatment", "activity"))
