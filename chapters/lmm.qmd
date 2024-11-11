@@ -543,7 +543,17 @@ lmm.sp2 <-  lmer(y ~ factor1 * factor2 + main_plot_id + (1 | main_plot_id:factor
 # the two versions are numerically equivalent
 ```
             
-#### ANOVA models ("mixed models", "repeated measures ANOVA")
+#### ANOVA models
+##### Nested ANOVA
+
+```{r, class.source = "fold-show", eval=FALSE}
+# nest_id is the batch containing the subsampled replicates
+naov <- aov_4(y ~ treatment + (1 | nest_id),
+              fun_aggregate = mean,
+              data = figx)
+```
+
+
 ##### Univariate repeated measures ANOVA
 
 ```{r, class.source = "fold-show", eval=FALSE}
@@ -557,14 +567,14 @@ rmaov.uni <- aov_4(y ~ treatment + (treatment | block),
 
 ```{r, class.source = "fold-show", eval=FALSE}
 # the factor treatment contains all combinations of factor 1 and factor 2
-rmaov.uni1 <- aov_4(y ~ treatment + (treatment | block),
+rmaov.uni1x <- aov_4(y ~ treatment + (treatment | block),
            include_aov = TRUE,
              data = figx)
 # requires the argument model = "univariate" in the emmeans function
 ```
 
 ```{r, class.source = "fold-show", eval=FALSE}
-rmaov.uni2 <- aov_4(y ~ factor1 * factor2 + (factor1 * factor2 | block),
+rmaov.uni2x <- aov_4(y ~ factor1 * factor2 + (factor1 * factor2 | block),
            include_aov = TRUE,
              data = figx)
 # requires the argument model = "univariate" in the emmeans function
@@ -605,11 +615,11 @@ ppttm <- pptt(y ~ treatment + (1 | block),
 
 1. lmm.ri -- random intercept model
 2. lm.agg -- linear model of batch means 
+3. naov -- nested ANOVA
 
 Notes
 
-1. These are numerically equivalent and should result in the same estimates, SE, CIs, and p-values
-2. These are equivalent to a **Nested t-test** or **Nested ANOVA**
+1. These are numerically equivalent if the design is balanced
 
 ### RCBD
 #### Statistical models for single factor RCBD
@@ -1251,7 +1261,7 @@ Notes
 
 ## Example 4 -- RCBD with two factors (fig5c)
 
-Example 4 is similar to example 2 in that there is no subsampling replication and we cannot add random slopes to the linear mixed model. But, because example 3 is a factorial design with two factors, there is replication within each factor within a block. Consequently, there are several alternative models with different sets of random intercepts. The reported model includes two random intercepts, one of which models differences in batch effects among treatment levels (treatment by batch interactions). This **interaction intercept** is an alternative to random slope for modeling treatment by batch interactions.
+The data for Example 4 are from Figure 5c, which is a 2 x 2 factorial design with factors $\texttt{treatment}$ and $\texttt{activity}$. While there is no replication of $\texttt{treatment:activity}$ combinations within a block, there are two measures of each factor level within a block and these two measures can act as a kind of replicate. Consequently, we can fit **interaction intercept** models.
 
 [Transcriptomic profiling of skeletal muscle adaptations to exercise and inactivity](https://www.nature.com/articles/s41467-019-13869-w){target="_blank"}
 
@@ -1288,7 +1298,7 @@ fig5c[, donor := rep(paste0("donor_", 1:6), 4)]
 
 ### Understand the data
 
-The data for Example 1 are from Figure 5c. Six muscle source cells were used to start six independent cultures. Cells from each culture were treated with either a negative control ("Scr") or a siRNA ("siNR4A3") that "silences" expression of the NR4A3 gene product by [cleaving the mRNA](https://en.wikipedia.org/wiki/Small_interfering_RNA){target="_blank"}. Glucose uptake in the two cell types was measured at rest ("Basal") and during electrical pulse stimulation ("EPS").
+The data for Example 4 are from Figure 5c. Six muscle source cells were used to start six independent cultures. Cells from each culture were treated with either a negative control ("Scr") or a siRNA ("siNR4A3") that "silences" expression of the NR4A3 gene product by [cleaving the mRNA](https://en.wikipedia.org/wiki/Small_interfering_RNA){target="_blank"}. Glucose uptake in the two cell types was measured at rest ("Basal") and during electrical pulse stimulation ("EPS").
 
 The design is a $2 \times 2$ [Randomized complete block with no subsampling](https://en.wikipedia.org/wiki/Blocking_(statistics)#Randomized_block_design){target="_blank"}. There are two factors each with two levels: $\texttt{treatment}$ ("Scr", "siNR4A3") and $\texttt{activity}$ ("Basal", "EPS"). Each source cell is a block. All four treatment combinations were measured once per block.
 
@@ -1564,7 +1574,7 @@ Notes
 
 1. Many researchers might look at the wide confidence intervals relative to the short distance between the means and think "no effect". The confidence intervals are correct, they simply are *not* meant to be tools for inferring anything about differences in means. This is one of many reasons why plots of means and error bars can be misleading for inference, despite the ubiquity of their use for communicating results. And, its why I prefer the [effects-and-response plots](@fig-lmm-fig5c-effects), which explicitly communicate correct inference about effects.
 
-### Why we care about modeling batch in fig5c
+### Why we care about modeling the blocks in fig5c
 
 @fig-lmm-fig5c-why shows the modeled means of the four treatment combinations and the individual values colored by donor. It is pretty easy to see that the glucose uptake values for donors 4 and 5 are well above the mean for all four treatments. And, the values for donors 1, 2, and 3 are well below the mean for all four treatments. The values for donor 6 are near the mean for all four treatments.
 
@@ -1580,7 +1590,7 @@ ggptm(fig5c_m1, fig5c_m1_emm, fig5c_m1_planned[1:2,],
 #| echo: false
 #| warning: false
 #| eval: true
-#| fig-width: 7
+#| fig-width: 6
 #| fig-height: 3
 #| fig-cap: "Why we care about blocking. The black dots are the modeled means of each treatment combination. The colored dots are the measured values of the response for each donor. The position of a donor relative to the mean is easy to see with these data."
 #| 
@@ -1599,9 +1609,9 @@ gg <- ggplot(data = fig5c,
            y = glucose_uptake,
            color = donor)) +
   
-  # geom_line(aes(group = donor),
-  #           position = position_dodge(pd_width),
-  #           color = "gray") +
+  geom_line(aes(group = donor),
+            position = position_dodge(pd_width),
+            color = "gray") +
   geom_point(position = position_dodge(pd_width),
              size = 2) +
   
@@ -2271,7 +2281,7 @@ if(error_type == "power"){
 save_file_path <- here(data_from, outfile_name)
 
 
-param_sets <- 3
+
 treatment_levels <- c("Cn", "Tr1", "Tr2")
 model_levels <- c("lm.crd", "lm.fe", "rmaov.mul", "rmaov.uni1", "ppttm", "lmm.ce")
 
@@ -2392,7 +2402,7 @@ if(do_sim == TRUE){
         contrast(method = "revpairwise", adjust = "none")
       rmaov.mul_pairs <- emmeans(rmaov.uni, specs = "treatment", model = "multivariate") |>
         contrast(method = "revpairwise", adjust = "none")
-      aov1_pairs <- emmeans(rmaov.uni, specs = "treatment", model = "univariate") |>
+      rmaov.uni1x_pairs <- emmeans(rmaov.uni, specs = "treatment", model = "univariate") |>
         contrast(method = "revpairwise", adjust = "none")
       ppttm_pairs <- pptt(form_pptt, data = fake_rcbd_means)
       
@@ -2409,25 +2419,25 @@ if(do_sim == TRUE){
       lm.crd_p <- summary(lm.crd_pairs)[, "p.value"]
       lm.fe_p <- summary(lm.fe_pairs)[, "p.value"]
       rmaov.mul_p <- summary(rmaov.mul_pairs)[, "p.value"]
-      aov1_p <- summary(aov1_pairs)[, "p.value"]
+      rmaov.uni1x_p <- summary(rmaov.uni1x_pairs)[, "p.value"]
       pptt_p <- pptt_pairs[, p.value]
       
       p1_mat[i, 1] <- lm.crd_p[1]
       p1_mat[i, 2] <- lm.fe_p[1]
       p1_mat[i, 3] <- rmaov.mul_p[1]
-      p1_mat[i, 4] <- aov1_p[1]
+      p1_mat[i, 4] <- rmaov.uni1x_p[1]
       p1_mat[i, 5] <- pptt_p[1]
       
       p2_mat[i, 1] <- lm.crd_p[2]
       p2_mat[i, 2] <- lm.fe_p[2]
       p2_mat[i, 3] <- rmaov.mul_p[2]
-      p2_mat[i, 4] <- aov1_p[2]
+      p2_mat[i, 4] <- rmaov.uni1x_p[2]
       p2_mat[i, 5] <- pptt_p[2]
       
       p3_mat[i, 1] <- lm.crd_p[3]
       p3_mat[i, 2] <- lm.fe_p[3]
       p3_mat[i, 3] <- rmaov.mul_p[3]
-      p3_mat[i, 4] <- aov1_p[3]
+      p3_mat[i, 4] <- rmaov.uni1x_p[3]
       p3_mat[i, 5] <- pptt_p[3]
       
       if(!is.null(lmm.ce)){
@@ -2594,7 +2604,7 @@ This simulation is similar to that above.
 4. There is no among block or treatment:block variance, giving rise to zero correlated error.
 
 
-```{r rcbd-performance-2x2, warning=FALSE, message=FALSE, error=FALSE, echo = FALSE}
+```{r rcbd-performance-2x2, warning=FALSE, message=FALSE, error=FALSE, echo=FALSE}
 seed_starter <- 0
 n_sims <- 500
 do_sim <- FALSE
@@ -2614,12 +2624,11 @@ if(error_type == "power"){
 save_file_path <- here(data_from, outfile_name)
 
 
-param_sets <- 3
 fac1_levels <- c("CD", "HFD")
 fac2_levels <- c("Sal", "Treat")
 fac_table <- expand.grid(fac1_levels, fac2_levels)
 treatment_levels <- paste(fac_table[, 1], fac_table[, 2])
-model_levels <- c("lm.crd", "lm.fe", "lmm.rii", "rmaov.mul", "rmaov.uni", "rmaov.uni1", "pptt", "lmm.ce")
+model_levels <- c("lm.crd", "lm.fe", "lmm.rii", "lmm.ce", "rmaov.mul", "rmaov.uni2x", "rmaov.uni1x", "pptt")
 
 p1_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
 p2_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
@@ -2697,12 +2706,6 @@ if(do_sim == TRUE){
       sigma_exp.block.fac2 = sigma_exp.block.fac2_i, # sd among exp:block:treat
       sigma_rep = sigma_rep_i,
       sigma_ss = sigma_ss_i, # sd among subsamples within replication of treatment:block
-      # sigma_exp = 0, # sd among experiments
-      # sigma_exp.block = 0.1, # sd among exp:block (or block if n_exp = 1)
-      # sigma_exp.treat = 0, # sd among exp:treat
-      # sigma_exp.block.treat = c(0.1, 0.1, 0.1), # sd among exp:block:treat
-      # sigma_rep = 0.1,
-      # sigma_ss = 1, # sd among subsamples within replication of treatment:block
       fac1_names = fac1_levels,
       fac2_names = fac2_levels,
       block_name = "litter",
@@ -2725,7 +2728,7 @@ if(do_sim == TRUE){
         formula()
       form_lmm.ri <- paste(paste0("sim_", i), "~ diet * drug + (1 | litter)") |>
         formula()
-      form_lmm2 <- paste(paste0("sim_", i), "~ diet * drug + (1 | litter) + (1 | litter:diet)  + (1 | litter:drug)") |>
+      form_lmm.rii <- paste(paste0("sim_", i), "~ diet * drug + (1 | litter) + (1 | litter:diet)  + (1 | litter:drug)") |>
         formula()
       form_pptt <- paste(paste0("sim_1"), "~ treatment + (1 | litter)") |>
         formula()
@@ -2738,29 +2741,24 @@ if(do_sim == TRUE){
      
       lm.crd <- lm(form_lm.crd, data = fake_rcbd)
       lm.fe <- lm(form_lm.fe, data = fake_rcbd)
- #     lmm.ri <- lmer(form_lmm.ri, data = fake_rcbd)
+      lmm.rii <- lmer(form_lmm.rii, data = fake_rcbd)
       lmm.ce <- lme(form_lm.crd,
                   random = ~1 | litter,
-                  correlation = corSymm(form = ~ 1 | litter),
-                  weights = varIdent(form = ~ 1 | diet * drug),
+                  correlation = corCompSymm(form = ~ 1 | litter),
+                  weights = varIdent(form = ~ 1 | treatment),
                   data = fake_rcbd) |>
         try()
       if(inherits(lmm.ce, "try-error")){
         lmm.ce <- NULL
       }
  
-      # lmm.rii <- lmer(form_lmm2, data = fake_rcbd) |>
-      #   try()
-      # if(inherits(lmm.ce, "try-error")){
-      #   lmm.rii <- NULL
-      # }
      
       # rmaov.uni used for both multivariate (rmaov.mul) and univariate (rmaov.uni)
-      rmaov.uni <- aov_4(form_aov,
+      rmaov.mul <- aov_4(form_aov,
                     fun_aggregate = mean,
                     include_aov = TRUE,
                     data = fake_rcbd)
-      rmaov.uni1 <- aov_4(form_aov_flat,
+      rmaov.uni1x <- aov_4(form_aov_flat,
                       include_aov = TRUE,
                       data = fake_rcbd)
       
@@ -2768,15 +2766,13 @@ if(do_sim == TRUE){
         contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
       lm.fe_pairs <- emmeans(lm.fe, specs = c("diet", "drug")) |>
         contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-      # lmm.ri_pairs <- emmeans(lmm.ri, specs = c("diet", "drug")) |>
-      #   contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-      # lmm2_pairs <- emmeans(lmm.rii, specs = c("diet", "drug")) |>
-      #   contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-      rmaov.mul_pairs <- emmeans(rmaov.uni, specs = c("diet", "drug"), model = "multivariate") |>
+      lmm.rii_pairs <- emmeans(lmm.rii, specs = c("diet", "drug")) |>
         contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-      aov1_pairs <- emmeans(rmaov.uni, specs = c("diet", "drug"), model = "univariate") |>
+      rmaov.mul_pairs <- emmeans(rmaov.mul, specs = c("diet", "drug"), model = "multivariate") |>
         contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-      rmaov.uni1_pairs <- emmeans(rmaov.uni1, specs = c("treatment"), model = "univariate") |>
+      rmaov.uni2x_pairs <- emmeans(rmaov.mul, specs = c("diet", "drug"), model = "univariate") |>
+        contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+      rmaov.uni1x_pairs <- emmeans(rmaov.uni1x, specs = c("treatment"), model = "univariate") |>
         contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
   
       form_pptt <- paste(paste0("sim_1"), "~ treatment + (1 | litter)") |>
@@ -2797,53 +2793,58 @@ if(do_sim == TRUE){
 
       lm.crd_p <- summary(lm.crd_pairs)[, "p.value"]
       lm.fe_p <- summary(lm.fe_pairs)[, "p.value"]
+      lmm.rii_p <- summary(lmm.rii_pairs)[, "p.value"]
       rmaov.mul_p <- summary(rmaov.mul_pairs)[, "p.value"]
-      aov1_p <- summary(aov1_pairs)[, "p.value"]
-      rmaov.uni1_p <- summary(rmaov.uni1_pairs)[, "p.value"]
+      rmaov.uni2x_p <- summary(rmaov.uni2x_pairs)[, "p.value"]
+      rmaov.uni1x_p <- summary(rmaov.uni1x_pairs)[, "p.value"]
       pptt_p <- pptt_pairs[, p.value]
-      
+     
       p1_mat[i, 1] <- lm.crd_p[1]
       p1_mat[i, 2] <- lm.fe_p[1]
-      p1_mat[i, 3] <- rmaov.mul_p[1]
-      p1_mat[i, 4] <- aov1_p[1]
-      p1_mat[i, 5] <- rmaov.uni1_p[1]
-      p1_mat[i, 6] <- pptt_p[1]
+      p1_mat[i, 3] <- lmm.rii_p[1]
+      p1_mat[i, 5] <- rmaov.mul_p[1]
+      p1_mat[i, 6] <- rmaov.uni2x_p[1]
+      p1_mat[i, 7] <- rmaov.uni1x_p[1]
+      p1_mat[i, 8] <- pptt_p[1]
       
       p2_mat[i, 1] <- lm.crd_p[2]
       p2_mat[i, 2] <- lm.fe_p[2]
-      p2_mat[i, 3] <- rmaov.mul_p[2]
-      p2_mat[i, 4] <- aov1_p[2]
-      p2_mat[i, 5] <- rmaov.uni1_p[6]
-      p2_mat[i, 6] <- pptt_p[6]
+      p2_mat[i, 3] <- lmm.rii_p[2]
+      p2_mat[i, 5] <- rmaov.mul_p[2]
+      p2_mat[i, 6] <- rmaov.uni2x_p[2]
+      p2_mat[i, 7] <- rmaov.uni1x_p[2]
+      p2_mat[i, 8] <- pptt_p[6]
       
       p3_mat[i, 1] <- lm.crd_p[3]
       p3_mat[i, 2] <- lm.fe_p[3]
-      p3_mat[i, 3] <- rmaov.mul_p[3]
-      p3_mat[i, 4] <- aov1_p[3]
-      p3_mat[i, 5] <- rmaov.uni1_p[2]
-      p3_mat[i, 6] <- pptt_p[2]
+      p3_mat[i, 3] <- lmm.rii_p[3]
+      p3_mat[i, 5] <- rmaov.mul_p[3]
+      p3_mat[i, 6] <- rmaov.uni2x_p[3]
+      p3_mat[i, 7] <- rmaov.uni1x_p[3]
+      p3_mat[i, 8] <- pptt_p[2]
 
       p4_mat[i, 1] <- lm.crd_p[4]
       p4_mat[i, 2] <- lm.fe_p[4]
-      p4_mat[i, 3] <- rmaov.mul_p[4]
-      p4_mat[i, 4] <- aov1_p[4]
-      p4_mat[i, 5] <- rmaov.uni1_p[5]
-      p4_mat[i, 6] <- pptt_p[5]
+      p4_mat[i, 3] <- lmm.rii_p[4]
+      p4_mat[i, 5] <- rmaov.mul_p[4]
+      p4_mat[i, 6] <- rmaov.uni2x_p[4]
+      p4_mat[i, 7] <- rmaov.uni1x_p[4]
+      p4_mat[i, 8] <- pptt_p[5]
       
       if(!is.null(lmm.ce)){
         # lmm4_pairs <- emmeans(lmm.ce, specs = c("diet", "drug"), mode = "satterthwaite") |>
         #   contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-        lmm4_pairs <- emmeans(lmm.ce, specs = c("diet", "drug")) |>
+        lm.ce_pairs <- emmeans(lmm.ce, specs = c("diet", "drug")) |>
           contrast(method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-        p1_mat[i, 7] <- summary(lmm4_pairs)[1, "p.value"]
-        p2_mat[i, 7] <- summary(lmm4_pairs)[2, "p.value"]
-        p3_mat[i, 7] <- summary(lmm4_pairs)[3, "p.value"]
-        p4_mat[i, 7] <- summary(lmm4_pairs)[4, "p.value"]
+        p1_mat[i, 4] <- summary(lm.ce_pairs)[1, "p.value"]
+        p2_mat[i, 4] <- summary(lm.ce_pairs)[2, "p.value"]
+        p3_mat[i, 4] <- summary(lm.ce_pairs)[3, "p.value"]
+        p4_mat[i, 4] <- summary(lm.ce_pairs)[4, "p.value"]
       }else{
-        p1_mat[i, 7] <- NA
-        p2_mat[i, 7] <- NA
-        p3_mat[i, 7] <- NA
-        p4_mat[i, 7] <- NA
+        p1_mat[i, 4] <- NA
+        p2_mat[i, 4] <- NA
+        p3_mat[i, 4] <- NA
+        p4_mat[i, 4] <- NA
       }
       
       
@@ -2893,7 +2894,7 @@ data_from <- "simulations/grcbds/data"
 outfile_name <- "rcbd_type1-2x2.Rds"
 save_file_path <- here(data_from, outfile_name)
 big_table <- readRDS(file = save_file_path)
-model_levels <- c("lm.crd", "lm.fe", "lmm.rii", "rmaov.mul", "rmaov.uni", "rmaov.uni1", "pptt", "lmm.ce")
+model_levels <- c("lm.crd", "lm.fe", "lmm.rii", "lmm.ce", "rmaov.mul", "rmaov.uni2x", "rmaov.uni1x", "pptt")
 
 contrast_names <- c("HFD Sal - CD Sal", "HFD Treat - CD Treat",
                                    "CD Treat - CD Sal", "HFD Treat - HFD Sal")
@@ -2924,7 +2925,7 @@ setnames(out_table,
          names(out_table),
          c("Contrast", "Cor Error", model_levels))
 out_table |>
-  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 3, 3)) |>
+  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 3, 3, 3)) |>
   kable_styling() |>
   pack_rows("sim 1 - high correlated error", 1, 4) |>
   pack_rows("sim 2 - low correlated error", 5, 8) |>
@@ -2954,7 +2955,7 @@ data_from <- "simulations/grcbds/data"
 outfile_name <- "rcbd_power-2x2.Rds"
 save_file_path <- here(data_from, outfile_name)
 big_table <- readRDS(file = save_file_path)
-model_levels <- c("lm.crd", "lm.fe", "lmm.rii", "rmaov.mul", "rmaov.uni", "rmaov.uni1", "pptt", "lmm.ce")
+model_levels <- c("lm.crd", "lm.fe", "lmm.rii", "lmm.ce", "rmaov.mul", "rmaov.uni2x", "rmaov.uni1x", "pptt")
 
 contrast_names <- c("HFD Sal - CD Sal", "HFD Treat - CD Treat",
                                    "CD Treat - CD Sal", "HFD Treat - HFD Sal")
@@ -2987,69 +2988,13 @@ setnames(out_table,
          names(out_table),
          c("Contrast", "Cor Error", model_levels))
 out_table |>
-  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 3, 3)) |>
+  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 3, 3, 3)) |>
   kable_styling() |>
   pack_rows("sim 1 - high correlated error", 1, 4) |>
   pack_rows("sim 2 - low correlated error", 5, 8) |>
   pack_rows("sim 3 - equal correlated error", 9, 12) |>
   pack_rows("sim 4 - zero correlated error", 13, 16)
 
-```
-
-
-```{r rcbd-perforance-dissection, eval = FALSE, echo = FALSE}
-max_r <- 0.2
-p_mat <- big_table[sim_id == 1 & abs(r21) < max_r & abs(r31) < max_r & abs(r32) < max_r, .SD, .SDcols = paste0(model_levels, "_contrast_3")]
-p_mat <- big_table[sim_id == 1, .SD, .SDcols = paste0(model_levels, "_contrast_1")]
-
-p_mat |>
-  apply(2, pless)
-
-big_table[, pless_rmaov.mul_contrast_1 := ifelse(rmaov.mul_contrast_1 < 0.05, 1, 0)]
-big_table[, pless_rmaov.mul_contrast_3 := ifelse(rmaov.mul_contrast_3 < 0.05, 1, 0)]
-big_table[, pless_aov1_contrast_1 := ifelse(aov1_contrast_1 < 0.05, 1, 0)]
-big_table[, pless_aov1_contrast_3 := ifelse(aov1_contrast_3 < 0.05, 1, 0)]
-
-sim1_table <- data.table(r21 = seq(0,1,0.1),
-                         r32 = seq(0,1,0.1))
-
-# sim 1 - high heterogenous correlations
-m1 <- glm(pless_rmaov.mul_contrast_1 ~ r21,
-          family = binomial,
-          data = big_table[sim_id == 1,])
-sim1_table[, rmaov.mul_contrast_1 := predict(m1, sim1_table,
-                   type = "response")]
-m1 <- glm(pless_aov1_contrast_1 ~ r21,
-          family = binomial,
-          data = big_table[sim_id == 1,])
-sim1_table[, aov1_contrast_1 := predict(m1, sim1_table,
-                   type = "response")]
-m1 <- glm(pless_rmaov.mul_contrast_3 ~ r32,
-          family = binomial,
-          data = big_table[sim_id == 1,])
-sim1_table[, rmaov.mul_contrast_3 := predict(m1, sim1_table,
-                   type = "response")]
-m1 <- glm(pless_aov1_contrast_3 ~ r32,
-          family = binomial,
-          data = big_table[sim_id == 1,])
-sim1_table[, aov1_contrast_3 := predict(m1, sim1_table,
-                   type = "response")]
-
-# sim 4 zero correlation
-m1 <- glm(pless_rmaov.mul_contrast_1 ~ r21,
-          family = binomial,
-          data = big_table[sim_id == 4,])
-sim1_table[, rmaov.mul_contrast_1_sim4 := predict(m1, sim1_table,
-                   type = "response")]
-m1 <- glm(pless_aov1_contrast_1 ~ r21,
-          family = binomial,
-          data = big_table[sim_id == 4,])
-sim1_table[, aov1_contrast_1_sim4 := predict(m1, sim1_table,
-                   type = "response")]
-
-sim1_table |>
-  kable(digits = 3) |>
-  kable_styling()
 ```
 
 The major result is
