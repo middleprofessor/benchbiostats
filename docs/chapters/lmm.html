@@ -375,8 +375,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#so-which-model-and-why-a-simulation-to-help-decide" id="toc-so-which-model-and-why-a-simulation-to-help-decide" class="nav-link" data-scroll-target="#so-which-model-and-why-a-simulation-to-help-decide"><span class="header-section-number">14.14</span> So, which model, and why? A simulation to help decide</a>
   <ul>
-  <li><a href="#are-these-results-robust-for-a-2-x-2-design" id="toc-are-these-results-robust-for-a-2-x-2-design" class="nav-link" data-scroll-target="#are-these-results-robust-for-a-2-x-2-design"><span class="header-section-number">14.14.0.1</span> Are these results robust for a 2 x 2 design?</a></li>
-  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">14.14.0.2</span> TL;DR</a></li>
+  <li><a href="#single-factor-rcbd-models" id="toc-single-factor-rcbd-models" class="nav-link" data-scroll-target="#single-factor-rcbd-models"><span class="header-section-number">14.14.1</span> Single factor RCBD models</a></li>
+  <li><a href="#are-these-results-robust-for-a-2-x-2-rcbd" id="toc-are-these-results-robust-for-a-2-x-2-rcbd" class="nav-link" data-scroll-target="#are-these-results-robust-for-a-2-x-2-rcbd"><span class="header-section-number">14.14.2</span> Are these results robust for a 2 x 2 RCBD?</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">14.14.3</span> TL;DR</a></li>
   </ul></li>
   <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">14.15</span> Working in R</a>
   <ul>
@@ -2869,10 +2870,12 @@ Confidence level used: 0.95 </code></pre>
 </section>
 <section id="so-which-model-and-why-a-simulation-to-help-decide" class="level2" data-number="14.14">
 <h2 data-number="14.14" class="anchored" data-anchor-id="so-which-model-and-why-a-simulation-to-help-decide"><span class="header-section-number">14.14</span> So, which model, and why? A simulation to help decide</h2>
-<p>Two linear mixed modeling strategies would be</p>
+<section id="single-factor-rcbd-models" class="level3" data-number="14.14.1">
+<h3 data-number="14.14.1" class="anchored" data-anchor-id="single-factor-rcbd-models"><span class="header-section-number">14.14.1</span> Single factor RCBD models</h3>
+<p>With any design that creates non-independence, two linear mixed modeling strategies would be</p>
 <ol type="1">
-<li>Fit the most complete model first, if the model fails or has boundary warning because of too little variance at some level, then fit the next most complete model, and so on. This order would be lmm.ce, lmm.ri, lm.fe (lmm.ri and lm.fe are equivalent if the design is balanced).</li>
-<li>Fit all linear mixed models (lmm.ce, lmm.ri) and use a model selection method to choose the best model that balances completeness (controling type I error) and overfitting.</li>
+<li>Fit the maximal model first, if the model fails or has boundary warning because of too little variance at some level, then fit the next most maximal model, and so on. For a RCBD with &gt;2 groups, this order would be lmm.ce, lmm.ri, lm.fe (lmm.ri and lm.fe are equivalent if the design is balanced).</li>
+<li>Fit all linear mixed models and use a model selection method to choose the best model using a model selection method such as AIC.</li>
 </ol>
 <p>I suggest a third strategy, which I prefer. This is,</p>
 <ol start="3" type="1">
@@ -2900,10 +2903,10 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 <th style="text-align: right;" data-quarto-table-cell-role="th">Cor Error</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">lm.crd</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">lm.fe</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.mul</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.uni1</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">ppttm</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">lmm.ce</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.mul</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.uni1x</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ppttm</th>
 </tr>
 </thead>
 <tbody>
@@ -2915,30 +2918,30 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 <td style="text-align: right;">0.302</td>
 <td style="text-align: right;">0.050</td>
 <td style="text-align: right;">0.108</td>
+<td style="text-align: right;">0.070</td>
 <td style="text-align: right;">0.058</td>
 <td style="text-align: right;">0.108</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.070</td>
+<td style="text-align: right;">0.058</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
 <td style="text-align: right;">0.411</td>
 <td style="text-align: right;">0.024</td>
 <td style="text-align: right;">0.082</td>
+<td style="text-align: right;">0.064</td>
 <td style="text-align: right;">0.046</td>
 <td style="text-align: right;">0.082</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">0.046</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
 <td style="text-align: right;">0.657</td>
 <td style="text-align: right;">0.000</td>
 <td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.076</td>
 <td style="text-align: right;">0.072</td>
 <td style="text-align: right;">0.006</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.076</td>
+<td style="text-align: right;">0.072</td>
 </tr>
 <tr class="odd" data-grouplength="3">
 <td colspan="8" style="border-bottom: 1px solid"><strong>sim 2 - low correlated error</strong></td>
@@ -2948,30 +2951,30 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 <td style="text-align: right;">0.175</td>
 <td style="text-align: right;">0.052</td>
 <td style="text-align: right;">0.088</td>
+<td style="text-align: right;">0.076</td>
 <td style="text-align: right;">0.068</td>
 <td style="text-align: right;">0.088</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.076</td>
+<td style="text-align: right;">0.068</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
 <td style="text-align: right;">0.158</td>
 <td style="text-align: right;">0.684</td>
 <td style="text-align: right;">0.736</td>
+<td style="text-align: right;">0.698</td>
 <td style="text-align: right;">0.652</td>
 <td style="text-align: right;">0.736</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.698</td>
+<td style="text-align: right;">0.652</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
 <td style="text-align: right;">0.229</td>
 <td style="text-align: right;">0.726</td>
 <td style="text-align: right;">0.788</td>
+<td style="text-align: right;">0.876</td>
 <td style="text-align: right;">0.826</td>
 <td style="text-align: right;">0.788</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.876</td>
+<td style="text-align: right;">0.826</td>
 </tr>
 <tr class="odd" data-grouplength="3">
 <td colspan="8" style="border-bottom: 1px solid"><strong>sim 3 - equal correlated error</strong></td>
@@ -2981,30 +2984,30 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 <td style="text-align: right;">0.760</td>
 <td style="text-align: right;">0.000</td>
 <td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.059</td>
 <td style="text-align: right;">0.050</td>
 <td style="text-align: right;">0.054</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.050</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
 <td style="text-align: right;">0.773</td>
 <td style="text-align: right;">0.278</td>
 <td style="text-align: right;">0.904</td>
+<td style="text-align: right;">0.896</td>
 <td style="text-align: right;">0.874</td>
 <td style="text-align: right;">0.904</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.896</td>
+<td style="text-align: right;">0.874</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
 <td style="text-align: right;">0.766</td>
 <td style="text-align: right;">0.282</td>
 <td style="text-align: right;">0.912</td>
+<td style="text-align: right;">0.916</td>
 <td style="text-align: right;">0.882</td>
 <td style="text-align: right;">0.912</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.918</td>
+<td style="text-align: right;">0.882</td>
 </tr>
 <tr class="odd" data-grouplength="3">
 <td colspan="8" style="border-bottom: 1px solid"><strong>sim 4 - zero correlated error</strong></td>
@@ -3014,30 +3017,30 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 <td style="text-align: right;">0.045</td>
 <td style="text-align: right;">0.054</td>
 <td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.070</td>
 <td style="text-align: right;">0.046</td>
 <td style="text-align: right;">0.058</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.070</td>
+<td style="text-align: right;">0.046</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
 <td style="text-align: right;">0.020</td>
 <td style="text-align: right;">0.272</td>
 <td style="text-align: right;">0.268</td>
+<td style="text-align: right;">0.282</td>
 <td style="text-align: right;">0.232</td>
 <td style="text-align: right;">0.268</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.282</td>
+<td style="text-align: right;">0.232</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
 <td style="text-align: right;">-0.021</td>
 <td style="text-align: right;">0.310</td>
 <td style="text-align: right;">0.292</td>
+<td style="text-align: right;">0.302</td>
 <td style="text-align: right;">0.262</td>
 <td style="text-align: right;">0.292</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.302</td>
+<td style="text-align: right;">0.262</td>
 </tr>
 </tbody>
 </table>
@@ -3063,7 +3066,7 @@ Table&nbsp;14.1: Type I error rate the RCBD statistical models under different l
 <div id="tbl-lmm-rcbd-power" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lmm-rcbd-power-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;14.2: Power of the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+Table&nbsp;14.2: Power of the RCBD statistical models under different levels of correlation structure among the observations. Power is given for the (Tr2 - Cn) and (Tr2 - Tr1) contrasts. Type I error is given for the (Tr1 - Cn) contrast as the true effect is zero for this contrast. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
 </figcaption>
 <div aria-describedby="tbl-lmm-rcbd-power-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -3074,10 +3077,10 @@ Table&nbsp;14.2: Power of the RCBD statistical models under different levels of 
 <th style="text-align: right;" data-quarto-table-cell-role="th">Cor Error</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">lm.crd</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">lm.fe</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.mul</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.uni1</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">ppttm</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">lmm.ce</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.mul</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.uni1x</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ppttm</th>
 </tr>
 </thead>
 <tbody>
@@ -3086,132 +3089,132 @@ Table&nbsp;14.2: Power of the RCBD statistical models under different levels of 
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
-<td style="text-align: right;">0.302</td>
+<td style="text-align: right;">0.30</td>
 <td style="text-align: right;">0.050</td>
 <td style="text-align: right;">0.108</td>
+<td style="text-align: right;">0.070</td>
 <td style="text-align: right;">0.058</td>
 <td style="text-align: right;">0.108</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.070</td>
+<td style="text-align: right;">0.058</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
-<td style="text-align: right;">0.411</td>
+<td style="text-align: right;">0.41</td>
 <td style="text-align: right;">0.358</td>
 <td style="text-align: right;">0.486</td>
+<td style="text-align: right;">0.439</td>
 <td style="text-align: right;">0.396</td>
 <td style="text-align: right;">0.486</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.440</td>
+<td style="text-align: right;">0.396</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
-<td style="text-align: right;">0.657</td>
+<td style="text-align: right;">0.66</td>
 <td style="text-align: right;">0.268</td>
 <td style="text-align: right;">0.530</td>
+<td style="text-align: right;">0.942</td>
 <td style="text-align: right;">0.906</td>
 <td style="text-align: right;">0.530</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.940</td>
+<td style="text-align: right;">0.906</td>
 </tr>
 <tr class="odd" data-grouplength="3">
 <td colspan="8" style="border-bottom: 1px solid"><strong>sim 2 - low correlated error</strong></td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
-<td style="text-align: right;">0.175</td>
+<td style="text-align: right;">0.17</td>
 <td style="text-align: right;">0.052</td>
 <td style="text-align: right;">0.088</td>
+<td style="text-align: right;">0.076</td>
 <td style="text-align: right;">0.068</td>
 <td style="text-align: right;">0.088</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.076</td>
+<td style="text-align: right;">0.068</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
-<td style="text-align: right;">0.158</td>
+<td style="text-align: right;">0.16</td>
 <td style="text-align: right;">0.684</td>
 <td style="text-align: right;">0.736</td>
+<td style="text-align: right;">0.698</td>
 <td style="text-align: right;">0.652</td>
 <td style="text-align: right;">0.736</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.698</td>
+<td style="text-align: right;">0.652</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
-<td style="text-align: right;">0.229</td>
+<td style="text-align: right;">0.23</td>
 <td style="text-align: right;">0.726</td>
 <td style="text-align: right;">0.788</td>
+<td style="text-align: right;">0.876</td>
 <td style="text-align: right;">0.826</td>
 <td style="text-align: right;">0.788</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.876</td>
+<td style="text-align: right;">0.826</td>
 </tr>
 <tr class="odd" data-grouplength="3">
 <td colspan="8" style="border-bottom: 1px solid"><strong>sim 3 - equal correlated error</strong></td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
-<td style="text-align: right;">0.760</td>
+<td style="text-align: right;">0.76</td>
 <td style="text-align: right;">0.000</td>
 <td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.059</td>
 <td style="text-align: right;">0.050</td>
 <td style="text-align: right;">0.054</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.050</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
-<td style="text-align: right;">0.773</td>
+<td style="text-align: right;">0.77</td>
 <td style="text-align: right;">0.278</td>
 <td style="text-align: right;">0.904</td>
+<td style="text-align: right;">0.896</td>
 <td style="text-align: right;">0.874</td>
 <td style="text-align: right;">0.904</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.896</td>
+<td style="text-align: right;">0.874</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
-<td style="text-align: right;">0.766</td>
+<td style="text-align: right;">0.77</td>
 <td style="text-align: right;">0.282</td>
 <td style="text-align: right;">0.912</td>
+<td style="text-align: right;">0.916</td>
 <td style="text-align: right;">0.882</td>
 <td style="text-align: right;">0.912</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.918</td>
+<td style="text-align: right;">0.882</td>
 </tr>
 <tr class="odd" data-grouplength="3">
 <td colspan="8" style="border-bottom: 1px solid"><strong>sim 4 - zero correlated error</strong></td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
-<td style="text-align: right;">0.045</td>
+<td style="text-align: right;">0.05</td>
 <td style="text-align: right;">0.054</td>
 <td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.070</td>
 <td style="text-align: right;">0.046</td>
 <td style="text-align: right;">0.058</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.070</td>
+<td style="text-align: right;">0.046</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
-<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.02</td>
 <td style="text-align: right;">0.272</td>
 <td style="text-align: right;">0.268</td>
+<td style="text-align: right;">0.282</td>
 <td style="text-align: right;">0.232</td>
 <td style="text-align: right;">0.268</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.282</td>
+<td style="text-align: right;">0.232</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
-<td style="text-align: right;">-0.021</td>
+<td style="text-align: right;">-0.02</td>
 <td style="text-align: right;">0.310</td>
 <td style="text-align: right;">0.292</td>
+<td style="text-align: right;">0.302</td>
 <td style="text-align: right;">0.262</td>
 <td style="text-align: right;">0.292</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.302</td>
+<td style="text-align: right;">0.262</td>
 </tr>
 </tbody>
 </table>
@@ -3234,8 +3237,9 @@ Table&nbsp;14.2: Power of the RCBD statistical models under different levels of 
 </ol>
 <p>These results suggest lmm.ce is the preferred model. If lmm.ce fails, then it’s a toss-up between rmaov.mul/pptt and lmm.ri/rmaov.uni/lmm.ri.</p>
 <p>But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have poor type I error control under some conditions while lmm.ce and rmaov.mul/pptt have good error control under all conditions.</p>
-<section id="are-these-results-robust-for-a-2-x-2-design" class="level4" data-number="14.14.0.1">
-<h4 data-number="14.14.0.1" class="anchored" data-anchor-id="are-these-results-robust-for-a-2-x-2-design"><span class="header-section-number">14.14.0.1</span> Are these results robust for a 2 x 2 design?</h4>
+</section>
+<section id="are-these-results-robust-for-a-2-x-2-rcbd" class="level3" data-number="14.14.2">
+<h3 data-number="14.14.2" class="anchored" data-anchor-id="are-these-results-robust-for-a-2-x-2-rcbd"><span class="header-section-number">14.14.2</span> Are these results robust for a 2 x 2 RCBD?</h3>
 <p>This simulation is similar to that above.</p>
 <ol type="1">
 <li>High correlated error. There is heterogenous treatment:block variance giving rise to heterogenous correlated error among the pairs of treatments, ranging from intermediate to high magnitude.</li>
@@ -3741,8 +3745,8 @@ Table&nbsp;14.4: Power of the RCBD statistical models under different levels of 
 <p>These results suggest lmm.ce is the preferred model. If lmm.ce fails, then it’s a toss-up between rmaov.mul/pptt and lmm.ri/rmaov.uni/lmm.ri.</p>
 <p>But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have poor type I error control under some conditions while lmm.ce and rmaov.mul/pptt have good error control under all conditions.</p>
 </section>
-<section id="tldr" class="level4" data-number="14.14.0.2">
-<h4 data-number="14.14.0.2" class="anchored" data-anchor-id="tldr"><span class="header-section-number">14.14.0.2</span> TL;DR</h4>
+<section id="tldr" class="level3" data-number="14.14.3">
+<h3 data-number="14.14.3" class="anchored" data-anchor-id="tldr"><span class="header-section-number">14.14.3</span> TL;DR</h3>
 <ol type="1">
 <li>If the number of treatments = 2 and
 <ul>

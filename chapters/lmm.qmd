@@ -2280,11 +2280,12 @@ rmaov.sp_pairs
 ```
 
 ## So, which model, and why? A simulation to help decide
+### Single factor RCBD models
 
-Two linear mixed modeling strategies would be
+With any design that creates non-independence, two linear mixed modeling strategies would be
 
-1. Fit the most complete model first, if the model fails or has boundary warning because of too little variance at some level, then fit the next most complete model, and so on. This order would be lmm.ce, lmm.ri, lm.fe (lmm.ri and lm.fe are equivalent if the design is balanced).
-2. Fit all linear mixed models (lmm.ce, lmm.ri) and use a model selection method to choose the best model that balances completeness (controling type I error) and overfitting.
+1. Fit the maximal model first, if the model fails or has boundary warning because of too little variance at some level, then fit the next most maximal model, and so on. For a RCBD with >2 groups, this order would be lmm.ce, lmm.ri, lm.fe (lmm.ri and lm.fe are equivalent if the design is balanced).
+2. Fit all linear mixed models and use a model selection method to choose the best model using a model selection method such as AIC.
 
 I suggest a third strategy, which I prefer. This is,
 
@@ -2320,7 +2321,7 @@ save_file_path <- here(data_from, outfile_name)
 
 
 treatment_levels <- c("Cn", "Tr1", "Tr2")
-model_levels <- c("lm.crd", "lm.fe", "rmaov.mul", "rmaov.uni1", "ppttm", "lmm.ce")
+model_levels <- c("lm.crd", "lm.fe", "lmm.ce", "rmaov.mul", "rmaov.uni1x", "ppttm")
 
 p1_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
 p2_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
@@ -2441,7 +2442,7 @@ if(do_sim == TRUE){
         contrast(method = "revpairwise", adjust = "none")
       rmaov.uni1x_pairs <- emmeans(rmaov.uni, specs = "treatment", model = "univariate") |>
         contrast(method = "revpairwise", adjust = "none")
-      ppttm_pairs <- pptt(form_pptt, data = fake_rcbd_means)
+      pptt_pairs <- pptt(form_pptt, data = fake_rcbd_means)
       
      
       fake_rcbd[, y_res := residuals(lm.crd)]
@@ -2461,32 +2462,32 @@ if(do_sim == TRUE){
       
       p1_mat[i, 1] <- lm.crd_p[1]
       p1_mat[i, 2] <- lm.fe_p[1]
-      p1_mat[i, 3] <- rmaov.mul_p[1]
-      p1_mat[i, 4] <- rmaov.uni1x_p[1]
-      p1_mat[i, 5] <- pptt_p[1]
+      p1_mat[i, 4] <- rmaov.mul_p[1]
+      p1_mat[i, 5] <- rmaov.uni1x_p[1]
+      p1_mat[i, 6] <- pptt_p[1]
       
       p2_mat[i, 1] <- lm.crd_p[2]
       p2_mat[i, 2] <- lm.fe_p[2]
-      p2_mat[i, 3] <- rmaov.mul_p[2]
-      p2_mat[i, 4] <- rmaov.uni1x_p[2]
-      p2_mat[i, 5] <- pptt_p[2]
+      p2_mat[i, 4] <- rmaov.mul_p[2]
+      p2_mat[i, 5] <- rmaov.uni1x_p[2]
+      p2_mat[i, 6] <- pptt_p[2]
       
       p3_mat[i, 1] <- lm.crd_p[3]
       p3_mat[i, 2] <- lm.fe_p[3]
-      p3_mat[i, 3] <- rmaov.mul_p[3]
-      p3_mat[i, 4] <- rmaov.uni1x_p[3]
-      p3_mat[i, 5] <- pptt_p[3]
+      p3_mat[i, 4] <- rmaov.mul_p[3]
+      p3_mat[i, 5] <- rmaov.uni1x_p[3]
+      p3_mat[i, 6] <- pptt_p[3]
       
       if(!is.null(lmm.ce)){
         lmm4_pairs <- emmeans(lmm.ce, specs = "treatment") |>
           contrast(method = "revpairwise", adjust = "none")
-        p1_mat[i, 6] <- summary(lmm4_pairs)[1, "p.value"]
-        p2_mat[i, 6] <- summary(lmm4_pairs)[2, "p.value"]
-        p3_mat[i, 6] <- summary(lmm4_pairs)[3, "p.value"]
+        p1_mat[i, 3] <- summary(lmm4_pairs)[1, "p.value"]
+        p2_mat[i, 3] <- summary(lmm4_pairs)[2, "p.value"]
+        p3_mat[i, 3] <- summary(lmm4_pairs)[3, "p.value"]
       }else{
-        p1_mat[i, 6] <- lm.fe_p[1]
-        p2_mat[i, 6] <- lm.fe_p[2]
-        p3_mat[i, 6] <- lm.fe_p[3]
+        p1_mat[i, 3] <- NA
+        p2_mat[i, 3] <- NA
+        p3_mat[i, 3] <- NA
       }
       
       
@@ -2532,7 +2533,7 @@ data_from <- "simulations/grcbds/data"
 outfile_name <- "rcbd_type1.Rds"
 save_file_path <- here(data_from, outfile_name)
 big_table <- readRDS(file = save_file_path)
-model_levels <- c("lm.crd", "lm.fe", "rmaov.mul", "rmaov.uni1", "ppttm", "lmm.ce")
+model_levels <- c("lm.crd", "lm.fe", "lmm.ce", "rmaov.mul", "rmaov.uni1x", "ppttm")
 
 out_table <- data.table(NULL)
 for(param_set in 1:nrow(param_set_matrix)){
@@ -2579,13 +2580,13 @@ Combined, these results suggest that rmaov.mul/ppttm should be our preferred mod
 ```{r}
 #| label: tbl-lmm-rcbd-power
 #| echo: false
-#| tbl-cap: Power of the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+#| tbl-cap: Power of the RCBD statistical models under different levels of correlation structure among the observations. Power is given for the (Tr2 - Cn) and (Tr2 - Tr1) contrasts. Type I error is given for the (Tr1 - Cn) contrast as the true effect is zero for this contrast. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
 
 data_from <- "simulations/grcbds/data"
 outfile_name <- "rcbd_power.Rds"
 save_file_path <- here(data_from, outfile_name)
 big_table <- readRDS(file = save_file_path)
-model_levels <- c("lm.crd", "lm.fe", "rmaov.mul", "rmaov.uni1", "ppttm", "lmm.ce")
+model_levels <- c("lm.crd", "lm.fe", "lmm.ce", "rmaov.mul", "rmaov.uni1x", "ppttm")
 
 out_table <- data.table(NULL)
 for(param_set in 1:nrow(param_set_matrix)){
@@ -2608,7 +2609,7 @@ setnames(out_table,
          names(out_table),
          c("Contrast", "Cor Error", model_levels))
 out_table |>
-  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 4)) |>
+  kable(digits = c(1, 2, 3, 3, 3, 3, 3, 3)) |>
   kable_styling() |>
   pack_rows("sim 1 - high correlated error", 1, 3) |>
   pack_rows("sim 2 - low correlated error", 4, 6) |>
@@ -2631,7 +2632,7 @@ These results suggest lmm.ce is the preferred model. If lmm.ce fails, then it's 
 
 But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have poor type I error control under some conditions while lmm.ce and rmaov.mul/pptt have good error control under all conditions.
 
-#### Are these results robust for a 2 x 2 design?
+### Are these results robust for a 2 x 2 RCBD?
 
 This simulation is similar to that above.
 
@@ -3049,7 +3050,7 @@ These results suggest lmm.ce is the preferred model. If lmm.ce fails, then it's 
 But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have poor type I error control under some conditions while lmm.ce and rmaov.mul/pptt have good error control under all conditions.
 
 
-#### TL;DR
+### TL;DR
 
 1. If the number of treatments = 2 and
     * the design is balanced: it doesn't matter which method you use.
