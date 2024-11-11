@@ -1,11 +1,11 @@
-## ----setup, include=FALSE------------------------------------------------------------------------------------------------------
+## ----setup, include=FALSE--------------------------------------------------------------------------------------
 # wrangling
 library(data.table)
 library(stringr)
 
 # plot function
-library(ggsci)
 library(ggplot2)
+library(ggsci)
 library(ggpubr)
 library(ggforce)
 library(insight)
@@ -13,7 +13,7 @@ library(cowplot)
 
 
 
-## ----palettes------------------------------------------------------------------------------------------------------------------
+## ----palettes--------------------------------------------------------------------------------------------------
 # get some palettes
 pal_okabe_ito <- c(
   "#E69F00",
@@ -31,7 +31,7 @@ pal_jco <- pal_jco("default")(10)
 pal_frontiers <- pal_frontiers("default")(7)
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 remove_parentheses <- function(x){
   if(substr(x, 1, 1) == "("){
     x <- substr(x, 2, nchar(x))
@@ -61,7 +61,7 @@ sci_to_10 <- function(n) {
 }
 
 
-## ----ggcheck_the_qq, warning = FALSE-------------------------------------------------------------------------------------------
+## ----ggcheck_the_qq, warning = FALSE---------------------------------------------------------------------------
 ggcheck_the_qq = function(m1,
                    line = "robust",
                    n_boot = 200){
@@ -168,7 +168,7 @@ ggcheck_the_qq = function(m1,
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 
 ggcheck_the_glm_qq = function(m1,
                    n_sim = 250,
@@ -244,7 +244,7 @@ ggcheck_the_glm_qq = function(m1,
 
 
 
-## ----ggcheck_the_spreadlevel---------------------------------------------------------------------------------------------------
+## ----ggcheck_the_spreadlevel-----------------------------------------------------------------------------------
 ggcheck_the_spreadlevel <- function(m1,
                    n_boot = 200){
   n <- nobs(m1)
@@ -299,7 +299,7 @@ ggcheck_the_spreadlevel <- function(m1,
 }
 
 
-## ----ggcheck_the_model---------------------------------------------------------------------------------------------------------
+## ----ggcheck_the_model-----------------------------------------------------------------------------------------
 ggcheck_the_model <- function(m1){
   gg1 <- ggcheck_the_qq(m1)
   gg2 <- ggcheck_the_spreadlevel(m1)
@@ -307,7 +307,7 @@ ggcheck_the_model <- function(m1){
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 
 create_model_data <- function(
     data,
@@ -370,7 +370,7 @@ create_model_data <- function(
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 
 create_plot_data <- function(m1, ptm){
   gg_data <- get_data(m1) |>
@@ -405,7 +405,7 @@ create_plot_data <- function(m1, ptm){
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 create_emm_data <- function(m1_emm, ptm){
 
   if(is.data.frame(m1_emm) == TRUE){
@@ -416,6 +416,8 @@ create_emm_data <- function(m1_emm, ptm){
   }
   # create plot_factor column - this will be horizontal axis
   gg_emm[, plot_factor := get(ptm$factor1_label)]
+  gg_emm[, factor_1 := get(ptm$factor1_label) |>
+            factor()]
   if(ptm$two_factors == TRUE){
     gg_emm[, plot_factor := paste(get(ptm$factor1_label), get(ptm$factor2_label),
                                   sep = "\n")]
@@ -446,7 +448,7 @@ create_emm_data <- function(m1_emm, ptm){
 }
 
 
-## ----combine-contrasts---------------------------------------------------------------------------------------------------------
+## ----combine-contrasts-----------------------------------------------------------------------------------------
 combine_contrasts <- function(m1_pairs){
   part_1 <- m1_pairs[[1]]
   part_2 <- m1_pairs[[2]]
@@ -466,7 +468,7 @@ combine_contrasts <- function(m1_pairs){
 }
 
 
-## ----create-pairs-data---------------------------------------------------------------------------------------------------------
+## ----create-pairs-data-----------------------------------------------------------------------------------------
 create_pairs_data <- function(m1_pairs,
                               hide_pairs, # the rows to hide
                               ptm){
@@ -520,7 +522,7 @@ create_pairs_data <- function(m1_pairs,
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 create_nest_data <- function(m1, gg_data, ptm){
   gg_nest_data <- gg_data[, .(y = mean(get(ptm$response_label), na.rm = TRUE)),
                           by = c(ptm$factor1_label, ptm$factor1_label, "factor_1",
@@ -534,7 +536,7 @@ create_nest_data <- function(m1, gg_data, ptm){
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 # need to find maximum y-value from experimental reps, technical reps, or CIs
 add_y_pos <- function(gg_pairs, gg_data, gg_emm, gg_nest, ptm){
   if(ptm$nested == FALSE | (ptm$nested == TRUE & ptm$show_nest == TRUE)){
@@ -563,7 +565,7 @@ add_y_pos <- function(gg_pairs, gg_data, gg_emm, gg_nest, ptm){
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 get_ptm_parameters <- function(m1, m1_pairs){
   gg_data <- get_data(m1) |>
     data.table()
@@ -634,7 +636,7 @@ get_ptm_parameters <- function(m1, m1_pairs){
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 ggptm <- function(m1,
                   m1_emm,
                   m1_pairs,
@@ -647,7 +649,7 @@ ggptm <- function(m1,
                   jitter_spread = 0.8,
                   jitter_width = 0.2,
                   jitter_type = "density", # "none", "density", "jitter"
-                  palette = "pal_ggplot",
+                  palette = NULL,
                   y_label = NA,
                   y_units = NA,
                   x_axis_labels = NA,
@@ -735,32 +737,48 @@ ggptm <- function(m1,
                 aes(x = plot_factor_id,
                     y = y,
                     group = get(ptm$block_id)),
+                position = position_dodge(width = jitter_width),
                 color = "grey"
       )
   }
   
+  # show points
   if(ptm$nested == FALSE){
     # experimental reps
-    if(jitter_type == "density"){
+    if(ptm$blocked == TRUE & join_blocks == TRUE){
       gg <- gg +
-        geom_sina(data = gg_data,
-                  aes(x = plot_factor_id,
-                      y = y,
-                      color = factor_1),
-                  scale = "width",
-                  maxwidth = jitter_width,
-                  size = 4,
-                  show.legend = FALSE)
-    }
-    if(jitter_type == "jitter"){
-      gg <- gg +
-        geom_jitter(data = gg_data,
+        geom_point(data = gg_data,
+                   aes(x = plot_factor_id,
+                       y = y,
+                       color = factor_1,
+                       group = get(ptm$block_id)),
+                   position = position_dodge(width = jitter_width),
+                   size = 3,
+                   alpha = .5,
+                   show.legend = FALSE)
+    }else{
+      if(jitter_type == "density"){
+        gg <- gg +
+          geom_sina(data = gg_data,
                     aes(x = plot_factor_id,
                         y = y,
                         color = factor_1),
-                    width = jitter_width,
-                    size = 4,
+                    scale = "width",
+                    maxwidth = jitter_width,
+                    size = 3,
                     show.legend = FALSE)
+      }
+      if(jitter_type == "jitter"){
+        gg <- gg +
+          geom_jitter(data = gg_data,
+                      aes(x = plot_factor_id,
+                          y = y,
+                          color = factor_1),
+                      width = jitter_width,
+                      size = 3,
+                      show.legend = FALSE)
+      }
+      
     }
   }
   
@@ -772,7 +790,7 @@ ggptm <- function(m1,
                       y = nest_mean,
                       color = factor_1),
                   width = jitter_width,
-                  size = 4,
+                  size = 3,
                   show.legend = FALSE)
   }
   
@@ -784,18 +802,24 @@ ggptm <- function(m1,
                       y = mean,
                       ymin = lo,
                       ymax = hi,
-                      width =.1),
+                      width =.1,
+                      color = factor_1),
                   show.legend = FALSE) +
     geom_point(data = gg_emm,
                aes(x = plot_factor_id,
-                   y = mean),
+                   y = mean,
+                      color = factor_1),
                size = 4,
                show.legend = FALSE)
   
   # add some color
-  if(palette != "pal_ggplot"){
+  # if(palette != "pal_ggplot"){
+  #   gg <- gg +
+  #     scale_color_manual(values = get(palette))
+  # }
+  if(!is.null(palette)){
     gg <- gg +
-      scale_color_manual(values = get(palette))
+      scale_color_manual(values = palette)
   }
   
   # add p-value brackets
@@ -851,7 +875,7 @@ ggptm <- function(m1,
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 plot_response <- function(m1,
                           m1_emm,
                           m1_pairs,
@@ -892,7 +916,7 @@ plot_response <- function(m1,
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 geom_ancova <- function(m1){
   geom_smooth(method = "lm",
               se = FALSE,
@@ -902,7 +926,7 @@ geom_ancova <- function(m1){
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------------------------
 
 plot_the_ancova_model <- function(m1, m1_emm, m1_pairs){
   
@@ -987,7 +1011,7 @@ plot_the_ancova_model <- function(m1, m1_emm, m1_pairs){
 
 
 
-## ----output-as-R-file----------------------------------------------------------------------------------------------------------
+## ----output-as-R-file------------------------------------------------------------------------------------------
 # highlight and run to put update into R folder
 # knitr::purl("ggptm.Rmd")
 

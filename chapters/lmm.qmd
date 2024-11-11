@@ -806,7 +806,7 @@ ggptm(fig5b_lmm, fig5b_lmm_emm, fig5b_lmm_pairs,
       nest_id = "mouse",
       hide_pairs = 3,
       y_label = "Caspr Length (µm)",
-      palette = "pal_okabe_ito_blue")
+      palette = pal_okabe_ito_blue)
 ```
 
 
@@ -937,6 +937,7 @@ rmaov.mul_emm <- emmeans(rmaov.mul, specs = "genotype")
 rmaov.mul_pairs <- contrast(rmaov.mul_emm, method = "revpairwise") |>
   summary(infer = TRUE)
 rmaov.mul_pairs
+# notice the afex package doesn't like math symbols in group names
 ```
 
 ### pptt -- pairwise paired t-test
@@ -950,23 +951,29 @@ print(ppttm)
 ### Notes on the three models
  
 1. All inferential statistics are the same in all three models.
-2. A RM-ANOVA with two groups is equivalent to a random intercept linear mixed model. A paired *t*-test is a special case of a linear mixed model.
+2. A paired *t*-test is a special case of a linear mixed model. A RM-ANOVA with two groups is equivalent to a random intercept linear mixed model.
 3. rmaov.mul fits an ANOVA model even though there are only two groups. Yes ANOVA can be used with only two groups, and the statistics are exactly the same as with a *t*-test, but most people choose *t*-test and not ANOVA when there are only two groups.
 4. The random component of the model formula for the linear mixed model using `lmer` is `(1 | experiment_id)`. This is the notation for adding a random intercept. $\texttt{experiment\_id$ is a random factor and is added as a random intercept.
 5. There is potential for confusion in the formula for the RM-ANOVA model using `aov_4`. The afex package has three equivalent functions for fitting repeated measures ANOVA models, each function is targeted to users with different statistics backgrounds. This text uses the `aov_4` function which uses the `lmer` formula notation. For an RCBD experimental design, `aov_4` uses the `lmer` formula notation for a random intercept AND a random slope, which is `(genotype | experiment_id)`. No random intercept or slope is estimated in an ANOVA model but the notation is necessary to aggregate multiple values of $\texttt{experiment\_id}$ only within and not among $\texttt{genotype}$.
 
 ### Plot the model
 
-```{r echo=FALSE, eval=FALSE}
-ggptm(lmm.ri, lmm.ri_emm, lmm.ri_pairs,
-      join_blocks = TRUE,
-      block_id = "experiment_id",
-      jitter_width = .2)
-```
-
 ```{r}
 #| label: lmm-fig2c-ggplot
 #| echo: false
+
+ggptm(lmm.ri, lmm.ri_emm, lmm.ri_pairs,
+      join_blocks = TRUE,
+      block_id = "experiment_id",
+      jitter_width = .2,
+      y_label = "MFI",
+      palette = pal_okabe_ito)
+```
+
+```{r}
+#| label: lmm-fig2c-ggplot-manual
+#| echo: false
+#| eval: false
 
 # create a pretty p-value column
 lmm.ri_dt <- data.table(lmm.ri_pairs)
@@ -1018,15 +1025,46 @@ gg1 <- ggplot(data = fig2c,
 gg1
 ```
 
+### By modeling non-independence, the researchers gained free power
+
+
+```{r}
+#| label: lmm-fig2c-lm
+#| 
+lm1 <- lm(nr4a1 ~ genotype, data = fig2c)
+lm1_emm <- emmeans(lm1, specs = "genotype")
+lm1_pairs <- contrast(lm1_emm, method = "revpairwise") |>
+  summary(infer = TRUE)
+
+# combine with random intercept and compare
+model_table <- rbind(lmm.ri_pairs, lm1_pairs)
+model_table |>
+  kable(digits = c(1, 2, 2, 1, 2, 2, 2, 3)) |>
+  kable_styling() |>
+  pack_rows("lmm.ri:  random intercept model", 1, 1) |>
+  pack_rows("lm1:  linear model", 2, 2)
+```
+
+Notes
+
+1. The p-value for the linear model is 0.1426 while that of the random intercept model is 0.0217. Increased power will generally be the case with experimental bench biology data.
+2. More specifically, compared to the linear model, the random intercept model has increased precision of the effect estimate (a smaller SE) BUT also decreased degrees of freedom (df). The increased precision will always be the case if the correlated error is positive.
+3. Because of the increased precision but decreased df, there is a trade-off for inference using the linear mixed model (or classical equivalents) -- increased precision increases power but decreased df decreases power. With even modest sample size ($\sim 5$), the increased precision will overwhelm the decreased df and power will increase. Here there is increased power even with n = 3.
+
 ### Better Know the linear mixed model
 
 Intraclass correlation
 
 ```{r}
+#| label: lmm-fig2c-varcorr
+#| 
+
 VarCorr(lmm.ri)
 ```
 
 ```{r}
+#| label: lmm-fig2c-icc
+#| 
 lmm.ri_vc <- VarCorr(lmm.ri) |>
   data.frame() |>
   data.table()
@@ -1034,46 +1072,6 @@ among_var <- lmm.ri_vc[1, vcov]
 within_var <- lmm.ri_vc[2, vcov]
 icc <- among_var/(among_var + within_var)
 icc
-```
-
-```{r lmm-fig3-import-analysis, echo=FALSE, eval=FALSE}
-file_name <- "41586_2019_985_MOESM9_ESM.xlsx"
-file_path <- here(data_folder, data_from, file_name)
-genotype_levels <- c("WT", "TKO")
-fig3e_wide <- read_excel(file_path,
-                         sheet = "Fig 3",
-                         range = "G77:H83",
-                         col_names = TRUE) |>
-  data.table()
-fig3e_wide[, experiment_id := paste("exp", .I)]
-fig3e <- melt(fig3e_wide,
-              id.vars = "experiment_id",
-              measure.vars = genotype_levels,
-              variable.name = "genotype",
-              value.name = "pd1_mfi")
-fig3e[, genotype := factor(genotype, levels = genotype_levels)]
-
-lmm.ri <- lmer(pd1_mfi ~ genotype + (1 | experiment_id), data = fig3e)
-lmm.ri_emm <- emmeans(lmm.ri, specs = "genotype")
-lmm.ri_pairs <- contrast(lmm.ri_emm, method = "revpairwise") |>
-  summary(infer = TRUE)
-plot_response(lmm.ri, lmm.ri_emm, lmm.ri_pairs,
-              join_blocks = TRUE,
-              block_id = "experiment_id")
-VarCorr(lmm.ri)
-3396.6^2/(3396.6^2 + 1327^2)
-
-rmaov.mul <- aov_4(pd1_mfi ~ genotype + (genotype | experiment_id), data = fig3e)
-rmaov.mul_emm <- emmeans(rmaov.mul, specs = "genotype")
-rmaov.mul_pairs <- contrast(rmaov.mul_emm, method = "revpairwise") |>
-  summary(infer = TRUE)
-
-lmm.ri_pairs
-rmaov.mul_pairs
-
-lm.crd <- lm(pd1_mfi ~ genotype, data = fig3e)
-summary(lm.crd)$sigma
-sqrt(3396.6^2 + 1327^2)
 ```
 
 ## Example 3: RCBD with > 2 groups (classical equivalent: repeated measures ANOVA) {#sec-lmm-example2}
@@ -1133,11 +1131,14 @@ lmm.ri_pairs
 ### lmm.ce -- linear model for correlated error
 
 ```{r}
-# lmm.ris <- lme(nr4a1 ~ genotype,
-#                 random = ~1|experiment_id,
-#                 correlation = corSymm(form = ~ 1 | experiment_id),
-#                 weights = varIdent(form = ~ 1 | genotype),
-#                 data = fig2c_r)
+#| label: lmm-fig2c-r-lmm.ce
+#| eval: false
+
+lmm.ce <- lme(nr4a1 ~ genotype,
+                random = ~1|experiment_id,
+                correlation = corSymm(form = ~ 1 | experiment_id),
+                weights = varIdent(form = ~ 1 | genotype),
+                data = fig2c_r)
 ```
 
 ### rmaov.mul -- repeated measures ANOVA (RM-ANOVA), multivariate model
@@ -1181,19 +1182,27 @@ print(ppttm)
 4. rmaov.uni and lmm.ri are equivalent and this is generally true if there are no missing data.
 5. The lmm equivalent of rmaov.mul is lmm.ris (random intercept and slopte model) but this model cannot be fit without replication with genotype:experiment_id combinations.
 6. One reasonable conclusion of item 4 is that rmaov.mul effectively overfits the data and we should use rmaov.uni/lmm.ri as the model of choice. The simulation under RCBD above argues against this. Instead, rmaov.mul/lmm.ris is preferred (although lmm.ris cannot be fit without replication)
-7. Item 5 raises the question, why bother with random intercept model in a RCBD? The random intercept model (lmm.ri) should be used if there are covariates or if the response type (count, proportion, amount) and model check suggest a generalized linear model (glm).
+7. Item 5 raises the question, why bother with random intercept model in a RCBD? The random intercept model (lmm.ri) should be used if there are missing treatment:block combinations or if there are covariates or if the response should be modeled with a non-Normal distribution (distributions for counts, proportions, amounts) using a generalized linear model (glm).
 
 ### Plot the model
-
-```{r lmm-fig2c_r_ggplot-auto, echo=FALSE, eval=FALSE}
-ggptm(rmaov.mul, rmaov.mul_emm, rmaov.mul_pairs,
-              join_blocks = TRUE,
-              block_id = "experiment_id")
-```
 
 ```{r}
 #| label: lmm-fig2c-r-ggplot
 #| echo: false
+
+ggptm(rmaov.mul, rmaov.mul_emm, rmaov.mul_pairs,
+              join_blocks = TRUE,
+              block_id = "experiment_id",
+      y_label = "MFI",
+      palette = pal_okabe_ito,
+      x_axis_labels = levels(fig2c_r$genotype))
+```
+
+```{r}
+#| label: lmm-fig2c-r-ggplot-manual
+#| echo: false
+#| eval: false
+#| 
 # aov_4 didn't like the group names, so switching these back
 rmaov.mul_emm_dt <- rmaov.mul_emm |>
   data.frame() |>
@@ -1258,6 +1267,34 @@ Notes
 
 1. The blocks are connected by the gray lines
 2. The modeled SE of the treatment means are large relative to the spread of the treatment replicates. The modeled SE of the treatment means are not a good guide to differences among the treatments in a model with random factors if the sample size (number of blocks) is small.
+
+### By modeling non-independence, the researchers gained free power
+
+
+```{r}
+#| label: lmm-fig2cr-lm
+#| 
+lm1 <- lm(nr4a1 ~ genotype, data = fig2c_r)
+lm1_emm <- emmeans(lm1, specs = "genotype")
+lm1_pairs <- contrast(lm1_emm, method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+# replace contrast labels in rmaov.mul_pairs with readable labels
+rmaov.mul_pairs$ contrast <- lm1_pairs$contrast
+# combine with random intercept and compare
+model_table <- rbind(rmaov.mul_pairs, lm1_pairs)
+model_table |>
+  kable(digits = c(1, 2, 2, 1, 2, 2, 2, 3)) |>
+  kable_styling() |>
+  pack_rows("lmm.ri:  multivariate RM-ANOVA model", 1, 3) |>
+  pack_rows("lm1:  linear model", 4, 6)
+```
+
+Notes
+
+1. Only two of the three p-values are smaller for the RM-ANOVA model. Increased power will generally be the case with experimental bench biology data.
+2. More specifically, compared to the linear model, the RM-ANOVA model has increased precision of the effect estimate (a smaller SE) BUT also decreased degrees of freedom (df). The increased precision will always be the case if the correlated error is positive.
+3. Because of the increased precision but decreased df, there is a trade-off for inference using the linear mixed model (or classical equivalents) -- increased precision increases power but decreased df decreases power. With even modest sample size ($\sim 5$), the increased precision will overwhelm the decreased df and power will increase. Here there is increased power in two of the three contrasts even with n = 3.
 
 ## Example 4 -- RCBD with two factors (fig5c)
 
