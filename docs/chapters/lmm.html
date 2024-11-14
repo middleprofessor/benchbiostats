@@ -2739,7 +2739,7 @@ To turn off this warning, pass `fun_aggregate = mean` explicitly.</code></pre>
 <p>Source figure: Figure 1f</p>
 <section id="understand-the-data-2" class="level3" data-number="14.13.1">
 <h3 data-number="14.13.1" class="anchored" data-anchor-id="understand-the-data-2"><span class="header-section-number">14.13.1</span> Understand the data</h3>
-<p>The experiment for Fig. is a 3 x 2 factorial designed arranged as a split plot design. Donor cells are randomly assigned to one of three levels of the factor <code>treatment</code> (αGFP, αpm, αpm+HM). Within a donor, cells are divided into two levels of the factor <code>glucose</code> (low, high). In the languague of Split Plot experiments, <code>treatment</code> is the Main Plot factor, because each replication is a unique donor. And, <code>glucose</code> is the Subplot factor, because both levels are within each Main plot. Note that in a split plot design, non-independence is only within a level of the Main Plot. If the design were blocked, a donor would be split between all combinations of <code>treatment:glucose</code> but here, a donor is only split among glucose <em>within</em> a <code>treatment</code> level (aGFP or aPM or aPM_HM).</p>
+<p>The experiment for Fig. is a 3 x 2 factorial designed arranged as a split plot design. Donor cells are randomly assigned to one of three levels of the factor <code>treatment</code> (αGFP, αpm, αpm+HM). Within a donor, cells are divided into two levels of the factor <code>glucose</code> (low, high). In the language of Split Plot experiments, <code>treatment</code> is the Main Plot factor, because each replication is a unique donor. And, <code>glucose</code> is the Subplot factor, because both levels are within each Main plot. Note that in a split plot design, non-independence is only within a level of the Main Plot. If the design were blocked, a donor would be split between all combinations of <code>treatment:glucose</code> but here, a donor is only split among glucose <em>within</em> a <code>treatment</code> level (aGFP or aPM or aPM_HM).</p>
 <p><strong>Factor variables</strong></p>
 <ol type="1">
 <li>Factor 1 (Main plot): <code>treatment</code></li>
@@ -2787,25 +2787,27 @@ To turn off this warning, pass `fun_aggregate = mean` explicitly.</code></pre>
 <span id="cb84-21"><a href="#cb84-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> glucose_levels,</span>
 <span id="cb84-22"><a href="#cb84-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"glucose"</span>,</span>
 <span id="cb84-23"><a href="#cb84-23" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"c_peptide"</span>)</span>
-<span id="cb84-24"><a href="#cb84-24" aria-hidden="true" tabindex="-1"></a><span class="co"># View(fig1f)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-24"><a href="#cb84-24" aria-hidden="true" tabindex="-1"></a><span class="co"># View(fig1f)</span></span>
+<span id="cb84-25"><a href="#cb84-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-26"><a href="#cb84-26" aria-hidden="true" tabindex="-1"></a>fig1f[, .(<span class="at">N =</span> .N), by <span class="ot">=</span> .(treatment, glucose)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   treatment glucose     N
+      &lt;fctr&gt;  &lt;fctr&gt; &lt;int&gt;
+1:      αGFP     Low     5
+2:       αPM     Low     5
+3:    αPM+HM     Low     5
+4:      αGFP      Hi     5
+5:       αPM      Hi     5
+6:    αPM+HM      Hi     5</code></pre>
+</div>
 </div>
 </section>
 <section id="lmm.sp-linear-mixed-model-for-split-plot-design" class="level3" data-number="14.13.2">
 <h3 data-number="14.13.2" class="anchored" data-anchor-id="lmm.sp-linear-mixed-model-for-split-plot-design"><span class="header-section-number">14.13.2</span> lmm.sp linear mixed model for split plot design</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>lmm.sp <span class="ot">&lt;-</span> <span class="fu">lmer</span>(c_peptide <span class="sc">~</span> treatment <span class="sc">*</span> glucose <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> donor_id), <span class="at">data =</span> fig1f)</span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>lmm.sp_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(lmm.sp, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"glucose"</span>))</span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>lmm.sp_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(lmm.sp_emm,</span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">simple =</span> <span class="st">"each"</span>,</span>
-<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>rmaov.sp <span class="ot">&lt;-</span> <span class="fu">lmer</span>(c_peptide <span class="sc">~</span> treatment <span class="sc">*</span> glucose <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> donor_id), <span class="at">data =</span> fig1f)</span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>rmaov.sp_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(rmaov.sp, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"glucose"</span>))</span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>rmaov.sp_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(rmaov.sp_emm,</span>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>lmm.sp <span class="ot">&lt;-</span> <span class="fu">lmer</span>(c_peptide <span class="sc">~</span> treatment <span class="sc">*</span> glucose <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> donor_id), <span class="at">data =</span> fig1f)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>lmm.sp_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(lmm.sp, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"glucose"</span>))</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>lmm.sp_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(lmm.sp_emm,</span>
 <span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
 <span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">simple =</span> <span class="st">"each"</span>,</span>
 <span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
@@ -2813,59 +2815,278 @@ To turn off this warning, pass `fun_aggregate = mean` explicitly.</code></pre>
 <span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>lmm.sp_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> glucose treatment contrast        estimate     SE   df lower.CL upper.CL
- Low     .         αPM - αGFP        0.0582 0.0392 20.4  -0.0234   0.1398
- Low     .         (αPM+HM) - αGFP   0.0624 0.0392 20.4  -0.0192   0.1440
- Low     .         (αPM+HM) - αPM    0.0042 0.0392 20.4  -0.0774   0.0858
- Hi      .         αPM - αGFP        0.1272 0.0392 20.4   0.0456   0.2088
- Hi      .         (αPM+HM) - αGFP   0.2486 0.0392 20.4   0.1670   0.3302
- Hi      .         (αPM+HM) - αPM    0.1214 0.0392 20.4   0.0398   0.2030
- .       αGFP      Hi - Low          0.0168 0.0299 12.0  -0.0483   0.0819
- .       αPM       Hi - Low          0.0858 0.0299 12.0   0.0207   0.1509
- .       αPM+HM    Hi - Low          0.2030 0.0299 12.0   0.1379   0.2681
- t.ratio p.value
-   1.486  0.1525
-   1.593  0.1264
-   0.107  0.9156
-   3.248  0.0039
-   6.348  &lt;.0001
-   3.100  0.0055
-   0.562  0.5842
-   2.872  0.0140
-   6.796  &lt;.0001
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>rmaov.sp <span class="ot">&lt;-</span> <span class="fu">aov_4</span>(c_peptide <span class="sc">~</span> treatment <span class="sc">*</span> glucose <span class="sc">+</span> (glucose <span class="sc">|</span> donor_id), <span class="at">data =</span> fig1f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Contrasts set to contr.sum for the following variables: treatment</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>rmaov.sp_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(rmaov.sp, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"glucose"</span>))</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>rmaov.sp_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(rmaov.sp_emm,</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">simple =</span> <span class="st">"each"</span>,</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>pairs_dt <span class="ot">&lt;-</span> <span class="fu">rbind</span>(lmm.sp_pairs, rmaov.sp_pairs)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>pairs_dt <span class="sc">|&gt;</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">5</span>), <span class="at">caption =</span> <span class="st">"Planned contrasts from mixed ANOVA compared to lmm equivalent of mixed ANOVA and lowest AIC lmm."</span>) <span class="sc">|&gt;</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>() <span class="sc">|&gt;</span></span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pack_rows</span>(<span class="st">"lmm.sp lmm random intercept"</span>, <span class="dv">1</span>, <span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pack_rows</span>(<span class="st">"rmaov.sp RMANOVA for split plot"</span>, <span class="dv">10</span>, <span class="dv">18</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Planned contrasts from mixed ANOVA compared to lmm equivalent of mixed ANOVA and lowest AIC lmm.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">glucose</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">treatment</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">contrast</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lower.CL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">upper.CL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t.ratio</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="9">
+<td colspan="10" style="border-bottom: 1px solid"><strong>lmm.sp lmm random intercept</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Low</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">αPM - αGFP</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">20.43</td>
+<td style="text-align: right;">-0.023</td>
+<td style="text-align: right;">0.140</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">0.15251</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Low</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αGFP</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">20.43</td>
+<td style="text-align: right;">-0.019</td>
+<td style="text-align: right;">0.144</td>
+<td style="text-align: right;">1.59</td>
+<td style="text-align: right;">0.12643</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Low</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αPM</td>
+<td style="text-align: right;">0.004</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">20.43</td>
+<td style="text-align: right;">-0.077</td>
+<td style="text-align: right;">0.086</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.91564</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hi</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">αPM - αGFP</td>
+<td style="text-align: right;">0.127</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">20.43</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.209</td>
+<td style="text-align: right;">3.25</td>
+<td style="text-align: right;">0.00395</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hi</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αGFP</td>
+<td style="text-align: right;">0.249</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">20.43</td>
+<td style="text-align: right;">0.167</td>
+<td style="text-align: right;">0.330</td>
+<td style="text-align: right;">6.35</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hi</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αPM</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">20.43</td>
+<td style="text-align: right;">0.040</td>
+<td style="text-align: right;">0.203</td>
+<td style="text-align: right;">3.10</td>
+<td style="text-align: right;">0.00555</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">.</td>
+<td style="text-align: left;">αGFP</td>
+<td style="text-align: left;">Hi - Low</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">-0.048</td>
+<td style="text-align: right;">0.082</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.58418</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">.</td>
+<td style="text-align: left;">αPM</td>
+<td style="text-align: left;">Hi - Low</td>
+<td style="text-align: right;">0.086</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.021</td>
+<td style="text-align: right;">0.151</td>
+<td style="text-align: right;">2.87</td>
+<td style="text-align: right;">0.01403</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">.</td>
+<td style="text-align: left;">αPM+HM</td>
+<td style="text-align: left;">Hi - Low</td>
+<td style="text-align: right;">0.203</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.138</td>
+<td style="text-align: right;">0.268</td>
+<td style="text-align: right;">6.80</td>
+<td style="text-align: right;">0.00002</td>
+</tr>
+<tr class="odd" data-grouplength="9">
+<td colspan="10" style="border-bottom: 1px solid"><strong>rmaov.sp RMANOVA for split plot</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Low</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">αPM - αGFP</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.023</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.108</td>
+<td style="text-align: right;">2.57</td>
+<td style="text-align: right;">0.02477</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Low</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αGFP</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.023</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.013</td>
+<td style="text-align: right;">0.112</td>
+<td style="text-align: right;">2.75</td>
+<td style="text-align: right;">0.01759</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Low</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αPM</td>
+<td style="text-align: right;">0.004</td>
+<td style="text-align: right;">0.023</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">-0.045</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.85623</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hi</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">αPM - αGFP</td>
+<td style="text-align: right;">0.127</td>
+<td style="text-align: right;">0.051</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;">0.237</td>
+<td style="text-align: right;">2.52</td>
+<td style="text-align: right;">0.02702</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hi</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αGFP</td>
+<td style="text-align: right;">0.249</td>
+<td style="text-align: right;">0.051</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.139</td>
+<td style="text-align: right;">0.359</td>
+<td style="text-align: right;">4.92</td>
+<td style="text-align: right;">0.00035</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hi</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">(αPM+HM) - αPM</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">0.051</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.231</td>
+<td style="text-align: right;">2.40</td>
+<td style="text-align: right;">0.03334</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">.</td>
+<td style="text-align: left;">αGFP</td>
+<td style="text-align: left;">Hi - Low</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">-0.048</td>
+<td style="text-align: right;">0.082</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.58418</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">.</td>
+<td style="text-align: left;">αPM</td>
+<td style="text-align: left;">Hi - Low</td>
+<td style="text-align: right;">0.086</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.021</td>
+<td style="text-align: right;">0.151</td>
+<td style="text-align: right;">2.87</td>
+<td style="text-align: right;">0.01403</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">.</td>
+<td style="text-align: left;">αPM+HM</td>
+<td style="text-align: left;">Hi - Low</td>
+<td style="text-align: right;">0.203</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">12.00</td>
+<td style="text-align: right;">0.138</td>
+<td style="text-align: right;">0.268</td>
+<td style="text-align: right;">6.80</td>
+<td style="text-align: right;">0.00002</td>
+</tr>
+</tbody>
+</table>
 
-Degrees-of-freedom method: kenward-roger 
-Confidence level used: 0.95 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>rmaov.sp_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> glucose treatment contrast        estimate     SE   df lower.CL upper.CL
- Low     .         αPM - αGFP        0.0582 0.0392 20.4  -0.0234   0.1398
- Low     .         (αPM+HM) - αGFP   0.0624 0.0392 20.4  -0.0192   0.1440
- Low     .         (αPM+HM) - αPM    0.0042 0.0392 20.4  -0.0774   0.0858
- Hi      .         αPM - αGFP        0.1272 0.0392 20.4   0.0456   0.2088
- Hi      .         (αPM+HM) - αGFP   0.2486 0.0392 20.4   0.1670   0.3302
- Hi      .         (αPM+HM) - αPM    0.1214 0.0392 20.4   0.0398   0.2030
- .       αGFP      Hi - Low          0.0168 0.0299 12.0  -0.0483   0.0819
- .       αPM       Hi - Low          0.0858 0.0299 12.0   0.0207   0.1509
- .       αPM+HM    Hi - Low          0.2030 0.0299 12.0   0.1379   0.2681
- t.ratio p.value
-   1.486  0.1525
-   1.593  0.1264
-   0.107  0.9156
-   3.248  0.0039
-   6.348  &lt;.0001
-   3.100  0.0055
-   0.562  0.5842
-   2.872  0.0140
-   6.796  &lt;.0001
 
-Degrees-of-freedom method: kenward-roger 
-Confidence level used: 0.95 </code></pre>
 </div>
 </div>
+<p>Notes</p>
+<ol type="1">
+<li>The design is balanced</li>
+<li>Within the treatment factor, where there are only two levels of the other factor, inference is the same between the lmm.sp and rmaov.sp.</li>
+<li>But, within the glucose factor, where there are three levels of the other factor, inference is different, because different SEs are computed for the Low vs.&nbsp;Hi contrasts. The rmaov.sp model is the more maximal model.</li>
+</ol>
 </section>
 </section>
 <section id="so-which-model-and-why-a-simulation-to-help-decide" class="level2" data-number="14.14">
@@ -3832,7 +4053,7 @@ Table&nbsp;14.4: Power of the RCBD statistical models under different levels of 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -4023,7 +4244,7 @@ Table&nbsp;14.4: Power of the RCBD statistical models under different levels of 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid figure-img" width="1066"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid figure-img" width="1066"></p>
 </figure>
 </div>
 </div>

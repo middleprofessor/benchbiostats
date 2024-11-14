@@ -931,7 +931,7 @@ lmm.ri_pairs
 
 ### rmaov.mul -- repeated measures ANOVA (RM-ANOVA)
 
-```{r}
+```{r lmm-fig2c-rmaov-mul}
 rmaov.mul <- aov_4(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c)
 rmaov.mul_emm <- emmeans(rmaov.mul, specs = "genotype")
 rmaov.mul_pairs <- contrast(rmaov.mul_emm, method = "revpairwise") |>
@@ -2203,7 +2203,7 @@ Source figure: Figure 1f
 
 ### Understand the data
 
-The experiment for Fig. is a 3 x 2 factorial designed arranged as a split plot design. Donor cells are randomly assigned to one of three levels of the factor `treatment` (αGFP, αpm, αpm+HM). Within a donor, cells are divided into two levels of the factor `glucose` (low, high). In the languague of Split Plot experiments, `treatment` is the Main Plot factor, because each replication is a unique donor. And, `glucose` is the Subplot factor, because both levels are within each Main plot. Note that in a split plot design, non-independence is only within a level of the Main Plot. If the design were blocked, a donor would be split between all combinations of `treatment:glucose` but here, a donor is only split among glucose *within* a `treatment` level (aGFP or aPM or aPM_HM).
+The experiment for Fig. is a 3 x 2 factorial designed arranged as a split plot design. Donor cells are randomly assigned to one of three levels of the factor `treatment` (αGFP, αpm, αpm+HM). Within a donor, cells are divided into two levels of the factor `glucose` (low, high). In the language of Split Plot experiments, `treatment` is the Main Plot factor, because each replication is a unique donor. And, `glucose` is the Subplot factor, because both levels are within each Main plot. Note that in a split plot design, non-independence is only within a level of the Main Plot. If the design were blocked, a donor would be split between all combinations of `treatment:glucose` but here, a donor is only split among glucose *within* a `treatment` level (aGFP or aPM or aPM_HM).
 
 **Factor variables**
 
@@ -2248,6 +2248,8 @@ fig1f <- melt(fig1f_wide,
               variable.name = "glucose",
               value.name = "c_peptide")
 # View(fig1f)
+
+fig1f[, .(N = .N), by = .(treatment, glucose)]
 ```
 
 ### lmm.sp linear mixed model for split plot design
@@ -2264,7 +2266,7 @@ lmm.sp_pairs <- contrast(lmm.sp_emm,
 ```
 
 ```{r}
-rmaov.sp <- lmer(c_peptide ~ treatment * glucose + (1 | donor_id), data = fig1f)
+rmaov.sp <- aov_4(c_peptide ~ treatment * glucose + (glucose | donor_id), data = fig1f)
 rmaov.sp_emm <- emmeans(rmaov.sp, specs = c("treatment", "glucose"))
 rmaov.sp_pairs <- contrast(rmaov.sp_emm,
                          method = "revpairwise",
@@ -2275,9 +2277,20 @@ rmaov.sp_pairs <- contrast(rmaov.sp_emm,
 ```
 
 ```{r}
-lmm.sp_pairs
-rmaov.sp_pairs
+pairs_dt <- rbind(lmm.sp_pairs, rmaov.sp_pairs)
+
+pairs_dt |>
+  kable(digits = c(1,1,1,3,3,2,3,3,2,5), caption = "Planned contrasts from mixed ANOVA compared to lmm equivalent of mixed ANOVA and lowest AIC lmm.") |>
+  kable_styling() |>
+  pack_rows("lmm.sp lmm random intercept", 1, 9) |>
+  pack_rows("rmaov.sp RMANOVA for split plot", 10, 18)
 ```
+
+Notes
+
+1. The design is balanced
+2. Within the treatment factor, where there are only two levels of the other factor, inference is the same between the lmm.sp and rmaov.sp.
+3. But, within the glucose factor, where there are three levels of the other factor, inference is different, because different SEs are computed for the Low vs. Hi contrasts. The rmaov.sp model is the more maximal model.
 
 ## So, which model, and why? A simulation to help decide
 ### Single factor RCBD models

@@ -432,8 +432,8 @@ pairwise_paired_tt <- function(
 
 ```
 
-```{r pptt}
-pptt <- function(
+```{r pptt-old}
+pptt_old <- function(
     model_formula,
     data){
   
@@ -490,6 +490,103 @@ pptt <- function(
 
 ```
 
+```{r pptt}
+pptt <- function(
+    model_formula,
+    method = "revpairwise",
+    simple = NULL, # can be "each" or any of the factor names
+    data){
+  
+  
+  # a formula versions of pairwise_paired_tt
+  
+  m1 <- aov_4(model_formula, data)
+  variables <- find_variables(m1)
+  y_col <- variables$response
+  x_cols <- variables$fixed
+  fac1_col <- x_cols[1]
+  
+  # make sure fac1 is a factor
+  data[, ..fac1_col := factor(get(fac1_col))]
+  
+  fac2_col <- NULL
+  if(length(x_cols) == 2){
+    fac2_col <- x_cols[2]
+    data[, ..fac2_col := factor(get(fac2_col))]
+    levels_1 <- levels(data[, get(fac1_col)])
+    levels_2 <- levels(data[, get(fac2_col)])
+    levels_flat <- paste(rep(levels_1, length(levels_2)), rep(levels_2, each = length(levels_1)))
+    data[, flat := paste(get(x_cols[1]), get(x_cols[2])) |> factor(levels = levels_flat)]
+    g_col <- "flat"
+  }else{
+    g_col <- x_cols
+  }
+  id_col <- variables$random
+  keep <- c(y_col, g_col, id_col)
+  
+  # get means of subsampled replicates, if these exist
+  dt_long <- data[, .(y = mean(get(y_col))),
+                  by = .(get(g_col), get(id_col))]
+  setnames(dt_long, old = names(dt_long), new = c(g_col, id_col, y_col))
+
+  # pairwise
+  dt_wide <- dcast(dt_long,
+                   formula(paste(id_col, g_col, sep = "~")),
+                   value.var = y_col)
+  g_levels <- names(dt_wide)[-1]
+  n_groups <- length(g_levels)
+  
+  fit_pairs <- matrix(as.numeric(NA),
+                           nrow = n_groups*(n_groups-1)/2,
+                           ncol = 8) |>
+    data.table()
+  fit_pairs_colnames <- c("contrast", "estimate", "SE", "df", "lower.CL", "upper.CL", "t.ratio", "p.value")
+  colnames(fit_pairs) <- fit_pairs_colnames
+  fit_pairs[, contrast := as.character(contrast)]
+
+  if(method == "revpairwise"){
+    l <- 0;
+    for(i in 2:n_groups){
+      for(j in 1:(i-1)){
+        l <- l+1
+        ttest_ij <- t.test(dt_wide[, get(g_levels[i])],
+                           dt_wide[, get(g_levels[j])],
+                           paired = TRUE,
+                           na.action = "na.omit")
+        fit_pairs[l, contrast := paste(g_levels[i], g_levels[j], sep = " - ")]
+        fit_pairs[l, estimate := ttest_ij$estimate]
+        fit_pairs[l, SE := ttest_ij$estimate/ttest_ij$statistic]
+        fit_pairs[l, df := ttest_ij$parameter]
+        fit_pairs[l, lower.CL := ttest_ij$conf.int[1]]
+        fit_pairs[l, upper.CL := ttest_ij$conf.int[2]]
+        fit_pairs[l, t.ratio := ttest_ij$statistic]
+        fit_pairs[l, p.value := ttest_ij$p.value]
+      }
+    }
+  }
+  if(!is.null(simple)){
+    fit_pairs[, c("first", "second") := tstrsplit(contrast, " - ")]
+    fit_pairs[, c("first.fac1", "first.fac2") := tstrsplit(first, " ")]
+    fit_pairs[, c("second.fac1", "second.fac2") := tstrsplit(second, " ")]
+    set_1 <- which(fit_pairs$first.fac1 == fit_pairs$second.fac1)
+    set_2 <- which(fit_pairs$first.fac2 == fit_pairs$second.fac2)
+    if(simple == "each"){
+      fit_pairs <- fit_pairs[c(set_1, set_2),]
+    }
+    if(simple == fac1_col){
+      fit_pairs <- fit_pairs[set_2,]
+    }
+    if(simple == fac2_col){
+      fit_pairs <- fit_pairs[set_1,]
+    }
+    # fit_pairs[, i := .I]
+    # fit_pairs <- setorder(fit_pairs, -i)
+  }
+  fit_pairs <- fit_pairs[, .SD, .SDcols = fit_pairs_colnames]
+  return(fit_pairs)
+}
+
+```
 
 ```{r gg_pptt}
 gg_pptt <- function(
