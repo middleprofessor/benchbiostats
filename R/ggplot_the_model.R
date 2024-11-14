@@ -495,10 +495,22 @@ pptt <- function(
   
   # a formula versions of pairwise_paired_tt
   
-  m1 <- aov_4(model_formula, data)
+  # more elegant
+  # m1 <- aov_4(model_formula, data)
+  # variables <- find_variables(m1)
+  # y_col <- variables$response
+  # id_col <- variables$random
+  # x_cols <- variables$fixed
+  # fac1_col <- x_cols[1]
+  
+  # less elegant but less fussy because works with both (1 | random) and (factor | random)
+  m1 <- model_formula
   variables <- find_variables(m1)
   y_col <- variables$response
-  x_cols <- variables$fixed
+  x_cols <- variables$conditional
+  n_x_cols <- length(x_cols)
+  id_col <- x_cols[n_x_cols]
+  x_cols <- x_cols[-n_x_cols]
   fac1_col <- x_cols[1]
   
   # make sure fac1 is a factor
@@ -516,7 +528,6 @@ pptt <- function(
   }else{
     g_col <- x_cols
   }
-  id_col <- variables$random
   keep <- c(y_col, g_col, id_col)
   
   # get means of subsampled replicates, if these exist

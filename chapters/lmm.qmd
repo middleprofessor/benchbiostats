@@ -942,9 +942,11 @@ rmaov.mul_pairs
 
 ### pptt -- pairwise paired t-test
 
+There are two groups so only a single pairwise t-test.
+
 ```{r}
 # t.test(fig2c[genotype == "TIM3-", nr4a1], fig2c[genotype == "TIM3+", nr4a1], paired = TRUE)
-ppttm <- pptt(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c)
+ppttm <- pptt(nr4a1 ~ genotype + (1 | experiment_id), data = fig2c)
 print(ppttm)
 ```
 
@@ -955,6 +957,7 @@ print(ppttm)
 3. rmaov.mul fits an ANOVA model even though there are only two groups. Yes ANOVA can be used with only two groups, and the statistics are exactly the same as with a *t*-test, but most people choose *t*-test and not ANOVA when there are only two groups.
 4. The random component of the model formula for the linear mixed model using `lmer` is `(1 | experiment_id)`. This is the notation for adding a random intercept. $\texttt{experiment\_id$ is a random factor and is added as a random intercept.
 5. There is potential for confusion in the formula for the RM-ANOVA model using `aov_4`. The afex package has three equivalent functions for fitting repeated measures ANOVA models, each function is targeted to users with different statistics backgrounds. This text uses the `aov_4` function which uses the `lmer` formula notation. For an RCBD experimental design, `aov_4` uses the `lmer` formula notation for a random intercept AND a random slope, which is `(genotype | experiment_id)`. No random intercept or slope is estimated in an ANOVA model but the notation is necessary to aggregate multiple values of $\texttt{experiment\_id}$ only within and not among $\texttt{genotype}$.
+6. For the paired *t*-test, I've used my pptt function which computes paired *t*-tests for all combinations of the factor levels. 
 
 ### Plot the model
 
@@ -1170,7 +1173,7 @@ aov1_pairs
 ### pptt -- pairwise paired t-test
 
 ```{r}
-ppttm <- pptt(nr4a1 ~ genotype + (genotype | experiment_id), data = fig2c_r)
+ppttm <- pptt(nr4a1 ~ genotype + (1 | experiment_id), data = fig2c_r)
 print(ppttm)
 ```
 

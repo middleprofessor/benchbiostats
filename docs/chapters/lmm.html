@@ -1356,9 +1356,10 @@ Confidence level used: 0.95 </code></pre>
 </section>
 <section id="pptt-pairwise-paired-t-test" class="level3" data-number="14.9.3">
 <h3 data-number="14.9.3" class="anchored" data-anchor-id="pptt-pairwise-paired-t-test"><span class="header-section-number">14.9.3</span> pptt – pairwise paired t-test</h3>
+<p>There are two groups so only a single pairwise t-test.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># t.test(fig2c[genotype == "TIM3-", nr4a1], fig2c[genotype == "TIM3+", nr4a1], paired = TRUE)</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ppttm <span class="ot">&lt;-</span> <span class="fu">pptt</span>(nr4a1 <span class="sc">~</span> genotype <span class="sc">+</span> (genotype <span class="sc">|</span> experiment_id), <span class="at">data =</span> fig2c)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ppttm <span class="ot">&lt;-</span> <span class="fu">pptt</span>(nr4a1 <span class="sc">~</span> genotype <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> experiment_id), <span class="at">data =</span> fig2c)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ppttm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        contrast  estimate       SE    df lower.CL  upper.CL   t.ratio
@@ -1378,6 +1379,7 @@ Confidence level used: 0.95 </code></pre>
 <li>rmaov.mul fits an ANOVA model even though there are only two groups. Yes ANOVA can be used with only two groups, and the statistics are exactly the same as with a <em>t</em>-test, but most people choose <em>t</em>-test and not ANOVA when there are only two groups.</li>
 <li>The random component of the model formula for the linear mixed model using <code>lmer</code> is <code>(1 | experiment_id)</code>. This is the notation for adding a random intercept. <span class="math inline">\(\texttt{experiment\_id\)</span> is a random factor and is added as a random intercept.</li>
 <li>There is potential for confusion in the formula for the RM-ANOVA model using <code>aov_4</code>. The afex package has three equivalent functions for fitting repeated measures ANOVA models, each function is targeted to users with different statistics backgrounds. This text uses the <code>aov_4</code> function which uses the <code>lmer</code> formula notation. For an RCBD experimental design, <code>aov_4</code> uses the <code>lmer</code> formula notation for a random intercept AND a random slope, which is <code>(genotype | experiment_id)</code>. No random intercept or slope is estimated in an ANOVA model but the notation is necessary to aggregate multiple values of <span class="math inline">\(\texttt{experiment\_id}\)</span> only within and not among <span class="math inline">\(\texttt{genotype}\)</span>.</li>
+<li>For the paired <em>t</em>-test, I’ve used my pptt function which computes paired <em>t</em>-tests for all combinations of the factor levels.</li>
 </ol>
 </section>
 <section id="plot-the-model-1" class="level3" data-number="14.9.5">
@@ -1568,7 +1570,7 @@ Confidence level used: 0.95 </code></pre>
 <section id="pptt-pairwise-paired-t-test-1" class="level3" data-number="14.10.5">
 <h3 data-number="14.10.5" class="anchored" data-anchor-id="pptt-pairwise-paired-t-test-1"><span class="header-section-number">14.10.5</span> pptt – pairwise paired t-test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>ppttm <span class="ot">&lt;-</span> <span class="fu">pptt</span>(nr4a1 <span class="sc">~</span> genotype <span class="sc">+</span> (genotype <span class="sc">|</span> experiment_id), <span class="at">data =</span> fig2c_r)</span>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>ppttm <span class="ot">&lt;-</span> <span class="fu">pptt</span>(nr4a1 <span class="sc">~</span> genotype <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> experiment_id), <span class="at">data =</span> fig2c_r)</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ppttm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                contrast  estimate        SE    df   lower.CL  upper.CL
