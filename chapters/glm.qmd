@@ -547,7 +547,7 @@ A linear model also assumes that the error is **homoskedastic** -- the error var
 
 The regression line in the spread-level plot of the fit of the linear model to the sprout data shows a distinct increase in the "scale" (the square root of the standardized residuals) with increased fitted value, which is expected of data sampled from a distribution in which the variance increases with the mean.
 
-#### Two distributions for count data -- Poisson and Negative Binomial
+#### Three distributions for count data -- Poisson, Negative Binomial, and Quasipoisson
 
 The patterns in the Normal Q-Q plot (@fig-glm-fig3a-qq) and the spread-level plot (@fig-glm-fig3a-sl) should discourage a researcher from modeling the data with a linear model and instead model the data with an alternative distribution using a Generalized Linear Model. There is no unique mapping between observed data and a data generating mechanism with a specific distribution, so this decision is not as easy as thinking about the data generation mechanism and then simply choosing the "correct" distribution. Section 4.5 in Bolker (xxx) is an excellent summary of how to think about the generating processes for different distributions in the context of ecological data. Since the response in the angiogenic sprouts data are counts, we need to choose a distribution that generates integer values, such as the Poisson, the Quasipoisson, and the Negative Binomial.
 
@@ -600,6 +600,15 @@ ggplot(data = fake_data,
              scales = "free")
 
 ```
+
+3. Quasipoisson -- The Quasipoisson distribution is similar to the NB distribution in that it models overdispersion, which occurs when the variance increases faster than the mean. In the NB, the overdispersion parameter $\theta$ is a function of the mean which makes the variance increase with the square of the mean. In the QP, the overdispersion parameter $\theta$ is not a function of the mean, so the variance increases linearly with the mean.
+
+::: {.callout-tip title="NB1 vs NB2 in the glmmTMB package"}
+The glmmTMB package is a wicked-useful update of the base R glm functions. The glmmTMB package treats the Quasipoisson and the Negative Binomial as two versions of a Negative Binomial distribution and uses the notation:
+
+1. NB1 -- the variance increases linearly with the mean, so this is a Quasipoisson fit. Think "1 = linear".
+2. NB2 -- the variance is a quadratic of the mean, so this is the classic Negative Binomial fit. Think "2 = quadratic".
+:::
 
 #### Model checking a GLM I -- the quantile-residual uniform-QQ plot
 
