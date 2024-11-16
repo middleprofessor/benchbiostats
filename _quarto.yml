@@ -22,6 +22,7 @@ book:
     - chapters/multiple-testing.qmd
     - chapters/two-factors.qmd
     - chapters/lmm.qmd
+    - chapters/glm.qmd
 
 bibliography: references.bib
 

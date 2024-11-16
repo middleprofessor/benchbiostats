@@ -501,7 +501,14 @@ pptt <- function(
   # a formula versions of pairwise_paired_tt
   
   # more elegant
-  # m1 <- aov_4(model_formula, data)
+  # m1 <- lmer(model_formula, data) # works only with (1 | random) and will fail if model fails
+  # variables <- find_variables(m1)
+  # y_col <- variables$response
+  # id_col <- variables$random
+  # x_cols <- variables$conditional
+  # fac1_col <- x_cols[1]
+
+  # m1 <- aov_4(model_formula, data) # works only with (factor | random) but won't generally fail
   # variables <- find_variables(m1)
   # y_col <- variables$response
   # id_col <- variables$random
