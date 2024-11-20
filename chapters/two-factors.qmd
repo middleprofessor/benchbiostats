@@ -2815,28 +2815,6 @@ Many researchers are unaware of the different ways of computing the sum of squar
 
 If your reviewer/advisor/boss wants an ANOVA table and wants this table to match that in Graphpad Prism or JMP, then you need a table computed from Type III sum of squares. If using a linear model to compute the ANOVA (remember that ANOVA was developed without fitting linear models), then the linear model needs to be fit using a model matrix constructed with indicator variables using effects coding. There are two safe ways to do this in R.
 
-#### The afex aov_4 function
-
-```{r twoway-aov_4, warning=FALSE, message = FALSE}
-# .I is a data.table function that returns the row number
-exp2j[, fake_id := paste("mouse", .I)]
-
-m1_aov4 <- aov_4(glucose_uptake ~ stimulation * genotype +
-                   (1|fake_id),
-                 data = exp2j)
-
-nice(m1_aov4, MSE = FALSE)[,-4] |> # delete ges column
-  kable() |>
-  kable_styling()
-```
-
-Notes
-
-1. The afex package has three function names for generating the same ANOVA table and statistics -- here I'm using `aov_4` because this functions uses a linear model formula argument (specifically, that used in the lme4 package), which is consistent with the rest of this text.
-2. The formula includes the addition of a random factor (`(1|id)`) even though there really is no random factor in this model. See [Models with random factors -- Blocking and pseudoreplication](#lmm) for more information on random factors. The random factor (the factor variable "id" created in the line before the fit model line) identifies the individual mouse from which the response variable was measured. Because the response was only measured once on each individual mouse, "id" is not really a random factor but the addition of this in the model formula is necessary for the `aov_4` function to work.
-
-#### The car Anova function {#twoway-car-anova}
-
 ```{r twoway-car-Anova}
 type3 <- list(stimulation = contr.sum,
               genotype = contr.sum)
@@ -2864,7 +2842,7 @@ Danger!. Many online sites suggest this bit of code before a Type III ANOVA usin
 If you're reading this book, you almost certainly don't want to do this because this code resets how R computes coefficients of linear models and SS of ANOVA tables. This will effect all future analysis until the contrasts are set to something else or a new R session is started. 
 </div>
 
-### Better to avoid these
+#### Better to avoid these
 
 ```{r twoway-aov}
 m1_aov <- aov(glucose_uptake ~ stimulation * genotype,

@@ -1,4 +1,4 @@
-## ----setup, include=TRUE-------------------------------------------------------------------------------------------------------------------------
+## ----setup, include=TRUE---------------------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 
 # wrangling
@@ -11,6 +11,7 @@ library(nlme)
 library(lmerTest)
 library(emmeans)
 library(MASS)
+library(DHARMa)
 
 # plot function
 library(ggplot2)
@@ -39,7 +40,7 @@ pal_okabe_ito_4 <- pal_okabe_ito[c(5,6,7,2)]
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 # this is the official simulator function from grcbds.Rmd in the book
 simulator <- function(
   seed_i = 1,
@@ -342,7 +343,7 @@ simulator <- function(
 }
 
 
-## ----holm-sidak----------------------------------------------------------------------------------------------------------------------------------
+## ----holm-sidak------------------------------------------------------------------------
 
 holm_sidak <- function(p){
   # assume alpha = 0.05
@@ -375,7 +376,7 @@ holm_sidak <- function(p){
 
 
 
-## ----pairwise_paired_tt--------------------------------------------------------------------------------------------------------------------------
+## ----pairwise_paired_tt----------------------------------------------------------------
 pairwise_paired_tt <- function(
     y_col, # response column
     g_col, # grouping column
@@ -427,7 +428,7 @@ pairwise_paired_tt <- function(
 
 
 
-## ----pptt-old------------------------------------------------------------------------------------------------------------------------------------
+## ----pptt-old--------------------------------------------------------------------------
 pptt_old <- function(
     model_formula,
     data){
@@ -485,7 +486,7 @@ pptt_old <- function(
 
 
 
-## ----pptt----------------------------------------------------------------------------------------------------------------------------------------
+## ----pptt------------------------------------------------------------------------------
 pptt <- function(
     model_formula,
     method = "revpairwise",
@@ -496,7 +497,14 @@ pptt <- function(
   # a formula versions of pairwise_paired_tt
   
   # more elegant
-  # m1 <- aov_4(model_formula, data)
+  # m1 <- lmer(model_formula, data) # works only with (1 | random) and will fail if model fails
+  # variables <- find_variables(m1)
+  # y_col <- variables$response
+  # id_col <- variables$random
+  # x_cols <- variables$conditional
+  # fac1_col <- x_cols[1]
+
+  # m1 <- aov_4(model_formula, data) # works only with (factor | random) but won't generally fail
   # variables <- find_variables(m1)
   # y_col <- variables$response
   # id_col <- variables$random
@@ -594,7 +602,7 @@ pptt <- function(
 
 
 
-## ----gg_pptt-------------------------------------------------------------------------------------------------------------------------------------
+## ----gg_pptt---------------------------------------------------------------------------
 gg_pptt <- function(
     aov_formula,
     data){
@@ -666,7 +674,7 @@ gg_pptt <- function(
 
 
 
-## ----twoway-fmt_p_value_2, echo=FALSE, warning=FALSE, message=FALSE------------------------------------------------------------------------------
+## ----twoway-fmt_p_value_2, echo=FALSE, warning=FALSE, message=FALSE--------------------
 fmt_p_value_2 <- function(p, digits = 0.0001){
   p_char <- ifelse(p < 0.06 | is.na(p),
                    scales::pvalue(p,
@@ -681,22 +689,22 @@ fmt_p_value_rmd <- function(x, digits = 0.0001){
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 fmt_table <- function(df, digits = 0.0001){
   
 }
 
 
-## ----odd-even------------------------------------------------------------------------------------------------------------------------------------
+## ----odd-even--------------------------------------------------------------------------
 odd <- function(x) x%%2 != 0
 even <- function(x) x%%2 == 0
 
 
-## ----not_in--------------------------------------------------------------------------------------------------------------------------------------
+## ----not_in----------------------------------------------------------------------------
 '%not_in%' <- Negate('%in%')
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 factor_wrap <- function(gg, sep = " "){
   x_labels <- layer_scales(gg)$x$get_limits()
   label_x <- str_replace(x_labels, sep, "\n")
@@ -707,7 +715,7 @@ factor_wrap <- function(gg, sep = " "){
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 factor_wrap_1 <- function(gg, sep = " "){
   x_labels <- layer_scales(gg)$x$get_limits()
   label_x <- str_replace(x_labels, sep, "\n")
@@ -716,7 +724,7 @@ factor_wrap_1 <- function(gg, sep = " "){
 
 
 
-## ----remove-parentheses--------------------------------------------------------------------------------------------------------------------------
+## ----remove-parentheses----------------------------------------------------------------
 remove_parentheses <- function(x){
   if(substr(x, 1, 1) == "("){
     x <- substr(x, 2, nchar(x))
@@ -728,7 +736,7 @@ remove_parentheses <- function(x){
 }
 
 
-## ----ggcheck_the_qq, warning = FALSE-------------------------------------------------------------------------------------------------------------
+## ----ggcheck_the_qq, warning = FALSE---------------------------------------------------
 ggcheck_the_qq = function(m1,
                    line = "robust",
                    n_boot = 200){
@@ -835,18 +843,84 @@ ggcheck_the_qq = function(m1,
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## ----rqpois----------------------------------------------------------------------------
+  rqpois <- function(n, mu, theta) {
+    y <- rnbinom(n = n, mu = mu, size = mu/(theta-1))
+    return(y)
+  }
+
+
+## --------------------------------------------------------------------------------------
+
+ggcheck_the_glm = function(m1,
+                           n_sim = 250,
+                           se = FALSE,
+                           normal = FALSE){
+  
+  info <- model_info(m1)
+  if(info$family == "quasipoisson"){
+    n <- info$n_obs
+    x_cols <- find_predictors(m1)$conditional
+    y_col <- find_response(m1)
+    m1_data <- get_data(m1) |>
+      data.table()
+    # get mu
+    m1_data[, yhat := exp(predict(m1))]
+    mu_sim <- m1_data[, yhat]
+    # get theta
+    theta <- summary(m1)$dispersion
+    # get fake data
+    y <- rqpois(n * n_sim, rep(mu_sim, n_sim), theta)
+    fd <- matrix(y, nrow = n, ncol = n_sim)
+    m1_check <- createDHARMa(simulatedResponse = fd, 
+                             observedResponse = m1_data[, get(y_col)],
+                             fittedPredictedResponse = m1_data[, yhat],
+                             integerResponse = TRUE)
+  }else{
+    m1_check <- simulateResiduals(fittedModel = m1, n = n_sim)
+  }
+  return(m1_check)
+}
+
+
+## --------------------------------------------------------------------------------------
 
 ggcheck_the_glm_qq = function(m1,
                    n_sim = 250,
                    se = FALSE,
                    normal = FALSE){
   
-  simulationOutput <- simulateResiduals(fittedModel = m1, n = n_sim)
-  observed = simulationOutput$scaledResiduals %>%
-    sort()
-  
-  m1_data <- insight::get_data(m1)
+  info <- model_info(m1)
+  if(info$family == "quasipoisson"){
+    n <- info$n_obs
+    x_cols <- find_predictors(m1)$conditional
+    y_col <- find_response(m1)
+    m1_data <- get_data(m1) |>
+      data.table()
+    # get counts
+    m1_counts <- m1_data[, .(N = .N), by = x_cols]
+    # get mu
+    m1_data[, yhat := exp(predict(m1))]
+    mu_sim <- m1_data[, yhat]
+    # get theta
+    theta <- summary(m1)$dispersion
+    # get fake data
+    y <- rqpois(n * n_sim, mu_sim * n_sim, theta)
+    fd <- matrix(y, nrow = n, ncol = n_sim)
+    m1_check <- createDHARMa(simulatedResponse = fd, 
+                           observedResponse = m1_data[, get(y_col)],
+                           fittedPredictedResponse = m1_data[, yhat],
+                           integerResponse = TRUE)
+    observed = m1_check$scaledResiduals |>
+      sort()
+  }else{
+    m1_check <- simulateResiduals(fittedModel = m1, n = n_sim)
+    observed = m1_check$scaledResiduals |>
+      sort()
+    
+  }
+
+  m1_data <- get_data(m1)
   n_points <- nrow(m1_data)
   
   q <- n_points + 1
@@ -872,7 +946,7 @@ ggcheck_the_glm_qq = function(m1,
 
   if(se == TRUE){
     qr <- matrix(as.numeric(NA), nrow = n_points, ncol = n_sim)
-    fake_counts <- simulationOutput$simulatedResponse
+    fake_counts <- m1_check$simulatedResponse
     m1_form <- find_formula(m1)$conditional
     m1_y <- find_response(m1)
     m1_model_name <- model_name(m1)
@@ -911,7 +985,7 @@ ggcheck_the_glm_qq = function(m1,
 
 
 
-## ----ggcheck_the_spreadlevel---------------------------------------------------------------------------------------------------------------------
+## ----ggcheck_the_spreadlevel-----------------------------------------------------------
 ggcheck_the_spreadlevel <- function(m1,
                    n_boot = 200){
   n <- nobs(m1)
@@ -966,7 +1040,7 @@ ggcheck_the_spreadlevel <- function(m1,
 }
 
 
-## ----ggcheck_the_model---------------------------------------------------------------------------------------------------------------------------
+## ----ggcheck_the_model-----------------------------------------------------------------
 ggcheck_the_model <- function(m1){
   gg1 <- ggcheck_the_qq(m1)
   gg2 <- ggcheck_the_spreadlevel(m1)
@@ -974,7 +1048,7 @@ ggcheck_the_model <- function(m1){
 }
 
 
-## ----emm_table-----------------------------------------------------------------------------------------------------------------------------------
+## ----emm_table-------------------------------------------------------------------------
 emm_table <- function(fit_emm){
   table_out <- data.table(summary(fit_emm))
   if("response" %in% colnames(table_out)){
@@ -993,7 +1067,7 @@ emm_table <- function(fit_emm){
 }
 
 
-## ----effects_table-------------------------------------------------------------------------------------------------------------------------------
+## ----effects_table---------------------------------------------------------------------
 effects_table <- function(fit_pairs,
                           digits = 2,
                           accuracy = 1e-04,
@@ -1042,7 +1116,7 @@ effects_table <- function(fit_pairs,
 
 
 
-## ----pvalue_table--------------------------------------------------------------------------------------------------------------------------------
+## ----pvalue_table----------------------------------------------------------------------
 pvalue_table <- function(fit_pairs,
                          replace_space = FALSE # if two factors, this should be a "," between the two groups in treatment combo
                          ){
@@ -1157,7 +1231,7 @@ pvalue_table <- function(fit_pairs,
 
 
 
-## ----response-plot-------------------------------------------------------------------------------------------------------------------------------
+## ----response-plot---------------------------------------------------------------------
 response_plot <- function(
   fit, # model fit from lm, lmer, nlme, glmmTMB
   fit_emm, # data frame with means, error
@@ -1340,19 +1414,25 @@ response_plot <- function(
 }
 
 
-## ----plot_pvalues--------------------------------------------------------------------------------------------------------------------------------
+## ----plot_pvalues----------------------------------------------------------------------
 plot_pvalues <- function(
       gg,
       fit_emm,
       fit_pairs,
       contrast_rows,
-      y_pos = NULL
+      y_pos = NULL,
+      pvalue_text_size = 3.5
 ){
   fit_emm_dt <- emm_table(fit_emm)
   
   # change prob to emmean in binomial models
   if("prob" %in% names(fit_emm_dt)){
     setnames(fit_emm_dt, "prob", "emmean")
+  }
+
+  # change rate to emmean in quasipoisson models
+  if("rate" %in% names(fit_emm_dt)){
+    setnames(fit_emm_dt, "rate", "emmean")
   }
 
   if(which(names(fit_emm_dt) == "emmean") == 2){
@@ -1425,7 +1505,7 @@ plot_pvalues <- function(
                          y.position = y_position,
                          xmin = "x_min_col",
                          xmax = "x_max_col",
-                         size = 2.5,
+                         size = pvalue_text_size,
                          tip.length = 0.01)
     
     # make sure ylim includes p-value
@@ -1442,7 +1522,7 @@ plot_pvalues <- function(
 }
 
 
-## ----ggplot_the_response-------------------------------------------------------------------------------------------------------------------------
+## ----ggplot_the_response---------------------------------------------------------------
 ggplot_the_response <- function(
     fit, # model fit from lm, lmer, nlme, glmmTMB
     fit_emm,
@@ -1458,6 +1538,7 @@ ggplot_the_response <- function(
     adjust = 0.5,
     contrast_rows = "all",
     y_pos = NULL,
+    pvalue_text_size = 3.5,
     palette = pal_okabe_ito,
     legend_position = "top",
     flip_horizontal = FALSE,
@@ -1494,7 +1575,8 @@ ggplot_the_response <- function(
       fit_emm = fit_emm,
       fit_pairs = fit_pairs,
       contrast_rows = contrast_rows,
-      y_pos = y_pos
+      y_pos = y_pos,
+      pvalue_text_size = pvalue_text_size
     )
   }
   
@@ -1503,7 +1585,7 @@ ggplot_the_response <- function(
 }
 
 
-## ----old_ggplot_the_response---------------------------------------------------------------------------------------------------------------------
+## ----old_ggplot_the_response-----------------------------------------------------------
 old_ggplot_the_response <- function(
   fit, # model fit from lm, lmer, nlme, glmmTMB
   fit_emm,
@@ -1727,7 +1809,7 @@ old_ggplot_the_response <- function(
 
 
 
-## ----ggplot_the_effects--------------------------------------------------------------------------------------------------------------------------
+## ----ggplot_the_effects----------------------------------------------------------------
 ggplot_the_effects <- function(fit,
                        fit_pairs,
                        contrast_rows = "all",
@@ -1827,7 +1909,7 @@ ggplot_the_effects <- function(fit,
 }
 
 
-## ----ggplot_the_model----------------------------------------------------------------------------------------------------------------------------
+## ----ggplot_the_model------------------------------------------------------------------
 ggplot_the_model <- function(fit,
                            fit_emm,
                            fit_pairs,
@@ -1884,7 +1966,7 @@ ggplot_the_model <- function(fit,
 }
 
 
-## ----plot_treatments-----------------------------------------------------------------------------------------------------------------------------
+## ----plot_treatments-------------------------------------------------------------------
 plot_treatments <- function(gg,
                             x_levels,
                             text_size = 5){
@@ -1935,7 +2017,7 @@ plot_treatments <- function(gg,
 
 
 
-## ----ggplot_the_treatments-----------------------------------------------------------------------------------------------------------------------
+## ----ggplot_the_treatments-------------------------------------------------------------
 ggplot_the_treatments <- function(
   gg,
   x_levels,
@@ -1964,7 +2046,7 @@ ggplot_the_treatments <- function(
 }
 
 
-## ----vertical-brackets-functions, echo=FALSE-----------------------------------------------------------------------------------------------------
+## ----vertical-brackets-functions, echo=FALSE-------------------------------------------
 bracketsGrob <- function(...){
 l <- list(...)
 e <- new.env()
@@ -2124,7 +2206,7 @@ geom_vbracket_1 <- function(gg,
 
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 testy <- function(fit_emm){
   exp1c_m1_emm_dt <- fit_emm %>%
     summary()
@@ -2148,7 +2230,7 @@ testy <- function(fit_emm){
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 StatLm <- ggproto("StatLm", Stat, 
   required_aes = c("x", "y"),
   
@@ -2208,7 +2290,7 @@ stat_ancova <- function(mapping = NULL,
 
 
 
-## ----geom_ancova---------------------------------------------------------------------------------------------------------------------------------
+## ----geom_ancova-----------------------------------------------------------------------
 
 geom_ancova <- function(m1){
   geom_smooth(method = "lm",
@@ -2218,7 +2300,7 @@ geom_ancova <- function(m1){
 
 
 
-## ----kable_bind----------------------------------------------------------------------------------------------------------------------------------
+## ----kable_bind------------------------------------------------------------------------
 kable_bind <- function(tables, styling = TRUE, ...){
   p <- length(tables)
   table_out <- NULL
@@ -2246,7 +2328,7 @@ kable_bind <- function(tables, styling = TRUE, ...){
   
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 fill_down <- function(x){
   treatment_levels <- na.omit(unique(x))
   xf <- factor(x, levels = treatment_levels)
@@ -2257,14 +2339,14 @@ fill_down <- function(x){
 }
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 na_only_omit <- function(x){
   x <- x[rowSums(is.na(x)) != ncol(x), ]
   return(x)
 }
 
 
-## ----output-as-R-file----------------------------------------------------------------------------------------------------------------------------
+## ----output-as-R-file------------------------------------------------------------------
 # highlight and run to put update into R folder
 # knitr::purl("ggplot_the_model.Rmd")
 

@@ -365,10 +365,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#practice-safe-anova" id="toc-practice-safe-anova" class="nav-link" data-scroll-target="#practice-safe-anova"><span class="header-section-number">13.11.4</span> Practice safe ANOVA</a>
   <ul class="collapse">
-  <li><a href="#the-afex-aov_4-function" id="toc-the-afex-aov_4-function" class="nav-link" data-scroll-target="#the-afex-aov_4-function"><span class="header-section-number">13.11.4.1</span> The afex aov_4 function</a></li>
-  <li><a href="#twoway-car-anova" id="toc-twoway-car-anova" class="nav-link" data-scroll-target="#twoway-car-anova"><span class="header-section-number">13.11.4.2</span> The car Anova function</a></li>
+  <li><a href="#better-to-avoid-these" id="toc-better-to-avoid-these" class="nav-link" data-scroll-target="#better-to-avoid-these"><span class="header-section-number">13.11.4.1</span> Better to avoid these</a></li>
   </ul></li>
-  <li><a href="#better-to-avoid-these" id="toc-better-to-avoid-these" class="nav-link" data-scroll-target="#better-to-avoid-these"><span class="header-section-number">13.11.5</span> Better to avoid these</a></li>
   </ul></li>
   <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">13.12</span> Hidden Code</a>
   <ul>
@@ -3854,71 +3852,15 @@ NHST Blues
 <h3 data-number="13.11.4" class="anchored" data-anchor-id="practice-safe-anova"><span class="header-section-number">13.11.4</span> Practice safe ANOVA</h3>
 <p>Many researchers are unaware of the different ways of computing the sum of squares in an ANOVA table. The <em>F</em>-value and <em>p</em>-value are both functions of the sum of squares. When the cells of a two-way ANOVA are not balanced (different sample sizes among the cells), the different ways of computing the sum of squares can matter. There is a great deal of sound and fury about which methods should be used and which avoided. For many research questions and the experiments used to address these, these arguments are moot because the ANOVA table is simply unnecessary for inference. Instead, fit the linear model and compute the contrasts of interest.</p>
 <p>If your reviewer/advisor/boss wants an ANOVA table and wants this table to match that in Graphpad Prism or JMP, then you need a table computed from Type III sum of squares. If using a linear model to compute the ANOVA (remember that ANOVA was developed without fitting linear models), then the linear model needs to be fit using a model matrix constructed with indicator variables using effects coding. There are two safe ways to do this in R.</p>
-<section id="the-afex-aov_4-function" class="level4" data-number="13.11.4.1">
-<h4 data-number="13.11.4.1" class="anchored" data-anchor-id="the-afex-aov_4-function"><span class="header-section-number">13.11.4.1</span> The afex aov_4 function</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .I is a data.table function that returns the row number</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>exp2j[, fake_id <span class="sc">:</span><span class="er">=</span> <span class="fu">paste</span>(<span class="st">"mouse"</span>, .I)]</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>m1_aov4 <span class="ot">&lt;-</span> <span class="fu">aov_4</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype <span class="sc">+</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>                   (<span class="dv">1</span><span class="sc">|</span>fake_id),</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> exp2j)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="fu">nice</span>(m1_aov4, <span class="at">MSE =</span> <span class="cn">FALSE</span>)[,<span class="sc">-</span><span class="dv">4</span>] <span class="sc">|&gt;</span> <span class="co"># delete ges column</span></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">|&gt;</span></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Effect</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">df</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">F</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">stimulation</td>
-<td style="text-align: left;">1, 25</td>
-<td style="text-align: left;">26.86 ***</td>
-<td style="text-align: left;">&lt;.0001</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">genotype</td>
-<td style="text-align: left;">1, 25</td>
-<td style="text-align: left;">0.71</td>
-<td style="text-align: left;">.41</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">stimulation:genotype</td>
-<td style="text-align: left;">1, 25</td>
-<td style="text-align: left;">6.79 *</td>
-<td style="text-align: left;">.02</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<p>Notes</p>
-<ol type="1">
-<li>The afex package has three function names for generating the same ANOVA table and statistics – here I’m using <code>aov_4</code> because this functions uses a linear model formula argument (specifically, that used in the lme4 package), which is consistent with the rest of this text.</li>
-<li>The formula includes the addition of a random factor (<code>(1|id)</code>) even though there really is no random factor in this model. See <a href="#lmm">Models with random factors – Blocking and pseudoreplication</a> for more information on random factors. The random factor (the factor variable “id” created in the line before the fit model line) identifies the individual mouse from which the response variable was measured. Because the response was only measured once on each individual mouse, “id” is not really a random factor but the addition of this in the model formula is necessary for the <code>aov_4</code> function to work.</li>
-</ol>
-</section>
-<section id="twoway-car-anova" class="level4" data-number="13.11.4.2">
-<h4 data-number="13.11.4.2" class="anchored" data-anchor-id="twoway-car-anova"><span class="header-section-number">13.11.4.2</span> The car Anova function</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>type3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">stimulation =</span> contr.sum,</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">genotype =</span> contr.sum)</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>m1_type3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j,</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">contrasts =</span> type3)</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m1_type3, <span class="at">type=</span><span class="st">"3"</span>)[<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="co"># delete row 1 and col 1</span></span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>type3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">stimulation =</span> contr.sum,</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">genotype =</span> contr.sum)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>m1_type3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">contrasts =</span> type3)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m1_type3, <span class="at">type=</span><span class="st">"3"</span>)[<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="co"># delete row 1 and col 1</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -3973,14 +3915,12 @@ NHST Blues
 <p><code>options(contrasts = c("contr.sum", "contr.poly")</code></p>
 <p>If you’re reading this book, you almost certainly don’t want to do this because this code resets how R computes coefficients of linear models and SS of ANOVA tables. This will effect all future analysis until the contrasts are set to something else or a new R session is started.</p>
 </div>
-</section>
-</section>
-<section id="better-to-avoid-these" class="level3" data-number="13.11.5">
-<h3 data-number="13.11.5" class="anchored" data-anchor-id="better-to-avoid-these"><span class="header-section-number">13.11.5</span> Better to avoid these</h3>
+<section id="better-to-avoid-these" class="level4" data-number="13.11.4.1">
+<h4 data-number="13.11.4.1" class="anchored" data-anchor-id="better-to-avoid-these"><span class="header-section-number">13.11.4.1</span> Better to avoid these</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>m1_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j)</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_aov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>m1_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_aov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 stimulation           1  41.75   41.75  29.796 1.14e-05 ***
@@ -3992,10 +3932,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same as exp2j_m1 in the Example 1 section</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j)</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same as exp2j_m1 in the Example 1 section</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_uptake <span class="sc">~</span> stimulation <span class="sc">*</span> genotype,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> exp2j)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -4017,118 +3957,119 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ol>
 </section>
 </section>
+</section>
 <section id="hidden-code" class="level2" data-number="13.12">
 <h2 data-number="13.12" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">13.12</span> Hidden Code</h2>
 <section id="import-exp2j-example-1" class="level3" data-number="13.12.1">
 <h3 data-number="13.12.1" class="anchored" data-anchor-id="import-exp2j-example-1"><span class="header-section-number">13.12.1</span> Import exp2j (Example 1)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"TLR9 and beclin 1 crosstalk regulates muscle AMPK activation in exercise"</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2020_1992_MOESM4_ESM.xlsx"</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>treatment_levels  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"WT Rest"</span>,</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"WT Active"</span>,</span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"KO Rest"</span>,</span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"KO Active"</span>)</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>exp2j_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> <span class="st">"2j"</span>,</span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"A5:D13"</span>,</span>
-<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp2j_wide) <span class="ot">&lt;-</span> treatment_levels</span>
-<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>exp2j <span class="ot">&lt;-</span> <span class="fu">melt</span>(exp2j_wide,</span>
-<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> treatment_levels,</span>
-<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
-<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"glucose_uptake"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="co"># danger!</span></span>
-<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a>exp2j[, <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"stimulation"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(treatment,</span>
-<span id="cb61-25"><a href="#cb61-25" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">" "</span>,</span>
-<span id="cb61-26"><a href="#cb61-26" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">fixed =</span> <span class="cn">TRUE</span>)]</span>
-<span id="cb61-27"><a href="#cb61-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-28"><a href="#cb61-28" aria-hidden="true" tabindex="-1"></a>genotype_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>)</span>
-<span id="cb61-29"><a href="#cb61-29" aria-hidden="true" tabindex="-1"></a>stimulation_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Rest"</span>, <span class="st">"Active"</span>)</span>
-<span id="cb61-30"><a href="#cb61-30" aria-hidden="true" tabindex="-1"></a>exp2j[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype,</span>
-<span id="cb61-31"><a href="#cb61-31" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> genotype_levels)]</span>
-<span id="cb61-32"><a href="#cb61-32" aria-hidden="true" tabindex="-1"></a>exp2j[, stimulation <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(stimulation,</span>
-<span id="cb61-33"><a href="#cb61-33" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> stimulation_levels)]</span>
-<span id="cb61-34"><a href="#cb61-34" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp2j)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"TLR9 and beclin 1 crosstalk regulates muscle AMPK activation in exercise"</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2020_1992_MOESM4_ESM.xlsx"</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>treatment_levels  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"WT Rest"</span>,</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"WT Active"</span>,</span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"KO Rest"</span>,</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"KO Active"</span>)</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>exp2j_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> <span class="st">"2j"</span>,</span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"A5:D13"</span>,</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp2j_wide) <span class="ot">&lt;-</span> treatment_levels</span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a>exp2j <span class="ot">&lt;-</span> <span class="fu">melt</span>(exp2j_wide,</span>
+<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> treatment_levels,</span>
+<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"glucose_uptake"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb60-22"><a href="#cb60-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="co"># danger!</span></span>
+<span id="cb60-23"><a href="#cb60-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-24"><a href="#cb60-24" aria-hidden="true" tabindex="-1"></a>exp2j[, <span class="fu">c</span>(<span class="st">"genotype"</span>, <span class="st">"stimulation"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(treatment,</span>
+<span id="cb60-25"><a href="#cb60-25" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">" "</span>,</span>
+<span id="cb60-26"><a href="#cb60-26" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">fixed =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb60-27"><a href="#cb60-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-28"><a href="#cb60-28" aria-hidden="true" tabindex="-1"></a>genotype_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>)</span>
+<span id="cb60-29"><a href="#cb60-29" aria-hidden="true" tabindex="-1"></a>stimulation_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Rest"</span>, <span class="st">"Active"</span>)</span>
+<span id="cb60-30"><a href="#cb60-30" aria-hidden="true" tabindex="-1"></a>exp2j[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype,</span>
+<span id="cb60-31"><a href="#cb60-31" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> genotype_levels)]</span>
+<span id="cb60-32"><a href="#cb60-32" aria-hidden="true" tabindex="-1"></a>exp2j[, stimulation <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(stimulation,</span>
+<span id="cb60-33"><a href="#cb60-33" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> stimulation_levels)]</span>
+<span id="cb60-34"><a href="#cb60-34" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp2j)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-exp3e-lesian-area-data-example-2" class="level3" data-number="13.12.2">
 <h3 data-number="13.12.2" class="anchored" data-anchor-id="import-exp3e-lesian-area-data-example-2"><span class="header-section-number">13.12.2</span> Import exp3e lesian area data (Example 2)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"XX sex chromosome complement promotes atherosclerosis in mice"</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2019_10462_MOESM6_ESM.xlsx"</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fig 3e</span></span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>exp3e_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sheet =</span> <span class="st">"Figure 3E"</span>,</span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">range =</span> <span class="st">"A3:K4"</span>,</span>
-<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transpose</span>(<span class="at">make.names =</span> <span class="dv">1</span>)</span>
-<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>sex_levels <span class="ot">&lt;-</span> <span class="fu">colnames</span>(exp3e_wide)</span>
-<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>exp3e <span class="ot">&lt;-</span> <span class="fu">melt</span>(exp3e_wide,</span>
-<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> sex_levels,</span>
-<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"sex"</span>,</span>
-<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"lesian_area"</span>)</span>
-<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a><span class="co"># convert lesian_area to mm^2 from µm^2</span></span>
-<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a>exp3e[, lesian_area <span class="sc">:</span><span class="er">=</span> lesian_area<span class="sc">/</span><span class="dv">10</span><span class="sc">^</span><span class="dv">6</span>]</span>
-<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a><span class="co"># convert sex variable to factor</span></span>
-<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a>exp3e[, sex <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(sex,</span>
-<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> sex_levels)]</span>
-<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a><span class="co"># create chromosome column and convert to factor</span></span>
-<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a>chromosome_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"XX"</span>, <span class="st">"XY"</span>)</span>
-<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a>exp3e[, chromosome <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(<span class="fu">rep</span>(chromosome_levels, <span class="at">each =</span> <span class="dv">5</span>), <span class="dv">2</span>)]</span>
-<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a>exp3e[, chromosome <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(chromosome,</span>
-<span id="cb62-30"><a href="#cb62-30" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> chromosome_levels)]</span>
-<span id="cb62-31"><a href="#cb62-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-32"><a href="#cb62-32" aria-hidden="true" tabindex="-1"></a><span class="co"># researchers treatment levels</span></span>
-<span id="cb62-33"><a href="#cb62-33" aria-hidden="true" tabindex="-1"></a>exp3e[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"FXX"</span>, <span class="st">"FXY"</span>, <span class="st">"MXX"</span>, <span class="st">"MXY"</span>), <span class="at">each =</span> <span class="dv">5</span>)]</span>
-<span id="cb62-34"><a href="#cb62-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-35"><a href="#cb62-35" aria-hidden="true" tabindex="-1"></a><span class="co"># two rows with missing response so delte these rows as there is </span></span>
-<span id="cb62-36"><a href="#cb62-36" aria-hidden="true" tabindex="-1"></a><span class="co"># no useful information in them</span></span>
-<span id="cb62-37"><a href="#cb62-37" aria-hidden="true" tabindex="-1"></a>exp3e <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(exp3e) <span class="co"># be careful with a global na.omit</span></span>
-<span id="cb62-38"><a href="#cb62-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-39"><a href="#cb62-39" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp3e) # highlight and run to see data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"XX sex chromosome complement promotes atherosclerosis in mice"</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2019_10462_MOESM6_ESM.xlsx"</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fig 3e</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>exp3e_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sheet =</span> <span class="st">"Figure 3E"</span>,</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">range =</span> <span class="st">"A3:K4"</span>,</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transpose</span>(<span class="at">make.names =</span> <span class="dv">1</span>)</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>sex_levels <span class="ot">&lt;-</span> <span class="fu">colnames</span>(exp3e_wide)</span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>exp3e <span class="ot">&lt;-</span> <span class="fu">melt</span>(exp3e_wide,</span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> sex_levels,</span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"sex"</span>,</span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"lesian_area"</span>)</span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a><span class="co"># convert lesian_area to mm^2 from µm^2</span></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>exp3e[, lesian_area <span class="sc">:</span><span class="er">=</span> lesian_area<span class="sc">/</span><span class="dv">10</span><span class="sc">^</span><span class="dv">6</span>]</span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a><span class="co"># convert sex variable to factor</span></span>
+<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a>exp3e[, sex <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(sex,</span>
+<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> sex_levels)]</span>
+<span id="cb61-25"><a href="#cb61-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-26"><a href="#cb61-26" aria-hidden="true" tabindex="-1"></a><span class="co"># create chromosome column and convert to factor</span></span>
+<span id="cb61-27"><a href="#cb61-27" aria-hidden="true" tabindex="-1"></a>chromosome_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"XX"</span>, <span class="st">"XY"</span>)</span>
+<span id="cb61-28"><a href="#cb61-28" aria-hidden="true" tabindex="-1"></a>exp3e[, chromosome <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(<span class="fu">rep</span>(chromosome_levels, <span class="at">each =</span> <span class="dv">5</span>), <span class="dv">2</span>)]</span>
+<span id="cb61-29"><a href="#cb61-29" aria-hidden="true" tabindex="-1"></a>exp3e[, chromosome <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(chromosome,</span>
+<span id="cb61-30"><a href="#cb61-30" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> chromosome_levels)]</span>
+<span id="cb61-31"><a href="#cb61-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-32"><a href="#cb61-32" aria-hidden="true" tabindex="-1"></a><span class="co"># researchers treatment levels</span></span>
+<span id="cb61-33"><a href="#cb61-33" aria-hidden="true" tabindex="-1"></a>exp3e[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"FXX"</span>, <span class="st">"FXY"</span>, <span class="st">"MXX"</span>, <span class="st">"MXY"</span>), <span class="at">each =</span> <span class="dv">5</span>)]</span>
+<span id="cb61-34"><a href="#cb61-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-35"><a href="#cb61-35" aria-hidden="true" tabindex="-1"></a><span class="co"># two rows with missing response so delte these rows as there is </span></span>
+<span id="cb61-36"><a href="#cb61-36" aria-hidden="true" tabindex="-1"></a><span class="co"># no useful information in them</span></span>
+<span id="cb61-37"><a href="#cb61-37" aria-hidden="true" tabindex="-1"></a>exp3e <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(exp3e) <span class="co"># be careful with a global na.omit</span></span>
+<span id="cb61-38"><a href="#cb61-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-39"><a href="#cb61-39" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp3e) # highlight and run to see data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-exp1c-ja-data-example-3" class="level3" data-number="13.12.3">
 <h3 data-number="13.12.3" class="anchored" data-anchor-id="import-exp1c-ja-data-example-3"><span class="header-section-number">13.12.3</span> Import Exp1c JA data (Example 3)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Integration of two herbivore-induced plant volatiles results in synergistic effects on plant defense and resistance"</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"Data for Dryad.xlsx"</span></span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>exp1 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig. 1"</span>,</span>
-<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A3:K23"</span>, <span class="co"># 1 blank column</span></span>
-<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
-<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(exp1, <span class="at">old =</span> <span class="st">"treat"</span>, <span class="at">new =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"Control"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC-"</span>, <span class="st">"Indole-"</span>)]</span>
-<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"HAC"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC+"</span>, <span class="st">"Indole-"</span>)]</span>
-<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"Indole"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC-"</span>, <span class="st">"Indole+"</span>)]</span>
-<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"HAC+Indole"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC+"</span>, <span class="st">"Indole+"</span>)]</span>
-<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Control"</span>, <span class="st">"HAC"</span>, <span class="st">"Indole"</span>, <span class="st">"HAC+Indole"</span>)</span>
-<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a>exp1[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment,</span>
-<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> treatment_levels)]</span>
-<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a>exp1[, hac <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(hac)] <span class="co"># levels in correct order</span></span>
-<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a>exp1[, indole <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(indole)] <span class="co"># levels in correct order</span></span>
-<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Integration of two herbivore-induced plant volatiles results in synergistic effects on plant defense and resistance"</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"Data for Dryad.xlsx"</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>exp1 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Fig. 1"</span>,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="st">"A3:K23"</span>, <span class="co"># 1 blank column</span></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(exp1, <span class="at">old =</span> <span class="st">"treat"</span>, <span class="at">new =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"Control"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC-"</span>, <span class="st">"Indole-"</span>)]</span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"HAC"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC+"</span>, <span class="st">"Indole-"</span>)]</span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"Indole"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC-"</span>, <span class="st">"Indole+"</span>)]</span>
+<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a>exp1[treatment <span class="sc">==</span> <span class="st">"HAC+Indole"</span>, <span class="fu">c</span>(<span class="st">"hac"</span>, <span class="st">"indole"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">list</span>(<span class="st">"HAC+"</span>, <span class="st">"Indole+"</span>)]</span>
+<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Control"</span>, <span class="st">"HAC"</span>, <span class="st">"Indole"</span>, <span class="st">"HAC+Indole"</span>)</span>
+<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a>exp1[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment,</span>
+<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> treatment_levels)]</span>
+<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a>exp1[, hac <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(hac)] <span class="co"># levels in correct order</span></span>
+<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a>exp1[, indole <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(indole)] <span class="co"># levels in correct order</span></span>
+<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a><span class="co"># View(exp1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

@@ -152,10 +152,7 @@ Write something like this in your .Rmd file following the model check code chunk
 ```{r fig3d_m1_coef, echo=TRUE}
 fig3d_m1_coef <- cbind(coef(summary(fig3d_m1)),
                         confint(fig3d_m1))
-colnames(fig3d_m1_coef)[4] <- "p value"
-kable(fig3d_m1_coef,
-      digits = c(1,2,1,4,1,1)) |>
-  kable_styling()
+fig3d_m1_coef
 ```
 
 ##### emmeans table
@@ -293,9 +290,7 @@ where $\mathbf{X}$ is the model matrix containing a column for an intercept, col
 #### The Estimates in the coefficient table are estimates of the parameters of the linear model fit to the data.
 
 ```{r cat-x-fig3d_m1_coef-kable, echo=FALSE}
-fig3d_m1_coef|>
-  kable(digits = c(1,2,1,4,1,1)) |>
-  kable_styling()
+fig3d_m1_coef
 ```
 
 The row names of the coefficient table are the column names of the model matrix. These are the model terms. There are two terms (two rows) because there are two parameters in the regression model @eq-reg-model-example-1. The values in the column $\texttt{Estimate}$ in the coefficient table are the estimates of the regression parameters $\beta_0$ and $\beta_1$. These estimates are the coefficients of the fit model, $b_0$ and $b_1$.
@@ -416,8 +411,7 @@ A geometric interpretation of the coefficients is illustrated in Figure @fig-one
 
 ```{r}
 fig3d_m1_coef|>
-  kable(digits = c(1,2,1,4,1,1)) |>
-  kable_styling()
+  kable(digits = c(1,2,1,4,1,1))
 ```
 
 1. The $\texttt{(Intercept)}$ row contains the statistics for $b_0$ (the estimate of $\beta_0$). Remember that $b_0$ is the conditional mean of the reference treatment ("Vehicle").
@@ -536,8 +530,7 @@ coefficient table:
 ```{r echo = TRUE}
 m1 <- lm(serum_tg ~ treatment, data = fig3d)
 coef(summary(m1)) |>
-  kable() |>
-  kable_styling()
+  kable()
 ```
 contrast table:
 
@@ -652,8 +645,7 @@ Write something like this in your .Rmd file following the model check code chunk
 fig2a_m1_coef <- cbind(coef(summary(fig2a_m1)),
                         confint(fig2a_m1))
 fig2a_m1_coef|>
-  kable(digits = c(1,2,1,4,1,1)) |>
-  kable_styling()
+  kable(digits = c(1,2,1,4,1,1))
 ```
 ##### emmeans table
 
@@ -747,8 +739,7 @@ The coefficients of the model are in the $\texttt{Estimate}$ column of the coeff
 
 ```{r example2-coef-understand, echo=FALSE}
 fig2a_m1_coef|>
-  kable(digits = c(1,1,1,0,1,1,2,4)) |>
-  kable_styling()
+  kable(digits = c(1,1,1,4,1,1))
 ```
 
 1. The $\texttt{(Intercept)}$ row contains the statistics for $b_0$ (the estimate of $\beta_0$). Here, $b_0$ is the mean of the reference group, which is "Control".
@@ -1022,6 +1013,7 @@ are two different models! The first models time as a numeric variable while the 
 
 ```{r}
 m1 <- lm(diHOME ~ treatment, data = fig2a)
+
 m1_coef <- coef(summary(m1))
 
 # or if we want the CIs of the coefficeints too
@@ -1029,29 +1021,6 @@ m1_coef <- coef(summary(m1))
 m1_coef <- cbind(coef(summary(m1)),
                  confint(m1))
 m1_coef
-```
-
-For many table-like objects, I use `knitr::kable` to print the table with fewer decimal places and `kableExtra::kable_styling` to make it a little prettier.
-
-```{r}
-# the row names are not part of the m1_coef object
-# so there is no digit designation for this column
-
-m1_coef|> # pipe the m1_coef object to kable
-  kable(digits = c(2,3,3,5,2,2)) |> 
-  kable_styling()
-
-# explore other styles in the kableExtra package
-```
-
-Note that as of this writing (09/29/2024), `kable_styling()` is not correctly printing the absolute value signs in the p-value label. This is annoying, so as a fix, I'm changing the column name to `p value`
-
-```{r}
-colnames(m1_coef)[4] <- "p value"
-m1_coef|> # pipe the m1_coef object to kable
-  kable(digits = c(2,3,3,5,2,2)) |> 
-  kable_styling()
-
 ```
 
 ### Using the emmeans function
@@ -1097,7 +1066,9 @@ The `method =` argument is used to control the set of contrasts that are compute
 @. `method = "pairwise"` is the default method. "pairwise" computes all pairwise contrasts but in the direction opposite to "revpairwise". The default *p*-value adjustment is "tukey."
 @. `method = "trt.vs.ctrl"` and `method = "dunnett"` are the same. These compute all non-reference minus reference contrasts. This method was used in the "Inference" section because it gives the two contrasts of the planned comparisons identified in the "understand the experimental design" step. The default *p*-value adjustment for multiple tests is "dunnettx", which is [Dunnett's test](https://en.wikipedia.org/wiki/Dunnett%27s_test){target="_blank"}.
 
-Here are all pairwise contrasts using "revpairwise"
+##### method = "revpairwise" or "pairwise"
+
+Here are all pairwise contrasts using "revpairwise" and the default p-value adjustment
 
 ```{r}
 contrast(m1_emm,
@@ -1105,7 +1076,7 @@ contrast(m1_emm,
   summary(infer = TRUE)
 ```
 
-and using "pairwise"
+and using "pairwise" and the default p-value adjustment
 
 ```{r}
 contrast(m1_emm,
@@ -1114,6 +1085,16 @@ contrast(m1_emm,
 ```
 
 Notice that inference is the same, only the direction of the effect differs.
+
+##### method = "dunnett"
+
+Above, I used method "trt.vs.ctrl" to get only the treatment vs. control contrasts but, following my argument on adjusting for multiple tests, I also included the adjust = "none" argument. What if we want the classical Dunnett test, with adjustment?
+
+```{r cat-x-fig-2a-dunnett}
+contrast(m1_emm,
+        method = "dunnett") |> # could also use "trt.vs.ctrl"
+  summary(infer = TRUE)
+```
 
 #### Planned comparisons using custom contrasts
 

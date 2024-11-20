@@ -15,6 +15,7 @@ library(nlme)
 library(lmerTest)
 library(emmeans)
 library(MASS)
+library(DHARMa)
 
 # plot function
 library(ggplot2)
@@ -847,6 +848,47 @@ ggcheck_the_qq = function(m1,
 }
 ```
 
+```{r rqpois}
+  rqpois <- function(n, mu, theta) {
+    y <- rnbinom(n = n, mu = mu, size = mu/(theta-1))
+    return(y)
+  }
+```
+
+
+```{r}
+
+ggcheck_the_glm = function(m1,
+                           n_sim = 250,
+                           se = FALSE,
+                           normal = FALSE){
+  
+  info <- model_info(m1)
+  if(info$family == "quasipoisson"){
+    n <- info$n_obs
+    x_cols <- find_predictors(m1)$conditional
+    y_col <- find_response(m1)
+    m1_data <- get_data(m1) |>
+      data.table()
+    # get mu
+    m1_data[, yhat := exp(predict(m1))]
+    mu_sim <- m1_data[, yhat]
+    # get theta
+    theta <- summary(m1)$dispersion
+    # get fake data
+    y <- rqpois(n * n_sim, rep(mu_sim, n_sim), theta)
+    fd <- matrix(y, nrow = n, ncol = n_sim)
+    m1_check <- createDHARMa(simulatedResponse = fd, 
+                             observedResponse = m1_data[, get(y_col)],
+                             fittedPredictedResponse = m1_data[, yhat],
+                             integerResponse = TRUE)
+  }else{
+    m1_check <- simulateResiduals(fittedModel = m1, n = n_sim)
+  }
+  return(m1_check)
+}
+```
+  
 ```{r}
 
 ggcheck_the_glm_qq = function(m1,
@@ -854,11 +896,37 @@ ggcheck_the_glm_qq = function(m1,
                    se = FALSE,
                    normal = FALSE){
   
-  simulationOutput <- simulateResiduals(fittedModel = m1, n = n_sim)
-  observed = simulationOutput$scaledResiduals %>%
-    sort()
-  
-  m1_data <- insight::get_data(m1)
+  info <- model_info(m1)
+  if(info$family == "quasipoisson"){
+    n <- info$n_obs
+    x_cols <- find_predictors(m1)$conditional
+    y_col <- find_response(m1)
+    m1_data <- get_data(m1) |>
+      data.table()
+    # get counts
+    m1_counts <- m1_data[, .(N = .N), by = x_cols]
+    # get mu
+    m1_data[, yhat := exp(predict(m1))]
+    mu_sim <- m1_data[, yhat]
+    # get theta
+    theta <- summary(m1)$dispersion
+    # get fake data
+    y <- rqpois(n * n_sim, mu_sim * n_sim, theta)
+    fd <- matrix(y, nrow = n, ncol = n_sim)
+    m1_check <- createDHARMa(simulatedResponse = fd, 
+                           observedResponse = m1_data[, get(y_col)],
+                           fittedPredictedResponse = m1_data[, yhat],
+                           integerResponse = TRUE)
+    observed = m1_check$scaledResiduals |>
+      sort()
+  }else{
+    m1_check <- simulateResiduals(fittedModel = m1, n = n_sim)
+    observed = m1_check$scaledResiduals |>
+      sort()
+    
+  }
+
+  m1_data <- get_data(m1)
   n_points <- nrow(m1_data)
   
   q <- n_points + 1
@@ -884,7 +952,7 @@ ggcheck_the_glm_qq = function(m1,
 
   if(se == TRUE){
     qr <- matrix(as.numeric(NA), nrow = n_points, ncol = n_sim)
-    fake_counts <- simulationOutput$simulatedResponse
+    fake_counts <- m1_check$simulatedResponse
     m1_form <- find_formula(m1)$conditional
     m1_y <- find_response(m1)
     m1_model_name <- model_name(m1)
@@ -1361,13 +1429,19 @@ plot_pvalues <- function(
       fit_emm,
       fit_pairs,
       contrast_rows,
-      y_pos = NULL
+      y_pos = NULL,
+      pvalue_text_size = 3.5
 ){
   fit_emm_dt <- emm_table(fit_emm)
   
   # change prob to emmean in binomial models
   if("prob" %in% names(fit_emm_dt)){
     setnames(fit_emm_dt, "prob", "emmean")
+  }
+
+  # change rate to emmean in quasipoisson models
+  if("rate" %in% names(fit_emm_dt)){
+    setnames(fit_emm_dt, "rate", "emmean")
   }
 
   if(which(names(fit_emm_dt) == "emmean") == 2){
@@ -1440,7 +1514,7 @@ plot_pvalues <- function(
                          y.position = y_position,
                          xmin = "x_min_col",
                          xmax = "x_max_col",
-                         size = 2.5,
+                         size = pvalue_text_size,
                          tip.length = 0.01)
     
     # make sure ylim includes p-value
@@ -1473,6 +1547,7 @@ ggplot_the_response <- function(
     adjust = 0.5,
     contrast_rows = "all",
     y_pos = NULL,
+    pvalue_text_size = 3.5,
     palette = pal_okabe_ito,
     legend_position = "top",
     flip_horizontal = FALSE,
@@ -1509,7 +1584,8 @@ ggplot_the_response <- function(
       fit_emm = fit_emm,
       fit_pairs = fit_pairs,
       contrast_rows = contrast_rows,
-      y_pos = y_pos
+      y_pos = y_pos,
+      pvalue_text_size = pvalue_text_size
     )
   }
   
