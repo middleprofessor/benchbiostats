@@ -202,9 +202,10 @@ fake_rcbd <- simulator(
   seed_i = 1,
   n_treat = 3, # number of treatment levels
   n_block = 10, # number of litters (blocks)
-  n_ss = 10, # number of subsamples
+  n_ss = 3, # number of subsamples
   design = "rcbd",
-  beta = c(0.4, -0.12, 0),
+  beta = c(0.4, 0, 0),
+  # beta = c(0.4, -0.12, 0),
   sigma_exp.block = sigma_among, # sd among exp:block (or block if n_exp = 1)
   sigma_exp.block.treat = c(0.1, 0.05, 0.01), # sd among exp:block:treat
   sigma_ss = sigma_within, # sd among subsamples within replication of treatment:block

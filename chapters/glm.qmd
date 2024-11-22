@@ -1706,10 +1706,42 @@ fit <- glmmTMB(y ~ treatment + (1|id), family="nbinom1", data = dt)
 
 The `DHARMa` package has an excellent set of model checking tools. The DHARMa package uses simulation to generate fake data sampled from the fit model using the function `simulateResiduals`.
 
-Here, I use `ggcheck_the_glm` which uses DHARMa underneath the hood. DHARMa does not simulate Quasipoisson model fits, but I have included these in `ggcheck_the_glm`.
+Here, I use `ggcheck_the_glm` which uses DHARMa underneath the hood. DHARMa does not simulate Quasipoisson model fits, but I have included these in `ggcheck_the_glm`. Because there is no native Quasipoisson check, I refit the fig3a data using a negative binomial
+
+```{r}
+fig3a_qp_1 <- glmmTMB(sprouts ~ treatment * genotype,
+                family = nbinom1(link = "log"),
+                data = fig3a)
+fig3a_qp_2 <- glm(sprouts ~ treatment * genotype,
+                family = quasipoisson(link = "log"),
+                data = fig3a)
+fig3a_nb_1 <- glmmTMB(sprouts ~ treatment * genotype,
+                family = nbinom2(link = "log"),
+                data = fig3a)
+fig3a_nb_2 <- glm.nb(sprouts ~ treatment * genotype,
+                data = fig3a)
+coef(summary(fig3a_qp_1))
+coef(summary(fig3a_qp_2))
+
+contrast(emmeans(fig3a_qp_1, specs = c("treatment", "genotype"),
+                 type = "response"),
+         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+contrast(emmeans(fig3a_qp_2, specs = c("treatment", "genotype"),
+                 type = "response"),
+         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+contrast(emmeans(fig3a_nb_1, specs = c("treatment", "genotype"),
+                 type = "response"),
+         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+contrast(emmeans(fig3a_nb_2, specs = c("treatment", "genotype"),
+                 type = "response"),
+         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+
+```
+
 
 ```{r}
 fig3a_qp_check <- ggcheck_the_glm(fig3a_qp, n_sim = 250) # 250 fake data sets
+
 ```
 
 

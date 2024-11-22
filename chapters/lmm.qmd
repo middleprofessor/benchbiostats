@@ -2334,8 +2334,6 @@ if(error_type == "power"){
 }
 save_file_path <- here(data_from, outfile_name)
 
-
-
 treatment_levels <- c("Cn", "Tr1", "Tr2")
 model_levels <- c("lm.crd", "lm.fe", "lmm.ce", "rmaov.mul", "rmaov.uni1x", "ppttm")
 
@@ -2375,7 +2373,9 @@ if(do_sim == TRUE){
   for(param_set in 1:nrow(param_set_matrix)){
     seed_starter <- seed_starter + 1
     if(param_set == 2 | param_set == 3){
-      beta_i[3] <- 0.65
+      if(error_type == "power"){
+        beta_i[3] <- 0.65
+      }
     }
     sigma_exp.block_i <- param_set_matrix[param_set, sigma_block]
     sigma_exp.block.treat_i <- param_set_matrix[param_set, .SD, .SDcols = treatment_levels] |> as.numeric()
@@ -3065,6 +3065,296 @@ These results suggest lmm.ce is the preferred model. If lmm.ce fails, then it's 
 
 But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have poor type I error control under some conditions while lmm.ce and rmaov.mul/pptt have good error control under all conditions.
 
+### RCBDS
+
+```{r rcbds-performance-sim, warning=FALSE, message=FALSE, error=FALSE, echo = FALSE}
+seed_starter <- 0
+n_sims <- 500
+do_sim <- TRUE
+
+data_from <- "simulations/grcbds/data"
+error_type <- "type1" 
+if(error_type == "type1"){
+  outfile_name <- "rcbds_type1.Rds"
+  # parameters
+  beta_i = c(10, 0, 0)
+}
+if(error_type == "power"){
+    outfile_name <- "rcbds_power.Rds"
+  # parameters
+  beta_i = c(10, 0, 1.2)
+}
+save_file_path <- here(data_from, outfile_name)
+
+treatment_levels <- c("Cn", "Tr1", "Tr2")
+model_levels <- c("lm.crd", "lm.fe", "lmm.ri", "lmm.ris", "lmm.ce", 
+                  "rmaov.mul", "rmaov.uni1x", "ppttm")
+
+p1_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+p2_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+p3_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = length(model_levels))
+r_mat <- matrix(as.numeric(NA), nrow = n_sims, ncol = 3)
+
+# each row is different param_set
+sigma_exp.block.treat_matrix <- matrix(c(
+  c(2, 1, 0.2),
+  c(0.5, .25, 0.05),
+  c(0, 0, 0),
+  c(0, 0, 0)
+), nrow = 3, ncol = 4) |>
+  t()
+colnames(sigma_exp.block.treat_matrix) <- treatment_levels
+
+# each value is different param_set
+sigma_exp.block_list <- c(1, 0.25, 0.8, 0)
+
+# each value is different param_set
+sigma_ss_list <- c(.1, .4, .4, 1)
+
+param_set_matrix <- data.table(
+  sim_id = 1:length(sigma_exp.block_list),
+  sigma_block = sigma_exp.block_list,
+  sigma_exp.block.treat_matrix,
+  sigma_ss = sigma_ss_list
+)
+
+res_table <- matrix(as.numeric(NA), nrow = nrow(param_set_matrix), ncol = 15)
+sim_table <- data.table(NULL)
+big_table <- data.table(NULL)
+
+if(do_sim == TRUE){
+  for(param_set in 1:nrow(param_set_matrix)){
+    seed_starter <- seed_starter + 1
+    if(param_set == 2 | param_set == 3){
+      if(error_type == "power"){
+        beta_i[3] <- 0.65
+      }
+    }
+    sigma_exp.block_i <- param_set_matrix[param_set, sigma_block]
+    sigma_exp.block.treat_i <- param_set_matrix[param_set, .SD, .SDcols = treatment_levels] |> as.numeric()
+    sigma_ss_i <- param_set_matrix[param_set, sigma_ss]
+    sigma_rep_i <- 0.1
+    sigma_exp.treat_i <- 0
+    sigma_exp_i <- 0
+    n_treat_i <- 3
+    n_block_i <- 10
+    n_rep_i <- 1
+    n_ss_i <- 3
+    fake_rcbd <- simulator(
+      seed_i = seed_starter,
+      n_sim = n_sims,
+      n_treat = n_treat_i, # number of treatment levels
+      n_block = n_block_i, # number of litters (blocks)
+      n_rep = n_rep_i, # number of mice per litter:treatment
+      n_ss = n_ss_i, # number of subsamples
+      design = "rcbd",
+      correlated_slopes = FALSE, # TRUE uses random int/slope model to generate data
+      beta = beta_i,
+      gamma = c(1, 1, 0), # sd of random intercept and slopes for non-ref
+      rho = 0.0, # r between random intercept and slopes
+      sigma_exp = sigma_exp_i, # sd among experiments
+      sigma_exp.block = sigma_exp.block_i, # sd among exp:block (or block if n_exp = 1)
+      sigma_exp.treat = sigma_exp.treat_i, # sd among exp:treat
+      sigma_exp.block.treat = sigma_exp.block.treat_i, # sd among exp:block:treat
+      sigma_rep = sigma_rep_i,
+      sigma_ss = sigma_ss_i, # sd among subsamples within replication of treatment:block
+      # sigma_exp = 0, # sd among experiments
+      # sigma_exp.block = 0.1, # sd among exp:block (or block if n_exp = 1)
+      # sigma_exp.treat = 0, # sd among exp:treat
+      # sigma_exp.block.treat = c(0.1, 0.1, 0.1), # sd among exp:block:treat
+      # sigma_rep = 0.1,
+      # sigma_ss = 1, # sd among subsamples within replication of treatment:block
+      block_name = "experiment",
+      rep_name = "mouse",
+      ss_name = "ss",
+    )
+    
+    for(i in 1:n_sims){
+      
+      # models
+      form_lm.crd <- paste(paste0("sim_1"), "~ treatment") |>
+        formula()
+      form_lm.fe <- paste(paste0("sim_1"), "~ treatment + experiment") |>
+        formula()
+      form_lmm.ri <- paste(paste0("sim_", i), "~ treatment + (1 | experiment)") |>
+        formula()
+      form_lmm.ris <- paste(paste0("sim_", i), "~ treatment + (treatment | experiment)") |>
+        formula()
+      form_pptt <- paste(paste0("sim_1"), "~ treatment + (1 | experiment)") |>
+        formula()
+      form_aov <- paste(paste0("sim_", i), "~ treatment + (treatment | experiment)") |>
+        formula()
+      
+      # aggregate data
+      fake_rcbd_means <- fake_rcbd[, .(sim_1 = mean(get(paste0("sim_", i)))),
+                                   by = .(treatment, experiment)]
+
+      lm.crd <- lm(form_lm.crd, data = fake_rcbd_means)
+      lm.fe <- lm(form_lm.fe, data = fake_rcbd_means)
+      lmm.ri <- lmer(form_lmm.ri, data = fake_rcbd)
+      lmm.ris <- lmer(form_lmm.ris, data = fake_rcbd)
+      # lmm.ce <- lme(form_lm.crd,
+      #             random = ~1 | experiment,
+      #             correlation = corSymm(form = ~ 1 | experiment),
+      #             weights = varIdent(form = ~ 1 | treatment),
+      #             data = fake_rcbd) |>
+      #   try()
+      # if(inherits(lmm.ce, "try-error")){
+      #   lmm.ce <- NULL
+      # }
+      
+      # rmaov.uni used for both multivariate (rmaov.mul) and univariate (rmaov.uni)
+      rmaov.uni <- aov_4(form_aov,
+                    fun_aggregate = mean,
+                    include_aov = TRUE,
+                    data = fake_rcbd)
+      
+      lm.crd_pairs <- emmeans(lm.crd, specs = "treatment") |>
+        contrast(method = "revpairwise", adjust = "none")
+      lm.fe_pairs <- emmeans(lm.fe, specs = "treatment") |>
+        contrast(method = "revpairwise", adjust = "none")
+      lmm.ri_pairs <- emmeans(lmm.ri, specs = "treatment") |>
+        contrast(method = "revpairwise", adjust = "none")
+      lmm.ris_pairs <- emmeans(lmm.ris, specs = "treatment") |>
+        contrast(method = "revpairwise", adjust = "none")
+      rmaov.mul_pairs <- emmeans(rmaov.uni, specs = "treatment", model = "multivariate") |>
+        contrast(method = "revpairwise", adjust = "none")
+      rmaov.uni1x_pairs <- emmeans(rmaov.uni, specs = "treatment", model = "univariate") |>
+        contrast(method = "revpairwise", adjust = "none")
+      pptt_pairs <- pptt(form_pptt, data = fake_rcbd_means)
+      
+     
+      fake_rcbd_means[, y_res := residuals(lm.crd)]
+      fake_rcbd_wide <- dcast(fake_rcbd_means,
+                              experiment ~ treatment,
+                              value.var = "y_res")
+      residual_correlations <- cor(fake_rcbd_wide[, .SD, .SDcols = treatment_levels])
+      r_mat[i, 1] <- residual_correlations[2,1]
+      r_mat[i, 2] <- residual_correlations[3,1]
+      r_mat[i, 3] <- residual_correlations[3,2]
+      
+      lm.crd_p <- summary(lm.crd_pairs)[, "p.value"]
+      lm.fe_p <- summary(lm.fe_pairs)[, "p.value"]
+      lmm.ri_p <- summary(lmm.ri_pairs)[, "p.value"]
+      lmm.ris_p <- summary(lmm.ris_pairs)[, "p.value"]
+      rmaov.mul_p <- summary(rmaov.mul_pairs)[, "p.value"]
+      rmaov.uni1x_p <- summary(rmaov.uni1x_pairs)[, "p.value"]
+      pptt_p <- pptt_pairs[, p.value]
+      
+      p1_mat[i, 1] <- lm.crd_p[1]
+      p1_mat[i, 2] <- lm.fe_p[1]
+      p1_mat[i, 3] <- lmm.ri_p[1]
+      p1_mat[i, 4] <- lmm.ris_p[1]
+      p1_mat[i, 5] <- NA
+      p1_mat[i, 6] <- rmaov.mul_p[1]
+      p1_mat[i, 7] <- rmaov.uni1x_p[1]
+      p1_mat[i, 8] <- pptt_p[1]
+      
+      p2_mat[i, 1] <- lm.crd_p[2]
+      p2_mat[i, 2] <- lm.fe_p[2]
+      p2_mat[i, 3] <- lmm.ri_p[2]
+      p2_mat[i, 4] <- lmm.ris_p[2]
+      p2_mat[i, 5] <- NA
+      p2_mat[i, 6] <- rmaov.mul_p[2]
+      p2_mat[i, 7] <- rmaov.uni1x_p[2]
+      p2_mat[i, 8] <- pptt_p[2]
+      
+      p3_mat[i, 1] <- lm.crd_p[3]
+      p3_mat[i, 2] <- lm.fe_p[3]
+      p3_mat[i, 3] <- lmm.ri_p[3]
+      p3_mat[i, 4] <- lmm.ris_p[3]
+      p3_mat[i, 5] <- NA
+      p3_mat[i, 6] <- rmaov.mul_p[3]
+      p3_mat[i, 7] <- rmaov.uni1x_p[3]
+      p3_mat[i, 8] <- pptt_p[3]
+      
+      # if(!is.null(lmm.ce)){
+      #   lmm4_pairs <- emmeans(lmm.ce, specs = "treatment") |>
+      #     contrast(method = "revpairwise", adjust = "none")
+      #   p1_mat[i, 3] <- summary(lmm4_pairs)[1, "p.value"]
+      #   p2_mat[i, 3] <- summary(lmm4_pairs)[2, "p.value"]
+      #   p3_mat[i, 3] <- summary(lmm4_pairs)[3, "p.value"]
+      # }else{
+      #   p1_mat[i, 3] <- NA
+      #   p2_mat[i, 3] <- NA
+      #   p3_mat[i, 3] <- NA
+      # }
+      
+      
+    } # n_sims
+    
+    sim_table <- cbind(r_mat, p1_mat, p2_mat, p3_mat)
+    sim_table_names <- paste(rep(model_levels, 3),
+                             rep(c("contrast_1", "contrast_2", "contrast_3"), each = length(model_levels)),
+                             sep = "_")
+    colnames(sim_table) <- c("r21", "r31", "r32", sim_table_names)
+    
+    big_table <- rbind(
+      big_table,
+      data.table(
+        sim_id = param_set,
+        n_treat = n_treat_i,
+        n_block = n_block_i,
+        n_rep = n_rep_i,
+        n_ss = n_ss_i,
+        sigma_block = sigma_exp.block_i,
+        sigma_block.treat_1 = sigma_exp.block.treat_i[1],
+        sigma_block.treat_2 = sigma_exp.block.treat_i[2],
+        sigma_block.treat_3 = sigma_exp.block.treat_i[3],
+        sigma_exp.treat = sigma_exp.treat_i,
+        sigma_rep = sigma_rep_i,
+        sigma_exp = sigma_exp_i,
+        sigma_ss = sigma_ss_i,
+        sim_table
+      )
+    )
+  } # end paramset
+  if(!is.null(outfile_name)){saveRDS(object = big_table, file = save_file_path)}
+}
+```
+
+```{r}
+#| label: tbl-lmm-rcbd-type1
+#| echo: false
+#| tbl-cap: Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+
+data_from <- "simulations/grcbds/data"
+# power
+outfile_name <- "rcbds_type1.Rds"
+save_file_path <- here(data_from, outfile_name)
+big_table <- readRDS(file = save_file_path)
+model_levels <- c("lm.crd", "lm.fe", "lmm.ri", "lmm.ris", "lmm.ce", 
+                  "rmaov.mul", "rmaov.uni1x", "ppttm")
+
+out_table <- data.table(NULL)
+for(param_set in 1:nrow(param_set_matrix)){
+  r_mat <- big_table[sim_id == param_set, .SD, .SDcols = c("r21", "r31", "r32")]
+  p1_mat <- big_table[sim_id == param_set, .SD, .SDcols = paste0(model_levels, "_contrast_1")]
+  p2_mat <- big_table[sim_id == param_set, .SD, .SDcols = paste0(model_levels, "_contrast_2")]
+  p3_mat <- big_table[sim_id == param_set, .SD, .SDcols = paste0(model_levels, "_contrast_3")]
+  out_table <- rbind(
+    out_table,
+    data.table(
+      contrast = c("Tr1 - Cn", "Tr2 - Cn", "Tr2 - Tr1"),
+      cor = apply(r_mat, 2, mean),
+      rbind(apply(p1_mat, 2, pless),
+            apply(p2_mat, 2, pless),
+            apply(p3_mat, 2, pless))
+    ))
+}
+
+setnames(out_table,
+         names(out_table),
+         c("Contrast", "Cor Error", model_levels))
+out_table |>
+  kable(digits = c(1, 3, 3, 3, 3, 3, 3, 4)) |>
+  kable_styling() |>
+  pack_rows("sim 1 - high correlated error", 1, 3) |>
+  pack_rows("sim 2 - low correlated error", 4, 6) |>
+  pack_rows("sim 3 - equal correlated error", 7, 9) |>
+  pack_rows("sim 4 - zero correlated error", 10, 12)
+
+```
 
 ### TL;DR
 
