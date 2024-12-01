@@ -360,7 +360,11 @@ window.Quarto = {
   <li><a href="#fitting-a-glm-to-a-binary-success-or-failure-presence-or-absence-survived-or-died-response" id="toc-fitting-a-glm-to-a-binary-success-or-failure-presence-or-absence-survived-or-died-response" class="nav-link" data-scroll-target="#fitting-a-glm-to-a-binary-success-or-failure-presence-or-absence-survived-or-died-response"><span class="header-section-number">15.9.3</span> Fitting a GLM to a binary (success or failure, presence or absence, survived or died) response</a></li>
   <li><a href="#fitting-generalized-linear-mixed-models" id="toc-fitting-generalized-linear-mixed-models" class="nav-link" data-scroll-target="#fitting-generalized-linear-mixed-models"><span class="header-section-number">15.9.4</span> Fitting Generalized Linear Mixed Models</a></li>
   </ul></li>
-  <li><a href="#model-checking-glms" id="toc-model-checking-glms" class="nav-link" data-scroll-target="#model-checking-glms"><span class="header-section-number">15.10</span> Model checking GLMs</a></li>
+  <li><a href="#model-checking-glms" id="toc-model-checking-glms" class="nav-link" data-scroll-target="#model-checking-glms"><span class="header-section-number">15.10</span> Model checking GLMs</a>
+  <ul>
+  <li><a href="#use-dharmasimulateresiduals-to-check-glm-models-using-uniform-residuals" id="toc-use-dharmasimulateresiduals-to-check-glm-models-using-uniform-residuals" class="nav-link" data-scroll-target="#use-dharmasimulateresiduals-to-check-glm-models-using-uniform-residuals"><span class="header-section-number">15.10.1</span> Use DHARMa::simulateResiduals to check GLM models using uniform residuals</a></li>
+  <li><a href="#use-ggcheck_the_glm-to-check-the-quasipoisson-model" id="toc-use-ggcheck_the_glm-to-check-the-quasipoisson-model" class="nav-link" data-scroll-target="#use-ggcheck_the_glm-to-check-the-quasipoisson-model"><span class="header-section-number">15.10.2</span> Use ggcheck_the_glm to check the quasipoisson model</a></li>
+  </ul></li>
   <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">15.11</span> Hidden code</a>
   <ul>
   <li><a href="#import-example-1-data-fig3a-angiogenic-sprouts" id="toc-import-example-1-data-fig3a-angiogenic-sprouts" class="nav-link" data-scroll-target="#import-example-1-data-fig3a-angiogenic-sprouts"><span class="header-section-number">15.11.1</span> Import Example 1 data (fig3a – “angiogenic sprouts”)</a></li>
@@ -2655,131 +2659,121 @@ More than I need to know
 </section>
 <section id="model-checking-glms" class="level2" data-number="15.10">
 <h2 data-number="15.10" class="anchored" data-anchor-id="model-checking-glms"><span class="header-section-number">15.10</span> Model checking GLMs</h2>
+<section id="use-dharmasimulateresiduals-to-check-glm-models-using-uniform-residuals" class="level3" data-number="15.10.1">
+<h3 data-number="15.10.1" class="anchored" data-anchor-id="use-dharmasimulateresiduals-to-check-glm-models-using-uniform-residuals"><span class="header-section-number">15.10.1</span> Use DHARMa::simulateResiduals to check GLM models using uniform residuals</h3>
 <p>The <code>DHARMa</code> package has an excellent set of model checking tools. The DHARMa package uses simulation to generate fake data sampled from the fit model using the function <code>simulateResiduals</code>.</p>
-<p>Here, I use <code>ggcheck_the_glm</code> which uses DHARMa underneath the hood. DHARMa does not simulate Quasipoisson model fits, but I have included these in <code>ggcheck_the_glm</code>. Because there is no native Quasipoisson check, I refit the fig3a data using a negative binomial</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>fig3a_qp_1 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(sprouts <span class="sc">~</span> treatment <span class="sc">*</span> genotype,</span>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>fig3a_nb1 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(sprouts <span class="sc">~</span> treatment <span class="sc">*</span> genotype,</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> <span class="fu">nbinom1</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig3a)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>fig3a_qp_2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(sprouts <span class="sc">~</span> treatment <span class="sc">*</span> genotype,</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> <span class="fu">quasipoisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig3a)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>fig3a_nb_1 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(sprouts <span class="sc">~</span> treatment <span class="sc">*</span> genotype,</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> <span class="fu">nbinom2</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig3a)</span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>fig3a_nb_2 <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(sprouts <span class="sc">~</span> treatment <span class="sc">*</span> genotype,</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig3a)</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(fig3a_qp_1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$cond
-                              Estimate Std. Error   z value     Pr(&gt;|z|)
-(Intercept)                  1.1202806  0.2746647 4.0787204 4.528425e-05
-treatmentGAS6                1.0433797  0.3100886 3.3647793 7.660492e-04
-genotypeFAK_ko               0.0629671  0.4006240 0.1571725 8.751089e-01
-treatmentGAS6:genotypeFAK_ko 0.4518341  0.4474024 1.0099054 3.125406e-01
-
-$zi
-NULL
-
-$disp
-NULL</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(fig3a_qp_2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                               Estimate Std. Error    t value   Pr(&gt;|t|)
-(Intercept)                  0.90445627  0.3671580 2.46339795 0.01626063
-treatmentGAS6                1.29804536  0.4057144 3.19940664 0.00208128
-genotypeFAK_ko               0.04462428  0.5634222 0.07920221 0.93710104
-treatmentGAS6:genotypeFAK_ko 0.46381864  0.6029987 0.76918679 0.44440751</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="fu">emmeans</span>(fig3a_qp_1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"genotype"</span>),</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">type =</span> <span class="st">"response"</span>),</span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">simple =</span> <span class="st">"each"</span>, <span class="at">combine =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> genotype treatment contrast        ratio    SE  df null z.ratio p.value
- FAK_wt   .         GAS6 / PBS       2.84 0.880 Inf    1   3.365  0.0008
- FAK_ko   .         GAS6 / PBS       4.46 1.472 Inf    1   4.532  &lt;.0001
- .        PBS       FAK_ko / FAK_wt  1.06 0.427 Inf    1   0.157  0.8751
- .        GAS6      FAK_ko / FAK_wt  1.67 0.333 Inf    1   2.585  0.0097
-
-Tests are performed on the log scale </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="fu">emmeans</span>(fig3a_qp_2, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"genotype"</span>),</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">type =</span> <span class="st">"response"</span>),</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">simple =</span> <span class="st">"each"</span>, <span class="at">combine =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> genotype treatment contrast        ratio    SE  df null z.ratio p.value
- FAK_wt   .         GAS6 / PBS       3.66 1.486 Inf    1   3.199  0.0014
- FAK_ko   .         GAS6 / PBS       5.82 2.598 Inf    1   3.950  0.0001
- .        PBS       FAK_ko / FAK_wt  1.05 0.589 Inf    1   0.079  0.9369
- .        GAS6      FAK_ko / FAK_wt  1.66 0.357 Inf    1   2.366  0.0180
-
-Tests are performed on the log scale </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="fu">emmeans</span>(fig3a_nb_1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"genotype"</span>),</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">type =</span> <span class="st">"response"</span>),</span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">simple =</span> <span class="st">"each"</span>, <span class="at">combine =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> genotype treatment contrast        ratio    SE  df null z.ratio p.value
- FAK_wt   .         GAS6 / PBS       3.66 1.050 Inf    1   4.526  &lt;.0001
- FAK_ko   .         GAS6 / PBS       5.82 1.828 Inf    1   5.613  &lt;.0001
- .        PBS       FAK_ko / FAK_wt  1.05 0.373 Inf    1   0.125  0.9004
- .        GAS6      FAK_ko / FAK_wt  1.66 0.385 Inf    1   2.194  0.0282
-
-Tests are performed on the log scale </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="fu">emmeans</span>(fig3a_nb_2, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"genotype"</span>),</span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">type =</span> <span class="st">"response"</span>),</span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">simple =</span> <span class="st">"each"</span>, <span class="at">combine =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> genotype treatment contrast        ratio    SE  df null z.ratio p.value
- FAK_wt   .         GAS6 / PBS       3.66 1.050 Inf    1   4.526  &lt;.0001
- FAK_ko   .         GAS6 / PBS       5.82 1.828 Inf    1   5.613  &lt;.0001
- .        PBS       FAK_ko / FAK_wt  1.05 0.373 Inf    1   0.125  0.9004
- .        GAS6      FAK_ko / FAK_wt  1.66 0.385 Inf    1   2.194  0.0282
-
-Tests are performed on the log scale </code></pre>
-</div>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>fig3a_nb1_check <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(fig3a_nb1, <span class="at">n_sim =</span> <span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>fig3a_qp_check <span class="ot">&lt;-</span> <span class="fu">ggcheck_the_glm</span>(fig3a_qp, <span class="at">n_sim =</span> <span class="dv">250</span>) <span class="co"># 250 fake data sets</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fig3a_qp_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fig3a_nb1_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="glm_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQQunif</span>(fig3a_qp_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="glm_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="glm_files/figure-html/glm-dharma-plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Three test statistics are superimposed. Use these <em>p</em>-values cautiously – they are guides and not thresholds of demarcation. The two we care about here are * The KS statistic indicates that the quantile residuals are not very compatible with a Poisson model – think of this as having a very low probability of sampling these counts from a Poisson with the estimated <span class="math inline">\(\lambda\)</span>. * The dispersion statistic indicates that the value of the dispersion of the quantile residuals is not very compatible with a Poisson model – think of this as having a very low probability of sampling counts with this dispersion from a Poisson with the estimated <span class="math inline">\(\lambda\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(fig3a_nb1_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    DHARMa nonparametric dispersion test via sd of residuals fitted vs.
+    simulated
+
+data:  simulationOutput
+dispersion = 1.284, p-value = 0.28
+alternative hypothesis: two.sided</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(fig3a_nb1_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    DHARMa zero-inflation test via comparison to expected zeros with
+    simulation under H0 = fitted model
+
+data:  simulationOutput
+ratioObsSim = 1.0356, p-value = 1
+alternative hypothesis: two.sided</code></pre>
+</div>
+</div>
+</section>
+<section id="use-ggcheck_the_glm-to-check-the-quasipoisson-model" class="level3" data-number="15.10.2">
+<h3 data-number="15.10.2" class="anchored" data-anchor-id="use-ggcheck_the_glm-to-check-the-quasipoisson-model"><span class="header-section-number">15.10.2</span> Use ggcheck_the_glm to check the quasipoisson model</h3>
+<p>Here, I use <code>ggcheck_the_glm</code> which uses DHARMa underneath the hood. DHARMa does not simulate Quasipoisson model fits, but I have included these in <code>ggcheck_the_glm</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>fig3a_qp <span class="ot">&lt;-</span> <span class="fu">glm</span>(sprouts <span class="sc">~</span> treatment <span class="sc">*</span> genotype,</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> <span class="fu">quasipoisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> fig3a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>fig3a_qp_check <span class="ot">&lt;-</span> <span class="fu">ggcheck_the_glm</span>(fig3a_qp, <span class="at">n_sim =</span> <span class="dv">500</span>) <span class="co"># 250 fake data sets</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fig3a_qp_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(fig3a_qp_check)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    DHARMa nonparametric dispersion test via sd of residuals fitted vs.
+    simulated
+
+data:  simulationOutput
+dispersion = 1.2324, p-value = 0.388
+alternative hypothesis: two.sided</code></pre>
+</div>
+</div>
+</section>
 </section>
 <section id="hidden-code" class="level2" data-number="15.11">
 <h2 data-number="15.11" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">15.11</span> Hidden code</h2>
 <section id="import-example-1-data-fig3a-angiogenic-sprouts" class="level3" data-number="15.11.1">
 <h3 data-number="15.11.1" class="anchored" data-anchor-id="import-example-1-data-fig3a-angiogenic-sprouts"><span class="header-section-number">15.11.1</span> Import Example 1 data (fig3a – “angiogenic sprouts”)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Pericyte FAK negatively regulates Gas6-Axl signalling to suppress tumour angiogenesis and tumour growth"</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2020_16618_MOESM3_ESM.xlsx"</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>fig3a_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> <span class="st">"Figure 3"</span>,</span>
-<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"B4:E26"</span>,</span>
-<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Pericyte FAK negatively regulates Gas6-Axl signalling to suppress tumour angiogenesis and tumour growth"</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2020_16618_MOESM3_ESM.xlsx"</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>fig3a_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> <span class="st">"Figure 3"</span>,</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"B4:E26"</span>,</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>New names:
 • `` -&gt; `...1`
@@ -2787,27 +2781,27 @@ Tests are performed on the log scale </code></pre>
 • `` -&gt; `...3`
 • `` -&gt; `...4`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>input_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PBS FAK_wt"</span>, <span class="st">"PBS FAK_ko"</span>, <span class="st">"GAS6 FAK_wt"</span>, <span class="st">"GAS6 FAK_ko"</span>)</span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fig3a_wide) <span class="ot">&lt;-</span> input_labels</span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>fig3a <span class="ot">&lt;-</span> <span class="fu">melt</span>(fig3a_wide,</span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> input_labels,</span>
-<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"group"</span>,</span>
-<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"sprouts"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
-<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="co"># change order of factor levels</span></span>
-<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>group_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PBS FAK_wt"</span>, <span class="st">"GAS6 FAK_wt"</span>, <span class="st">"PBS FAK_ko"</span>, <span class="st">"GAS6 FAK_ko"</span>)</span>
-<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a>fig3a[, <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"genotype"</span>)<span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(group,</span>
-<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">" "</span>,</span>
-<span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">fixed =</span> <span class="cn">TRUE</span>)]</span>
-<span id="cb75-16"><a href="#cb75-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-17"><a href="#cb75-17" aria-hidden="true" tabindex="-1"></a>fig3a[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> group_levels)]</span>
-<span id="cb75-18"><a href="#cb75-18" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PBS"</span>, <span class="st">"GAS6"</span>)</span>
-<span id="cb75-19"><a href="#cb75-19" aria-hidden="true" tabindex="-1"></a>fig3a[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> treatment_levels)]</span>
-<span id="cb75-20"><a href="#cb75-20" aria-hidden="true" tabindex="-1"></a>genotype_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"FAK_wt"</span>, <span class="st">"FAK_ko"</span>)</span>
-<span id="cb75-21"><a href="#cb75-21" aria-hidden="true" tabindex="-1"></a>fig3a[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype, <span class="at">levels =</span> genotype_levels)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>input_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PBS FAK_wt"</span>, <span class="st">"PBS FAK_ko"</span>, <span class="st">"GAS6 FAK_wt"</span>, <span class="st">"GAS6 FAK_ko"</span>)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fig3a_wide) <span class="ot">&lt;-</span> input_labels</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>fig3a <span class="ot">&lt;-</span> <span class="fu">melt</span>(fig3a_wide,</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure.vars =</span> input_labels,</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">variable.name =</span> <span class="st">"group"</span>,</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">value.name =</span> <span class="st">"sprouts"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="co"># change order of factor levels</span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a>group_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PBS FAK_wt"</span>, <span class="st">"GAS6 FAK_wt"</span>, <span class="st">"PBS FAK_ko"</span>, <span class="st">"GAS6 FAK_ko"</span>)</span>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a>fig3a[, <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"genotype"</span>)<span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(group,</span>
+<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">" "</span>,</span>
+<span id="cb71-15"><a href="#cb71-15" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">fixed =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb71-16"><a href="#cb71-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-17"><a href="#cb71-17" aria-hidden="true" tabindex="-1"></a>fig3a[, group <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> group_levels)]</span>
+<span id="cb71-18"><a href="#cb71-18" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PBS"</span>, <span class="st">"GAS6"</span>)</span>
+<span id="cb71-19"><a href="#cb71-19" aria-hidden="true" tabindex="-1"></a>fig3a[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> treatment_levels)]</span>
+<span id="cb71-20"><a href="#cb71-20" aria-hidden="true" tabindex="-1"></a>genotype_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"FAK_wt"</span>, <span class="st">"FAK_ko"</span>)</span>
+<span id="cb71-21"><a href="#cb71-21" aria-hidden="true" tabindex="-1"></a>fig3a[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype, <span class="at">levels =</span> genotype_levels)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

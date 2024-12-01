@@ -1917,45 +1917,46 @@ fit <- glmmTMB(y ~ treatment + (1|id), family="nbinom1", data = dt)
 ```
 
 ## Model checking GLMs
+### Use DHARMa::simulateResiduals to check GLM models using uniform residuals
 
 The `DHARMa` package has an excellent set of model checking tools. The DHARMa package uses simulation to generate fake data sampled from the fit model using the function `simulateResiduals`.
 
-Here, I use `ggcheck_the_glm` which uses DHARMa underneath the hood. DHARMa does not simulate Quasipoisson model fits, but I have included these in `ggcheck_the_glm`. Because there is no native Quasipoisson check, I refit the fig3a data using a negative binomial
-
-```{r}
-fig3a_qp_1 <- glmmTMB(sprouts ~ treatment * genotype,
+```{r glm-dharma-simulate-residuals}
+fig3a_nb1 <- glmmTMB(sprouts ~ treatment * genotype,
                 family = nbinom1(link = "log"),
                 data = fig3a)
-fig3a_qp_2 <- glm(sprouts ~ treatment * genotype,
+fig3a_nb1_check <- simulateResiduals(fig3a_nb1, n_sim = 500)
+```
+
+```{r glm-dharma-plot}
+plot(fig3a_nb1_check)
+```
+
+Three test statistics are superimposed. Use these *p*-values cautiously -- they are guides and not thresholds of demarcation. The two we care about here are
+* The KS statistic indicates that the quantile residuals are not very compatible with a Poisson model -- think of this as having a very low probability of sampling these counts from a Poisson with the estimated $\lambda$.
+* The dispersion statistic indicates that the value of the dispersion of the quantile residuals is not very compatible with a Poisson model -- think of this as having a very low probability of sampling counts with this dispersion from a Poisson with the estimated $\lambda$.
+
+```{r}
+testDispersion(fig3a_nb1_check)
+```
+
+```{r}
+testZeroInflation(fig3a_nb1_check)
+```
+
+### Use ggcheck_the_glm to check the quasipoisson model
+
+Here, I use `ggcheck_the_glm` which uses DHARMa underneath the hood. DHARMa does not simulate Quasipoisson model fits, but I have included these in `ggcheck_the_glm`.
+
+```{r}
+fig3a_qp <- glm(sprouts ~ treatment * genotype,
                 family = quasipoisson(link = "log"),
                 data = fig3a)
-fig3a_nb_1 <- glmmTMB(sprouts ~ treatment * genotype,
-                family = nbinom2(link = "log"),
-                data = fig3a)
-fig3a_nb_2 <- glm.nb(sprouts ~ treatment * genotype,
-                data = fig3a)
-coef(summary(fig3a_qp_1))
-coef(summary(fig3a_qp_2))
-
-contrast(emmeans(fig3a_qp_1, specs = c("treatment", "genotype"),
-                 type = "response"),
-         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-contrast(emmeans(fig3a_qp_2, specs = c("treatment", "genotype"),
-                 type = "response"),
-         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-contrast(emmeans(fig3a_nb_1, specs = c("treatment", "genotype"),
-                 type = "response"),
-         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-contrast(emmeans(fig3a_nb_2, specs = c("treatment", "genotype"),
-                 type = "response"),
-         method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
-
 ```
 
 
 ```{r}
-fig3a_qp_check <- ggcheck_the_glm(fig3a_qp, n_sim = 250) # 250 fake data sets
-
+fig3a_qp_check <- ggcheck_the_glm(fig3a_qp, n_sim = 500) # 250 fake data sets
 ```
 
 
@@ -1965,12 +1966,8 @@ plot(fig3a_qp_check)
 
 
 ```{r}
-plotQQunif(fig3a_qp_check)
+testDispersion(fig3a_qp_check)
 ```
-
-Three test statistics are superimposed. Use these *p*-values cautiously -- they are guides and not thresholds of demarcation. The two we care about here are
-* The KS statistic indicates that the quantile residuals are not very compatible with a Poisson model -- think of this as having a very low probability of sampling these counts from a Poisson with the estimated $\lambda$.
-* The dispersion statistic indicates that the value of the dispersion of the quantile residuals is not very compatible with a Poisson model -- think of this as having a very low probability of sampling counts with this dispersion from a Poisson with the estimated $\lambda$.
 
 ## Hidden code
 ### Import Example 1 data (fig3a -- "angiogenic sprouts")
