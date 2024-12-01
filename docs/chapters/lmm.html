@@ -384,7 +384,8 @@ window.Quarto = {
   <ul>
   <li><a href="#single-factor-rcbd-models" id="toc-single-factor-rcbd-models" class="nav-link" data-scroll-target="#single-factor-rcbd-models"><span class="header-section-number">14.14.1</span> Single factor RCBD models</a></li>
   <li><a href="#are-these-results-robust-for-a-2-x-2-rcbd" id="toc-are-these-results-robust-for-a-2-x-2-rcbd" class="nav-link" data-scroll-target="#are-these-results-robust-for-a-2-x-2-rcbd"><span class="header-section-number">14.14.2</span> Are these results robust for a 2 x 2 RCBD?</a></li>
-  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">14.14.3</span> TL;DR</a></li>
+  <li><a href="#rcbds-1" id="toc-rcbds-1" class="nav-link" data-scroll-target="#rcbds-1"><span class="header-section-number">14.14.3</span> RCBDS</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">14.14.4</span> TL;DR</a></li>
   </ul></li>
   <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">14.15</span> Working in R</a>
   <ul>
@@ -3975,8 +3976,200 @@ Table&nbsp;14.4: Power of the RCBD statistical models under different levels of 
 <p>These results suggest lmm.ce is the preferred model. If lmm.ce fails, then it’s a toss-up between rmaov.mul/pptt and lmm.ri/rmaov.uni/lmm.ri.</p>
 <p>But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have poor type I error control under some conditions while lmm.ce and rmaov.mul/pptt have good error control under all conditions.</p>
 </section>
-<section id="tldr" class="level3" data-number="14.14.3">
-<h3 data-number="14.14.3" class="anchored" data-anchor-id="tldr"><span class="header-section-number">14.14.3</span> TL;DR</h3>
+<section id="rcbds-1" class="level3" data-number="14.14.3">
+<h3 data-number="14.14.3" class="anchored" data-anchor-id="rcbds-1"><span class="header-section-number">14.14.3</span> RCBDS</h3>
+<div class="cell">
+<div id="tbl-lmm-rcbds-type1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lmm-rcbds-type1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;14.5: Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
+</figcaption>
+<div aria-describedby="tbl-lmm-rcbds-type1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Cor Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lm.crd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lm.fe</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lmm.ri</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lmm.ris</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">lmm.ce</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.mul</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rmaov.uni1x</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ppttm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="3">
+<td colspan="10" style="border-bottom: 1px solid"><strong>sim 1 - high correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
+<td style="text-align: right;">0.303</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.106</td>
+<td style="text-align: right;">0.490</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
+<td style="text-align: right;">0.416</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">0.080</td>
+<td style="text-align: right;">0.398</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.044</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
+<td style="text-align: right;">0.662</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.130</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.062</td>
+</tr>
+<tr class="odd" data-grouplength="3">
+<td colspan="10" style="border-bottom: 1px solid"><strong>sim 2 - low correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
+<td style="text-align: right;">0.243</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.102</td>
+<td style="text-align: right;">0.264</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.058</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
+<td style="text-align: right;">0.266</td>
+<td style="text-align: right;">0.028</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.228</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.042</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.042</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
+<td style="text-align: right;">0.391</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.090</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.058</td>
+</tr>
+<tr class="odd" data-grouplength="3">
+<td colspan="10" style="border-bottom: 1px solid"><strong>sim 3 - equal correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
+<td style="text-align: right;">0.894</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.076</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.058</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
+<td style="text-align: right;">0.896</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.082</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.066</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.066</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
+<td style="text-align: right;">0.895</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.014</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.036</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.036</td>
+</tr>
+<tr class="odd" data-grouplength="3">
+<td colspan="10" style="border-bottom: 1px solid"><strong>sim 4 - zero correlated error</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr1 - Cn</td>
+<td style="text-align: right;">-0.015</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.042</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.018</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Cn</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Tr2 - Tr1</td>
+<td style="text-align: right;">-0.011</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.044</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="tldr" class="level3" data-number="14.14.4">
+<h3 data-number="14.14.4" class="anchored" data-anchor-id="tldr"><span class="header-section-number">14.14.4</span> TL;DR</h3>
 <ol type="1">
 <li>If the number of treatments = 2 and
 <ul>
@@ -4062,7 +4255,7 @@ Table&nbsp;14.4: Power of the RCBD statistical models under different levels of 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -4253,7 +4446,7 @@ Table&nbsp;14.4: Power of the RCBD statistical models under different levels of 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lmm_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid figure-img" width="1066"></p>
+<p><img src="lmm_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid figure-img" width="1066"></p>
 </figure>
 </div>
 </div>

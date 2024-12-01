@@ -65,7 +65,26 @@ out.width_small <- paste0(small_width/full_width*100, "%")
 
 ## Introducing Generalized Linear Models using count data examples {#glm-counts}
 
-Biologists frequently count stuff, and design experiments to estimate the effects of different factors on these counts. Count data can cause numerous problems with linear models that assume a normal, conditional distribution, including 1) counts are discrete, and can be zero or positive integers only, 2) counts tend to bunch up on the small side of the range and spread thinly on the large side of the range, creating a distribution with a positive skew, 3) a sample of counts can have an abundance of zeros, and 4) the variance of counts increases with the mean (see @fig-glm-fig3a-histogram for some of these properties). Some count data can be approximated by and reasonably modeled with a normal distribution. More often, count data should modeled with a [Quasipoisson distribution](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/07-0043.1){target="_blank"} or [Negative Binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution){target="_blank"} using a [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model (GLM)){target="_blank"}. Quasipoisson and Negative Binomial distributions are **discrete probability distributions** with two important properties: 1) the distribution contains only zeros and positive integers and 2) the variance is a function of the mean. Back before modern computing and fast processors, count data were often analyzed by either **transforming** the response or by **non-parametric hypothesis tests**. One reason to prefer a statistical modeling approach with a GLM is that we can get interpretable parameter estimates better behaved error intervals. 
+Biologists frequently count stuff, and design experiments to estimate the effects of different factors on these counts. Count data can cause numerous problems with linear models that assume a normal, conditional distribution, including 1) counts are discrete, and can be zero or positive integers only, 2) counts tend to bunch up on the small side of the range and spread thinly on the large side of the range, creating a distribution with a positive skew, 3) the variance of counts increases with the mean (see @fig-glm-fig3a-histogram for some of these properties).
+
+Some count data can be approximated by and reasonably modeled with a normal distribution. More often, count data are better approximated with a [Quasipoisson distribution](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/07-0043.1){target="_blank"} or [Negative Binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution){target="_blank"} and modeled with a [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model (GLM)){target="_blank"}. Quasipoisson and Negative Binomial distributions are **discrete probability distributions** with two important properties: 1) the distribution contains only non-negative integers and 2) the variance is a function of the mean.
+
+For a researcher using *p*-values to guide the direction of bench biology experiments, we want a method with good Type I error control and high power and a linear model of raw counts has both (which is why I've stated multiple times that the Normal assumption is the least important of the assumptions of the linear model and classical equivalents).
+
+That said, I do recommend a quasipoisson or quasipoisson-like negative binomial model with count data because
+
+1. Confidence intervals are asymmetric, reflecting the distribution of the sample.
+2. The effect is the response of one group relative to the response of another, so we'd report this as "the KO tumor count is 2.1X the WT count". This is much more natural than a difference (which we get with a linear model) and is nicely scale independent (20 tumors is 2X 10 tumors and 2M CD4+ cells is 2X 1M CD4+ cells).
+
+What I don't recommend
+
+1. Non-parametric tests such as the Mann-Whitney (Wilcoxon) test. The Mann-Whitney has non-trivially less power than a linear model or a quasipoisson GLM. Non-parametric tests were common in the pre-computer era but are much less relevant now.
+2. Linear models of log-transformed counts. I am more ambivalent about these. For small samples (n ~ 6), this has non-trivially less power than a linear model or a quasipoisson GLM. Also, datasets with zeros require log(y + 1) transformation and the addition of 1 to each data point changes the result a little.
+3. A negative binomial GLM for small samples (< ~20). Almost all sources of guidance recommend a a negative binomial (NB) GLM for count data, but a NB GLM has non-trivially inflated type I error with the small sample sizes (n ~ 6) typical of experimental bench biology (but much better control at n > 20).
+
+::: {.callout-warning title="GLMM blues"}
+Generalized linear mixed models (GLMMs) have frequent convergence issues. If this happen, use a linear mixed model of the untransformed data instead of a GLM of a reduced model as the pseudoreplication of a reduced model is (generally) a massively larger problem than data that aren't approximately normal.
+:::
 
 ```{r glm-fig3a-import, echo=FALSE, message=FALSE}
 data_from <- "Pericyte FAK negatively regulates Gas6-Axl signalling to suppress tumour angiogenesis and tumour growth"
@@ -83,18 +102,18 @@ colnames(fig3a_wide) <- input_labels
 
 fig3a <- melt(fig3a_wide,
               measure.vars = input_labels,
-              variable.name = "t_by_g",
+              variable.name = "group",
               value.name = "sprouts") |>
   na.omit()
 
 # change order of factor levels
-t_by_g_levels <- c("PBS FAK_wt", "GAS6 FAK_wt", "PBS FAK_ko", "GAS6 FAK_ko")
+group_levels <- c("PBS FAK_wt", "GAS6 FAK_wt", "PBS FAK_ko", "GAS6 FAK_ko")
 
-fig3a[, c("treatment", "genotype"):= tstrsplit(t_by_g,
+fig3a[, c("treatment", "genotype"):= tstrsplit(group,
                                              " ",
                                              fixed = TRUE)]
 
-fig3a[, t_by_g := factor(t_by_g, levels = t_by_g_levels)]
+fig3a[, group := factor(group, levels = group_levels)]
 treatment_levels <- c("PBS", "GAS6")
 fig3a[, treatment := factor(treatment, levels = treatment_levels)]
 genotype_levels <- c("FAK_wt", "FAK_ko")
@@ -107,20 +126,54 @@ fig3a[, genotype := factor(genotype, levels = genotype_levels)]
 #| echo: false
 #| warning: false
 #| eval: true
-#| fig-width: 4
-#| fig-height: 3
-#| fig-cap: "Histogram of the number of angiogenic sprouts in response to two of the four treatment combinations for the experiment in Example 1."
+#| fig-width: 8
+#| fig-height: 4
+#| fig-cap: "The data for Example 1 shows characteristics of count data including right skew and a variance that is proportional to the mean. The median of each group is shown with the black dot in A."
 
-gghistogram(data = fig3a[genotype == "FAK_wt"],
-            x = "sprouts",
-            color="t_by_g",
-            fill="t_by_g",
-            add = "mean",
-            rug = FALSE,
-            #palette = c("#00AFBB", "#E7B800")
-            palette = pal_okabe_ito_2
-)
 
+fig3a_means <- fig3a[, .(sprouts = median(sprouts)), by = .(treatment, genotype)]
+gg1 <- ggplot(data = fig3a,
+              aes(x = treatment,
+                  y = sprouts,
+                  color = genotype)) +
+  geom_point(position = position_jitterdodge(
+    jitter.width = 0.3,
+    dodge.width = 0.75
+  )) +
+  geom_point(data = fig3a_means,
+             aes(group = genotype),
+             color = "black",
+             position = position_dodge(width = 0.75)) +
+  scale_color_manual(values = pal_okabe_ito) +
+  theme_pubr()
+
+fig3a_histogram <- function(fac1 = NULL, fac2 = NULL){
+  gg_histogram <- ggplot(data = fig3a[treatment == fac1 &
+                             genotype == fac2],
+                aes(x = sprouts)) +
+    geom_histogram(color = "black",
+                   fill = pal_okabe_ito[1],
+                   binwidth = 1) +
+    theme_pubr() +
+    ggtitle(paste(fac1, fac2))
+  return(gg_histogram)
+}
+gg2a <- fig3a_histogram(fac1 = "PBS", fac2 = "FAK_wt")
+gg2b <- fig3a_histogram(fac1 = "GAS6", fac2 = "FAK_wt")
+gg2c <- fig3a_histogram(fac1 = "PBS", fac2 = "FAK_ko")
+gg2d <- fig3a_histogram(fac1 = "GAS6", fac2 = "FAK_ko")
+gg2 <- plot_grid(gg2a, gg2b, gg2c, gg2d, nrow = 2)
+
+gg2 <- ggplot(data = fig3a,
+             aes(x = sprouts)) +
+  geom_histogram(color = "black",
+                 fill = pal_okabe_ito[1],
+                 binwidth = 1) +
+  theme_pubr() +
+  facet_grid(treatment ~ genotype)
+
+
+plot_grid(gg1, gg2, labels = "AUTO")
 ```
 
 ### The Generalized Linear Model (GLM)
@@ -225,6 +278,161 @@ When modeling counts using the Quasipoisson or Negative Binomial distributions w
 4. If a response is a fraction of counts per "effort" (cells per area or volume or time), then use a Poisson, quasi-Poisson or Negative Binomial family with a log link on the raw count and include the log of the measure of effort as an offset.
 5. If a response is continuous but the variance increases with mean then use the gamma family
 6. If a response is a fraction of a continuous measure per "effort" (tumor area per total area or volume or time), then use a gamma family on the raw measure and include the log of the measure of effort as an offset.
+
+## Which model and why
+### Count data
+#### Alternative models
+
+We might model count data using any of several GLMs for non-negative integer responses, including
+
+1. Poisson model with log link. 
+2. Quasipoisson model with log link.
+3. Negative binomial model with log link.
+4. A quasipoisson-like Negative binomial model with log link.
+
+Or, we could model count data using a
+
+5. linear model
+6. linear model on the log transformed response. The log transformation tends to "normalize" a right skewed distribution and "homogenize" variances. If there are zero counts, then a typical strategy is to add one to all responses. This can lead to issues.
+
+
+```{r glm-fig3a-all-models}
+fig3a_lm <- lm(sprouts ~ treatment * genotype, data = fig3a)
+fig3a_loglm <- lm(log(sprouts + 1) ~ treatment * genotype, data = fig3a)
+fig3a_pois <- glm(sprouts ~ treatment * genotype,
+                family = poisson(link = "log"),
+                data = fig3a)
+fig3a_qp <- glm(sprouts ~ treatment * genotype,
+                family = quasipoisson(link = "log"),
+                data = fig3a)
+fig3a_nb1 <- glmmTMB(sprouts ~ treatment * genotype,
+                family = nbinom1(link = "log"),
+                data = fig3a)
+fig3a_nb2 <- glmmTMB(sprouts ~ treatment * genotype,
+                family = nbinom2(link = "log"),
+                data = fig3a)
+
+```
+
+```{r}
+#| label: glm-intro-alt-models
+#| echo: false
+#| tbl-cap: Inference for the first simple effect of the angiogenic sprout data (fig3a) for the two lm and four glm models fit to the data. Statistics are computed using the emmeans and contrast functions from the emmeans package.
+
+col_labels <- c("genotype", "treatment","contrast","estimate", "SE",
+                "df", "lower CL", "upper CL", "t/Z", "p.value")
+fig3a_lm_pairs <- emmeans(fig3a_lm, specs = c("treatment", "genotype")) |>
+  contrast(method = "revpairwise", simple = "each", combine = TRUE,
+           adjust = "none") |>
+  summary(infer = TRUE) |> data.table()
+colnames(fig3a_lm_pairs) <- col_labels
+
+fig3a_loglm_pairs <- emmeans(fig3a_loglm, specs = c("treatment", "genotype"),
+                             type = "response") |>
+  contrast(method = "revpairwise", simple = "each", combine = TRUE,
+           adjust = "none") |>
+  summary(infer = TRUE) |> data.table()
+colnames(fig3a_loglm_pairs) <- col_labels
+
+fig3a_pois_pairs <- emmeans(fig3a_pois, specs = c("treatment", "genotype"),
+                             type = "response") |>
+  contrast(method = "revpairwise", simple = "each", combine = TRUE,
+           adjust = "none") |>
+  summary(infer = TRUE) |> data.table()
+colnames(fig3a_pois_pairs) <- c("genotype", "treatment", "contrast", "estimate", "SE",
+                              "df", "lower CL", "upper CL", "null", "t/Z", "p.value")
+fig3a_pois_pairs <- fig3a_pois_pairs[, .SD, .SDcols = col_labels]
+
+fig3a_qp_pairs <- emmeans(fig3a_qp, specs = c("treatment", "genotype"),
+                             type = "response") |>
+  contrast(method = "revpairwise", simple = "each", combine = TRUE,
+           adjust = "none") |>
+  summary(infer = TRUE) |> data.table()
+colnames(fig3a_qp_pairs) <- c("genotype", "treatment","contrast","estimate", "SE",
+                              "df", "lower CL", "upper CL", "null", "t/Z", "p.value")
+fig3a_qp_pairs <- fig3a_qp_pairs[, .SD, .SDcols = col_labels]
+
+fig3a_nb1_pairs <- emmeans(fig3a_nb1, specs = c("treatment", "genotype"),
+                             type = "response") |>
+  contrast(method = "revpairwise", simple = "each", combine = TRUE,
+           adjust = "none") |>
+  summary(infer = TRUE) |> data.table()
+colnames(fig3a_nb1_pairs) <- c("genotype", "treatment","contrast","estimate", "SE",
+                              "df", "lower CL", "upper CL", "null", "t/Z", "p.value")
+fig3a_nb1_pairs <- fig3a_nb1_pairs[, .SD, .SDcols = col_labels]
+
+fig3a_nb2_pairs <- emmeans(fig3a_nb2, specs = c("treatment", "genotype"),
+                             type = "response") |>
+  contrast(method = "revpairwise", simple = "each", combine = TRUE,
+           adjust = "none") |>
+  summary(infer = TRUE) |> data.table()
+colnames(fig3a_nb2_pairs) <- c("genotype", "treatment","contrast","estimate", "SE",
+                              "df", "lower CL", "upper CL", "null", "t/Z", "p.value")
+fig3a_nb2_pairs <- fig3a_nb2_pairs[, .SD, .SDcols = col_labels]
+
+pairs_table <- rbind(
+  fig3a_lm_pairs[1,],
+  fig3a_loglm_pairs[1,],
+  fig3a_pois_pairs[1,],
+  fig3a_qp_pairs[1,],
+  fig3a_nb1_pairs[1,],
+  fig3a_nb2_pairs[1,]
+)
+
+# pairs_table |>
+#   kable() |>
+#   kable_styling() |>
+#   pack_rows("lm", 1, 4) |>
+#   pack_rows("loglm", 5, 8) |>
+#   pack_rows("pois", 9, 12) |>
+#   pack_rows("qp", 13, 16) |>
+#   pack_rows("nb1", 17, 20) |>
+#   pack_rows("nb2", 21, 24)
+# 
+pairs_table |>
+  kable(digits = c(1,1,1,2,2,1,2,2,2,5)) |>
+  kable_styling() |>
+  pack_rows("lm", 1, 1) |>
+  pack_rows("loglm", 2, 2) |>
+  pack_rows("pois", 3, 3) |>
+  pack_rows("qp", 4, 4) |>
+  pack_rows("nb1", 5, 5) |>
+  pack_rows("nb2", 6, 6)
+
+  
+```
+Notes
+
+1. Only the first simple effect of the four is shown
+2. The values in the column "Estimate" are estimates of different ways of computing the effect. For the lm, the estimate is the difference in estimated means. For the loglm, the estimate is the difference in the geometric means. For the generalized linear models, the estimate is the ratio of the means, but the estimate of the means for the nb1 model differs from that of the pois, qp, and nb2 models (which are all the same).
+3. While the estimates are the same for the pois, qp, and nb2 models, the variances (SE) of the estimates differ, so the test statistic (*t* and *Z*) and *p*-values differ.
+4. The tests ("Wald test") for the GLM use a *Z* statistic, which assumes infinite sample size. In practice this means, the CI and *p*-value will be more reliable with larger sample size. n > 30 is pretty good.
+5. No model, and no *p*-value is either incorrect or correct. Some models fit the data better than other models. By fit, I mean how well the data look like a sample from a normal, poisson, or negative binomial distribution, each with specific mean-variance relationships.
+6. If reliable *p*-values and high power is our goal, then, how well a model fits the data is not a primary concern. Instead, we want to choose the method with good Type 1 error performance and high power relative to alternative methods.
+
+#### The Likelihood Ratio Test (LRT) is alternative to the Wald test for GLMs.
+
+This is done pairwise.
+
+```{r }
+# simple effect of genotype in GAS6 treatment
+fig3a_nb2_full <- glmmTMB(sprouts ~ genotype,
+                         family = nbinom2(link = "log"),
+                         data = fig3a[treatment == "GAS6"])
+# refit genotype factor
+fig3a_nb2_reduced <- glmmTMB(sprouts ~ 1,
+                         family = nbinom2(link = "log"),
+                         data = fig3a[treatment == "GAS6"])
+# LRT
+fig3a_nb2_lrt_1 <- anova(fig3a_nb2_full, fig3a_nb2_reduced, test="Chisq")
+fig3a_nb2_lrt_1
+```
+
+#### Simulation shows that a quasipoisson model (qp) has the best performance over the parameter space
+
+Notes
+
+1. xxx
 
 ## Example 1 -- GLM models for count responses ("angiogenic sprouts" fig3a) {#glm-1}
 ### Understand the data
@@ -619,7 +827,7 @@ A common misconception is that if the distribution of the response approximates 
 ```{r echo=FALSE, eval=FALSE}
 
 m2_resid <- data.table(
-  group = fig3a$t_by_g,
+  group = fig3a$group,
   response = residuals(fig3a_pois, type="response"),
   pearson = residuals(fig3a_pois, type="pearson"),
   pearson2 = residuals(fig3a_pois, type="response")/sqrt(fitted(fig3a_pois)),
@@ -745,7 +953,7 @@ exp(b1)
 ```
 
 ```{r glm1-fig3a_qp-mean}
-mean(fig3a[t_by_g == "PBS FAK_wt", sprouts])
+mean(fig3a[group == "PBS FAK_wt", sprouts])
 ```
 
 #### The coefficients of the indicator variables of a Generalized Linear Model with a log-link function are effect-ratios on the response scale
@@ -852,7 +1060,7 @@ gas6_fak_ko_link <- b[1] + b[2]*1 + b[3]*1 + b[4]*1
 
 # combine into a table
 fig3a_means <- data.table(
-  group = t_by_g_levels,
+  group = group_levels,
   "mean (link scale)" = c(pbs_fak_wt_link,
                           gas6_fak_wt_link,
                           pbs_fak_ko_link,
@@ -924,13 +1132,13 @@ upper_del <- qt(0.975, df = summary(fig3a_lm)$df[2])*sigma
 fig3a_sum <- fig3a[, .(mean = mean(sprouts),
                        lower = mean(sprouts) + lower_del,
                        upper = mean(sprouts) + upper_del),
-                   by = t_by_g]
+                   by = group]
 gg1 <- ggplot(data = fig3a,
-             aes(x = t_by_g,
+             aes(x = group,
                  y = sprouts)) +
   geom_sina(alpha = 0.5) +
   geom_point(data = fig3a_sum,
-             aes(x = t_by_g,
+             aes(x = group,
                  y = mean),
              size = 3) +
   geom_errorbar(data = fig3a_sum,
@@ -950,17 +1158,17 @@ gg1 <- factor_wrap(gg1)
 sigma <- summary(fig3a_lm)$sigma
 n <- 100
 fake_fig3a <- data.table(
-  t_by_g = factor(rep(t_by_g_levels, each = n),
-                  levels = t_by_g_levels)
+  group = factor(rep(group_levels, each = n),
+                  levels = group_levels)
 )
-fake_fig3a[, c("treatment", "genotype"):= tstrsplit(t_by_g,
+fake_fig3a[, c("treatment", "genotype"):= tstrsplit(group,
                                              " ",
                                              fixed = TRUE)]
 fake_fig3a[, sprouts := predict(fig3a_lm, newdata = fake_fig3a) +
              rnorm(n*4, mean = 0, sd = sigma)]
 
 gg2 <- ggplot(data = fake_fig3a,
-             aes(x = t_by_g,
+             aes(x = group,
                  y = sprouts)) +
   geom_sina(alpha = 0.5) +
 
@@ -983,7 +1191,7 @@ theta <- summary(fig3a_qp)$dispersion
 fake_fig3a[, sprouts_qp := rqpois(n * 4, mu_vec, theta)]
 
 gg3 <- ggplot(data = fake_fig3a,
-             aes(x = t_by_g,
+             aes(x = group,
                  y = sprouts_qp)) +
   geom_sina(alpha = 0.5) +
 
@@ -1638,20 +1846,29 @@ plot_grid(gg1, gg2, ncol = 2, labels = "AUTO")
 ## Working in R
 ### Fitting GLMs to count data
 
-The Poisson family is specified with the base R `glm()` function. For Negative Binomial, use `glm.nb` from the MASS package
-
 ```{r, eval=FALSE}
 # poisson - less likely to fit to real biological data well 
 # because of overdispersion
-fit <- glm(y ~ treatment, family = "poisson", data = dt)
 
-# two alternatives to overdispersed poisson fit
+fit <- glm(y ~ treatment, family = poisson(link = "log"), data = dt)
 
-# quasipoisson
-fit <- glm(y ~ treatment, family = "quasipoisson", data=dt)
+# alternatives to overdispersed poisson fit
 
-# note that "family" is not an argument since this function is used only to fit a Negative Binomial distribution!
+# 1. quasipoisson using Base R
+fit <- glm(y ~ treatment, family = quasipoisson(link = "log"), data = dt)
+
+# 2. nbinom1 from glmmTMB package models the variance like quasipoisson. The result differs from Base R quasipoisson
+
+fit <- glmmTMB(y ~ treatment, family = nbinom1(link = "log"), data = dt)
+
+# 3. negative binomial using nbinom2 from glmmTMB package. Equivalent to glm.nb from MASS
+
+fit <- glmmTMB(y ~ treatment, family = nbinom1(link = "log"), data = dt)
+
+# 4. negative binomial using glm.nb from MASS package. Equivalent to nbinom2 from glmmTMB
+
 fit <- glm.nb(y ~ treatment, data = dt)
+
 ```
 
 ### Fitting a GLM to a continuous conditional response with right skew.
@@ -1668,11 +1885,8 @@ The binomial family is specified with base R `glm()` function.
 
 ```{r, eval=FALSE}
 # if the data includes a 0 or 1 for every observation of y
-fit <- glm(y ~ treatment, family = "binomial", data = dt)
+fit <- glm(y ~ treatment, family = binomial(link = "logit"), data = dt)
 
-# if the data includes the frequency of success AND there is a measure of the total n
-dt[ , failure := n - success]
-fit <- glm(cbind(success, failure) ~ treatment, family = "binomial", data = dt)
 ```
 
 ### Fitting Generalized Linear Mixed Models
@@ -1777,18 +1991,18 @@ colnames(fig3a_wide) <- input_labels
 
 fig3a <- melt(fig3a_wide,
               measure.vars = input_labels,
-              variable.name = "t_by_g",
+              variable.name = "group",
               value.name = "sprouts") |>
   na.omit()
 
 # change order of factor levels
-t_by_g_levels <- c("PBS FAK_wt", "GAS6 FAK_wt", "PBS FAK_ko", "GAS6 FAK_ko")
+group_levels <- c("PBS FAK_wt", "GAS6 FAK_wt", "PBS FAK_ko", "GAS6 FAK_ko")
 
-fig3a[, c("treatment", "genotype"):= tstrsplit(t_by_g,
+fig3a[, c("treatment", "genotype"):= tstrsplit(group,
                                              " ",
                                              fixed = TRUE)]
 
-fig3a[, t_by_g := factor(t_by_g, levels = t_by_g_levels)]
+fig3a[, group := factor(group, levels = group_levels)]
 treatment_levels <- c("PBS", "GAS6")
 fig3a[, treatment := factor(treatment, levels = treatment_levels)]
 genotype_levels <- c("FAK_wt", "FAK_ko")

@@ -3070,7 +3070,7 @@ But, combining the Type I and power simulations, lmm.ri/rmaov.uni/lmm.ri have po
 ```{r rcbds-performance-sim, warning=FALSE, message=FALSE, error=FALSE, echo = FALSE}
 seed_starter <- 0
 n_sims <- 500
-do_sim <- TRUE
+do_sim <- FALSE
 
 data_from <- "simulations/grcbds/data"
 error_type <- "type1" 
@@ -3314,7 +3314,7 @@ if(do_sim == TRUE){
 ```
 
 ```{r}
-#| label: tbl-lmm-rcbd-type1
+#| label: tbl-lmm-rcbds-type1
 #| echo: false
 #| tbl-cap: Type I error rate the RCBD statistical models under different levels of correlation structure among the observations. The Cor Error column is the average correlated error of the residuals fit by a simple linear model y ~ treatment. Model abbreviations as in text.
 
