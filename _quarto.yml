@@ -21,6 +21,7 @@ book:
     - chapters/model-checking.qmd
     - chapters/multiple-testing.qmd
     - chapters/two-factors.qmd
+    - chapters/ancova.qmd
     - chapters/lmm.qmd
     - chapters/glm.qmd
 

@@ -273,8 +273,8 @@ summary_table |>
 
 ```{r simulation-3x, fig.width=8, fig.height = 4, warning=FALSE}
 # https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
-n_iter <- 1000
-set.seed(1)
+n_iter <- 2000
+set.seed(2)
 file_path <- "glm_3x_results_new_lrt_out.Rds"
 do_it <- TRUE
 if(do_it){
