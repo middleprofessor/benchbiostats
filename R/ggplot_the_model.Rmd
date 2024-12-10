@@ -1058,7 +1058,11 @@ ggcheck_the_model <- function(m1){
 
 ```{r emm_table}
 emm_table <- function(fit_emm){
-  table_out <- data.table(summary(fit_emm))
+  if(is.data.frame(fit_emm)){
+    table_out <- data.table(fit_emm)
+  }else{
+    table_out <- data.table(summary(fit_emm))
+  }
   if("response" %in% colnames(table_out)){
     # if the lm with log(y) or glm with log link, use " / "
     setnames(table_out,

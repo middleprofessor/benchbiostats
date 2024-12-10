@@ -1,0 +1,704 @@
+---
+title: "glmmTMB nbinom1 test"
+author: "Jeffrey Walker"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# wrangling packages
+library(data.table)
+
+# analysis packages
+library(MASS)
+library(glmmTMB)
+library(AICcmodavg) # qaic
+
+# graphics packages
+library(ggplot2)
+library(cowplot)
+library(knitr)
+library(kableExtra)
+```
+
+```{r rqpois}
+  rqpois <- function(n, mu, theta) {
+    # theta is the qp dispersion parameter which > 1
+    # theta = 1 = poisson
+    y <- rnbinom(n = n, mu = mu, size = mu/(theta-1))
+    return(y)
+  }
+```
+
+
+```{r fqaic}
+fqaic <- function(model) {
+  loglik <- sum(dpois(model$y, model$fitted.values, log = TRUE))
+  phi <- summary(model)$dispersion
+  qaic <- -2*loglik/phi + 2*summary(model)$df[3]
+  qaic <- -2*loglik + 2*summary(model)$df[3] * phi
+  return(qaic)
+}
+```
+
+# nbinom1 does not result in same estimate as other glm functions
+
+```{r}
+mu_sim <- exp(3+rnorm(3))
+fd <- data.table(
+  genotype = rep(c("WT", "KO", "KO_rescue"), each = 8),
+  tumors = rnegbin(8*3, mu = rep(mu_sim, each = 8), theta = 2)
+)
+qp1 <- glm(tumors ~ genotype + 0,
+           family = quasipoisson(link = "log"),
+           data = fd)
+nb1 <- glmmTMB(tumors ~ genotype + 0,
+               family = nbinom1(link = "log"),
+               data = fd)
+nb <- glm.nb(tumors ~ genotype + 0,
+           data = fd)
+nb2 <- glmmTMB(tumors ~ genotype + 0,
+               family = nbinom2(link = "log"),
+               data = fd)
+coef(summary(qp1))
+coef(summary(nb1))$cond
+coef(summary(nb))
+coef(summary(nb2))$cond
+```
+
+## modification of code from stackexchange
+
+```{r stackexchange}
+#https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
+library(MASS)
+n <- 5
+m <- 3
+set.seed(17) # origina
+b <- exp(5+rnorm(m))
+k <- 6
+
+# Random negbin data; orthogonal factors
+y <- rnbinom(m*n, size=k, mu=rep(b,each=n))
+X <- factor(paste("X",rep(1:m,each=n),sep=""))
+
+# Fit a bunch of GLMs with a log link
+con <- glm.control(maxit=100)
+mnb <- glm(y~X+1, family=negative.binomial(theta=2))
+mpo <- glm(y~X+1, family="poisson")
+mga <- glm(y~X+1, family=gaussian(link=log), start=rep(1,m), control=con)
+miv <- glm(y~X+1, family=inverse.gaussian(link=log), start=rep(2,m), control=con)
+mgm <- glm(y~X+1, family=Gamma(link=log), start=rep(1,m), control=con)  
+mqp <- glm(y~X+1, family="quasipoisson")
+mqptmb <- glmmTMB(y~X+1, family=nbinom1)
+coefs <- cbind(negbin=mnb$coef, poisson=mpo$coef, gaussian=mga$coef,
+                   invgauss=miv$coef, gamma=mgm$coef, qpoisson=mqp$coef,
+               qpoissson_tmb=summary(mqptmb)$coef$cond[,"Estimate"])
+coefs
+```
+
+```{r}
+group_means <- function(x){
+  ybar <- c(x[1], x[1]+x[2], x[1]+x[3])
+}
+apply(coefs, 2, group_means)
+```
+
+```{r pless, echo=FALSE}
+  pless <- function(x){
+    value <- sum(x < 0.05, na.rm=TRUE)/length(na.omit(x))
+    return(value)
+  }
+
+```
+
+
+
+```{r simulation-3x, fig.width=8, fig.height = 4}
+# https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
+n_iter <- 500
+set.seed(1)
+file_path <- "glm_3x_results_out.Rds"
+do_it <- TRUE
+if(do_it){
+  
+  # variable parameters
+  model_list <- c("qp", "nb")
+  n_list <- c(6, 20)
+  theta_list <- c(1, 5)
+  parameter_matrix <- expand.grid(theta = theta_list,
+                                  model = model_list,
+                                  sample_size = n_list)
+  
+  results_out <- data.table(NULL)
+  
+  mag <- 1
+  mu_ref <- 10 # mu[3] is modified in the loop
+  k <- 3
+  
+  
+  stats_labels <- c("lm_mu1", "lm_mu2", "lm_b1", "lm_p",
+                    "lm_log_mu1", "lm_log_mu2", "lm_log_b1", "lm_log_p",
+                    "qp_mu1", "qp_mu2", "qp_b1", "qp_p",
+                    "nbinom1_mu1", "nbinom1_mu2", "nbinom1_b1", "nbinom1_p",
+                    "nbinom2_mu1", "nbinom2_mu2", "nbinom2_b1", "nbinom2_p",
+                    "nbinom1_pw_mu1", "nbinom1_pw_mu2", "nbinom1_pw_b1", "nbinom1_pw_p", "nbinom1_lrt_p",
+                    "nbinom2_pw_mu1", "nbinom2_pw_mu2", "nbinom2_pw_b1", "nbinom2_pw_p", "nbinom2_lrt_p")
+  
+  type1_matrix <- matrix(nrow = n_iter,
+                         ncol = length(stats_labels))
+  power_matrix <- matrix(nrow = n_iter,
+                         ncol = length(stats_labels))
+  colnames(type1_matrix) <- stats_labels
+  colnames(power_matrix) <- stats_labels
+  
+  mu_mag <- c(3.4, 2.1, 3.8, 2.2, 2.1, 1.7, 2.4, 1.8)
+  for(parameter_set in 1:nrow(parameter_matrix)){
+    gen_theta <- parameter_matrix[parameter_set, "theta"]
+    gen_model <- parameter_matrix[parameter_set, "model"]
+    n <- parameter_matrix[parameter_set, "sample_size"]
+    mu_sim <- rep(mu_ref, 3)
+    mu_sim[3] <- mu_mag[parameter_set] * mu_sim[1]
+ 
+    fd <- data.table(
+      genotype = rep(c("WT", "KO", "TR"), each = n) |>
+        factor(levels = c("WT", "KO", "TR"))
+    )
+    
+    # nb var = mu + mu^2/theta
+    # qp var = theta*mu
+    # qp*mu = mu + mu^2/nb
+    # qp = mu/mu + mu^2/nb
+    # qp = 1 + mu/nb
+    # if nb = 0.5 qp and mu = 10 then qp = 21
+    # if nb = 2 qp and mu = 10 then qp = 6
+    theta_nb <- gen_theta
+    theta_qp <- 1 + mu_sim/theta_nb # for generating data each group has its own theta
+    if(gen_model == "qp"){
+      y_qp <- rqpois(n * k * n_iter,
+                     mu = rep(mu_sim, each = n),
+                     theta = theta_qp)
+      y_mat <- matrix(y_qp, nrow = n * k, ncol = n_iter)
+    }
+    if(gen_model == "nb"){
+      y_nb <- rnegbin(n * k * n_iter,
+                      mu = rep(mu_sim, each = n),
+                      theta = theta_nb)
+      y_mat <- matrix(y_nb, nrow = n * k, ncol = n_iter)
+    }
+    
+    for(iter in 1:n_iter){
+      fd[, tumors := y_mat[, iter]]
+      lm1 <- lm(tumors ~ genotype,
+                data = fd)
+      lm1_log <- lm(log(tumors + 1) ~ genotype,
+                    data = fd)
+      qp1 <- glm(tumors ~ genotype,
+                 family = quasipoisson(link = "log"),
+                 data = fd)
+      nb1 <- glmmTMB(tumors ~ genotype,
+                     family = nbinom1(link = "log"),
+                     data = fd)
+      nb2 <- glmmTMB(tumors ~ genotype,
+                     family = nbinom2(link = "log"),
+                     data = fd)
+
+      # pairwise
+      nb1_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
+                          family = nbinom1(link = "log"),
+                          data = fd[genotype != "TR",])
+      nb1_pw_2 <- glmmTMB(tumors ~ genotype,  # the power pair
+                          family = nbinom1(link = "log"),
+                          data = fd[genotype != "KO",])
+      nb2_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
+                          family = nbinom2(link = "log"),
+                          data = fd[genotype != "TR",])
+      nb2_pw_2 <- glmmTMB(tumors ~ genotype,  # the power pair
+                          family = nbinom2(link = "log"),
+                          data = fd[genotype != "KO",])
+      
+      # type 1
+      nonref <- 2
+      type1_matrix[iter, "lm_mu1"] <- coef(lm1)[1]
+      type1_matrix[iter, "lm_mu2"] <- coef(lm1)[1] + coef(lm1)[nonref]
+      type1_matrix[iter, "lm_b1"] <- coef(lm1)[nonref]
+      type1_matrix[iter, "lm_p"] <- summary(contrast(emmeans(lm1, specs = "genotype"),
+                                                     method = "revpairwise",
+                                                     adjust = "none"))[nonref-1,"p.value"]
+      
+      type1_matrix[iter, "lm_log_mu1"] <- coef(lm1_log)[1]
+      type1_matrix[iter, "lm_log_mu2"] <- coef(lm1_log)[1] + coef(lm1_log)[nonref]
+      type1_matrix[iter, "lm_log_b1"] <- coef(lm1_log)[nonref]
+      type1_matrix[iter, "lm_log_p"] <- summary(contrast(emmeans(lm1_log, specs = "genotype"),
+                                                         method = "revpairwise",
+                                                         adjust = "none"))[nonref-1,"p.value"]
+      
+      type1_matrix[iter, "qp_mu1"] <- coef(qp1)[1]
+      type1_matrix[iter, "qp_mu2"] <- coef(qp1)[1] + coef(qp1)[nonref]
+      type1_matrix[iter, "qp_b1"] <- coef(qp1)[nonref]
+      type1_matrix[iter, "qp_p"] <- summary(contrast(emmeans(qp1, specs = "genotype"),
+                                                     method = "revpairwise",
+                                                     adjust = "none"))[nonref-1,"p.value"]
+      
+      type1_matrix[iter, "nbinom1_mu1"] <- coef(summary(nb1))$cond[1,"Estimate"]
+      type1_matrix[iter, "nbinom1_mu2"] <- coef(summary(nb1))$cond[1,"Estimate"] +
+        coef(summary(nb1))$cond[nonref,"Estimate"]
+      type1_matrix[iter, "nbinom1_b1"] <- coef(summary(nb1))$cond[nonref,"Estimate"]
+      type1_matrix[iter, "nbinom1_p"] <- summary(contrast(
+        emmeans(nb1, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[nonref-1,"p.value"]
+      
+      type1_matrix[iter, "nbinom2_mu1"] <- coef(summary(nb2))$cond[1,"Estimate"]
+      type1_matrix[iter, "nbinom2_mu2"] <- coef(summary(nb2))$cond[1,"Estimate"] +
+        coef(summary(nb2))$cond[nonref,"Estimate"]
+      type1_matrix[iter, "nbinom2_b1"] <- coef(summary(nb2))$cond[nonref,"Estimate"]
+      type1_matrix[iter, "nbinom2_p"] <- summary(contrast(
+        emmeans(nb2, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[nonref-1,"p.value"]
+      
+      type1_matrix[iter, "nbinom1_pw_mu1"] <- coef(summary(nb1_pw_1))$cond[1,"Estimate"]
+      type1_matrix[iter, "nbinom1_pw_mu2"] <- coef(summary(nb1_pw_1))$cond[1,"Estimate"] +
+        coef(summary(nb1))$cond[nonref,"Estimate"]
+      type1_matrix[iter, "nbinom1_pw_b1"] <- coef(summary(nb1_pw_1))$cond[2,"Estimate"]
+      type1_matrix[iter, "nbinom1_pw_p"] <- summary(contrast(
+        emmeans(nb1_pw_1, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[1,"p.value"]
+      type1_matrix[iter, "nbinom1_lrt_p"] <- drop1(nb1_pw_1, test="Chisq")$"Pr(>Chi)"[2]
+      
+      type1_matrix[iter, "nbinom2_pw_mu1"] <- coef(summary(nb2_pw_1))$cond[1,"Estimate"]
+      type1_matrix[iter, "nbinom2_pw_mu2"] <- coef(summary(nb2_pw_1))$cond[1,"Estimate"] +
+        coef(summary(nb2))$cond[nonref,"Estimate"]
+      type1_matrix[iter, "nbinom2_pw_b1"] <- coef(summary(nb2_pw_1))$cond[2,"Estimate"]
+      type1_matrix[iter, "nbinom2_pw_p"] <- summary(contrast(
+        emmeans(nb2_pw_1, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[1,"p.value"]
+      type1_matrix[iter, "nbinom2_lrt_p"] <- drop1(nb2_pw_1, test="Chisq")$"Pr(>Chi)"[2]
+      
+      # power
+      nonref <- 3
+      power_matrix[iter, "lm_mu1"] <- coef(lm1)[1]
+      power_matrix[iter, "lm_mu2"] <- coef(lm1)[1] + coef(lm1)[nonref]
+      power_matrix[iter, "lm_b1"] <- coef(lm1)[nonref]
+      power_matrix[iter, "lm_p"] <- summary(contrast(emmeans(lm1, specs = "genotype"),
+                                                     method = "revpairwise",
+                                                     adjust = "none"))[nonref-1,"p.value"]
+      
+      power_matrix[iter, "lm_log_mu1"] <- coef(lm1_log)[1]
+      power_matrix[iter, "lm_log_mu2"] <- coef(lm1_log)[1] + coef(lm1_log)[nonref]
+      power_matrix[iter, "lm_log_b1"] <- coef(lm1_log)[nonref]
+      power_matrix[iter, "lm_log_p"] <- summary(contrast(emmeans(lm1_log, specs = "genotype"),
+                                                         method = "revpairwise",
+                                                         adjust = "none"))[nonref-1,"p.value"]
+      
+      power_matrix[iter, "qp_mu1"] <- coef(qp1)[1]
+      power_matrix[iter, "qp_mu2"] <- coef(qp1)[1] + coef(qp1)[nonref]
+      power_matrix[iter, "qp_b1"] <- coef(qp1)[nonref]
+      power_matrix[iter, "qp_p"] <- summary(contrast(emmeans(qp1, specs = "genotype"),
+                                                     method = "revpairwise",
+                                                     adjust = "none"))[nonref-1,"p.value"]
+      
+      power_matrix[iter, "nbinom1_mu1"] <- coef(summary(nb1))$cond[1,"Estimate"]
+      power_matrix[iter, "nbinom1_mu2"] <- coef(summary(nb1))$cond[1,"Estimate"] +
+        coef(summary(nb1))$cond[nonref,"Estimate"]
+      power_matrix[iter, "nbinom1_b1"] <- coef(summary(nb1))$cond[nonref,"Estimate"]
+      power_matrix[iter, "nbinom1_p"] <- summary(contrast(
+        emmeans(nb1, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[nonref-1,"p.value"]
+      
+      power_matrix[iter, "nbinom2_mu1"] <- coef(summary(nb2))$cond[1,"Estimate"]
+      power_matrix[iter, "nbinom2_mu2"] <- coef(summary(nb2))$cond[1,"Estimate"] +
+        coef(summary(nb2))$cond[nonref,"Estimate"]
+      power_matrix[iter, "nbinom2_b1"] <- coef(summary(nb2))$cond[nonref,"Estimate"]
+      power_matrix[iter, "nbinom2_p"] <- summary(contrast(
+        emmeans(nb2, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[nonref-1,"p.value"]
+      
+      power_matrix[iter, "nbinom1_pw_mu1"] <- coef(summary(nb1_pw_2))$cond[1,"Estimate"]
+      power_matrix[iter, "nbinom1_pw_mu2"] <- coef(summary(nb1_pw_2))$cond[1,"Estimate"] +
+        coef(summary(nb1))$cond[nonref,"Estimate"]
+      power_matrix[iter, "nbinom1_pw_b1"] <- coef(summary(nb1_pw_2))$cond[2,"Estimate"]
+      power_matrix[iter, "nbinom1_pw_p"] <- summary(contrast(
+        emmeans(nb1_pw_2, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[1,"p.value"]
+      power_matrix[iter, "nbinom1_lrt_p"] <- drop1(nb1_pw_2, test="Chisq")$"Pr(>Chi)"[2]
+      
+      power_matrix[iter, "nbinom2_pw_mu1"] <- coef(summary(nb2_pw_2))$cond[1,"Estimate"]
+      power_matrix[iter, "nbinom2_pw_mu2"] <- coef(summary(nb2_pw_2))$cond[1,"Estimate"] +
+        coef(summary(nb2))$cond[nonref,"Estimate"]
+      power_matrix[iter, "nbinom2_pw_b1"] <- coef(summary(nb2_pw_2))$cond[2,"Estimate"]
+      power_matrix[iter, "nbinom2_pw_p"] <- summary(contrast(
+        emmeans(nb2_pw_2, specs = "genotype"), method = "revpairwise",
+        adjust = "none"))[1,"p.value"]
+      power_matrix[iter, "nbinom2_lrt_p"] <- drop1(nb2_pw_2, test="Chisq")$"Pr(>Chi)"[2]
+      
+    }
+    results_out <- rbind(
+      results_out,
+      data.table(
+        theta = gen_theta,
+        model = gen_model,
+        sample_size = n,
+        type = "type1",
+        type1_matrix
+      ),
+      data.table(
+        theta = gen_theta,
+        model = gen_model,
+        sample_size = n,
+        type = "power",
+        power_matrix
+      )
+    )
+  }
+  
+  saveRDS(results_out, file_path)
+  
+}
+
+results_out <- readRDS(file_path)
+# print results
+theta_list <- c(1, 5)
+model_list <- c("qp", "nb")
+n_list <- c(6, 20)
+type_list <- c("type1", "power")
+  
+parameter_matrix <- expand.grid(theta = theta_list,
+                                model = model_list,
+                                sample_size = n_list,
+                                sim_type = type_list)
+
+stats_labels <- c("lm_mu1", "lm_mu2", "lm_b1", "lm_p",
+                  "lm_log_mu1", "lm_log_mu2", "lm_log_b1", "lm_log_p",
+                  "qp_mu1", "qp_mu2", "qp_b1", "qp_p",
+                  "nbinom1_mu1", "nbinom1_mu2", "nbinom1_b1", "nbinom1_p",
+                  "nbinom2_mu1", "nbinom2_mu2", "nbinom2_b1", "nbinom2_p",
+                  "nbinom1_pw_mu1", "nbinom1_pw_mu2", "nbinom1_pw_b1", "nbinom1_pw_p", "nbinom1_lrt_p",
+                  "nbinom2_pw_mu1", "nbinom2_pw_mu2", "nbinom2_pw_b1", "nbinom2_pw_p", "nbinom2_lrt_p")
+stats_matrix <- matrix(nrow = n_iter,
+                       ncol = length(stats_labels))
+colnames(stats_matrix) <- stats_labels
+
+summary_table <- data.table(NULL)
+for(parameter_set in 1:nrow(parameter_matrix)){
+  gen_theta <- parameter_matrix[parameter_set, "theta"]
+  gen_model <- parameter_matrix[parameter_set, "model"]
+  sim_type <- parameter_matrix[parameter_set, "sim_type"]
+  n <- parameter_matrix[parameter_set, "sample_size"] 
+  stats_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                type == sim_type &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = stats_labels] |>
+    as.matrix()
+  
+  lm_mu1 <- mean(stats_matrix[, "lm_mu1"])
+  lm_mu2 <- mean(stats_matrix[, "lm_mu2"])
+  lm_effect <- mean(stats_matrix[, "lm_b1"])
+  lm_sd_b1 <- sd(stats_matrix[, "lm_b1"])
+  lm_pless <- pless(stats_matrix[, "lm_p"])
+  
+  lm_log_mu1 <- mean(exp(stats_matrix[, "lm_log_mu1"]))
+  lm_log_mu2 <- mean(exp(stats_matrix[, "lm_log_mu2"]))
+  lm_log_effect <- mean(exp(stats_matrix[, "lm_log_b1"]))
+  lm_log_sd_b1 <- sd(stats_matrix[, "lm_log_b1"])
+  lm_log_pless <- pless(stats_matrix[, "lm_log_p"])
+  
+  qp_mu1 <- mean(exp(stats_matrix[, "qp_mu1"]))
+  qp_mu2 <- mean(exp(stats_matrix[, "qp_mu2"]))
+  qp_effect <- mean(exp(stats_matrix[, "qp_b1"]))
+  qp_sd_b1 <- sd(stats_matrix[, "qp_b1"])
+  qp_pless <- pless(stats_matrix[, "qp_p"])
+  
+  nbinom1_mu1 <- mean(exp(stats_matrix[, "nbinom1_mu1"]))
+  nbinom1_mu2 <- mean(exp(stats_matrix[, "nbinom1_mu2"]))
+  nbinom1_effect <- mean(exp(stats_matrix[, "nbinom1_b1"]))
+  nbinom1_sd_b1 <- sd(stats_matrix[, "nbinom1_b1"])
+  nbinom1_pless <- pless(stats_matrix[, "nbinom1_p"])
+
+  nbinom2_mu1 <- mean(exp(stats_matrix[, "nbinom2_mu1"]))
+  nbinom2_mu2 <- mean(exp(stats_matrix[, "nbinom2_mu2"]))
+  nbinom2_effect <- mean(exp(stats_matrix[, "nbinom2_b1"]))
+  nbinom2_sd_b1 <- sd(stats_matrix[, "nbinom2_b1"])
+  nbinom2_pless <- pless(stats_matrix[, "nbinom2_p"])
+  
+  nbinom1_pw_mu1 <- mean(exp(stats_matrix[, "nbinom1_pw_mu1"]))
+  nbinom1_pw_mu2 <- mean(exp(stats_matrix[, "nbinom1_pw_mu2"]))
+  nbinom1_pw_effect <- mean(exp(stats_matrix[, "nbinom1_pw_b1"]))
+  nbinom1_pw_sd_b1 <- sd(stats_matrix[, "nbinom1_pw_b1"])
+  nbinom1_pw_pless <- pless(stats_matrix[, "nbinom1_pw_p"])
+  
+  nbinom2_pw_mu1 <- mean(exp(stats_matrix[, "nbinom2_pw_mu1"]))
+  nbinom2_pw_mu2 <- mean(exp(stats_matrix[, "nbinom2_pw_mu2"]))
+  nbinom2_pw_effect <- mean(exp(stats_matrix[, "nbinom2_pw_b1"]))
+  nbinom2_pw_sd_b1 <- sd(stats_matrix[, "nbinom2_pw_b1"])
+  nbinom2_pw_pless <- pless(stats_matrix[, "nbinom2_pw_p"])
+  
+  nbinom1_lrt_mu1 <- nbinom1_pw_mu1
+  nbinom1_lrt_mu2 <- nbinom1_pw_mu2
+  nbinom1_lrt_effect <- nbinom1_pw_effect
+  nbinom1_lrt_sd_b1 <- nbinom1_pw_sd_b1
+  nbinom1_lrt_pless <- pless(stats_matrix[, "nbinom1_lrt_p"])
+  
+  nbinom2_lrt_mu1 <- nbinom2_pw_mu1
+  nbinom2_lrt_mu2 <- nbinom2_pw_mu2
+  nbinom2_lrt_effect <- nbinom2_pw_effect
+  nbinom2_lrt_sd_b1 <- nbinom2_pw_sd_b1
+  nbinom2_lrt_pless <- pless(stats_matrix[, "nbinom2_lrt_p"])
+
+  
+  fit_models <- c("lm", "lm_log", "qp", "nb1", "nb2",
+                     "nb1_pw", "nb2_pw",
+                     "nb1_lrt", "nb2_lrt")
+  summary_table <- rbind(
+    summary_table,
+    data.table(
+      "theta" = gen_theta,
+      "gen_model" = gen_model,
+      "n" = n,
+      type = sim_type,
+      "fit_model" = fit_models,
+      "mu1" = c(lm_mu1, lm_log_mu1, qp_mu1, nbinom1_mu1, nbinom2_mu1,
+                nbinom1_pw_mu1, nbinom2_pw_mu1, nbinom1_lrt_mu1, nbinom2_lrt_mu1),
+      "mu2" = c(lm_mu2, lm_log_mu2, qp_mu2, nbinom1_mu2, nbinom2_mu2,
+                nbinom1_pw_mu2, nbinom2_pw_mu2, nbinom1_lrt_mu2, nbinom2_lrt_mu2),
+      "effect" = c(lm_effect, lm_log_effect, qp_effect, nbinom1_effect, nbinom2_effect,
+                   nbinom1_pw_effect, nbinom2_pw_effect, nbinom1_lrt_effect, nbinom2_lrt_effect),
+      "sd(b1)" = c(lm_sd_b1, lm_log_sd_b1, qp_sd_b1, nbinom1_sd_b1, nbinom2_sd_b1,
+                   nbinom1_pw_sd_b1, nbinom2_pw_sd_b1, nbinom1_lrt_sd_b1, nbinom2_lrt_sd_b1),
+      "p < 0.05" = c(lm_pless, lm_log_pless, qp_pless, nbinom1_pless, nbinom2_pless,
+                     nbinom1_pw_pless, nbinom2_pw_pless, nbinom1_lrt_pless, nbinom2_lrt_pless)
+    )
+  )
+  
+}
+
+
+summary_table |>
+  kable(digits = c(1,1,1,1,1,3,3,3,3,3,3)) |>
+  kable_styling()
+
+summary_table[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+
+heatmap_type1 <- summary_table[type == "type1"]
+setnames(heatmap_type1, "p < 0.05", "type1")
+heatmap_type1[, sim := paste(theta, gen_model, n, sep = "\n")]
+heatmap_type1[, sim := factor(sim,
+                                    levels = unique(sim))]
+heatmap_type1[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+
+heatmap_power <- summary_table[type == "power"]
+setnames(heatmap_power, "p < 0.05", "power")
+heatmap_power[, sim := paste(theta, gen_model, n, sep = "\n")]
+heatmap_power[, sim := factor(sim,
+                                    levels = unique(sim))]
+heatmap_power[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+sim_levels <- levels(heatmap_power$sim)
+
+
+gg1 <- ggplot(data = heatmap_type1,
+              aes(x = sim, y = fit_model, fill = type1)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(type1,3)), color = "black", size = 2) +
+  labs(title = "Type 1",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg2 <- ggplot(data = heatmap_power,
+              aes(x = sim, y = fit_model, fill = power)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "white", # "#fee5d9"
+                       high = "#cb181d") +
+  geom_text(aes(label = round(power, 2)), color = "black", size = 2) +
+  labs(title = "Type 1",
+       x = "Parameters",
+       y = "Fit Model")
+
+# gg1
+# gg2
+plot_grid(gg1, gg2)
+```
+
+
+```{r nb1-nb2-check}
+# https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
+n_iter <- 10
+set.seed(1)
+file_path <- "glm_3x_nb1-nb2-check.Rds"
+# variable parameters
+model_list <- c("qp", "nb")
+n_list <- c(6, 20)
+theta_list <- c(1, 5)
+
+parameter_matrix <- expand.grid(theta = theta_list,
+                                model = model_list,
+                                sample_size = n_list)
+
+
+stats_labels <- c("qp_aic", "qp_unif", "qp_disp", "qp_xxx",
+                  "nb1_aic", "nb1_unif", "nb1_disp", "nb1_xxx",
+                  "nb2_aic", "nb2_unif", "nb2_disp", "nb2_xxx",
+                  "nb1_pw_aic", "nb1_pw_unif", "nb1_pw_disp", "nb1_pw_xxx",
+                  "nb2_pw_aic", "nb2_pw_unif", "nb2_pw_disp", "nb2_pw_xxx")
+results_out <- data.table(NULL)
+
+mag <- 1
+mu_sim <- c(10^mag, 10^mag, 2*10^mag)
+k <- length(mu_sim)
+
+
+stats_matrix <- matrix(nrow = n_iter,
+                       ncol = length(stats_labels))
+colnames(stats_matrix) <- stats_labels
+
+for(parameter_set in 1:nrow(parameter_matrix)){
+  gen_theta <- parameter_matrix[parameter_set, "theta"]
+  gen_model <- parameter_matrix[parameter_set, "model"]
+  n <- parameter_matrix[parameter_set, "sample_size"]
+
+  fd <- data.table(
+    genotype = rep(c("WT", "KO", "TR"), each = n) |>
+      factor(levels = c("WT", "KO", "TR"))
+  )
+  
+  # nb var = mu + mu^2/theta
+  # qp var = theta*mu
+  # qp*mu = mu + mu^2/nb
+  # qp = mu/mu + mu^2/nb
+  # qp = 1 + mu/nb
+  # if nb = 0.5 qp and mu = 10 then qp = 21
+  # if nb = 2 qp and mu = 10 then qp = 6
+  theta_nb <- gen_theta
+  theta_qp <- 1 + mu_sim/theta_nb # for generating data each group has its own theta
+  if(gen_model == "qp"){
+    y_qp <- rqpois(n * k * n_iter,
+                   mu = rep(mu_sim, each = n),
+                   theta = theta_qp)
+    y_mat <- matrix(y_qp, nrow = n * k, ncol = n_iter)
+  }
+  if(gen_model == "nb"){
+    y_nb <- rnegbin(n * k * n_iter,
+                    mu = rep(mu_sim, each = n),
+                    theta = theta_nb)
+    y_mat <- matrix(y_nb, nrow = n * k, ncol = n_iter)
+  }
+
+  for(iter in 1:n_iter){
+    fd[, tumors := y_mat[, iter]]
+    qp1 <- glm(tumors ~ genotype,
+               family = quasipoisson(link = "log"),
+               data = fd)
+    nb1 <- glmmTMB(tumors ~ genotype,
+                   family = nbinom1(link = "log"),
+                   data = fd)
+    nb2 <- glmmTMB(tumors ~ genotype,
+                  family = nbinom2(link = "log"),
+                  data = fd)
+    # pairwise
+    nb1_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
+                             family = nbinom1(link = "log"),
+                             data = fd[genotype != "TR",])
+    nb1_pw_2 <- glmmTMB(tumors ~ genotype,  # the power pair
+                             family = nbinom1(link = "log"),
+                             data = fd[genotype != "KO",])
+    nb2_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
+                             family = nbinom2(link = "log"),
+                             data = fd[genotype != "TR",])
+    nb2_pw_2 <- glmmTMB(tumors ~ genotype,  # the power pair
+                             family = nbinom2(link = "log"),
+                             data = fd[genotype != "KO",])
+    aic_vals <- AIC(nb1, nb2)
+    stats_matrix[iter, "nb1_aic"] <- aic_vals[1,2]
+    stats_matrix[iter, "nb2_aic"] <- aic_vals[1,2]
+    qp1_check <- ggcheck_the_glm(qp1, n_sim = 500)
+    nb1_check <- ggcheck_the_glm(nb1, n_sim = 500)
+    nb2_check <- ggcheck_the_glm(nb2, n_sim = 500)
+    plot(qp1_check)
+    plot(nb1_check)
+    plot(nb2_check)
+    stats_matrix[iter, "qp_unif"] <- testUniformity(qp1_check)$statistic
+    stats_matrix[iter, "nb1_unif"] <- testUniformity(nb1_check)$statistic
+    stats_matrix[iter, "nb2_unif"] <- testUniformity(nb2_check)$statistic
+    stats_matrix[iter, "qp_disp"] <- testDispersion(qp1_check)$statistic
+    stats_matrix[iter, "nb1_disp"] <- testDispersion(nb1_check)$statistic
+    stats_matrix[iter, "nb2_disp"] <- testDispersion(nb2_check)$statistic
+  }
+  results_out <- rbind(
+    results_out,
+    data.table(
+      theta = gen_theta,
+      model = gen_model,
+      sample_size = n,
+      type = "type1",
+      stats_matrix
+    )
+  )
+}
+
+saveRDS(results_out, file_path)
+results_out <- readRDS(file_path)
+
+results_out[, aic_diff := ifelse(model == "qp",
+                                 nb2_aic - nb1_aic,
+                                 nb1_aic - nb2_aic)]
+results_out[, unif_qp1_nb2 := ifelse(model == "qp", # smaller is more uniform
+                                  nb2_unif - qp_unif,
+                                  qp_unif - nb2_unif)]
+results_out[, unif_nb1_nb2 := ifelse(model == "qp", # smaller is more uniform
+                                  nb2_unif - nb1_unif,
+                                  nb1_unif - nb2_unif)]
+results_out[, disp_diff := ifelse(model == "qp",
+                                 nb1_disp - nb2_disp,
+                                 nb2_disp - nb1_disp)]
+results_out[, unif_nb2_nb1 := nb2_unif - nb1_unif]
+results_out[, unif_nb2_qp1 := nb2_unif - qp_unif]
+results_out[, unif_nb1_qp1 := nb1_unif - qp_unif]
+results_out[, disp_nb2_qp1 := nb2_disp - nb2_disp]
+ggplot(data = results_out,
+       aes(x = model,
+           y = unif_nb2_nb1)) +
+  geom_jitter(width = 0.2)
+ggplot(data = results_out,
+       aes(x = model,
+           y = unif_nb2_qp1)) +
+  geom_jitter(width = 0.2)
+ggplot(data = results_out,
+       aes(x = model,
+           y = unif_nb1_qp1)) +
+  geom_jitter(width = 0.2)
+
+```
+
+
+```{r}
+Tx=c('TS','TS','TS','TS','CT','CT','CT','CT','TS','TS','TS','TS','RL','RL','RL','RL','RT','RT','RT','RT','RL','RL','RT','RT','RT','RT','RL','RL','RL','RT','RT','RT','TS','TS','CT','CT','CT','CT','RL','RL','RL','RT','RT','RT','RT','CT','CT','CT','CT','CT','CT','TS','TS')
+Bk= c('A','A','A','A','B','B','B','B','D','D','D','D','D','D','D','D','D','D','D','D','A','A','A','A','A','A','C','C','C','C','C', 'C','C','C','C','C','C','C','B','B','B','B','B','B','B','D','D','D','A','A','A','B','B')
+Rv=c(2.08,2.08,2.52,3.42,2.8,5.57,2.53,3.69,1.55,1.45,3.98,3.19,2.3,2.09,2.26,2.1,3.21,2.99,2.11,2.09,1.64,1.74,1.66,6.41,1.86,2.71,1.83,0.86,2.37,1.05,1.37,2.08,1.09,1.44,0.6,1.24,3.32,1.34,1.86,4.54,2.7,2.5,4.93,2.85,3.42,2.77,2.71,4.11,5.29,2.16,3.15,4.58,2.89)
+dat <- data.table(Tx, Bk, Rv)
+lmm.ri <- lmer(Rv ~ Tx + (1 | Bk), data = dat)
+lmm.ris <- lmer(Rv ~ Tx + (Tx | Bk), data = dat)
+rmaov <- aov_4(Rv ~ Tx + (Tx | Bk),
+               fun_aggregate = mean,
+               data = dat)
+
+
+contrast(emmeans(lmm.ri, specs = "Tx"), method = "revpairwise", adjust = "none")
+contrast(emmeans(lmm.ris, specs = "Tx"), method = "revpairwise", adjust = "none")
+contrast(emmeans(rmaov, specs = "Tx"), method = "revpairwise", adjust = "none")
+
+VarCorr(lmm.ri)
+VarCorr(lmm.ris)
+
+lm1 <- lm(Rv ~ Tx, data = dat)
+dat[, resid := residuals(lm1)]
+dat_agg <- dat[, .(Rv = mean(Rv)), by = .(Tx, Bk)]
+dat_agg_wide <- dcast(dat_agg, Bk ~ Tx, val.var = "Rv")
+cor(dat_agg_wide[, .SD, .SDcols = c("A", "B", "C", "D")])
+```
+
