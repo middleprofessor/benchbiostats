@@ -434,7 +434,7 @@ Notes
 
 1. xxx
 
-## Example 1 -- GLM models for count responses ("angiogenic sprouts" fig3a) {#glm-1}
+## Example 1 -- GLM models for count responses ("angiogenic sprouts" fig3a) {#sec-glm-count}
 ### Understand the data
 
 Article source [Lechertier, Tanguy, et al. "Pericyte FAK negatively regulates Gas6/Axl signalling to suppress tumour angiogenesis and tumour growth." Nature communications 11.1 (2020): 1-14.](https://www.nature.com/articles/s41467-020-16618-6){target="_blank"}
@@ -628,14 +628,14 @@ ggplot_the_response(fig3a_qp,
 
 ```
 
-## Understanding Example 1
-### Modeling strategy
+### Understanding Example 1
+#### Modeling strategy
 
 Instead of testing assumptions of a model using formal hypothesis tests *before* fitting the model, a better strategy is to 1) fit one or more models based on initial evaluation of the data, and then do 2) **model checking** using **diagnostic plots**, diagnostic statistics, and simulation (see Section [All statistical analyses should be followed by model checking](#check-check)).
 
 For the fig3a data, I fit a linear model, a Poisson GLM, and a Negative Binomial GLM. I use the diagnostic plots and statistics to help me decide which model to report.
 
-### Model checking fits to count data
+#### Model checking fits to count data
 
 We use the fit models to check
 
@@ -643,7 +643,7 @@ We use the fit models to check
 2. if the observed distribution is over or under dispersed
 3. if there are more zeros than expected by the theoretical distribution. If so, the observed distribution is **zero-inflated**
 
-#### Checking the linear model fig3a_lm -- a Normal-QQ plot {#glm-fig3a-normal-qq}
+##### Checking the linear model fig3a_lm -- a Normal-QQ plot {#glm-fig3a-normal-qq}
 
 @fig-glm-fig3a-qq A shows a histogram of the residuals from the fit linear model. The plot shows that the residuals seem to be clumped at the negative end of the range, which suggests that a model with a normally distributed conditional outcome (or normal error) is not well approximated.
 
@@ -675,7 +675,7 @@ A better way to investigate this is with the **Normal-QQ** plot in @fig-glm-fig3
 
 For the sprout data, the points are above the line at the positive end, hug the upper bound of the 95% CI at the negative end, are well above the 95% CI at the positive end, and the robust regression is distinctly shallower than a line bisecting the CI bounds. At the left (negative) end, the observed values are more positive than the theoretical values. Remembering that this plot is of residuals, if we think about this as counts, this means that our smallest counts are not as small as we would expect given the mean, the variance, and a normal distribution. This shouldn't be surprising -- the counts range down to zero and counts cannot be below zero. At the positive end, the sample values are again more positive than the theoretical values. Thinking about this as counts, this means that largest counts are larger than expected given the mean, the variance, and a normal distribution. This pattern is what we'd expect of count data.
 
-#### Checking the linear model fig3a_lm -- Spread-level plot for checking homoskedasticity {#glm-fig3a_lm-spreadlevel}
+##### Checking the linear model fig3a_lm -- Spread-level plot for checking homoskedasticity {#glm-fig3a_lm-spreadlevel}
 
 ```{r }
 #| label: fig-glm-fig3a-sl
@@ -697,7 +697,7 @@ A linear model also assumes that the error is **homoskedastic** -- the error var
 
 The regression line in the spread-level plot of the fit of the linear model to the sprout data shows a distinct increase in the "scale" (the square root of the standardized residuals) with increased fitted value, which is expected of data sampled from a distribution in which the variance increases with the mean.
 
-#### Three distributions for count data -- Poisson, Negative Binomial, and Quasipoisson
+##### Three distributions for count data -- Poisson, Negative Binomial, and Quasipoisson
 
 The patterns in the Normal Q-Q plot (@fig-glm-fig3a-qq) and the spread-level plot (@fig-glm-fig3a-sl) should discourage a researcher from modeling the data with a linear model and instead model the data with an alternative distribution using a Generalized Linear Model. There is no unique mapping between observed data and a data generating mechanism with a specific distribution, so this decision is not as easy as thinking about the data generation mechanism and then simply choosing the "correct" distribution. Section 4.5 in Bolker (xxx) is an excellent summary of how to think about the generating processes for different distributions in the context of ecological data. Since the response in the angiogenic sprouts data are counts, we need to choose a distribution that generates integer values, such as the Poisson, the Quasipoisson, and the Negative Binomial.
 
@@ -786,7 +786,7 @@ The glmmTMB package is a wicked-useful update of the base R glm functions. The g
 2. NB2 -- the variance is a quadratic of the mean, so this is the classic Negative Binomial fit. Think "2 = quadratic".
 :::
 
-#### Model checking a GLM I -- the quantile-residual uniform-QQ plot
+##### Model checking a GLM I -- the quantile-residual uniform-QQ plot
 
 An alternative to a Normal-QQ plot for a GLM fit is a **quantile-residual uniform-QQ** plot of observed **quantile residuals**.
 
@@ -822,7 +822,7 @@ Notes
 A common misconception is that if the distribution of the response approximates a Poisson distribution, then the residuals of a GLM fit with a Poisson distribution should be normally distributed, which could then be checked with a Normal-QQ plot, and homoskedastic, which could be checked with a scale-location plot. Neither of these is true because a GLM does not transform the data and, in fact, the model definition does not specify anything about the distribution of an "error" term -- there is no $\varepsilon$ in the model definition above! This is why thinking about the definition of a linear model by specifying an error term with a normal distribution can be confusing and lead to misconceptions when learning GLMs.
 :::
 
-#### Model checking a GLM II -- Spread-level plot for checking homoskedasticity
+##### Model checking a GLM II -- Spread-level plot for checking homoskedasticity
 
 ```{r echo=FALSE, eval=FALSE}
 
@@ -864,7 +864,7 @@ Notes
 2. We expect Q1 (the lower edge of the box) to be at 25%, the median to be at 50%, and Q3 to be at 75%.
 3. The uniform residuals for group 4 ("GAS6 FAK_ko") are shifted more toward zero than expected, indicating that the fit model fits this group less well.
 
-#### Model checking a GLM III -- Checking dispersion
+##### Model checking a GLM III -- Checking dispersion
 
 ```{r}
 #| label: fig-glm-fig3a-pois-dispersion
@@ -890,7 +890,7 @@ Notes
 5. The red line here is far larger than expected given the histogram, which indicates that the residuals are overdispersed given the fit model.
 6. Overdispersion will be common with Poisson GLM fits to biological data.
 
-#### Model Checking a count GLM -- Check zero inflation
+##### Model Checking a count GLM -- Check zero inflation
 
 Counts can have the value zero. Data that have more zeros than expected given a fit count GLM model (Poisson, quasi-Poisson, Negative Binomial) is **zero-inflated**.
 
@@ -900,11 +900,11 @@ zero_inflation_test <- testZeroInflation(fig3a_pois_check)
 
 1. This plot is a histogram of the number of zeros in each of the fake data sets generated by the fit model. An observed number of zeros at the extremes of this distribution are unlikely given the fit model. The number of zeros in the observed data is greater than expected by the model.
 
-### Biological count data are rarely fit well by a Poisson GLM. Instead, fit a quasi-poisson or Negative Binomial GLM model.
+#### Biological count data are rarely fit well by a Poisson GLM. Instead, fit a quasi-poisson or Negative Binomial GLM model.
 
 The diagnostic plots of the fit Quasipoisson model are given in @sec-glm-fig3a-check.
 
-### A GLM is a linear model on the link scale
+#### A GLM is a linear model on the link scale
 
 The negative-binomial GLM fit to the angiogenic sprout data (fig3a) is
 
@@ -926,7 +926,7 @@ $$ {#eq-qp-glm-fig3a}
 4. The fourth line is the **linear predictor** -- it is a linear model on the link scale. The linear predictor includes three indicator variables.
 5. Remember that a linear model is a model in which the coefficients are additive, meaning that the coefficients do not have exponents or are not multiplied by each other.
 
-### Coeffecients of a Generalized Linear Model with a log-link function are on the link scale.
+#### Coeffecients of a Generalized Linear Model with a log-link function are on the link scale.
 
 The coefficients of the fit Quasipoisson model are
 
@@ -940,7 +940,7 @@ Notes
 
 1. The coefficients are on the link scale, which is a linear (additive) scale.
 
-#### The intercept of a Generalized Linear Model with a log-link function is the mean of the reference on the link scale
+##### The intercept of a Generalized Linear Model with a log-link function is the mean of the reference on the link scale
 
 1. In the linear model `fig3a_lm`, the intercept is the modeled mean of the reference group. In a GLM with a log-link (including Models `fig3a_pois` and `fig3a_qp`), the intercept is the mean of the reference group *on the link scale*. The modeled mean of the reference on the response scale is computed by the backtransformaiton $\exp(b_1)$. The function "exp(x)" is the exponent, which is often written using the notation $e^{x}$.
 2. The transformation between link scale and response scale is part of the specification of a Generalized Linear Model. For the Quasipoisson GLM fit to the fig3a data, this specification is in line 3 of the specification (@eq-qp-glm-fig3a).
@@ -956,7 +956,7 @@ exp(b1)
 mean(fig3a[group == "PBS FAK_wt", sprouts])
 ```
 
-#### The coefficients of the indicator variables of a Generalized Linear Model with a log-link function are effect-ratios on the response scale
+##### The coefficients of the indicator variables of a Generalized Linear Model with a log-link function are effect-ratios on the response scale
 
 1. In the linear model `fig3a_lm`, the coefficient of an indicator variable is a difference in means. In a GLM with a log-link, the coefficient of an indicator variable is the difference (group minus reference) of the modeled means *on the link scale*. Let's check this with some computations.
 
@@ -1018,9 +1018,9 @@ exp_b2
 
 3. Since this backtransformed coefficient is both an effect and a ratio, I call it an **effect ratio**. It's value is a multiple of the non-reference response, that is, how many times bigger (or smaller if less than one) the non-reference response is relative to the reference response. The response of the GAS6 treatment is 3.66$\times$ bigger than the response of the reference treatment. 
 
-### Modeled means in the emmeans table of a Generalized Linear Model can be on the link scale or response scale -- Report the response scale
+#### Modeled means in the emmeans table of a Generalized Linear Model can be on the link scale or response scale -- Report the response scale
 
-#### The emmeans table on the link scale contains the log means {#glm-fig3a-emmans-link}
+##### The emmeans table on the link scale contains the log means {#glm-fig3a-emmans-link}
 
 ```{r }
 #| label: fig-fig3a-qp-emm-link
@@ -1076,7 +1076,7 @@ fig3a_means |>
 
 Compare the values here to those in the emmeans table on the link scale (@fig-fig3a-qp-emm-link).
 
-#### The emmeans table on the response scale contains more readily interpretable means
+##### The emmeans table on the response scale contains more readily interpretable means
 
 ```{r}
 #| label: fig3a-qp-emm-response
@@ -1227,22 +1227,23 @@ Notes
 1. Type I error that approximates the nominal value
 2. Reasonable power compared to GLM models and many non-parametric tests.
 
-## Example 2 -- Use a GLM with an offset instead of a ratio of some measurement per total ("dna damage" data fig3b) #glm_offset
+## Example 2--GLM offset models ("dna damage" data fig3b) {#sec-glm-offset}
+### Instead of a *t*-test or Mann-Whitney test of area-normalized counts ("counts per area"), fit a GLM count model with the raw count as the response and the sampling effort (area) as an offset to gain power 
 
-A problem that often arises in count data (and other kinds of measures) are counts that are taken in samples with different areas or volumes of tissue. As a consequence, size and treatment response are confounded -- samples with higher counts may have higher counts because of a different response to treatment, a larger amount of tissue, or some combination. The common practice in experimental biology is to adjust for tissue size variation by area-normalizing the count using the ratio $\frac{count}{area}$ and then testing for a difference in the normalized count using either a linear model NHST (*t*-test/ANOVA) or a non-parametric NHST (Mann-Whitney-Wilcoxan). These practices raise at least two statistical issues.
+A problem that often arises in count data (and other kinds of measures) are counts that are taken in samples with different areas or volumes of tissue. As a consequence, the sampling "effort" (area) is confounded with the treatment response--samples with higher counts may have higher counts because of a different response to treatment, a larger amount of tissue, or some combination. The common practice in experimental biology is to adjust for tissue size variation by area-normalizing the count using the ratio $\frac{count}{area}$ and then testing for a difference in the normalized count using either a linear model NHST (*t*-test/ANOVA) or a non-parametric NHST (Mann-Whitney-Wilcoxan). These practices raise at least two statistical issues.
 
 1. The ratio will have some kind of [ratio distribution](https://en.wikipedia.org/wiki/Ratio_distribution){target="_blank"} that violates the normal distribution assumption of the linear model.
 2. A Mann-Whitney-Wilcoxan does not estimate meaningful effects, is less powerful than GLM models, and is not flexible for complex designs including factorial or covariate models.
 
-A better practice is to model the count using a GLM that adds the denominator of the ratio (the area or volume) as an **offset** in the model. A count GLM with offset also models the ratio (see section \@ref(glm-rate) below), but in a way that is likely to be much more compatible with the data.
+A better practice is to model the count using a GLM that adds the denominator of the ratio (the area or volume) as an **offset** in the model. A count GLM with offset also models the ratio (see section @sec-glm-rate) below), but in a way that is likely to be much more compatible with the data.
 
 NHST of the ratios will perform okay in the sense of Type I error that is close to nominal but will have relatively low power compared to a generalized linear model with offset. If the researcher is interested in best practices including the reporting of uncertainty of estimated effects, a GLM with offset will have more useful confidence intervals -- for example CIs from linear model assuming Normal error can often include absurd values such as ratios less than zero.
 
-Source article (Fernández, Álvaro F., et al. "Disruption of the beclin 1–BCL2 autophagy regulatory complex promotes longevity in mice." Nature 558.7708 (2018): 136-140.)[https://www.nature.com/articles/s41586-018-0162-7]{target="_blank"}
-
 ### fig3b ("dna damage") data
 
-These data were first introduced in the Issues chapter, Section \@ref(issues-offset). There only the age 20 month data were analyzed. Here the full dataset is analyzed.
+Source article (Fernández, Álvaro F., et al. "Disruption of the beclin 1–BCL2 autophagy regulatory complex promotes longevity in mice." Nature 558.7708 (2018): 136-140.)[https://www.nature.com/articles/s41586-018-0162-7]{target="_blank"}
+
+These data were first introduced in the Issues chapter, Section @sec-issues-offset. There, only the age 20 month data were analyzed. Here, the full dataset is analyzed.
 
 [Public source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5992097/){target="_blank"}
 
@@ -1293,11 +1294,11 @@ Response variable -- number of [TUNEL+](https://en.wikipedia.org/wiki/TUNEL_assa
 
 Background. The experiments in Figure 3 were designed to measure the effect of a knock-in mutation in the gene for the [beclin 1 protein](https://en.wikipedia.org/wiki/BECN1){target="_blank"} on autophagy and tissue health in the kidney and heart. The researchers were interested in autophagy because there is evidence in many non-mammalian model organisms that increased autophagy reduces age-related damage to tissues and increases health and lifespan. [BCL2](https://en.wikipedia.org/wiki/Bcl-2){target="_blank"} is an autophagy inhibitor. Initial experiments showed that the knock-in mutation in beclin 1 inhibits BCL2. Inhibiting BCL2 with the knock-in mutation should increase autophagy and, as a consequence, reduce age-related tissue damage.
 
-Design - $2 \times 2$ factorial with offset
+Design - $2 \times 2$ factorial
 
 1. Factor 1: $\texttt{age}$ with levels "Young" (two months) and "Old" (twenty months).
 2. Factor 2: $\texttt{genotype}$ with levels "WT" (wildtype) and "KI" (knock-in).
-3. Offset: $\texttt{area_mm2}$. The area of the kidney tissue containing the counted cells.
+3. Offset (a covariate): $\texttt{area_mm2}$. The area of the kidney tissue containing the counted cells.
 
 The planned contrasts are
 
@@ -1349,7 +1350,7 @@ plot(fig3b_m3_check, asFactor = FALSE)
 
 ```
 
-#### Inference from the model {#glm-fig3b-m3-inference}
+#### Inference from the model {#sec-glm-fig3b-m3-inference}
 
 ```{r glm-fig3b_m3-coef, message=FALSE}
 fig3b_m3_coef <- cbind(coef(summary(fig3b_m3)),
@@ -1494,7 +1495,7 @@ $$
 Notes
 
 1. The offset variable is $\textrm{log}(\texttt{area\_mm2})$. An offset is a covariate with a fixed coefficient of 1.0 -- this coefficient is not estimated.
-2. Figure \@ref(fig:glm-eg2-fig3b-m3-plot-offset) illustrates the offset on the response and the log scale.
+2. @fig-glm-eg2-fig3b-m3-plot-offset illustrates the offset on the response and the log scale.
 
 ```{r glm-eg2-fig3b-m3-gg1-2, echo=FALSE}
 xdat <- expand.grid(
@@ -1576,14 +1577,18 @@ gg2 <- ggplot(data = fig3b[age == "Old"],
 
 ```
 
-```{r glm-eg2-fig3b-m3-plot-offset, echo=FALSE, fig.cap = "What an offset looks like. A. The offset on the response scale. B. The offset on the log scale. In A and B, only the lines for the 20 month old mice are shown."}
+```{r}
+#| label: glm-eg2-fig3b-m3-plot-offset
+#| echo: false
+#| fig-cap: "What an offset looks like. A. The offset on the response scale. B. The offset on the log scale. In A and B, only the lines for the 20 month old mice are shown."
+
 plot_grid(gg1, gg2, ncol = 2, labels = "AUTO")
 ```
 
-3. On the log scale (Figure \@ref(fig:glm-eg2-fig3b-m3-plot-offset)B), the offset curves are parallel because each is forced to have a slope of one on the link scale. On the response scale, these curves have different slopes -- this slope is $\mathrm{exp}(b_0)$, that is, the exponent of the intercept on the log scale).
-4. The plot on the log scale (Figure \@ref(fig:glm-eg2-fig3b-m3-plot-offset)B) is easy to misinterpret as a regression with a slope of 1 fit to the log transformed values. It isn't, because individual values are not transformed in a GLM. I'm specifically referring to this space as the log and not link scale to try to avoid this misinterpretation.
+3. On the log-link scale (@-fig-glm-eg2-fig3b-m3-plot-offset B), the offset curves are parallel because each is forced to have a slope of one on this scale. On the response scale, these curves have different slopes -- this slope is $\mathrm{exp}(b_0)$, that is, the exponent of the intercept on the log scale).
+4. The plot on the log scale (@fig-glm-eg2-fig3b-m3-plot-offset B) is easy to misinterpret as a regression with a slope of 1 fit to the log transformed values. It isn't, because individual values are not transformed in a GLM. I'm specifically referring to this space as the log and not link scale to try to avoid this misinterpretation.
 
-### A count GLM with an offset models the area-normalized means {#glm-rate}
+### A count GLM with an offset models the ratio of area-normalized means {#sec-glm-rate}
 
 In the *t*-test or ANOVA of the difference in the area-normalized count of TUNEL+ nuclei, the systematic component of the equivalent linear model is (using only the 20 month old mice for simplicity)
 
@@ -1840,7 +1845,63 @@ plot_grid(gg1, gg2, ncol = 2, labels = "AUTO")
 
 ### Issues with plotting
 
-## Example 3 -- GLM models for binary responses
+## Example 3--GLM models for proportions (percent of a total)
+### Instead of a *t*-test or Mann-Whitney test of a proportion (e.g. percent of cells expressing a specific marker), fit a GLM Binomial model to gain power (sox21 Fig. 5d) {#sec-glm-proportion}
+
+Source article: [Evelien Eenjes Marjon Buscop-van Kempen Anne Boerema-de Munck Gabriela G Edel Floor Benthem Lisette de Kreij-de Bruin Marco Schnater Dick Tibboel Jennifer Collins Robbert J Rottier (2021) SOX21 modulates SOX2-initiated differentiation of epithelial cells in the extrapulmonary airways eLife 10:e57325.](https://elifesciences.org/articles/57325){target="_blank"}
+
+```{r glm-import-fig5d, echo=FALSE}
+data_from <- "SOX21 modulates SOX2-initiated differentiation of epithelial cells in the extrapulmonary airways"
+file_name <- "elife-57325-fig5-data1-v2.xlsx"
+file_path <- here(data_folder, data_from, file_name)
+
+  fig5d <- read_excel(file_path,
+                          sheet = "D20 Napthalen",
+                          range = "B166:Y169",
+                          col_names = TRUE) |>
+    data.table() |>
+    transpose(make = 1, keep = "id") |>
+    clean_names()
+genotype_levels <- c("WT", "Sox2KO", "Sox21KO")
+fig5d[, genotype := rep(c("Sox2KO", "WT", "Sox21KO"), c(9,8,6)) |>
+        factor(genotype_levels)]
+fig5d <- fig5d[-c(8,9,17)]
+fig5d[, foxj1_prop := foxj1/dapi]
+fig5d[, non_foxj1 := dapi - foxj1]
+
+```
+
+```{r}
+
+glm1.qb <- glm(foxj1_prop ~ genotype,
+          family = quasibinomial,
+          weights = dapi,
+          data = fig5d)
+
+glm1.qb_emm <- emmeans(glm1.qb, specs = "genotype", type = "response")
+
+glm1.qb_pairs <- contrast(glm1.qb_emm,
+           method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+glm1.qb_pairs
+```
+
+Notes
+
+1. The family is quasibinomial. A binomial response is 0 or 1 (survived/died, or success/fail) but these data are proprotions and not binomial responses. Here's how to think about this with proportion data. Within a sample, if 18% are cells express a specific marker, then there are 18 successess (and 82 failures) for every 100 cells sampled.
+2. The weights argument in the function takes the total number of cells counted.
+3. The effect is an odds ratio. The probability of a cell being FOXJ1+ in the Sox2KO group is .553 times (about half) that of a FOXJ1+ cell in the WT group.
+
+### Statistical issues with proportions for a linear model
+
+Any variable that is a proportion has a hard lower (zero) and upper (one) bound (or 0% and 100% if using percents). Some consequences of this are
+
+1. If the mean proportion is closer to zero, the distribution of values will often be right skewed. If the mean proportion is closer to one, the distribution of values will often be left skewed.
+2. The variance willy typically increase with the mean for proportions < 0.5 but decrease for proportions > 0.5.
+
+## Example 4 -- GLM models for continuous responses
+## Example 5 -- GLM models for binary responses
 
 
 ## Working in R
