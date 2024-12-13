@@ -1,6 +1,6 @@
-# Linear models for counts, binary responses, skewed responses, and proportions -- Generalized Linear Models {#sec-glm}
+# Models for counts, binary responses, skewed responses, and proportions -- Generalized Linear Models {#sec-glm}
 
-```{r glm1-setup, echo=FALSE, message=FALSE}
+```{r glm1-setup, echo=FALSE, message=FALSE, warning=FALSE}
 library(here)
 library(janitor)
 library(readxl)
@@ -13,6 +13,7 @@ library(lmerTest)
 library(glmmTMB)
 library(MASS) # Negative Binomial
 library(DHARMa) # diagnostic plots
+library(sandwich) # robust covariance
 
 # graphing and tabling packages
 library(ggplot2) # ggplot environment
@@ -24,6 +25,8 @@ library(kableExtra) #tables
 
 ggplot_the_model_path <- here::here("R/ggplot_the_model.R")
 source(ggplot_the_model_path)
+ggptm_path <- here::here("R/ggptm.R")
+source(ggptm_path)
 
 here <- here::here
 clean_names <- janitor::clean_names
@@ -1298,7 +1301,7 @@ Design - $2 \times 2$ factorial
 
 1. Factor 1: $\texttt{age}$ with levels "Young" (two months) and "Old" (twenty months).
 2. Factor 2: $\texttt{genotype}$ with levels "WT" (wildtype) and "KI" (knock-in).
-3. Offset (a covariate): $\texttt{area_mm2}$. The area of the kidney tissue containing the counted cells.
+3. Offset (a covariate): $\texttt{area\_mm2}$. The area of the kidney tissue containing the counted cells.
 
 The planned contrasts are
 
@@ -1487,7 +1490,7 @@ The systematic part (the linear predictor) of the Negative Binomial model fit to
 
 $$
 \begin{align}
-\texttt{positive_nuclei} = \ &\beta_0 + \beta_1 \texttt{age}_\texttt{Old} + \beta_2 \texttt{genotype}_\texttt{KI} \ + \\ &\beta_3 \texttt{age}_\texttt{Old}\texttt{:genotype}_\texttt{KI} \ + \\ 
+\texttt{positive\_nuclei} = \ &\beta_0 + \beta_1 \texttt{age}_\texttt{Old} + \beta_2 \texttt{genotype}_\texttt{KI} \ + \\ &\beta_3 \texttt{age}_\texttt{Old}\texttt{:genotype}_\texttt{KI} \ + \\ 
 &1.0 \times \textrm{log}(\texttt{area\_mm2})
 \end{align}
 $$
@@ -1596,7 +1599,7 @@ $$
 \frac{\mu}{\texttt{area\_mm2}} = \beta_0 + \beta_1 \texttt{genotype}_\texttt{KI}
 $$
 
-where $\mu$ is the mean response ($\texttt{positive_nuclei}$) conditional on the level of genotype. Statisticians typically refer to the ratio $\frac{\mu}{\texttt{area\_mm2}}$ as a rate -- here, it is the expected rate of observing a TUNEL+ nucleus as more area is searched.
+where $\mu$ is the mean response ($\texttt{positive\_nuclei}$) conditional on the level of genotype. Statisticians typically refer to the ratio $\frac{\mu}{\texttt{area\_mm2}}$ as a rate -- here, it is the expected rate of observing a TUNEL+ nucleus as more area is searched.
 
 Let's compare this to the GLM model recommended here. Recall that the conditional expecation on the link scale is $\eta$ and, using the inverse link function, $\mathrm{log}(\mu) = \eta$, the systematic part of the count GLM model with offset is
 
@@ -1782,10 +1785,10 @@ pairs_dt |>
 
 Notes
 
-1. The coefficient table for Model fig3b_m5 has a row for the added covariate $\texttt{area_mm2}$. This row is absent for Model fig3b_m3 since the coefficient is fixed at 1.0.
-2. The estimate of the coefficient of $\texttt{area_mm2}$ in Model fig3b_m5 is 2.48. A value of 1.0 -- the value assumed by the offset model or an analysis of the ratio -- is not very compatible with the data.
+1. The coefficient table for Model fig3b_m5 has a row for the added covariate $\texttt{area\_mm2}$. This row is absent for Model fig3b_m3 since the coefficient is fixed at 1.0.
+2. The estimate of the coefficient of $\texttt{area\_mm2}$ in Model fig3b_m5 is 2.48. A value of 1.0 -- the value assumed by the offset model or an analysis of the ratio -- is not very compatible with the data.
 3. A coefficient greater than 1.0 means that the rate of DNA damage (the number of TUNEL positive cells per area) increases with the size of the area measured. Does this make any biological sense? The area measured should not have a biological component unless it is a function of the size of the organ. If the area measured is a function of the size of the organ, then we would want to use the ANCOVA model and not the offset model.
-4. This increase in the rate of TUNEL positive cells is seen in the response-scale plot of the fit model in Figure \@ref(fig:glm-fig3b-m5-plot)A, where the slope of the regression line increases as $\texttt{area_mm2}$ increases.
+4. This increase in the rate of TUNEL positive cells is seen in the response-scale plot of the fit model in Figure \@ref(fig:glm-fig3b-m5-plot)A, where the slope of the regression line increases as $\texttt{area\_mm2}$ increases.
 
 ```{r glm-fig3b-m5-gg1, echo=FALSE}
 xdat <- expand.grid(
@@ -1846,9 +1849,17 @@ plot_grid(gg1, gg2, ncol = 2, labels = "AUTO")
 ### Issues with plotting
 
 ## Example 3--GLM models for proportions (percent of a total)
-### Instead of a *t*-test or Mann-Whitney test of a proportion (e.g. percent of cells expressing a specific marker), fit a GLM Binomial model to gain power (sox21 Fig. 5d) {#sec-glm-proportion}
+### Instead of a *t*-test or Mann-Whitney test of a proportion (e.g. percent of cells expressing a specific marker), fit a GLM Quasibinomial model to gain power (sox21 Fig. 5d) {#sec-glm-proportion}
 
 Source article: [Evelien Eenjes Marjon Buscop-van Kempen Anne Boerema-de Munck Gabriela G Edel Floor Benthem Lisette de Kreij-de Bruin Marco Schnater Dick Tibboel Jennifer Collins Robbert J Rottier (2021) SOX21 modulates SOX2-initiated differentiation of epithelial cells in the extrapulmonary airways eLife 10:e57325.](https://elifesciences.org/articles/57325){target="_blank"}
+
+Source Figure: 5d
+
+About the data:
+
+Researcher's results: "At 20 DPI, fewer FOXJ1+ ciliated cells, but more dividing and non-dividing basal cells were observed in Sox2+/− TE compared to WT, Sox21+/−, or to Sox2+/− CO exposed mice"
+
+Researcher's methods: One-way ANOVA
 
 ```{r glm-import-fig5d, echo=FALSE}
 data_from <- "SOX21 modulates SOX2-initiated differentiation of epithelial cells in the extrapulmonary airways"
@@ -1871,8 +1882,8 @@ fig5d[, non_foxj1 := dapi - foxj1]
 
 ```
 
-```{r}
 
+```{r glm-glm1-qb}
 glm1.qb <- glm(foxj1_prop ~ genotype,
           family = quasibinomial,
           weights = dapi,
@@ -1887,6 +1898,15 @@ glm1.qb_pairs <- contrast(glm1.qb_emm,
 glm1.qb_pairs
 ```
 
+
+```{r glm-glm1-qb-ptm}
+ggptm(glm1.qb, glm1.qb_emm, glm1.qb_pairs,
+      palette = pal_okabe_ito,
+      ci_bar_color = "black",
+      rescale = "percent",
+      y_label = "% Foxj1")
+```
+
 Notes
 
 1. The family is quasibinomial. A binomial response is 0 or 1 (survived/died, or success/fail) but these data are proprotions and not binomial responses. Here's how to think about this with proportion data. Within a sample, if 18% are cells express a specific marker, then there are 18 successess (and 82 failures) for every 100 cells sampled.
@@ -1899,6 +1919,57 @@ Any variable that is a proportion has a hard lower (zero) and upper (one) bound 
 
 1. If the mean proportion is closer to zero, the distribution of values will often be right skewed. If the mean proportion is closer to one, the distribution of values will often be left skewed.
 2. The variance willy typically increase with the mean for proportions < 0.5 but decrease for proportions > 0.5.
+
+### Alternative models for proportion data
+
+#### The GLM binomial model is the standard, but has less power than quasibinomial
+
+```{r glm-glm2-logit}
+glm2.logit <- glm(foxj1_prop ~ genotype,
+          family = binomial(link = "logit"),
+          weights = dapi,
+          data = fig5d)
+
+glm2.logit_emm <- emmeans(glm2.logit,
+                          specs = "genotype",
+                          vcov. = vcovHC(glm2.logit, type="HC3"),
+                          type = "response")
+
+glm2.logit_pairs <- contrast(glm2.logit_emm,
+           method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+glm2.logit_pairs
+```
+
+Notes
+
+1. The `vcov. = vcovHC(glm2.logit, type="HC3")` argument is passed to the emmeans function to use robust ("sandwich") estimates of the covariance matrix. Without this, the binomial GLM has very high Type I error. The `vcovHC` function is in the sandwich package.
+2. In my simulations, the quasibinomial has non-trivially higher power than the binomial.
+
+#### The GLM quasibinomial model works if you have only the proportion and not the total count
+
+```{r glm-glm1-qb-alternatives}
+glm3.qb <- glm(foxj1_prop ~ genotype,
+          family = quasibinomial,
+ #         weights = dapi,
+          data = fig5d)
+
+glm3.qb_emm <- emmeans(glm3.qb, specs = "genotype", type = "response")
+
+glm3.qb_pairs <- contrast(glm3.qb_emm,
+           method = "revpairwise", adjust = "none") |>
+  summary(infer = TRUE)
+
+glm3.qb_pairs
+```
+
+Notes
+
+1. Why would you have only the proportion?
+2. The results are only slightly different from the model with the total counts used as weights
+3. In simulations, the model with weights has non-trivially higher power
+4. Researchers almost always archive only the proportions and not the raw counts and total counts. Don't do this. Archive all data!
 
 ## Example 4 -- GLM models for continuous responses
 ## Example 5 -- GLM models for binary responses
