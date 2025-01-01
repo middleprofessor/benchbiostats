@@ -340,7 +340,7 @@ fig2e_m1_pairs_dt[, group1 := c(1 +.25, 2 + .25, 2 -.25, 2 + .25)]
 fig2e_m1_pairs_dt[, group2 := c(1 -.25, 2 - .25, 1 -.25, 1 + .25)]
 fig2e_m1_pairs_dt[, p_pretty := pvalString(p.value)]
 
-fig2e_gg_response <- fig2e_gg_response +
+fig2e_gg_response_p <- fig2e_gg_response +
   stat_pvalue_manual(fig2e_m1_pairs_dt,
                      label = "p_pretty", 
                      y.position=c(3300, 3300, 3450, 3600),
@@ -352,12 +352,12 @@ fig2e_gg_response <- fig2e_gg_response +
 # interaction p-value
 p_ixn <- coef(summary(fig2e_m1))[4, "Pr(>|t|)"] |>
   pvalString()
-fig2e_gg_response <- fig2e_gg_response +
+fig2e_gg_response_p <- fig2e_gg_response_p +
   annotate(geom = "text",
            label = paste("Interaction p-value:", p_ixn),
            x <- 0.75, y = 3750)
 
- fig2e_gg_response
+ fig2e_gg_response_p
 ```
 
 The plot in @fig-plots-fig2-response is typical of the standard tool for communicating results of experiments in bench biology. I refer to this type of plot as a **response plot** since the focus is on variation in the measured response variable (y-axis) among treatment levels (x-axis). Treatment effects are inferred by mentally visually differences among the means.
@@ -404,7 +404,7 @@ knitr::kable(fig2e_summary, digits = c(1,1,2,2,2,2,2,2,2)) |>
   kable_styling()
 ```
 
-### Pretty good plot component 2: Modeled effects plot
+### Pretty good plot component 2: Effects plot
 
 ```{r plots-prepare-fig2e-effects, echo = FALSE, message=FALSE}
 # reverse order of rows so flipped plot has original order
@@ -521,7 +521,7 @@ We can use the effects and CIs of the effects to evaluate the treatment effects.
 
 ```{r plots-fig2e-ggplot, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Effect of diet and ASK1 deletion on post-baseline glucose. Top: effects plot of 2 X 2 simple effects (difference in means) and of the diet X genotype interaction. Bars are 95% confidence intervals of the effects. Unadjusted p-values from the linear model are given. Bottom: response plot of the means and 95% confidence interval of each diet X genotype combination."}
 fig2e_gg_response <- fig2e_gg_response +
-  coord_flip() +
+#  coord_flip() +
   theme(axis.title.y = element_blank())
 
 
@@ -531,13 +531,13 @@ fig2e_fig <- plot_grid(fig2e_gg_effect,
                        nrow = 2,
                        align = "v",
                        axis = "l",
-                       rel_heights = c(0.7,1))
+                       rel_heights = c(0.5,1))
 fig2e_fig
 ```
 
 Combining the effects and response plots into a single plot is an easy solution to issues that arise if only one or the other is used. What are these issues?
 
-While a response plot like that in Figure \@ref(fig:plots-fig2-gg-response-adjusted) is standard in biology, it fails to show the effects, and the uncertainty in the effects, *explicitly*. To infer the effects from the plot, a reader must perform mental math -- either compute the difference or the ratio between pairs of means. This mental math is easy enough if the comparisons are between individual treatment levels but much harder if the comparisons are between pooled sets of treatment levels, for example in a factorial experimental design. The mental math that is excessively difficult is the reconstruction of some kind of error interval of the contrasts, for example the 95% confidence intervals in Figure \@ref(plots-fig2e-gg-effects) and it is these intervals that are necessary for a researcher to infer the range of biological consequences that are compatible with the experiment's results. The inclusion of the *p*-values for all pairwise comparisons in a response plot gives the significance level of these contrasts, but of the kinds of summary results that we could present (contrasts, error intervals, *p*-values), the *p*-values are the least informative.
+While a response plot like that in @fig-plots-fig2-gg-response is standard in biology, it fails to show the effects, and the uncertainty in the effects, *explicitly*. To infer the effects from the plot, a reader must perform mental math -- either compute the difference or the ratio between pairs of means. This mental math is easy enough if the comparisons are between individual treatment levels but much harder if the comparisons are between pooled sets of treatment levels, for example in a factorial experimental design. The mental math that is excessively difficult is the reconstruction of some kind of error interval of the contrasts, for example the 95% confidence intervals in Figure \@ref(plots-fig2e-gg-effects) and it is these intervals that are necessary for a researcher to infer the range of biological consequences that are compatible with the experiment's results. The inclusion of the *p*-values for all pairwise comparisons in a response plot gives the significance level of these contrasts, but of the kinds of summary results that we could present (contrasts, error intervals, *p*-values), the *p*-values are the least informative.
 
 Effects plots are very uncommon in most of biology outside of meta-analysis and clinical medicine more generally. An effects plot alone fails to communicate anything about the sample size or conditional distribution of the data. Equally important, response values are often meaningful and researchers working in the field should be familiar with usual and unusual values. This can be useful for interpreting biological consequences of treatment effects but also for researchers and readers to asses the credibility of the data (for example, I have twice, once in my own data and once in a colleagues data, found mistakes in the measurement of an entire data set of response variable because the plotted values weren't credible).
 
