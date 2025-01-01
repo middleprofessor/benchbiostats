@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Plotting models – Statistics for the Experimental Bench Biologist</title>
+<title>4&nbsp; Plotting Models – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -68,6 +102,8 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -110,7 +146,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/plotting-models.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/plotting-models.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -162,7 +198,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/plotting-models.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -242,15 +278,73 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pretty-good-plots-show-the-model-and-the-data" id="toc-pretty-good-plots-show-the-model-and-the-data" class="nav-link active" data-scroll-target="#pretty-good-plots-show-the-model-and-the-data"><span class="header-section-number">4.1</span> Pretty good plots show the model and the data</a>
+  <ul>
+  <li><a href="#pretty-good-plot-component-1-modeled-effects-plot" id="toc-pretty-good-plot-component-1-modeled-effects-plot" class="nav-link" data-scroll-target="#pretty-good-plot-component-1-modeled-effects-plot"><span class="header-section-number">4.1.1</span> Pretty good plot component 1: Modeled effects plot</a></li>
+  <li><a href="#pretty-good-plot-component-2-modeled-mean-and-ci-plot" id="toc-pretty-good-plot-component-2-modeled-mean-and-ci-plot" class="nav-link" data-scroll-target="#pretty-good-plot-component-2-modeled-mean-and-ci-plot"><span class="header-section-number">4.1.2</span> Pretty good plot component 2: Modeled mean and CI plot</a></li>
+  <li><a href="#combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot." id="toc-combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot." class="nav-link" data-scroll-target="#combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot."><span class="header-section-number">4.1.3</span> Combining Effects and Modeled mean and CI plots – an Effects and response plot.</a></li>
+  <li><a href="#some-comments-on-plot-components" id="toc-some-comments-on-plot-components" class="nav-link" data-scroll-target="#some-comments-on-plot-components"><span class="header-section-number">4.1.4</span> Some comments on plot components</a></li>
+  </ul></li>
+  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">4.2</span> Working in R</a>
+  <ul>
+  <li><a href="#source-data" id="toc-source-data" class="nav-link" data-scroll-target="#source-data"><span class="header-section-number">4.2.1</span> Source data</a>
+  <ul class="collapse">
+  <li><a href="#import" id="toc-import" class="nav-link" data-scroll-target="#import"><span class="header-section-number">4.2.1.1</span> Import</a></li>
+  </ul></li>
+  <li><a href="#how-to-plot-the-model" id="toc-how-to-plot-the-model" class="nav-link" data-scroll-target="#how-to-plot-the-model"><span class="header-section-number">4.2.2</span> How to plot the model</a>
+  <ul class="collapse">
+  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">4.2.2.1</span> Fit the model</a></li>
+  <li><a href="#compute-the-modeled-means-table-of-estimated-means-and-confidence-intervals" id="toc-compute-the-modeled-means-table-of-estimated-means-and-confidence-intervals" class="nav-link" data-scroll-target="#compute-the-modeled-means-table-of-estimated-means-and-confidence-intervals"><span class="header-section-number">4.2.2.2</span> Compute the modeled means table of estimated means and confidence intervals</a></li>
+  <li><a href="#compute-the-contrasts-table-of-estimated-effects-with-confidence-intervals-and-p-values" id="toc-compute-the-contrasts-table-of-estimated-effects-with-confidence-intervals-and-p-values" class="nav-link" data-scroll-target="#compute-the-contrasts-table-of-estimated-effects-with-confidence-intervals-and-p-values"><span class="header-section-number">4.2.2.3</span> Compute the contrasts table of estimated effects with confidence intervals and p-values</a></li>
+  </ul></li>
+  <li><a href="#be-sure-ggplot_the_model-is-in-your-r-folder" id="toc-be-sure-ggplot_the_model-is-in-your-r-folder" class="nav-link" data-scroll-target="#be-sure-ggplot_the_model-is-in-your-r-folder"><span class="header-section-number">4.2.3</span> Be sure ggplot_the_model is in your R folder</a></li>
+  <li><a href="#how-to-use-the-plot-the-model-functions" id="toc-how-to-use-the-plot-the-model-functions" class="nav-link" data-scroll-target="#how-to-use-the-plot-the-model-functions"><span class="header-section-number">4.2.4</span> How to use the Plot the Model functions</a>
+  <ul class="collapse">
+  <li><a href="#ggplot_the_response" id="toc-ggplot_the_response" class="nav-link" data-scroll-target="#ggplot_the_response"><span class="header-section-number">4.2.4.1</span> ggplot_the_response</a></li>
+  <li><a href="#ggplot_the_effects" id="toc-ggplot_the_effects" class="nav-link" data-scroll-target="#ggplot_the_effects"><span class="header-section-number">4.2.4.2</span> ggplot_the_effects</a></li>
+  <li><a href="#ggplot_the_model" id="toc-ggplot_the_model" class="nav-link" data-scroll-target="#ggplot_the_model"><span class="header-section-number">4.2.4.3</span> ggplot_the_model</a></li>
+  <li><a href="#ggplot_the_treatments" id="toc-ggplot_the_treatments" class="nav-link" data-scroll-target="#ggplot_the_treatments"><span class="header-section-number">4.2.4.4</span> ggplot_the_treatments</a></li>
+  </ul></li>
+  <li><a href="#how-to-generate-a-response-plot-using-ggpubr" id="toc-how-to-generate-a-response-plot-using-ggpubr" class="nav-link" data-scroll-target="#how-to-generate-a-response-plot-using-ggpubr"><span class="header-section-number">4.2.5</span> How to generate a Response Plot using ggpubr</a>
+  <ul class="collapse">
+  <li><a href="#plot-individual-points" id="toc-plot-individual-points" class="nav-link" data-scroll-target="#plot-individual-points"><span class="header-section-number">4.2.5.1</span> Step 4: Plot the individual points</a></li>
+  <li><a href="#step-5-plot-the-modeled-means-and-95-error-intervals" id="toc-step-5-plot-the-modeled-means-and-95-error-intervals" class="nav-link" data-scroll-target="#step-5-plot-the-modeled-means-and-95-error-intervals"><span class="header-section-number">4.2.5.2</span> Step 5: Plot the modeled means and 95% error intervals</a></li>
+  <li><a href="#step-6-adding-p-values" id="toc-step-6-adding-p-values" class="nav-link" data-scroll-target="#step-6-adding-p-values"><span class="header-section-number">4.2.5.3</span> Step 6: Adding p-values</a></li>
+  <li><a href="#a-variation-for-factorial-models" id="toc-a-variation-for-factorial-models" class="nav-link" data-scroll-target="#a-variation-for-factorial-models"><span class="header-section-number">4.2.5.4</span> A variation for factorial models</a></li>
+  <li><a href="#how-to-add-treatment-combinations-to-a-ggpubr-plot" id="toc-how-to-add-treatment-combinations-to-a-ggpubr-plot" class="nav-link" data-scroll-target="#how-to-add-treatment-combinations-to-a-ggpubr-plot"><span class="header-section-number">4.2.5.5</span> How to add treatment combinations to a ggpubr plot</a></li>
+  </ul></li>
+  <li><a href="#how-to-generate-a-response-plot-with-a-grid-of-treatments-using-ggplot2" id="toc-how-to-generate-a-response-plot-with-a-grid-of-treatments-using-ggplot2" class="nav-link" data-scroll-target="#how-to-generate-a-response-plot-with-a-grid-of-treatments-using-ggplot2"><span class="header-section-number">4.2.6</span> How to generate a Response Plot with a grid of treatments using ggplot2</a>
+  <ul class="collapse">
+  <li><a href="#first-wrangle-the-data" id="toc-first-wrangle-the-data" class="nav-link" data-scroll-target="#first-wrangle-the-data"><span class="header-section-number">4.2.6.1</span> First, wrangle the data</a></li>
+  <li><a href="#second-generate-the-plot" id="toc-second-generate-the-plot" class="nav-link" data-scroll-target="#second-generate-the-plot"><span class="header-section-number">4.2.6.2</span> Second, generate the plot</a></li>
+  <li><a href="#third-add-the-grid-of-treatments-below-the-x-axis" id="toc-third-add-the-grid-of-treatments-below-the-x-axis" class="nav-link" data-scroll-target="#third-add-the-grid-of-treatments-below-the-x-axis"><span class="header-section-number">4.2.6.3</span> Third, add the grid of treatments below the x-axis</a></li>
+  </ul></li>
+  <li><a href="#how-to-generate-an-effects-plot" id="toc-how-to-generate-an-effects-plot" class="nav-link" data-scroll-target="#how-to-generate-an-effects-plot"><span class="header-section-number">4.2.7</span> How to generate an Effects Plot</a></li>
+  <li><a href="#how-to-combine-the-response-and-effects-plots" id="toc-how-to-combine-the-response-and-effects-plots" class="nav-link" data-scroll-target="#how-to-combine-the-response-and-effects-plots"><span class="header-section-number">4.2.8</span> How to combine the response and effects plots</a>
+  <ul class="collapse">
+  <li><a href="#using-the-ggpubr-response-plot" id="toc-using-the-ggpubr-response-plot" class="nav-link" data-scroll-target="#using-the-ggpubr-response-plot"><span class="header-section-number">4.2.8.1</span> Using the ggpubr response plot</a></li>
+  <li><a href="#using-a-response-plot-with-a-treatment-grid" id="toc-using-a-response-plot-with-a-treatment-grid" class="nav-link" data-scroll-target="#using-a-response-plot-with-a-treatment-grid"><span class="header-section-number">4.2.8.2</span> Using a response plot with a treatment grid</a></li>
+  </ul></li>
+  <li><a href="#how-to-add-the-interaction-effect-to-response-and-effects-plots" id="toc-how-to-add-the-interaction-effect-to-response-and-effects-plots" class="nav-link" data-scroll-target="#how-to-add-the-interaction-effect-to-response-and-effects-plots"><span class="header-section-number">4.2.9</span> How to add the interaction effect to response and effects plots</a>
+  <ul class="collapse">
+  <li><a href="#adding-interaction-p-value-to-a-response-plot" id="toc-adding-interaction-p-value-to-a-response-plot" class="nav-link" data-scroll-target="#adding-interaction-p-value-to-a-response-plot"><span class="header-section-number">4.2.9.1</span> Adding interaction p-value to a response plot</a></li>
+  <li><a href="#adding-interaction-effect-to-effects-plot" id="toc-adding-interaction-effect-to-effects-plot" class="nav-link" data-scroll-target="#adding-interaction-effect-to-effects-plot"><span class="header-section-number">4.2.9.2</span> Adding interaction effect to effects plot</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting models</span></h1>
+<h1 class="title"><span id="sec-plotting" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting Models</span></span></h1>
 </div>
 
 
@@ -267,8 +361,1437 @@ window.Quarto = {
 </header>
 
 
+<p><em>So, along the lines of Sarah Susanka’s “Not So Big House,” Kolbert asks the group, “What would a Pretty Good House look like?”</em> – Michael Maines<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'data.table' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'emmeans' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'car' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'Matrix' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'DHARMa' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'insight' was built under R version 4.4.1</code></pre>
+</div>
+</div>
+<p>Plots should be the focus of both the reader and researcher. Instead of mindless plotting, a researcher should ask a series of questions of every plot</p>
+<ol type="1">
+<li>What is the point of each element in a plot?</li>
+<li>Are these the points that I most want to communicate?</li>
+<li>Are there better practices for communicating these points?</li>
+<li>Are the points that I want to communicate that are not covered by these elements?</li>
+</ol>
+<p>The answer to these questions should inform what is and what is not plotted. The result is a pretty good plot. The idea of a pretty good plot is borrowed from the “pretty good house” concept that grew out of a collaborative group of builders and architects in Northern New England. The “pretty good house” combines best practices for building an earth friendly, high performance home at a reasonable cost. There is no pretty good house governing body that awards certificates of achievement but, instead, a set of metrics and a collection of building practices that can achieve these.</p>
+<p>A typical pretty good plot contains some combination of</p>
+<ol type="1">
+<li>Modeled effects with confidence intervals. “Effects” are differences between groups in response to treatment – the <em>raison d’etre</em> of a typical experiment in bench biology.</li>
+<li>Modeled means and confidence intervals.</li>
+<li>Individual data points or a summary distribution of these.</li>
+</ol>
+<section id="pretty-good-plots-show-the-model-and-the-data" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="pretty-good-plots-show-the-model-and-the-data"><span class="header-section-number">4.1</span> Pretty good plots show the model and the data</h2>
+<p>The data to introduce best practices in plotting come from Figure 2d and Figure 2e from “ASK1 inhibits browning of white adipose tissue in obesity”, introduced in the introductor chapter (Analyzing experimental data with a linear model)</p>
+<section id="pretty-good-plot-component-1-modeled-effects-plot" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="pretty-good-plot-component-1-modeled-effects-plot"><span class="header-section-number">4.1.1</span> Pretty good plot component 1: Modeled effects plot</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-fig2e-gg-effects-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Effects plot of glucose AUC data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Biologists infer the biological consequences of a treatment by interpreting the magnitude and sign of treatment “effects”, such as the differences in means among treatment levels. Why then do we mostly plot treatment level means, where effect magnitude and sign can only be inferred <em>indirectly</em>, by mentally computing differences in means? A pretty good plot <em>directly</em> communicates treatment effects and the uncertainty in the estimates of these effects using an <strong>effects plot</strong>.</p>
+<p>Figure @ref(plots-fig2e-gg-effects) is an effects plot of the linear model fit to the glucose tolerance data. The effects plot is “flipped”. The y-axis is the categorical variable – it contains the labels identifying the pair of groups in the contrast and the direction of the difference. In addition to the pairwise comparisons, I include the interaction effect on the y-axis. The x-axis is the continuous variable – it contains the <strong>simple effects</strong>, which is the difference in means between the two groups identified by the y-axis labels. Additionally, the y-axis includes the estimate of the <span class="math inline">\(diet \time genotype\)</span> interaction effect. The bars are 95% confidence intervals of the effects (either simple effects or interaction effect), which is the range of values that are compatible with the observed data at the 95% level.</p>
+<p>We can use the effects and CIs of the effects to evaluate the treatment effects. For example, when on a high fat diet (HFD), the mean, post-baseline plasma glucose level in the ASK1<span class="math inline">\(\Delta\)</span>adipo is 3.5 mmol/L less than that for the control (ASK1F/F). Differences less than 5.3 mmol/L less than ASK1F/F levels or greater than 1.7 mmol/L less than ASK1F/F levels are not very compatible with the data. It is up to the research community to decide if 1.7 mmol/L or 3.5 mmol/L differences are physiologically meaningful effects.</p>
+</section>
+<section id="pretty-good-plot-component-2-modeled-mean-and-ci-plot" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="pretty-good-plot-component-2-modeled-mean-and-ci-plot"><span class="header-section-number">4.1.2</span> Pretty good plot component 2: Modeled mean and CI plot</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-fig2-gg-response-adjusted-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Response plot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The response plot in Figure @ref(fig:plots-fig2-gg-response-adjusted) “shows the model” – by this I mean the plot shows the <em>modeled</em> means, represented by the large circles, the <em>modeled</em> 95% confidence intervals of each mean, represented by the error bars, and the <em>model-adjusted</em> individual response values, represented by the small colored dots. What do I mean by <em>modeled</em> means, modeled error intervals, and model-adjusted responses?</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">ask1</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">diet</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">N</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample sigma</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample SE</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Model mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Model sigma</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Model SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ASK1F/F</td>
+<td style="text-align: left;">chow</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">14.35</td>
+<td style="text-align: right;">1.48</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">14.35</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">0.59</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ASK1F/F</td>
+<td style="text-align: left;">HFD</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">19.40</td>
+<td style="text-align: right;">3.60</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">18.63</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">0.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ASK1Δadipo</td>
+<td style="text-align: left;">chow</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">13.87</td>
+<td style="text-align: right;">1.26</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">14.01</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">0.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ASK1Δadipo</td>
+<td style="text-align: left;">HFD</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">15.92</td>
+<td style="text-align: right;">1.73</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">15.53</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">0.49</td>
+</tr>
+</tbody>
+</table>
 
 
+</div>
+</div>
+<ol type="1">
+<li>The modeled means and error intervals are estimated from the statistical model. Many published plots show the sample means and sample error intervals, which are computed within each group independently of the data in the other groups and are not adjusted for any covariates or for any hierarchical structure to the data.</li>
+<li>A modeled mean will often be equal to the raw mean, but this will not always be the case. Here, the modeled means for the non-reference groups in Figure @ref(fig:lots-fig2-gg-response-adjusted) do not equal the sample means because the modeled means are adjusted for the baseline measures of glucose (Table @ref(tab:plots-model-means-table)) (specifically, the modeled means are conditional on the baseline being equal to the mean of the baseline in the reference group).</li>
+<li>For most of the analyses in this text, modeled error intervals are not the same as the sample error intervals and are commonly conspicuously different. For the glucose tolerance data, the modeled error intervals are calculated from a pooled estimate of <span class="math inline">\(\sigma\)</span> while the sample error intervals are estimated from sample-specific estimates of <span class="math inline">\(\sigma\)</span> (Table @ref(tab:plots-model-means-table)).</li>
+<li>Model-adjusted responses are responses that are adjusted for covariates in the model. If there are no covariates in the model, the model-adjusted responses are the same as the raw response. In the glucose tolerance data, the model-adjusted responses are the modeled, individual response measures if all individuals had the same baseline glucose (the covariate).</li>
+</ol>
+<p>Modeled means, error intervals, and responses are not commonly plotted but it is these values that are consistent with our inferences from the statistical model. There are many data sets in experimental biology where a plot of sample means, error intervals, and responses give a very distorted view of inference from the model.</p>
+<p>The response plot in Figure @ref(fig:plots-fig2-gg-response-adjusted) also “shows the data” by plotting response values as “jittered” dots. Showing the data</p>
+<ol type="1">
+<li>allows the reader to get a sense of the underlying sample size and distribution including outliers, which can be used to mentally model check the published statistical analysis. Adding a box plot, violin plot, or dot plot augments the communication of the distributions if there are enough data to justify the addition.</li>
+<li>allows a reader to see the overlap in individual responses among groups and to evaluate the biological consequences of this overlap.</li>
+</ol>
+</section>
+<section id="combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot." class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot."><span class="header-section-number">4.1.3</span> Combining Effects and Modeled mean and CI plots – an Effects and response plot.</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-fig2e-ggplot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Effect of diet and ASK1 deletion on post-baseline glucose. Top: effects plot of 2 X 2 simple effects (difference in means) and of the diet X genotype interaction. Bars are 95% confidence intervals of the effects. Unadjusted p-values from the linear model are given. Bottom: response plot of the means and 95% confidence interval of each diet X genotype combination.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Combining the effects and response plots into a single plot is an easy solution to issues that arise if only one or the other is used. What are these issues?</p>
+<p>While a response plot like that in Figure @ref(fig:plots-fig2-gg-response-adjusted) is standard in biology, it fails to show the effects, and the uncertainty in the effects, <em>explicitly</em>. To infer the effects from the plot, a reader must perform mental math – either compute the difference or the ratio between pairs of means. This mental math is easy enough if the comparisons are between individual treatment levels but much harder if the comparisons are between pooled sets of treatment levels, for example in a factorial experimental design. The mental math that is excessively difficult is the reconstruction of some kind of error interval of the contrasts, for example the 95% confidence intervals in Figure @ref(plots-fig2e-gg-effects) and it is these intervals that are necessary for a researcher to infer the range of biological consequences that are compatible with the experiment’s results. The inclusion of the <em>p</em>-values for all pairwise comparisons in a response plot gives the significance level of these contrasts, but of the kinds of summary results that we could present (contrasts, error intervals, <em>p</em>-values), the <em>p</em>-values are the least informative.</p>
+<p>Effects plots are very uncommon in most of biology outside of meta-analysis and clinical medicine more generally. An effects plot alone fails to communicate anything about the sample size or conditional distribution of the data. Equally important, response values are often meaningful and researchers working in the field should be familiar with usual and unusual values. This can be useful for interpreting biological consequences of treatment effects but also for researchers and readers to asses the credibility of the data (for example, I have twice, once in my own data and once in a colleagues data, found mistakes in the measurement of an entire data set of response variable because the plotted values weren’t credible).</p>
+</section>
+<section id="some-comments-on-plot-components" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="some-comments-on-plot-components"><span class="header-section-number">4.1.4</span> Some comments on plot components</h3>
+<ol type="1">
+<li>Several recent criticisms of bar plots have advocated box plots or violin plots as alternatives. Box plots and violin plots are useful alternatives to jittered dots if there are sufficient data to capture the distribution but I wouldn’t advocate replacing the plot of modeled means and confidence intervals with box or violin plots, as these communicate different things. More importantly, box and violin plots do not communicate the treatment effects.</li>
+<li>Almost all plots in biology report the error bars that represent the sample standard error. As described above, sample standard error bars do not reflect the fit model and can be highly misleading, at least if interpreting as if they do reflect the model. Also, sample standard error bars can explicitly include absurd values or imply absurd confidence intervals. For example, I sometimes see standard error bars cross <span class="math inline">\(y=0\)</span> for a response that cannot be negative, such as a count. Even if the standard error bar doesn’t cross zero, it is common to see standard error bars that imply (but do not explicitly show) 95% confidence intervals that cross zero, again for responses that cannot be negative. A standard error bar or confidence interval that crosses zero implies that negative means are compatible with the data. This is an absurd implication for responses that cannot have negative values (or are “bounded by” zero). Explicit or implicit error bars that cross zero are especially common for count responses with small means. <em>If</em> a researcher plots confidence intervals, these should be computed using a method that avoids absurd implications, such methods include the bootstrap and generalized linear models.</li>
+<li>Significance stars are okay, the actual <em>p</em>-value is better, effects plots are best. Many researchers add star symbols to a plot indicating the level of significance of a particular paired comparison. Stars are okay in the sense that there is no inferential difference between <span class="math inline">\(p = 0.015\)</span> and <span class="math inline">\(p = 0.045\)</span>. There’s also no inferential difference between <span class="math inline">\(p = 0.0085\)</span> and <span class="math inline">\(p = 0.015\)</span>, which highlights the weakness of -chotomizing any continuous variable. For this reason, a better, alternative would be to add the actual p-value (as above). A more serious criticism of stars is that it encourages researchers and readers to focus on statistical significance instead of effect size and uncertainty. A more valuable alternative, then, is to report the effects and uncertainty in an effects plot or a combined effects-and-response plot.</li>
+</ol>
+</section>
+</section>
+<section id="working-in-r" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">4.2</span> Working in R</h2>
+<p>A reasonable goal of any research project should be a script to generate the final plots entirely within the R environment and not rely on external drawing software to add finishing features. This section covers some of the basics of using R packages to create plots. Later chapters cover some of the details that are specific to the analyses in that chapter.</p>
+<p><a href="https://ggplot2.tidyverse.org">ggplot2</a> is one of the major plotting environments in R and the one that seems to have the strongest following, especially among new R users. ggplot2 has the ability to generate extremely personalized and finished plots. However, ggplot2 has a long learning curve and until one is pretty comfortable with its implementation of the grammar of graphics, creating a plot with multiple layers (mean points, error intervals, raw data points, p-values, text annotations) and modified aesthetics (axis text, point colors) can often require many hours of googling.</p>
+<p><a href="https://cran.r-project.org/web/packages/ggpubr/index.html">ggpubr</a> is an extension to ggplot2 (it calls ggplot2 functions under the hood) and provides many canned functions for producing the kinds of ggplots that are published in biological journals. With one line of script, a researcher can generate a publishable plot.</p>
+<p><strong>ggplot_the_model</strong> and related functions in this chapter are my attempts to create a simple function for creating publication ready plots that highlight effect size and uncertainty.</p>
+<p>Some of the basics for using ggpubr, ggplot2, and ggplot_the_model are outlined here. More specific examples are in each chapter.</p>
+<section id="source-data" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="source-data"><span class="header-section-number">4.2.1</span> Source data</h3>
+<p>Data source: <a href="https://www.nature.com/articles/s41467-020-15483-7" target="_blank">ASK1 inhibits browning of white adipose tissue in obesity</a></p>
+<p>The source data are that for Figure 2E. The response is <span class="math inline">\(glucose\_auc\)</span> the “area under the curve” of repeated measures of blood glucose during the 120 minutes of a glucose tolerance test. Glucose AUC is a measure of glucose tolerance, the higher the area, the higher the blood glucose over the two hours, and the worse the physiological response to a sudden rise in blood glucose. There are two treatment factor variables: 1) <span class="math inline">\(Diet\)</span>, with levels “chow” and “HFD”, where “chow” is normal mouse chow and “HFD” is a high fat diet, and 2) <span class="math inline">\(ask1\)</span>, with levels “ASK1F/F” and “ASK1Δadipo” where “ASK1F/F” is the control level and “ASK1Δadipo” is the ASK1 adipose-deletion mouse described in Chapter 1.</p>
+<section id="import" class="level4" data-number="4.2.1.1">
+<h4 data-number="4.2.1.1" class="anchored" data-anchor-id="import"><span class="header-section-number">4.2.1.1</span> Import</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"ASK1 inhibits browning of white adipose tissue in obesity"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41467_2020_15483_MOESM4_ESM no_gels.xlsx"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the data are in "tranposed" format -- each row contains the n</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># measures of a treatment level. Read, then transpose</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># to make the treatment levels the columns</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>fig2e_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sheet =</span> <span class="st">"Source Date_Figure 2"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">range =</span> <span class="fu">c</span>(<span class="st">"A233:O236"</span>), <span class="co"># lot of NA</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_names =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  data.table <span class="sc">%&gt;%</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transpose</span>(<span class="at">make.names =</span> <span class="dv">1</span>) <span class="co"># turn data onto </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># melt the four columns into a single "glucose_auc" column</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># and create a new column containing treatment level.</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>y_cols <span class="ot">&lt;-</span> <span class="fu">colnames</span>(fig2e_wide)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># melt</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>fig2e <span class="ot">&lt;-</span> <span class="fu">melt</span>(fig2e_wide,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">measure.vars =</span> y_cols,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">value.name =</span> <span class="st">"glucose_auc"</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>               <span class="at">variable.name =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># create two new columns that are the split of treatment</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>fig2e[, <span class="fu">c</span>(<span class="st">"ask1"</span>, <span class="st">"diet"</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">tstrsplit</span>(treatment,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">" "</span>,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">fixed=</span><span class="cn">TRUE</span>)]</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co"># since glucose_auc is the only response variable in this</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># data.table, omit all rows with any NA</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>fig2e <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(fig2e)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co"># View(fig2e)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="how-to-plot-the-model" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="how-to-plot-the-model"><span class="header-section-number">4.2.2</span> How to plot the model</h3>
+<p>The steps throughout the text for plotting the model fit to experimental data are</p>
+<ol type="1">
+<li>fit the statistical model</li>
+<li>use the fit model to estimate the modeled means and confidence limits using <code>emmeans</code> from the <a href="https://cran.r-project.org/web/packages/emmeans/index.html">emmeans package</a>.</li>
+<li>use the <code>emmeans</code> object to estimate the contrasts of interests using the <code>contrast</code> function from emmeans.</li>
+<li>Plot the individual points. If covariates are in the model, use the fit model from step 1 to plot the adjusted values of the points.</li>
+<li>Use the values from step 2 to plot the modeled means and error intervals.</li>
+<li>If including p-value brackets, use the values from step 3.</li>
+</ol>
+<p>If you are using ggplot_the_model functions, then steps 4-6 are done for you.</p>
+<p>Here, I fit a linear model to the fig2e data and compute the use the <code>emmeans</code> and <code>contrast</code> functions without comment. The details of these functions are in the chapters that follow. The fit model and construction of the plots is simplified from those above.</p>
+<section id="fit-the-model" class="level4" data-number="4.2.2.1">
+<h4 data-number="4.2.2.1" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">4.2.2.1</span> Fit the model</h4>
+<p>The response is the glucose AUC, which is the area under the curve of the data from the glucose tolerance test. The model is a factorial linear model with <em>ask1</em> genotype and <em>diet</em> as the two factors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># glucose_auc is the AUC of the glucose tolerance curves computed using trapezoidal algorithm</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose_auc <span class="sc">~</span> ask1<span class="sc">*</span>diet,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig2e)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="compute-the-modeled-means-table-of-estimated-means-and-confidence-intervals" class="level4" data-number="4.2.2.2">
+<h4 data-number="4.2.2.2" class="anchored" data-anchor-id="compute-the-modeled-means-table-of-estimated-means-and-confidence-intervals"><span class="header-section-number">4.2.2.2</span> Compute the modeled means table of estimated means and confidence intervals</h4>
+<p>Modeled means are computed by passing the model object (<code>m1</code>) to the <code>emmeans</code> function and specifying the columns containing the groups using the <code>specs =</code> argument`.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"ask1"</span>, <span class="st">"diet"</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> ask1       diet emmean   SE df lower.CL upper.CL
+ ASK1F/F    chow   1691 83.4 41     1523     1859
+ ASK1Δadipo chow   1637 93.2 41     1449     1826
+ ASK1F/F    HFD    2257 73.1 41     2110     2405
+ ASK1Δadipo HFD    1871 70.5 41     1728     2013
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+</section>
+<section id="compute-the-contrasts-table-of-estimated-effects-with-confidence-intervals-and-p-values" class="level4" data-number="4.2.2.3">
+<h4 data-number="4.2.2.3" class="anchored" data-anchor-id="compute-the-contrasts-table-of-estimated-effects-with-confidence-intervals-and-p-values"><span class="header-section-number">4.2.2.3</span> Compute the contrasts table of estimated effects with confidence intervals and p-values</h4>
+<p>Contrasts among levels, or combinations of levels, are computed by passing the emmeans object (<code>m1.emm</code>) to the <code>contrast</code> function. There are many important variations of this step. This text advocates computing planned comparisons, which requires expert knowledge and forthought. Here I limit the computation to the four simple effects (the effects of one factor in each of the levels of the other factor).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m1_simple <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">simple =</span> <span class="st">"each"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">combine =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>m1_simple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> diet ask1       contrast               estimate  SE df lower.CL upper.CL
+ chow .          ASK1Δadipo - (ASK1F/F)    -53.6 125 41  -306.21      199
+ HFD  .          ASK1Δadipo - (ASK1F/F)   -386.7 102 41  -591.85     -182
+ .    ASK1F/F    HFD - chow                566.5 111 41   342.48      790
+ .    ASK1Δadipo HFD - chow                233.3 117 41    -2.67      469
+ t.ratio p.value
+  -0.429  0.6703
+  -3.808  0.0005
+   5.107  &lt;.0001
+   1.997  0.0525
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>I often use <code>m1_pairs</code> as the name of the contrast table. Here I use <code>m1_simple</code> to remind me that I’ve limited the comparison to the four simple effects. If I only compute planned comparisons, I might use <code>m1_planned</code>.</li>
+</ol>
+</section>
+</section>
+<section id="be-sure-ggplot_the_model-is-in-your-r-folder" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="be-sure-ggplot_the_model-is-in-your-r-folder"><span class="header-section-number">4.2.3</span> Be sure ggplot_the_model is in your R folder</h3>
+<p>If you skipped <a href="setup.html#setup-create-project">Create an R Studio Project for this textbook</a>, then download and move the file <a href="https://raw.githubusercontent.com/middleprofessor/applied-biostats/master/R/ggplot_the_model.R">ggplot_the_model.R</a> into the R folder in your Project folder.</p>
+</section>
+<section id="how-to-use-the-plot-the-model-functions" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="how-to-use-the-plot-the-model-functions"><span class="header-section-number">4.2.4</span> How to use the Plot the Model functions</h3>
+<p>The philosophy underneath these functions is to use the model fitted by the researcher to make the plots. The functions require information from three objects:</p>
+<ol type="1">
+<li>the data frame containing the modeled data</li>
+<li>the modeled means and CIs from <code>emmeans</code></li>
+<li>the modeled effects, CIs and <em>p</em>-values from <code>emmeans::contrast</code>.</li>
+</ol>
+<p>This philosophy strikes a balance between functions in which all of the statistical modeling is hidden and the researcher only sees the output and manually building ggplots. Actually, I strongly encourage researchers to learn how to build these plots and to not rely on canned functions, and I outline this after introducing the ggplot_the_model functions</p>
+<p>These functions require the fit model object (<code>m1</code>), the emmeans object of modeled means (<code>m1_emm</code>) and the contrast object of modeled effects (<code>m1_simple</code>).</p>
+<section id="ggplot_the_response" class="level4" data-number="4.2.4.1">
+<h4 data-number="4.2.4.1" class="anchored" data-anchor-id="ggplot_the_response"><span class="header-section-number">4.2.4.1</span> ggplot_the_response</h4>
+<p>For the response plot only, use <code>ggplot_the_response</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m1_response_plot <span class="ot">&lt;-</span> <span class="fu">ggplot_the_response</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit =</span> m1,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_emm =</span> m1_emm,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_pairs =</span> m1_simple,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> pal_okabe_ito_blue,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_label =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min"</span>)),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">g_label =</span> <span class="st">"none"</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>m1_response_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ggplot_the_response-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>ggplot_the_response</code> arguments:</p>
+<p><strong>fit</strong> model object from lm, lmer, nlme, glmmTMB</p>
+<p><strong>fit_emm</strong> object from ‘emmeans’. Or, a data frame that looks like this object, with modeled factor variables in columns 1 and 2 (if a 2nd factor is in the model), a column of means with name “emmean”, and columns of error intervals named “lower.CL” and “upper.CL”</p>
+<p><strong>fit_pairs</strong> object from <code>emmeans:contrast</code>. Or, a data frame that looks like this object.</p>
+<p><strong>wrap_col = NULL</strong> Not used at the moment</p>
+<p><strong>x_label = “none”</strong> A character variable used for the X-axis title.</p>
+<p><strong>y_label = “Response (units)”</strong> A character variable used for the Y-axis title. Use <code>expression(paste())</code> method for math.</p>
+<p><strong>g_label = NULL</strong> A character variable used for the grouping variable (the 2nd factor) title. Use “none” to remove</p>
+<p><strong>dots = “sina”</strong> controls the plotting of individual points. sina from ggforce package. Alternatives are “jitter” and “dotplot”</p>
+<p><strong>dodge_width = 0.8</strong> controls spacing between group means for models with a 2nd factor (the grouping variable)</p>
+<p><strong>adjust = 0.5</strong> controls spread of dots if using <code>dots = "sina"</code></p>
+<p><strong>contrast_rows = “all”</strong> controls which rows of fit_pairs to use for <em>p</em>-value brackets. Use “none” to hide.</p>
+<p><strong>y_pos = NULL</strong> manual control of the y-coordinates for p-value brackets</p>
+<p><strong>palette = pal_okabe_ito</strong> allows control of the color palette. The default pal_okabe_ito palette is a color blind palette.</p>
+<p><strong>legend_position = “top”</strong> controls position of the legend for the grouping variable (the 2nd factor in a two-factor model)</p>
+<p><strong>flip_horizontal = FALSE</strong> controls the orientation of the axes.</p>
+<p><strong>group_lines = FALSE</strong> used for plotting lines connecting group means. Not yet implemented.</p>
+</section>
+<section id="ggplot_the_effects" class="level4" data-number="4.2.4.2">
+<h4 data-number="4.2.4.2" class="anchored" data-anchor-id="ggplot_the_effects"><span class="header-section-number">4.2.4.2</span> ggplot_the_effects</h4>
+<p>For the effects plot only, use <code>ggplot_the_effects</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>m1_effects_plot <span class="ot">&lt;-</span> <span class="fu">ggplot_the_effects</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit =</span> m1,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_pairs =</span> m1_simple,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">effect_label =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Effect (mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min)"</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>m1_effects_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ggplot_the_effects-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>ggplot_the_effects</code> arguments</p>
+<p><strong>fit</strong> model object from lm, lmer, nlme, glmmTMB</p>
+<p><strong>fit_pairs</strong> object from <code>emmeans:contrast</code>. Or, a data frame that looks like this object.</p>
+<p><strong>contrast_rows = “all”</strong> controls which rows of fit_pairs to include in plot.</p>
+<p><strong>show_p = TRUE</strong> controls show/hide of <em>p</em>-values</p>
+<p><strong>effect_label = “Effect (units)”</strong> character variable for the title of the effects axis title.</p>
+</section>
+<section id="ggplot_the_model" class="level4" data-number="4.2.4.3">
+<h4 data-number="4.2.4.3" class="anchored" data-anchor-id="ggplot_the_model"><span class="header-section-number">4.2.4.3</span> ggplot_the_model</h4>
+<p>For the combined response and effects plot, use <code>ggplot_the_model</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m1_plot <span class="ot">&lt;-</span> <span class="fu">ggplot_the_model</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit =</span> m1,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_emm =</span> m1_emm,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_pairs =</span> m1_simple,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> pal_okabe_ito_blue,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_label =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min"</span>)),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">g_label =</span> <span class="st">"none"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">effect_label =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Effect (mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min)"</span>))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>m1_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ggplot_the_model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>ggplot_the_model</code> arguments</p>
+<p><strong>fit</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>fit_emm</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>fit_pairs</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>wrap_col = NULL</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>x_label = “none”</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>y_label = “Response (units)”</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>g_label = NULL</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>effect_label = “Effect (units)”</strong> same as for <code>ggplot_the_effect</code></p>
+<p><strong>dots = “sina”</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>dodge_width = 0.8</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>adjust = 0.5</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>contrast_rows = “all”</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>y_pos = NULL</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>palette = pal_okabe_ito</strong> same as for <code>ggplot_the_response</code></p>
+<p><strong>legend_position = “bottom”</strong> Except for default, same as for <code>ggplot_the_response</code></p>
+<p><strong>flip_horizontal = TRUE</strong> Except for default, same as for <code>ggplot_the_response</code></p>
+<p><strong>group_lines = FALSE</strong> used for plotting lines connecting group means. Not yet implemented.</p>
+<p><strong>rel_heights = c(1,1)</strong> used to control relative heights of the effects and response plot</p>
+</section>
+<section id="ggplot_the_treatments" class="level4" data-number="4.2.4.4">
+<h4 data-number="4.2.4.4" class="anchored" data-anchor-id="ggplot_the_treatments"><span class="header-section-number">4.2.4.4</span> ggplot_the_treatments</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x_levels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ASK1 =</span> <span class="fu">c</span>(<span class="st">"F/F"</span>, <span class="st">"Δadipo"</span>, <span class="st">"F/F"</span>, <span class="st">"Δadipo"</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Diet =</span> <span class="fu">c</span>(<span class="st">"chow"</span>, <span class="st">"chow"</span>, <span class="st">"HFD"</span>, <span class="st">"HFD"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the same code as above but hiding </span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># legend position</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>m1_response_plot_base <span class="ot">&lt;-</span> <span class="fu">ggplot_the_response</span>(</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit =</span> m1,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_emm =</span> m1_emm,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit_pairs =</span> m1_simple,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> pal_okabe_ito_blue,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_label =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min"</span>)),</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">g_label =</span> <span class="st">"none"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend_position =</span> <span class="st">"none"</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>m1_response_plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot_the_treatments</span>(</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  m1_response_plot_base,</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_levels =</span> x_levels,</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">text_size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.1</span>)</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>m1_response_plot2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ggplot_the_treatments-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you prefer plus and minus symbols, use <code>minus &lt;- "\u2013"</code> for the minus sign instead of the hyphen “-”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>minus <span class="ot">&lt;-</span> <span class="st">"\u2013"</span> <span class="co"># good to put this in the setup chunk</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>x_levels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  Δ<span class="at">adipo =</span> <span class="fu">c</span>(minus, <span class="st">"+"</span>, minus, <span class="st">"+"</span>),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">HFD =</span> <span class="fu">c</span>(minus, minus, <span class="st">"+"</span>, <span class="st">"+"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>m1_response_plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot_the_treatments</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  m1_response_plot_base,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_levels =</span> x_levels,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">text_size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.1</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>m1_response_plot2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ggplot_the_treatments-minus-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-generate-a-response-plot-using-ggpubr" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="how-to-generate-a-response-plot-using-ggpubr"><span class="header-section-number">4.2.5</span> How to generate a Response Plot using ggpubr</h3>
+<p>Steps 1-3 were completed above.</p>
+<section id="plot-individual-points" class="level4" data-number="4.2.5.1">
+<h4 data-number="4.2.5.1" class="anchored" data-anchor-id="plot-individual-points"><span class="header-section-number">4.2.5.1</span> Step 4: Plot the individual points</h4>
+<p><strong>Using ggplot</strong></p>
+<p>I’m going to show how to create the initial, base plot of points using ggplot2 in order to outline <strong>very briefly</strong> how ggplot2 works.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>m1_response <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fig2e,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="co"># these 2 lines define the axes</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> glucose_auc,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> ask1 <span class="co"># define the grouping variable</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># surprisingly, the code above doesn't plot anything</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># this adds the points as a layer</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the title of the y-axis</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"AUC (mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min)"</span>))) <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the theme</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># these theme modifications need to be added after re-setting</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the theme</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="co"># remove legend</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>() <span class="co"># remove the x-axis title</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the colors palette for the points</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito_blue) <span class="sc">+</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>m1_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plot-ggplot-base-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>The <code>ggplot</code> function requires a data frame passed to <code>data</code> containing the data to plot and an aesthetic (<code>aes</code>), which passes the column names that set the x and y axes. These column names must be in the data frame passed to <code>data</code>. <code>color =</code> is an aesthetic that sets the grouping variable used to assign the different colors.</li>
+<li>The x-axis is discrete but is numeric. The x-axis values are 1, 2, 3, 4. But instead of using these numbers as the labels for the x-axis values, ggplot uses the names of the groups (the four values of the column “treatment”)</li>
+</ol>
+<p><strong>Using ggpubr</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>m1_response <span class="ot">&lt;-</span> <span class="fu">ggstripchart</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fig2e,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"glucose_auc"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"ask1"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ylab = expression(paste("AUC (mmol ", l^-1, " min)")),</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"AUC (mmol/min)"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> pal_okabe_ito_blue,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="st">"none"</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>m1_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plot-ggpubr-base-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-5-plot-the-modeled-means-and-95-error-intervals" class="level4" data-number="4.2.5.2">
+<h4 data-number="4.2.5.2" class="anchored" data-anchor-id="step-5-plot-the-modeled-means-and-95-error-intervals"><span class="header-section-number">4.2.5.2</span> Step 5: Plot the modeled means and 95% error intervals</h4>
+<p>To add points and error bars to <code>m1_response</code>, we need to tell ggplot the x-axis positions (or coordinates). These positions are the values of the “treatment” column in <code>fig2e</code>. The modeled means and and 95% CIs are in the <code>m1_emm</code> object but there is no “treatment” column, or any column with these values. We, therefore have to make this column before we can add the modeled means and CIs to the plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert m1_emm to a data.table</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>m1_emm_dt <span class="ot">&lt;-</span> <span class="fu">summary</span>(m1_emm) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create treatment column</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure it matches values in the two factor columns</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>m1_emm_dt[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="st">"ASK1F/F chow"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1Δadipo chow"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1F/F HFD"</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1Δadipo HFD"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now add the modeled means and CIs</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m1_response <span class="ot">&lt;-</span> m1_response <span class="sc">+</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing means</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> m1_emm_dt,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> ask1), </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing error bars</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> m1_emm_dt, </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymin =</span> lower.CL, </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> upper.CL,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> ask1), </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>m1_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plot-mean-ci-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li><code>m1_response</code> generated by <code>ggpubr::stripchart</code> is a <code>ggplot2</code> object. This means modifications of the plot are implemented by adding these with the “+” sign.</li>
+<li>The modeled means are in the column “emmean” in the data frame <code>m1_emm_dt</code>. We need to tell <code>geom_point</code> where to find the data using the <code>data =</code> argument. <code>geom_point()</code> (and other geoms) assumes that the points that we want to plot are defined by the same x and y column names used to create the plot – if these don’t exist, we need to state the x and y column names in the aesthetic function <code>aes</code>. Since we created a “treatment” column in <code>m1_emm_dt</code> that contains the x-axis coordiantes (1, 2, 3, 4), we do not need to tell ggplot where to find the x-values. But there is no “glucose_auc” column in <code>m1_emm_dt</code> so we need to tell <code>geom_point()</code> where to find the y values using <code>aes(y = "emmean")</code>.</li>
+<li>Adding the modeled error intervals using <code>geom_errorbar</code> follows the same logic as adding the modeled means. Importantly, and interestingly, <code>y = emmean</code> has to be passed even though no information from this column is used to plot the error bars.</li>
+<li>Note that column names passed to a <code>ggpubr</code> function must be in quotes but column names passed to a <code>ggplot2</code> function cannot be in quotes</li>
+</ol>
+</section>
+<section id="step-6-adding-p-values" class="level4" data-number="4.2.5.3">
+<h4 data-number="4.2.5.3" class="anchored" data-anchor-id="step-6-adding-p-values"><span class="header-section-number">4.2.5.3</span> Step 6: Adding p-values</h4>
+<p><em>p</em>-value brackets are added to a response plot using <code>stat_pvalue_manual</code> from the <code>ggpubr</code> package. This function needs a column of p-values, and a pair of columns that define the left and right x-axis positions of the bracket.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert m1_simple to a data.table</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>m1_simple_dt <span class="ot">&lt;-</span> <span class="fu">data.table</span>(m1_simple)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create group1 -- column containing x-position</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># of the left side of the bracket</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># need to look at m1_simple_dt to construct this.</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># "ASK1F/F chow", "ASK1Δadipo chow" ,"ASK1F/F HFD", "ASK1Δadipo HFD" </span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, group1 <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="st">"ASK1Δadipo chow"</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1Δadipo HFD"</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1F/F HFD"</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1Δadipo HFD"</span>)]</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create group2 -- column containing x-position</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># of the right side of the bracket</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co"># need to look at m1_simple_dt to construct this.</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co"># "ASK1F/F chow", "ASK1Δadipo chow" ,"ASK1F/F HFD", "ASK1Δadipo HFD" </span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, group2 <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="st">"ASK1F/F chow"</span>,</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1F/F HFD"</span>,</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1F/F chow"</span>,</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"ASK1Δadipo chow"</span>)]</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, p_rounded <span class="sc">:</span><span class="er">=</span> <span class="fu">p_round</span>(p.value,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">digits =</span> <span class="dv">2</span>)]</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, p_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">p_format</span>(p_rounded,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">accuracy =</span> <span class="fl">1e-04</span>,</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">add.p =</span> <span class="cn">TRUE</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now add the p-values</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simply assigning this to a new plot with new name</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># because I want to re-use the base plot in the next chunk</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>m1_response_p <span class="ot">&lt;-</span> m1_response <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> m1_simple_dt,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"p_pretty"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y.position =</span> <span class="fu">c</span>(<span class="dv">3300</span>, <span class="dv">3300</span>, <span class="dv">3450</span>, <span class="dv">3600</span>),</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">tip.length =</span> <span class="fl">0.01</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>m1_response_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plot-manual-p-values-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes on adding <em>p</em>-values to the plot:</p>
+<ol type="1">
+<li>The <code>y.position</code> argument in <code>stat_pvalue_manual()</code> contains the position on the y-axis for the p-value brackets. I typically choose these values “by eye”. Essentially, I look at the maximum y-value on the plot and then choose a value just above this for the first bracket. This may take some trial-and-error to position the brackets satisfactorily.</li>
+<li>Use base R indexing to specify a subset. For example</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>m1_response_p <span class="ot">&lt;-</span> m1_response <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> m1_simple_dt[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>), ], <span class="co"># only rows 2, 4</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"p_pretty"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y.position =</span> <span class="fu">c</span>(<span class="dv">3300</span>, <span class="dv">3450</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">tip.length =</span> <span class="fl">0.01</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>m1_response_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plot-manual-p-values-subset-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li><code>ggpubr::stat_compare_means</code> automates the process somewhat but the function is too limited for statistics on anything but the simplest experiments. I don’t advocate it’s use.</li>
+</ol>
+</section>
+<section id="a-variation-for-factorial-models" class="level4" data-number="4.2.5.4">
+<h4 data-number="4.2.5.4" class="anchored" data-anchor-id="a-variation-for-factorial-models"><span class="header-section-number">4.2.5.4</span> A variation for factorial models</h4>
+<p>The experiment in Fig2e has a factorial design and was analyzed (here, not in the original paper) using a factorial model. The factorial design can be represented in the plot by clustering the levels.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>dodge_width <span class="ot">=</span> <span class="fl">0.4</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>jitter_width <span class="ot">=</span> <span class="fl">0.2</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, xmin <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>dodge_width<span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">2</span><span class="sc">-</span>dodge_width<span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">1</span><span class="sc">-</span>dodge_width<span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">1</span><span class="sc">+</span>dodge_width<span class="sc">/</span><span class="dv">4</span>)]</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, xmax <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">+</span>dodge_width<span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">2</span><span class="sc">+</span>dodge_width<span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">2</span><span class="sc">-</span>dodge_width<span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">2</span><span class="sc">+</span>dodge_width<span class="sc">/</span><span class="dv">4</span>)]</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>m1_response_fac <span class="ot">&lt;-</span> <span class="fu">ggstripchart</span>(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fig2e,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"diet"</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"glucose_auc"</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"ask1"</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">fill =</span> <span class="st">"ask1"</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  ylab = expression(paste("AUC (mmol ", l^-1, " min)")),</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"AUC (mmol/min)"</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> pal_okabe_ito_blue,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  position = position_dodge(width = dodge_width)</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">position =</span> <span class="fu">position_jitterdodge</span>(<span class="at">dodge.width =</span> dodge_width,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">jitter.width =</span> jitter_width)</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rremove</span>(<span class="st">"xlab"</span>) <span class="sc">+</span> <span class="co">#ggpubr function</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing means</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> m1_emm_dt,</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> ask1), </span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> dodge_width)) <span class="sc">+</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing error bars</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> m1_emm_dt, </span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymin =</span> lower.CL, </span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> upper.CL,</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> ask1), </span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.05</span>,</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> dodge_width)) <span class="sc">+</span></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add p-value brackets</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> m1_simple_dt,</span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"p_pretty"</span>,</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="st">"xmin"</span>,</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax =</span> <span class="st">"xmax"</span>,</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">y.position =</span> <span class="fu">c</span>(<span class="dv">3300</span>, <span class="dv">3300</span>, <span class="dv">3450</span>, <span class="dv">3600</span>),</span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">tip.length =</span> <span class="fl">0.01</span>,</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>m1_response_fac</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plot-factorial-response-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="how-to-add-treatment-combinations-to-a-ggpubr-plot" class="level4" data-number="4.2.5.5">
+<h4 data-number="4.2.5.5" class="anchored" data-anchor-id="how-to-add-treatment-combinations-to-a-ggpubr-plot"><span class="header-section-number">4.2.5.5</span> How to add treatment combinations to a ggpubr plot</h4>
+<p>Many researchers in bench biology insert a grid of treatments below the x-axis of a plot. This is time consuming if we are using some external software to add to this. A much leaner workflow would be to add the treatment grid in the same step as generating the plot itself. Here is a kludgy way to do this using a ggpubr plot. A much more elegant method is described below</p>
+<section id="variant-1-fake-axes" class="level5" data-number="4.2.5.5.1">
+<h5 data-number="4.2.5.5.1" class="anchored" data-anchor-id="variant-1-fake-axes"><span class="header-section-number">4.2.5.5.1</span> Variant 1 – Fake axes</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>use_this <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># if false use +/- symbols</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(use_this <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  x_levels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ASK1:"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"F/F"</span>, <span class="st">"Δadipo"</span>, <span class="st">"F/F"</span>, <span class="st">"Δadipo"</span>),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Diet:"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"chow"</span>, <span class="st">"chow"</span>, <span class="st">"HFD"</span>, <span class="st">"HFD"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  minus <span class="ot">&lt;-</span> <span class="st">"\u2013"</span> <span class="co"># good to put this in the setup chunk</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  x_levels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Δadipo:"</span> <span class="ot">=</span> <span class="fu">c</span>(minus, <span class="st">"+"</span>, minus, <span class="st">"+"</span>),</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"HFD: "</span> <span class="ot">=</span> <span class="fu">c</span>(minus, minus, <span class="st">"+"</span>, <span class="st">"+"</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>x_levels_text <span class="ot">&lt;-</span> <span class="fu">apply</span>(x_levels, <span class="dv">2</span>, paste0, <span class="at">collapse=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>x_levels_title <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">row.names</span>(x_levels), <span class="at">collapse=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>x_axis_min <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>x_axis_max <span class="ot">&lt;-</span> <span class="fl">4.5</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>y_plot_min <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>y_axis_min <span class="ot">&lt;-</span> <span class="dv">1350</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>y_axis_max <span class="ot">&lt;-</span> <span class="dv">3500</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>y_breaks <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1500</span>, <span class="dv">3500</span>, <span class="at">by =</span> <span class="dv">500</span>)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>y_labels <span class="ot">&lt;-</span> <span class="fu">as.character</span>(y_breaks)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>m1_response_final <span class="ot">&lt;-</span> m1_response_p <span class="sc">+</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(y_plot_min, y_axis_max)) <span class="sc">+</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> y_breaks) <span class="sc">+</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.line =</span> <span class="fu">element_blank</span>(), <span class="co"># remove both x &amp; y axis lines</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), <span class="co"># remove x-axis labels</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>() <span class="co"># remove x-axis ticks</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add shortened y-axis line that doesn't extend to treatments</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> x_axis_min <span class="sc">+</span> <span class="fl">0.01</span>,</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> y_axis_min,</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend =</span> x_axis_min <span class="sc">+</span> <span class="fl">0.01</span>,</span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend =</span> y_axis_max),</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add x-axis line above treatments</span></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> x_axis_min,</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> y_axis_min,</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend =</span> x_axis_max,</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend =</span> y_axis_min),</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add treatment combinations</span></span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> y_plot_min,</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> x_levels_text) <span class="sc">+</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add factor names</span></span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> x_axis_min,</span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> y_plot_min,</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> x_levels_title,</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>m1_response_final</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_segment(aes(x = x_axis_min + 0.01, y = y_axis_min, xend = x_axis_min + : All aesthetics have length 1, but the data has 45 rows.
+ℹ Please consider using `annotate()` or provide this layer with data containing
+  a single row.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_segment(aes(x = x_axis_min, y = y_axis_min, xend = x_axis_max, : All aesthetics have length 1, but the data has 45 rows.
+ℹ Please consider using `annotate()` or provide this layer with data containing
+  a single row.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-how to plot treatments-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li><code>ggplot_the_treatments</code> should work with any ggplot, including those generated by ggpubr functions, with categorical values on the x-axis.</li>
+<li>Here, I add the treatment combinations manually. The table of combinations is added inside the plot area (inside the axes). To make this look nice, and not weird, the x and y axes are removed and new lines are inserted to create new axis lines. The bottom of the new y-axis line starts above the treatment table. The new x-axis line is inserted above the treatment table.</li>
+<li>To include the treatment combination (group) names, add this as the first row of <code>x_levels</code>.</li>
+<li>Note that if the plot has a grid, this grid will extend into the area occupied by the treatment table using this method.</li>
+</ol>
+</section>
+</section>
+</section>
+<section id="how-to-generate-a-response-plot-with-a-grid-of-treatments-using-ggplot2" class="level3" data-number="4.2.6">
+<h3 data-number="4.2.6" class="anchored" data-anchor-id="how-to-generate-a-response-plot-with-a-grid-of-treatments-using-ggplot2"><span class="header-section-number">4.2.6</span> How to generate a Response Plot with a grid of treatments using ggplot2</h3>
+<p>Above, I wrote a <a href="#plot-individual-points">short script for generating the base response plot</a> using ggplot. In this plot, the x-axis variable (“treatment”) is categorical and ggplot uses the integers 1, 2, 3, 4 as the coordinate values for the position of the four groups on the x-axis. Understanding this mapping is important for adding lines to a plot or annotating a plot with text, both of which requires x,y coordinates to position the feature. While the x-axis is discrete – I cannot add a tick at x = 1.5 – the horizontal dimension of the plot area itself is continuous and I can add points or lines or text at any x coordinate within the plot area.</p>
+<p>Here I generate the same plot using a continuous x-axis. This requires that I explicitly create a numeric column in the data with the x-axis position for each group. This is easy. The advantage of this is that I now have a continuous x-axis that is more manipulatable than a discrete x-axis. I use this to add treatment levels below the plot</p>
+<section id="first-wrangle-the-data" class="level4" data-number="4.2.6.1">
+<h4 data-number="4.2.6.1" class="anchored" data-anchor-id="first-wrangle-the-data"><span class="header-section-number">4.2.6.1</span> First, wrangle the data</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure treatment is a factor with the levels in the </span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># desired order</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fig2e[, treatment_i := as.integer(fig2e$treatment)]</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># above line stopped working on 08/28/23 with error:</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Error in x[[name]] &lt;- value : bad names attribute</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># so here is a non-data.table alternative</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>fig2e<span class="sc">$</span>treatment_i <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(fig2e<span class="sc">$</span>treatment)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co"># convert m1_emm to a data.table</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>m1_emm_dt_i <span class="ot">&lt;-</span> <span class="fu">summary</span>(m1_emm) <span class="sc">%&gt;%</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create treatment_i column</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>m1_emm_dt_i[, treatment_i <span class="sc">:</span><span class="er">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="co"># convert m1_simple to a data.table</span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>m1_simple_dt_i <span class="ot">&lt;-</span> <span class="fu">data.table</span>(m1_simple)</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a><span class="co"># create group1 -- column containing x-position</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="co"># of the left side of the bracket</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="co"># need to look at m1_simple_dt to construct this.</span></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a><span class="co"># "ASK1F/F chow", "ASK1Δadipo chow" ,"ASK1F/F HFD", "ASK1Δadipo HFD" </span></span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>m1_simple_dt_i[, group1 <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>)]</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a><span class="co"># create group2 -- column containing x-position</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a><span class="co"># of the right side of the bracket</span></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a><span class="co"># need to look at m1_simple_dt to construct this.</span></span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a><span class="co"># "ASK1F/F chow", "ASK1Δadipo chow" ,"ASK1F/F HFD", "ASK1Δadipo HFD" </span></span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>m1_simple_dt_i[, group2 <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>)]</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>m1_simple_dt_i[, p_rounded <span class="sc">:</span><span class="er">=</span> <span class="fu">p_round</span>(p.value,</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">digits =</span> <span class="dv">2</span>)]</span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>m1_simple_dt_i[, p_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">p_format</span>(p_rounded,</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">accuracy =</span> <span class="fl">1e-04</span>,</span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">add.p =</span> <span class="cn">TRUE</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>The first line simply converts the categorical variable treatment into a numeric variable with values 1-4 assigned to the four treatment levels.</li>
+<li>As above, <code>m1_emm_dt</code> is created and a column with the x-variable name is added</li>
+<li>As above, <code>m1_simple_dt</code> is created and group1 and group2 columns with the x-axis positions of the two groups in the contrast are created. Here these columns are integers and not group names.</li>
+</ol>
+</section>
+<section id="second-generate-the-plot" class="level4" data-number="4.2.6.2">
+<h4 data-number="4.2.6.2" class="anchored" data-anchor-id="second-generate-the-plot"><span class="header-section-number">4.2.6.2</span> Second, generate the plot</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>m1_response_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fig2e,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> treatment_i, <span class="co"># these 2 lines define the axes</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> glucose_auc,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> ask1 <span class="co"># define the grouping variable</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add jittered points</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing means</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> m1_emm_dt_i,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> ask1), </span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing error bars</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> m1_emm_dt_i, </span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymin =</span> lower.CL, </span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> upper.CL,</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> ask1), </span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add the p-value brackets</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> m1_simple_dt_i[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>), ], <span class="co"># only rows 2, 4</span></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"p_pretty"</span>,</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y.position =</span> <span class="fu">c</span>(<span class="dv">3300</span>, <span class="dv">3450</span>),</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">tip.length =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the title of the y-axis</span></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"AUC (mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min)"</span>))) <span class="sc">+</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the theme</span></span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># these theme modifications need to be added after re-setting</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the theme</span></span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="co"># remove legend</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>() <span class="co"># remove the x-axis title</span></span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the colors palette for the points</span></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito_blue) <span class="sc">+</span></span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a>m1_response_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ggplot-continuous-x-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>This code is exactly the same as <a href="#plot-individual-points">that above</a> but uses an x-variable that is numeric instead of a factor.</li>
+</ol>
+</section>
+<section id="third-add-the-grid-of-treatments-below-the-x-axis" class="level4" data-number="4.2.6.3">
+<h4 data-number="4.2.6.3" class="anchored" data-anchor-id="third-add-the-grid-of-treatments-below-the-x-axis"><span class="header-section-number">4.2.6.3</span> Third, add the grid of treatments below the x-axis</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>minus <span class="ot">&lt;-</span> <span class="st">"\u2013"</span> <span class="co"># good to put this in the setup chunk</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># I've added x-axis group names in addition to the grid</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>x_levels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"Control"</span>, <span class="st">"Δadipo"</span>, <span class="st">"HFD"</span>, <span class="st">"Δadipo+HFD"</span>),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"Δadipo:"</span>, minus, <span class="st">"+"</span>, minus, <span class="st">"+"</span>),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"HFD: "</span>, minus, minus, <span class="st">"+"</span>, <span class="st">"+"</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>x_breaks_text <span class="ot">&lt;-</span> <span class="fu">apply</span>(x_levels, <span class="dv">2</span>, paste0, <span class="at">collapse=</span><span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>x_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>m1_response_2 <span class="ot">&lt;-</span> m1_response_2 <span class="sc">+</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">4.5</span>)) <span class="sc">+</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> x_breaks,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> x_breaks_text,</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> <span class="co"># remove x-axis ticks</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>m1_response_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-method3-treatment-grid-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>This is a good plot. A pretty good plot would include the effects.</li>
+</ol>
+</section>
+</section>
+<section id="how-to-generate-an-effects-plot" class="level3" data-number="4.2.7">
+<h3 data-number="4.2.7" class="anchored" data-anchor-id="how-to-generate-an-effects-plot"><span class="header-section-number">4.2.7</span> How to generate an Effects Plot</h3>
+<p>The effects plot is built using ggplot2 instead of ggpubr because the plot is “flipped” – the y-axis is the categorical variable and the x-axis is the continuous variable. The base plot with the estimates (but not the error bars) could be made using ggpubr (see below) but the subsequent functions to modify the plot are awkward because of inconsistencies in the designation of the x and y-axis (old or new?).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the m1_simple_dt object created above</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create nice labels for the contrasts</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, contrast_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="st">"ASK1Δadipo - Control"</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"ASK1Δadipo - HFD"</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"HFD - Control"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"ASK1Δadipo+HFD - ASK1Δadipo"</span>)]</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the levels of contrast_pretty are in the order of that in</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co"># m1_simple_dt</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>m1_simple_dt[, contrast_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(contrast_pretty,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">levels =</span> contrast_pretty)]</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>m1_effects <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> m1_simple_dt,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x =</span> estimate,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> contrast_pretty)) <span class="sc">+</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Effects (mmol/L)"</span>) <span class="sc">+</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add error bars</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate,</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmin =</span> lower.CL,</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmax =</span> upper.CL),</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.02</span>) <span class="sc">+</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add zero effect line</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>,</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> pal_okabe_ito_blue[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add p-values</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> m1_simple_dt<span class="sc">$</span>estimate <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">30</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.2</span>,</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> m1_simple_dt<span class="sc">$</span>p_pretty,</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rremove</span>(<span class="st">"ylab"</span>) <span class="sc">+</span> <span class="co">#remove y-axis, ggpubr function</span></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>m1_effects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-how-to-plot-effects-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li><code>c(-30,0,0,0)</code> is added to the x coordinate to shift the first p-value to the left of the zero-effect line.</li>
+</ol>
+<p><strong>how would this be done with ggpubr?</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the modified m1_simple_dt object created in the previous chunk</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># use ggpubr::ggerrorplot with no error</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>m1_effects_pubr <span class="ot">&lt;-</span> <span class="fu">ggerrorplot</span>(<span class="at">data =</span> m1_simple_dt,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">y =</span> <span class="st">"estimate"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x =</span> <span class="st">"contrast_pretty"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ylab =</span> <span class="st">"Effects (mmol/L)"</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">desc_stat =</span> <span class="st">"mean"</span>, <span class="co"># mean only!</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">orientation =</span> <span class="st">"horizontal"</span>) <span class="sc">+</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove y-axis title</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rremove</span>(<span class="st">"ylab"</span>) <span class="sc">+</span> <span class="co">#ggpubr function</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add error bars using ggplot function</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note using original (not horizontal) axis designation</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">y =</span> estimate,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymin =</span> lower.CL,</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> upper.CL),</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.02</span>) <span class="sc">+</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add zero effect line using ggplot function</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note using original (not horizontal) axis designation</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>,</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> pal_okabe_ito_blue[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add p-values</span></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note using original (not horizontal) axis designation</span></span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> m1_simple_dt<span class="sc">$</span>estimate <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">30</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.3</span>,</span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> m1_simple_dt<span class="sc">$</span>p_pretty,</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>m1_effects_pubr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-how-to-plot-effects-ggpubr-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="how-to-combine-the-response-and-effects-plots" class="level3" data-number="4.2.8">
+<h3 data-number="4.2.8" class="anchored" data-anchor-id="how-to-combine-the-response-and-effects-plots"><span class="header-section-number">4.2.8</span> How to combine the response and effects plots</h3>
+<section id="using-the-ggpubr-response-plot" class="level4" data-number="4.2.8.1">
+<h4 data-number="4.2.8.1" class="anchored" data-anchor-id="using-the-ggpubr-response-plot"><span class="header-section-number">4.2.8.1</span> Using the ggpubr response plot</h4>
+<p>The <code>cowplot::plotgrid()</code> function is used generally to arrange multiple plots into a single figure. Here I use it to combine the response and effects subplots into a single plot. The response plot is <code>m1_response</code> created using ggpubr.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modify the response and effects plots for consistency</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># change group names for consistency</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>groups_pretty <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Control"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"ASK1Δadipo"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"HFD"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"ASK1Δadipo+HFD"</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>m1_bottom <span class="ot">&lt;-</span> m1_response <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> groups_pretty) <span class="sc">+</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="co"># rotate to horizontal</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>m1_top <span class="ot">&lt;-</span> m1_effects <span class="sc">+</span> <span class="co"># assign to new plot object</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">position=</span><span class="st">"top"</span>) <span class="co"># move x-axis to "top"</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>m1_plot <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(m1_top,</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>                     m1_bottom,</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nrow =</span> <span class="dv">2</span>,</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">align =</span> <span class="st">"v"</span>,</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">axis =</span> <span class="st">"lr"</span>,</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>m1_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-combined-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>The response plot was flipped in this code. If you know that you want it in this orientation, simply build it with this orientation to avoid the kinds of axis designation ambiguities highlighted above with the ggpubr effects plot.</li>
+<li>the <code>align</code> and <code>axis</code> arguments are used to force the plot areas to have the same width.</li>
+<li><code>rel_heights = c()</code> adjusts the relative heights of the top and bottom plot. This typically requires fiddling.</li>
+<li>The placement of the p-values looks different than it does in the standalone effects plot. To improve the look in the combined plot, fiddle with the placement argument (the x and y positions) in the chunk that generates the effects plot.</li>
+</ol>
+</section>
+<section id="using-a-response-plot-with-a-treatment-grid" class="level4" data-number="4.2.8.2">
+<h4 data-number="4.2.8.2" class="anchored" data-anchor-id="using-a-response-plot-with-a-treatment-grid"><span class="header-section-number">4.2.8.2</span> Using a response plot with a treatment grid</h4>
+<p>Here, I re-build the response plot in a horizontal orientation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="st">"\u0009"</span>  <span class="co"># good to put this in the setup chunk</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>minus <span class="ot">&lt;-</span> <span class="st">"\u2013"</span> <span class="co"># good to put this in the setup chunk</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>minus_pad <span class="ot">&lt;-</span> <span class="fu">paste0</span>(minus, <span class="st">"    "</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>plus_pad <span class="ot">&lt;-</span> <span class="st">"+    "</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>x_levels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(minus_pad, plus_pad, minus_pad, plus_pad),</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(minus_pad, minus_pad, plus_pad, plus_pad)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>x_breaks_text <span class="ot">&lt;-</span> <span class="fu">apply</span>(x_levels, <span class="dv">2</span>, paste0, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>x_breaks_text <span class="ot">&lt;-</span> <span class="fu">c</span>(x_breaks_text, <span class="st">"Δadipo HFD"</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>x_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="fl">4.5</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>m1_response_horiz <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fig2e,</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> treatment_i, <span class="co"># these 2 lines define the axes</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> glucose_auc,</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> ask1 <span class="co"># define the grouping variable</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add jittered points</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing means</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> m1_emm_dt_i,</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> emmean,</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> ask1), </span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add layer containing error bars</span></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> m1_emm_dt_i, </span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">x =</span> emmean,</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmin =</span> lower.CL, </span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmax =</span> upper.CL,</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> ask1), </span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the title of the y-axis</span></span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"AUC (mmol "</span>, l<span class="sc">^-</span><span class="dv">1</span>, <span class="st">" min)"</span>))) <span class="sc">+</span></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the theme</span></span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># these theme modifications need to be added after re-setting</span></span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the theme</span></span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="co"># remove legend</span></span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(), <span class="co"># remove the x-axis title</span></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>() <span class="co"># remove y-axis ticks</span></span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change the colors palette for the points</span></span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito_blue) <span class="sc">+</span></span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add the treatment</span></span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">4.5</span>)) <span class="sc">+</span></span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> x_breaks,</span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> x_breaks_text,</span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>m1_response_horiz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-response-horizontal-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m1_plot <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(m1_top,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                     m1_response_horiz,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nrow =</span> <span class="dv">2</span>,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">align =</span> <span class="st">"v"</span>,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">axis =</span> <span class="st">"lr"</span>,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>m1_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-response-effects-plot-treatment-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-add-the-interaction-effect-to-response-and-effects-plots" class="level3" data-number="4.2.9">
+<h3 data-number="4.2.9" class="anchored" data-anchor-id="how-to-add-the-interaction-effect-to-response-and-effects-plots"><span class="header-section-number">4.2.9</span> How to add the interaction effect to response and effects plots</h3>
+<p>In the experiment for Figure 2E, a good question to ask is, is the effect of ASK1Δadipo conditional on diet? For example, a scenario where ASK1Δadipo lowers AUC about the same amount in both Chow and HFD mice (that is, the effect of ASK1Δadipo is not conditional on diet) has a different underlying biological explanation of the control of browning than a scenario where ASK1Δadipo lowers AUC only in HFD mice. To pursue this, we need an estimate of the interaction effect. In general, <strong>if an experiment has a factorial design, we always want estimates of the interaction effects</strong></p>
+<section id="adding-interaction-p-value-to-a-response-plot" class="level4" data-number="4.2.9.1">
+<h4 data-number="4.2.9.1" class="anchored" data-anchor-id="adding-interaction-p-value-to-a-response-plot"><span class="header-section-number">4.2.9.1</span> Adding interaction p-value to a response plot</h4>
+<p>Wrangle</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>m1_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>ixn_estimate <span class="ot">&lt;-</span> m1_coef[<span class="st">"ask1ASK1Δadipo:dietHFD"</span>, <span class="st">"Estimate"</span>]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>p_ixn <span class="ot">&lt;-</span> m1_coef[<span class="st">"ask1ASK1Δadipo:dietHFD"</span>, <span class="st">"Pr(&gt;|t|)"</span>] <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p_round</span>(<span class="at">digits =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p_format</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">accuracy =</span> <span class="fl">1e-04</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>p_ixn_text <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"interaction p = "</span>, p_ixn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>m1_response_ixn <span class="ot">&lt;-</span> m1_response_fac <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add line connecting group means</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># comment out all lines to remove</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> m1_emm_dt,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">y =</span> emmean,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">group =</span> ask1,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> ask1),</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> dodge_width)) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add p-value</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="fl">1.5</span>,</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">2300</span>,</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> p_ixn_text) <span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>m1_response_fac</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>m1_response_ixn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adding-interaction-effect-to-effects-plot" class="level4" data-number="4.2.9.2">
+<h4 data-number="4.2.9.2" class="anchored" data-anchor-id="adding-interaction-effect-to-effects-plot"><span class="header-section-number">4.2.9.2</span> Adding interaction effect to effects plot</h4>
+<section id="add-the-interaction-effect-to-the-contrast-table" class="level5" data-number="4.2.9.2.1">
+<h5 data-number="4.2.9.2.1" class="anchored" data-anchor-id="add-the-interaction-effect-to-the-contrast-table"><span class="header-section-number">4.2.9.2.1</span> Add the interaction effect to the contrast table</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert m1_simple to data.table</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>m1_simple_dt <span class="ot">&lt;-</span> <span class="fu">data.table</span>(m1_simple)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get interaction p-value using emmeans::contrast()</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>m1_ixn <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">interaction =</span> <span class="fu">c</span>(<span class="st">"revpairwise"</span>),</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by =</span> <span class="cn">NULL</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(m1_ixn,</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">old =</span> <span class="fu">names</span>(m1_ixn)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">new =</span> <span class="fu">names</span>(m1_simple_dt)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>m1_ixn[, contrast <span class="sc">:</span><span class="er">=</span> <span class="st">"ask1:diet"</span>]</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="co"># note that column order does not need to be the same</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>m1_effects_dt <span class="ot">&lt;-</span> <span class="fu">rbind</span>(m1_simple_dt,</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>                       m1_ixn)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>m1_effects_dt[, contrast_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">c</span>(<span class="st">"Δadipo - Control"</span>,</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"Δadipo+HFD - HFD"</span>,</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"HFD - Control"</span>,</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"Δadipo+HFD - Δadipo"</span>,</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"Interaction"</span>)]</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>m1_effects_dt[, p_round <span class="sc">:</span><span class="er">=</span> <span class="fu">p_round</span>(p.value, <span class="at">digits =</span> <span class="dv">2</span>)]</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>m1_effects_dt[, p_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">p_format</span>(p_round,</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">accuracy =</span> <span class="fl">1e-04</span>,</span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">add.p =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a><span class="co"># don't forget this imperative step!</span></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a><span class="co"># otherwise your p-values and factor labels won't match!</span></span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a>m1_effects_dt[, contrast_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(contrast_pretty,</span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">levels =</span> contrast_pretty)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>m1_effects <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> m1_effects_dt,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x =</span> estimate,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> contrast_pretty)) <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Effects (mmol/L)"</span>) <span class="sc">+</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add error bars</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate,</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmin =</span> lower.CL,</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmax =</span> upper.CL),</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.02</span>) <span class="sc">+</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add zero effect line</span></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>,</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> pal_okabe_ito_blue[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add p-values</span></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> m1_effects_dt<span class="sc">$</span>estimate <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">30</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span> <span class="sc">+</span> <span class="fl">0.2</span>,</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> m1_effects_dt<span class="sc">$</span>p_pretty,</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>           <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rremove</span>(<span class="st">"ylab"</span>) <span class="sc">+</span> <span class="co">#remove y-axis, ggpubr function</span></span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>m1_effects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ixn-effects-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>m1_top <span class="ot">&lt;-</span> m1_effects <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">position=</span><span class="st">"top"</span>) <span class="co"># move x-axis to "top"</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>m1_plot <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(m1_top,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>                     m1_response_horiz,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nrow =</span> <span class="dv">2</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">align =</span> <span class="st">"v"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">axis =</span> <span class="st">"lr"</span>,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.9</span>))</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>m1_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="plotting-models_files/figure-html/plots-ixn-combined-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notes</p>
+<ol type="1">
+<li>This is a pretty good plot</li>
+</ol>
+
+
+</section>
+</section>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>“The Pretty Good House - Finding the right balance between construction cost and energy performance”. https://www.greenbuildingadvisor.com/article/the-pretty-good-house<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
