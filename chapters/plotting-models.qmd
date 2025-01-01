@@ -57,11 +57,13 @@ A typical pretty good plot contains some combination of
 
 ## Pretty good plots show the model and the data
 
-The data to introduce best practices in plotting come from Figure 2d and Figure 2e from "ASK1 inhibits browning of white adipose tissue in obesity", introduced in the introductory chapter (Analyzing experimental data with a linear model). The response variable is the area under the curve (AUC) of a glucose tolerance test. In this test, blood glucose levels are measured at 0, 15, 30, 45, 60, 90, and 120 minutes after glucose administration. Each mouse was assigned to one of four combinations of two experimental factors
+The data to introduce best practices in plotting come from Figure 2d and Figure 2e from "ASK1 inhibits browning of white adipose tissue in obesity", introduced in the introductory chapter (Analyzing experimental data with a linear model). In this experiment, blood glucose level was measured at 0, 15, 30, 45, 60, 90, and 120 minutes after glucose administration in order to  compare the rate of glucose clearance from the blood. Each mouse was assigned to one of four combinations of two experimental factors
 
 Factor 1: Genotype with levels "WT" (wildtype) and "ASK1_KO" (adipose specific *ASK1* knockout)
 
 Factor 2: Diet with levels "Chow" (normal mice chow) and "HFD" (high fat diet)
+
+The response variable in Figure 2e is the "area under the curve" (AUC)--the area under the line connecting the glucose values for an individual mouse at each of the time points (@fig-plots-fig2e-longitudinal). Dividing the AUC by 120 minutes would give the average blood glucose level over the duration of the test.
 
 
 ```{r plots-import-functions, echo=FALSE, message=FALSE, warning=FALSE}
@@ -145,17 +147,22 @@ fig2e <- melt(fig2e_wide,
                id.vars = c("treatment",
                            "genotype_orig",
                            "diet_orig",
+                           "genotype",
+                           "diet",
                            "mouse_id"),
                variable.name = "time",
                value.name = "glucose")
 fig2e[, time := as.numeric(as.character(time))]
+fig2e[, treatment_orig := treatment]
+fig2e[, treatment := paste(diet, genotype) |>
+        factor(levels = c("Chow WT", "Chow adipoKO", "HFD WT","HFD adipoKO"))]
 
 # for plot only (not analysis!)
 shift <- 2
-fig2e[treatment == "ASK1F/F chow", time_x := time - shift*1.5]
-fig2e[treatment == "ASK1Δadipo chow", time_x := time - shift*.5]
-fig2e[treatment == "ASK1F/F HFD", time_x := time + shift*.5]
-fig2e[treatment == "ASK1Δadipo HFD", time_x := time + shift*1.5]
+fig2e[treatment_orig == "ASK1F/F chow", time_x := time - shift*1.5]
+fig2e[treatment_orig == "ASK1Δadipo chow", time_x := time - shift*.5]
+fig2e[treatment_orig == "ASK1F/F HFD", time_x := time + shift*.5]
+fig2e[treatment_orig == "ASK1Δadipo HFD", time_x := time + shift*1.5]
 
 
 ```
@@ -178,6 +185,22 @@ fig2e_wide[, glucose_mean := apply(Y, 1, auc,
                            average = TRUE)]
 
 # View(fig2e_wide)
+```
+
+```{r}
+#| label: fig-plots-fig2e-longitudinal
+#| echo: false
+#| fig-cap: "Blood glucose levels over time course of a glucose tolerance test. Values for each treatment are separated at each time-of-measurement to more easily see group differences."
+
+ggplot(data = fig2e,
+              aes(x = time_x, y = glucose, color = treatment)) +
+  geom_point() +
+  geom_line(aes(group = mouse_id)) +
+  scale_x_continuous(breaks = c(0, 15, 30, 45, 60, 90, 120)) +
+  scale_color_manual(values = pal_okabe_ito_blue) +
+  ylab("Blood Glucose (mmol/l)") +
+  xlab("Time (minutes)") +
+  theme_pubr()
 ```
 
 ```{r plots-fig2e-fit-model, echo=FALSE}
@@ -263,7 +286,7 @@ fig2e_m1_pairs <- contrast(fig2e_m1_emm,
 
 ```
 
-### Pretty good plot component 1: Modeled mean and CI plot
+### Pretty good plot component 1: Response plot
 
 ```{r }
 #| label: fig-plots-fig2-response
@@ -301,7 +324,7 @@ fig2e_gg_response <- ggplot(data = fig2e_wide,
   ) +
   
   # aesthetics
-  ylab("GTT AUC") +
+  ylab("AUC (mmol/l min)") +
   scale_color_manual(values=pal_okabe_ito_blue,
                      name = NULL) +
   theme_pubr() +
@@ -320,27 +343,51 @@ fig2e_m1_pairs_dt[, p_pretty := pvalString(p.value)]
 fig2e_gg_response <- fig2e_gg_response +
   stat_pvalue_manual(fig2e_m1_pairs_dt,
                      label = "p_pretty", 
-                     y.position=c(3300, 3450, 3600, 3750),
+                     y.position=c(3300, 3300, 3450, 3600),
                      tip.length = 0.01) +
   theme(legend.position = "top") +
   theme(axis.title.x=element_blank()) +
   NULL
 
+# interaction p-value
+p_ixn <- coef(summary(fig2e_m1))[4, "Pr(>|t|)"] |>
+  pvalString()
+fig2e_gg_response <- fig2e_gg_response +
+  annotate(geom = "text",
+           label = paste("Interaction p-value:", p_ixn),
+           x <- 0.75, y = 3750)
+
  fig2e_gg_response
 ```
 
-The response plot in @fig-plots-fig2-response "shows the model" -- by this I mean the plot shows the *modeled* means, represented by the large circles, and the *modeled* 95% confidence intervals of each mean, represented by the error bars. What do I mean by *modeled* means and error intervals?
+The plot in @fig-plots-fig2-response is typical of the standard tool for communicating results of experiments in bench biology. I refer to this type of plot as a **response plot** since the focus is on variation in the measured response variable (y-axis) among treatment levels (x-axis). Treatment effects are inferred by mentally visually differences among the means.
+
+My version of a response plot differs a little from that typically published in the bench biology literature because it "plots the model". By this I mean, the plot shows the
+
+1. *Modeled* means of each treatment combination (large circles) instead of sampled means. For simple statistical models, a modeled mean will equal the sampled mean. In a model with covariates or an offset variable, modeled means will be adjusted for the covariate. In generalized linear mixed models, modeled means will be conditional on the random effects.
+2. *Modeled* 95% confidence intervals of each mean (error bars) instead of sampled error intervals. Even for simple statistical models, modeled error intervals will differ from the sample error intervals because the modeled error intervals are calculated from a pooled estimate of $\sigma$ while the sample error intervals are estimated from sample-specific estimates of $\sigma$.
+
+Plotting modeled means and error intervals are not the norm in experimental bench biology plots but it should be, as it is these values that are consistent with our inferences from the statistical model. There are many data sets in experimental biology where a plot of sample means and error intervals give a very distorted view of inference from the model.
+
+The response plot in @fig-plots-fig2-response also (shows the data)[https://journals.physiology.org/doi/full/10.1152/advan.00009.2011]{target="_blank"} by plotting response values as "jittered" dots. Showing the data
+
+1. allows the reader to get a sense of the underlying sample size and distribution including outliers, which can be used to mentally model check the published statistical analysis. Adding a box plot, violin plot, or dot plot augments the communication of the distributions if there are enough data to justify the addition.
+2. allows a reader to see the overlap in individual responses among groups and to evaluate the biological consequences of this overlap.
+
+Finally, the response plot in @fig-plots-fig2-response reports the interaction *p*-value, which is almost always the focal *p*-value that we want in a 2 x 2 factorial experiment like this, but is almost never reported.
+
 
 ```{r}
 #| label: tbl-plots-model-means-table
 #| echo: false
+#| tbl-cap: Sample and model means and standard errors for the Figure 2e data.
 
 # sample means and SE
 fig2e_summary <- fig2e_wide[, .(N = .N,
-                                 glucose_auc = mean(glucose_auc),
-                                 sigma = sd(glucose_auc),
-                                 SE = sd(glucose_auc)/sqrt(.N)),
-                       by = c("genotype", "diet")]
+                                glucose_auc = mean(glucose_auc),
+                                sigma = sd(glucose_auc),
+                                SE = sd(glucose_auc)/sqrt(.N)),
+                            by = c("genotype", "diet")]
 setnames(fig2e_summary,
          old = c("glucose_auc", "sigma", "SE"),
          new = c("Sample mean", "Sample sigma", "Sample SE"))
@@ -356,18 +403,6 @@ fig2e_summary <- doBy::orderBy(~ genotype + diet, fig2e_summary)
 knitr::kable(fig2e_summary, digits = c(1,1,2,2,2,2,2,2,2)) |>
   kable_styling()
 ```
-
-1. The modeled means and error intervals are estimated from the statistical model. Many published plots show the sample means and sample error intervals, which are computed within each group independently of the data in the other groups and are not adjusted for any covariates or for any hierarchical structure to the data.
-2. A modeled mean will often be equal to the raw mean, but this will not always be the case. Here, the modeled means for the non-reference groups in @fig-plots-fig2-response do not equal the sample means because the modeled means are adjusted for the baseline measures of glucose (@tbl-plots-model-means-table) (specifically, the modeled means are conditional on the baseline being equal to the mean of the baseline in the reference group).
-3. For most of the analyses in this text, modeled error intervals are not the same as the sample error intervals and are commonly conspicuously different. For the glucose tolerance data, the modeled error intervals are calculated from a pooled estimate of $\sigma$ while the sample error intervals are estimated from sample-specific estimates of $\sigma$ () (specifically, the modeled means are conditional on the baseline b).
-4. Model-adjusted responses are responses that are adjusted for covariates in the model. If there are no covariates in the model, the model-adjusted responses are the same as the raw response. In the glucose tolerance data, the model-adjusted responses are the modeled, individual response measures if all individuals had the same baseline glucose (the covariate).
-
-Modeled means, error intervals, and responses are not commonly plotted but it is these values that are consistent with our inferences from the statistical model. There are many data sets in experimental biology where a plot of sample means, error intervals, and responses give a very distorted view of inference from the model.
-
-The response plot in Figure \@ref(fig:plots-fig2-gg-response-adjusted) also "shows the data" by plotting response values as "jittered" dots. Showing the data
-
-1. allows the reader to get a sense of the underlying sample size and distribution including outliers, which can be used to mentally model check the published statistical analysis. Adding a box plot, violin plot, or dot plot augments the communication of the distributions if there are enough data to justify the addition.
-2. allows a reader to see the overlap in individual responses among groups and to evaluate the biological consequences of this overlap.
 
 ### Pretty good plot component 2: Modeled effects plot
 
@@ -485,14 +520,14 @@ We can use the effects and CIs of the effects to evaluate the treatment effects.
 ### Combining Effects and Modeled mean and CI plots -- an Effects and response plot.
 
 ```{r plots-fig2e-ggplot, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Effect of diet and ASK1 deletion on post-baseline glucose. Top: effects plot of 2 X 2 simple effects (difference in means) and of the diet X genotype interaction. Bars are 95% confidence intervals of the effects. Unadjusted p-values from the linear model are given. Bottom: response plot of the means and 95% confidence interval of each diet X genotype combination."}
-fig2e_gg_response_adj <- fig2e_gg_response_adj +
+fig2e_gg_response <- fig2e_gg_response +
   coord_flip() +
   theme(axis.title.y = element_blank())
 
 
 
 fig2e_fig <- plot_grid(fig2e_gg_effect,
-                       fig2e_gg_response_adj,
+                       fig2e_gg_response,
                        nrow = 2,
                        align = "v",
                        axis = "l",
@@ -545,7 +580,7 @@ fig2e_wide <- read_excel(file_path,
                      sheet = "Source Date_Figure 2",
                      range = c("A233:O236"), # lot of NA
                      col_names = FALSE) |>
-  data.table |>
+  data.table() |>
   transpose(make.names = 1) # turn data onto 
 
 # melt the four columns into a single "glucose_auc" column
