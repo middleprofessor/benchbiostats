@@ -4,11 +4,21 @@ project:
 
 book:
   title: "Statistics for the Experimental Bench Biologist"
-  author: "Jeffrey A. Walker"
-  date: "9/19/2024"
+  subtitle: "Best practice workflows using R"
+  date: last-modified
+  author:
+    - name: "Jeffrey A. Walker"
+      email: walker@maine.edu
+      affiliation: 
+        - name: University of Southern Maine
+          city: Portland
+          state: ME
+          url: https://usm.maine.edu/directories/people/jeffrey-walker/
+  license: "CC BY"
   chapters:
     - index.qmd
-    - intro.qmd
+    - chapters/preface.qmd
+    - chapters/intro.qmd
     - chapters/setup.qmd
     - chapters/reading-writing-wrangling.qmd
     - chapters/plotting-models.qmd

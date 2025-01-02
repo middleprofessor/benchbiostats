@@ -172,12 +172,18 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Front Matter</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/preface.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></a>
   </div>
 </li>
@@ -469,7 +475,7 @@ Figure&nbsp;8.2: Illustration of the slope in a linear model with a numeric X. T
 <section id="slope" class="level3" data-number="8.2.2">
 <h3 data-number="8.2.2" class="anchored" data-anchor-id="slope"><span class="header-section-number">8.2.2</span> Fitting linear models to experimental data in which the <span class="math inline">\(X\)</span> variable is categorical</h3>
 <p>Linear models can be fit to experimental data in which the <span class="math inline">\(X\)</span> variable is categorical – this is the focus of this text! For the model fit to the data in <a href="#fig-line" class="quarto-xref">Figure&nbsp;<span>8.1</span></a> B, the coefficient of <span class="math inline">\(X\)</span> is the slope of the line. Perhaps surprisingly, 1) we can fit a model like <a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>8.2</span></a> to data in which the <span class="math inline">\(X\)</span> variable is categorical and 2) the coefficient of <span class="math inline">\(X\)</span> <em>is</em> a slope. How is this possible? The slope of a line is <span class="math inline">\(\frac{y_2 - y_1}{x_2 - x_1}\)</span> where <span class="math inline">\((x_1, y_1)\)</span> and <span class="math inline">\((x_2, y_2)\)</span> are the graph coordinates of any two points on the line. What is the denominator of the slope function <span class="math inline">\((x_2 - x_1)\)</span> when <span class="math inline">\(X\)</span> is categorical?</p>
-<p>The solution to using a linear model with categorical <span class="math inline">\(X\)</span> is to recode the factor levels into numbers. An example of this was outlined in Chapter <a href="../intro.html" class="quarto-xref"><span>Chapter 1</span></a>. The value of <span class="math inline">\(X\)</span> for individual mouse <em>i</em> is a number that indicates the treatment assignment – a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (<a href="#fig-intro-linear-models-cat-slope" class="quarto-xref">Figure&nbsp;<span>8.3</span></a>). With the (0, 1) coding, <span class="math inline">\(\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1\)</span>, so the denominator of the slope is equal to one and the slope is simply equal to the numerator <span class="math inline">\(\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}\)</span>. The coefficient (which is a slope!) <em>is</em> the difference in conditional means.</p>
+<p>The solution to using a linear model with categorical <span class="math inline">\(X\)</span> is to recode the factor levels into numbers. An example of this was outlined in Chapter <a href="intro.html" class="quarto-xref"><span>Chapter 1</span></a>. The value of <span class="math inline">\(X\)</span> for individual mouse <em>i</em> is a number that indicates the treatment assignment – a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene. The regression line goes through the two group means (<a href="#fig-intro-linear-models-cat-slope" class="quarto-xref">Figure&nbsp;<span>8.3</span></a>). With the (0, 1) coding, <span class="math inline">\(\overline{x}_{ASK1Δadipo} - \overline{x}_{ASK1F/F} = 1\)</span>, so the denominator of the slope is equal to one and the slope is simply equal to the numerator <span class="math inline">\(\overline{y}_{ASK1Δadipo} - \overline{y}_{ASK1F/F}\)</span>. The coefficient (which is a slope!) <em>is</em> the difference in conditional means.</p>
 <div id="fig-intro-linear-models-cat-slope" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-intro-linear-models-cat-slope-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
