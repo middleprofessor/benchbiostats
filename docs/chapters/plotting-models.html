@@ -285,8 +285,8 @@ window.Quarto = {
   <ul>
   <li><a href="#pretty-good-plots-show-the-model-and-the-data" id="toc-pretty-good-plots-show-the-model-and-the-data" class="nav-link active" data-scroll-target="#pretty-good-plots-show-the-model-and-the-data"><span class="header-section-number">4.1</span> Pretty good plots show the model and the data</a>
   <ul>
-  <li><a href="#pretty-good-plot-component-1-modeled-mean-and-ci-plot" id="toc-pretty-good-plot-component-1-modeled-mean-and-ci-plot" class="nav-link" data-scroll-target="#pretty-good-plot-component-1-modeled-mean-and-ci-plot"><span class="header-section-number">4.1.1</span> Pretty good plot component 1: Modeled mean and CI plot</a></li>
-  <li><a href="#pretty-good-plot-component-2-modeled-effects-plot" id="toc-pretty-good-plot-component-2-modeled-effects-plot" class="nav-link" data-scroll-target="#pretty-good-plot-component-2-modeled-effects-plot"><span class="header-section-number">4.1.2</span> Pretty good plot component 2: Modeled effects plot</a></li>
+  <li><a href="#pretty-good-plot-component-1-response-plot" id="toc-pretty-good-plot-component-1-response-plot" class="nav-link" data-scroll-target="#pretty-good-plot-component-1-response-plot"><span class="header-section-number">4.1.1</span> Pretty good plot component 1: Response plot</a></li>
+  <li><a href="#pretty-good-plot-component-2-effects-plot" id="toc-pretty-good-plot-component-2-effects-plot" class="nav-link" data-scroll-target="#pretty-good-plot-component-2-effects-plot"><span class="header-section-number">4.1.2</span> Pretty good plot component 2: Effects plot</a></li>
   <li><a href="#combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot." id="toc-combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot." class="nav-link" data-scroll-target="#combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot."><span class="header-section-number">4.1.3</span> Combining Effects and Modeled mean and CI plots – an Effects and response plot.</a></li>
   <li><a href="#some-comments-on-plot-components" id="toc-some-comments-on-plot-components" class="nav-link" data-scroll-target="#some-comments-on-plot-components"><span class="header-section-number">4.1.4</span> Some comments on plot components</a></li>
   </ul></li>
@@ -361,6 +361,8 @@ window.Quarto = {
 </header>
 
 
+<section id="pretty-good-plots-show-the-model-and-the-data" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="pretty-good-plots-show-the-model-and-the-data"><span class="header-section-number">4.1</span> Pretty good plots show the model and the data</h2>
 <p><em>So, along the lines of Sarah Susanka’s “Not So Big House,” Kolbert asks the group, “What would a Pretty Good House look like?”</em> – Michael Maines<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>Plots should be the focus of both the reader and researcher. Instead of mindless plotting, a researcher should ask a series of questions of every plot</p>
 <ol type="1">
@@ -376,8 +378,6 @@ window.Quarto = {
 <li>Modeled means and confidence intervals.</li>
 <li>Individual data points or a summary distribution of these.</li>
 </ol>
-<section id="pretty-good-plots-show-the-model-and-the-data" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="pretty-good-plots-show-the-model-and-the-data"><span class="header-section-number">4.1</span> Pretty good plots show the model and the data</h2>
 <p>The data to introduce best practices in plotting come from Figure 2d and Figure 2e from “ASK1 inhibits browning of white adipose tissue in obesity”, introduced in the introductory chapter (Analyzing experimental data with a linear model). In this experiment, blood glucose level was measured at 0, 15, 30, 45, 60, 90, and 120 minutes after glucose administration in order to compare the rate of glucose clearance from the blood. Each mouse was assigned to one of four combinations of two experimental factors</p>
 <p>Factor 1: Genotype with levels “WT” (wildtype) and “ASK1_KO” (adipose specific <em>ASK1</em> knockout)</p>
 <p>Factor 2: Diet with levels “Chow” (normal mice chow) and “HFD” (high fat diet)</p>
@@ -390,14 +390,14 @@ window.Quarto = {
 <img src="plotting-models_files/figure-html/fig-plots-fig2e-longitudinal-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plots-fig2e-longitudinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.1: Blood glucose levels over time course of glucose tolerance test. Values for each treatment are separated at each time-of-measurement to more easily see group differences.
+Figure&nbsp;4.1: Blood glucose levels over time course of a glucose tolerance test. Values for each treatment are separated at each time-of-measurement to more easily see group differences.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<section id="pretty-good-plot-component-1-modeled-mean-and-ci-plot" class="level3" data-number="4.1.1">
-<h3 data-number="4.1.1" class="anchored" data-anchor-id="pretty-good-plot-component-1-modeled-mean-and-ci-plot"><span class="header-section-number">4.1.1</span> Pretty good plot component 1: Modeled mean and CI plot</h3>
+<section id="pretty-good-plot-component-1-response-plot" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="pretty-good-plot-component-1-response-plot"><span class="header-section-number">4.1.1</span> Pretty good plot component 1: Response plot</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-plots-fig2-response" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -412,14 +412,28 @@ Figure&nbsp;4.2: Response plot
 </div>
 </div>
 </div>
-<p>The response plot in <a href="#fig-plots-fig2-response" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> “plots the model”.</p>
+<p>The plot in <a href="#fig-plots-fig2-response" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> is typical of the standard tool for communicating results of experiments in bench biology. I refer to this type of plot as a <strong>response plot</strong> since the focus is on variation in the measured response variable (y-axis) among treatment levels (x-axis). Treatment effects are inferred by mentally visually differences among the means.</p>
+<p>My version of a response plot differs a little from that typically published in the bench biology literature because it “plots the model”. By this I mean, the plot shows the</p>
 <ol type="1">
-<li></li>
+<li><em>Modeled</em> means of each treatment combination (large circles) instead of sampled means. For simple statistical models, a modeled mean will equal the sampled mean. In a model with covariates or an offset variable, modeled means will be adjusted for the covariate. In generalized linear mixed models, modeled means will be conditional on the random effects.</li>
+<li><em>Modeled</em> 95% confidence intervals of each mean (error bars) instead of sampled error intervals. Even for simple statistical models, modeled error intervals will differ from the sample error intervals because the modeled error intervals are calculated from a pooled estimate of <span class="math inline">\(\sigma\)</span> while the sample error intervals are estimated from sample-specific estimates of <span class="math inline">\(\sigma\)</span>.</li>
 </ol>
-<p>– by this I mean the plot shows the <em>modeled</em> means, represented by the large circles, and the <em>modeled</em> 95% confidence intervals of each mean, represented by the error bars. What do I mean by <em>modeled</em> means and error intervals?</p>
-<div id="tbl-plots-model-means-table" class="cell anchored">
+<p>Plotting modeled means and error intervals are not the norm in experimental bench biology plots but it should be, as it is these values that are consistent with our inferences from the statistical model. There are many data sets in experimental biology where a plot of sample means and error intervals give a very distorted view of inference from the model.</p>
+<p>The response plot in <a href="#fig-plots-fig2-response" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> also (shows the data)<span target="_blank">https://journals.physiology.org/doi/full/10.1152/advan.00009.2011</span> by plotting response values as “jittered” dots. Showing the data</p>
+<ol type="1">
+<li>allows the reader to get a sense of the underlying sample size and distribution including outliers, which can be used to mentally model check the published statistical analysis. Adding a box plot, violin plot, or dot plot augments the communication of the distributions if there are enough data to justify the addition.</li>
+<li>allows a reader to see the overlap in individual responses among groups and to evaluate the biological consequences of this overlap.</li>
+</ol>
+<p>Finally, the response plot in <a href="#fig-plots-fig2-response" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> reports the interaction <em>p</em>-value, which is almost always the focal <em>p</em>-value that we want in a 2 x 2 factorial experiment like this, but is almost never reported.</p>
+<div class="cell">
+<div id="tbl-plots-model-means-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-plots-model-means-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.1: Sample and model means and standard errors for the Figure 2e data.
+</figcaption>
+<div aria-describedby="tbl-plots-model-means-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">genotype</th>
@@ -484,21 +498,12 @@ Figure&nbsp;4.2: Response plot
 
 </div>
 </div>
-<ol type="1">
-<li>The modeled means and error intervals are estimated from the statistical model. Many published plots show the sample means and sample error intervals, which are computed within each group independently of the data in the other groups and are not adjusted for any covariates or for any hierarchical structure to the data.</li>
-<li>A modeled mean will often be equal to the raw mean, but this will not always be the case. Here, the modeled means for the non-reference groups in <a href="#fig-plots-fig2-response" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> do not equal the sample means because the modeled means are adjusted for the baseline measures of glucose (<span class="quarto-unresolved-ref">?tbl-plots-model-means-table</span>) (specifically, the modeled means are conditional on the baseline being equal to the mean of the baseline in the reference group).</li>
-<li>For most of the analyses in this text, modeled error intervals are not the same as the sample error intervals and are commonly conspicuously different. For the glucose tolerance data, the modeled error intervals are calculated from a pooled estimate of <span class="math inline">\(\sigma\)</span> while the sample error intervals are estimated from sample-specific estimates of <span class="math inline">\(\sigma\)</span> () (specifically, the modeled means are conditional on the baseline b).</li>
-<li>Model-adjusted responses are responses that are adjusted for covariates in the model. If there are no covariates in the model, the model-adjusted responses are the same as the raw response. In the glucose tolerance data, the model-adjusted responses are the modeled, individual response measures if all individuals had the same baseline glucose (the covariate).</li>
-</ol>
-<p>Modeled means, error intervals, and responses are not commonly plotted but it is these values that are consistent with our inferences from the statistical model. There are many data sets in experimental biology where a plot of sample means, error intervals, and responses give a very distorted view of inference from the model.</p>
-<p>The response plot in Figure @ref(fig:plots-fig2-gg-response-adjusted) also “shows the data” by plotting response values as “jittered” dots. Showing the data</p>
-<ol type="1">
-<li>allows the reader to get a sense of the underlying sample size and distribution including outliers, which can be used to mentally model check the published statistical analysis. Adding a box plot, violin plot, or dot plot augments the communication of the distributions if there are enough data to justify the addition.</li>
-<li>allows a reader to see the overlap in individual responses among groups and to evaluate the biological consequences of this overlap.</li>
-</ol>
+</figure>
+</div>
+</div>
 </section>
-<section id="pretty-good-plot-component-2-modeled-effects-plot" class="level3" data-number="4.1.2">
-<h3 data-number="4.1.2" class="anchored" data-anchor-id="pretty-good-plot-component-2-modeled-effects-plot"><span class="header-section-number">4.1.2</span> Pretty good plot component 2: Modeled effects plot</h3>
+<section id="pretty-good-plot-component-2-effects-plot" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="pretty-good-plot-component-2-effects-plot"><span class="header-section-number">4.1.2</span> Pretty good plot component 2: Effects plot</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-plots-fig2e-gg-effects" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -521,16 +526,20 @@ Figure&nbsp;4.3: Effects plot of glucose AUC data
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="combining-effects-and-modeled-mean-and-ci-plots-an-effects-and-response-plot."><span class="header-section-number">4.1.3</span> Combining Effects and Modeled mean and CI plots – an Effects and response plot.</h3>
 <div class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="plotting-models_files/figure-html/plots-fig2e-ggplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Effect of diet and ASK1 deletion on post-baseline glucose. Top: effects plot of 2 X 2 simple effects (difference in means) and of the diet X genotype interaction. Bars are 95% confidence intervals of the effects. Unadjusted p-values from the linear model are given. Bottom: response plot of the means and 95% confidence interval of each diet X genotype combination.</figcaption>
+<div id="fig-plots-fig2e-ggplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plots-fig2e-ggplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="plotting-models_files/figure-html/fig-plots-fig2e-ggplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plots-fig2e-ggplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4: Effect of diet and ASK1 deletion on post-baseline glucose. Top: effects plot of four simple effects (difference in means) and of the diet:genotype interaction. Bars are 95% confidence intervals of the effects. Unadjusted p-values from the linear model are given. Bottom: response plot of the means and 95% confidence interval of each diet:genotype combination.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Combining the effects and response plots into a single plot is an easy solution to issues that arise if only one or the other is used. What are these issues?</p>
-<p>While a response plot like that in Figure @ref(fig:plots-fig2-gg-response-adjusted) is standard in biology, it fails to show the effects, and the uncertainty in the effects, <em>explicitly</em>. To infer the effects from the plot, a reader must perform mental math – either compute the difference or the ratio between pairs of means. This mental math is easy enough if the comparisons are between individual treatment levels but much harder if the comparisons are between pooled sets of treatment levels, for example in a factorial experimental design. The mental math that is excessively difficult is the reconstruction of some kind of error interval of the contrasts, for example the 95% confidence intervals in Figure @ref(plots-fig2e-gg-effects) and it is these intervals that are necessary for a researcher to infer the range of biological consequences that are compatible with the experiment’s results. The inclusion of the <em>p</em>-values for all pairwise comparisons in a response plot gives the significance level of these contrasts, but of the kinds of summary results that we could present (contrasts, error intervals, <em>p</em>-values), the <em>p</em>-values are the least informative.</p>
+<p>While a response plot like that in <span class="quarto-unresolved-ref">?fig-plots-fig2-gg-response</span> is standard in biology, it fails to show the effects, and the uncertainty in the effects, <em>explicitly</em>. To infer the effects from the plot, a reader must perform mental math – either compute the difference or the ratio between pairs of means. This mental math is easy enough if the comparisons are between individual treatment levels but much harder if the comparisons are between pooled sets of treatment levels, for example in a factorial experimental design. The mental math that is excessively difficult is the reconstruction of some kind of error interval of the contrasts, for example the 95% confidence intervals in <a href="#fig-plots-fig2e-ggplot" class="quarto-xref">Figure&nbsp;<span>4.4</span></a> and it is these intervals that are necessary for a researcher to infer the range of biological consequences that are compatible with the experiment’s results. The inclusion of the <em>p</em>-values for all pairwise comparisons in a response plot gives the significance level of these contrasts, but of the kinds of summary results that we could present (contrasts, error intervals, <em>p</em>-values), the <em>p</em>-values are the least informative.</p>
 <p>Effects plots are very uncommon in most of biology outside of meta-analysis and clinical medicine more generally. An effects plot alone fails to communicate anything about the sample size or conditional distribution of the data. Equally important, response values are often meaningful and researchers working in the field should be familiar with usual and unusual values. This can be useful for interpreting biological consequences of treatment effects but also for researchers and readers to asses the credibility of the data (for example, I have twice, once in my own data and once in a colleagues data, found mistakes in the measurement of an entire data set of response variable because the plotted values weren’t credible).</p>
 </section>
 <section id="some-comments-on-plot-components" class="level3" data-number="4.1.4">
@@ -547,7 +556,7 @@ Figure&nbsp;4.3: Effects plot of glucose AUC data
 <p>A reasonable goal of any research project should be a script to generate the final plots entirely within the R environment and not rely on external drawing software to add finishing features. This section covers some of the basics of using R packages to create plots. Later chapters cover some of the details that are specific to the analyses in that chapter.</p>
 <p><a href="https://ggplot2.tidyverse.org">ggplot2</a> is one of the major plotting environments in R and the one that seems to have the strongest following, especially among new R users. ggplot2 has the ability to generate extremely personalized and finished plots. However, ggplot2 has a long learning curve and until one is pretty comfortable with its implementation of the grammar of graphics, creating a plot with multiple layers (mean points, error intervals, raw data points, p-values, text annotations) and modified aesthetics (axis text, point colors) can often require many hours of googling.</p>
 <p><a href="https://cran.r-project.org/web/packages/ggpubr/index.html">ggpubr</a> is an extension to ggplot2 (it calls ggplot2 functions under the hood) and provides many canned functions for producing the kinds of ggplots that are published in biological journals. With one line of script, a researcher can generate a publishable plot.</p>
-<p><strong>ggplot_the_model</strong> and related functions in this chapter are my attempts to create a simple function for creating publication ready plots that highlight effect size and uncertainty.</p>
+<p><strong>ggplot_the_model</strong> and related functions in this chapter are my attempts to create a simple function for creating publication ready plots that create <a href="">pretty good plots</a>.</p>
 <p>Some of the basics for using ggpubr, ggplot2, and ggplot_the_model are outlined here. More specific examples are in each chapter.</p>
 <section id="source-data" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="source-data"><span class="header-section-number">4.2.1</span> Source data</h3>
@@ -1669,7 +1678,7 @@ Confidence level used: 0.95 </code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="plotting-models_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="plotting-models_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1677,7 +1686,7 @@ Confidence level used: 0.95 </code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="plotting-models_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="plotting-models_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
