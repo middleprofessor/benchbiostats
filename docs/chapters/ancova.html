@@ -202,7 +202,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Variability and Uncertainty (Standard Deviations, Standard Errors, and Confidence Intervals)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -344,32 +344,6 @@ window.Quarto = {
 </header>
 
 
-<div class="cell" data-warnng="false">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'data.table' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'Matrix' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'emmeans' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'car' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'broom' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'mvtnorm' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'DHARMa' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'insight' was built under R version 4.4.1</code></pre>
-</div>
-</div>
 <p>In its most general sense, <strong>Covariates</strong> are simply the <span class="math inline">\(X\)</span> variables in a statistical model. With data from experiments, “covariates” more typically refers to continuous <span class="math inline">\(X\)</span> variables that are added to a model to increase precision of the treatment effects. In observational designs, continuous and categorical covariates might be added to a model to 1) increase predictive ability, 2) because the researcher is interested in specific conditional effects, or 3) to eliminate confounding. These are discussed in later chapters. In this chapter, a single, continuous covariate is added to a linear model. Nothing is fundamentally different if the covariate added is categorical (<span class="math inline">\(Sex\)</span> is a common categorical covariate) or if multiple covariates are added.</p>
 <section id="adding-covariates-can-increases-the-precision-of-the-effect-of-interest" class="level2" data-number="14.1">
 <h2 data-number="14.1" class="anchored" data-anchor-id="adding-covariates-can-increases-the-precision-of-the-effect-of-interest"><span class="header-section-number">14.1</span> Adding covariates can increases the precision of the effect of interest</h2>
@@ -533,8 +507,8 @@ area\_of\_necrosis = \beta_0 + \beta_1 area\_at\_risk + \beta_2 treatment_{myrio
 \end{equation}\]</span></p>
 <p>The model includes parameters for the effects of area at risk (<span class="math inline">\(\beta_1\)</span>), the myriosin treatment (<span class="math inline">\(\beta_2\)</span>) and the myriosin + DoxSa treatment (<span class="math inline">\(\beta_3\)</span>). I explain the interpretation of these effects in “Interpretation of the model coefficients” below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment,</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-the-model" class="level3" data-number="14.2.2">
@@ -553,9 +527,9 @@ area\_of\_necrosis = \beta_0 + \beta_1 area\_at\_risk + \beta_2 treatment_{myrio
 <section id="interpretation-of-the-model-coefficients" class="level3" data-number="14.2.3">
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="interpretation-of-the-model-coefficients"><span class="header-section-number">14.2.3</span> Interpretation of the model coefficients</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig4h_m1)),</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">confint</span>(fig4h_m1))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">signif</span>(fig4h_m1_coef, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig4h_m1)),</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">confint</span>(fig4h_m1))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">signif</span>(fig4h_m1_coef, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                          Estimate Std. Error t value Pr(&gt;|t|)  2.5 % 97.5 %
 (Intercept)                 -3.890     2.1200   -1.83 7.63e-02 -8.220  0.436
@@ -584,8 +558,8 @@ b_2 = \mathrm{E}(area\_of\_necrosis|treatment = "Myriocin", X = x) - \mathrm{E}(
 <section id="interpretation-of-the-estimated-marginal-means" class="level3" data-number="14.2.5">
 <h3 data-number="14.2.5" class="anchored" data-anchor-id="interpretation-of-the-estimated-marginal-means"><span class="header-section-number">14.2.5</span> Interpretation of the estimated marginal means</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(fig4h_m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>fig4h_m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(fig4h_m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig4h_m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> treatment        emmean    SE df lower.CL upper.CL
  Vehicle           11.98 0.839 32     10.3     13.7
@@ -600,11 +574,11 @@ Confidence level used: 0.95 </code></pre>
 <section id="interpretation-of-the-contrasts" class="level3" data-number="14.2.6">
 <h3 data-number="14.2.6" class="anchored" data-anchor-id="interpretation-of-the-contrasts"><span class="header-section-number">14.2.6</span> Interpretation of the contrasts</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(fig4h_m1_emm,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>fig4h_m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(fig4h_m1_emm,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>fig4h_m1_pairs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast                      estimate   SE df lower.CL upper.CL t.ratio
  Myriocin - Vehicle             -3.1139 1.23 32    -5.62   -0.611  -2.534
@@ -651,9 +625,9 @@ area\_of\_necrosis = \beta_0 &amp;+ \beta_1 area\_at\_risk + \beta_2 treatment_{
 <p>In addition to the effects of the myriosin (<span class="math inline">\(\beta_2\)</span>) and the myriosin + DoxSa (<span class="math inline">\(\beta_3\)</span>) treatments of Model <span class="math inline">\(\mathcal{M}_1\)</span>, Model <span class="math inline">\(\mathcal{M}_2\)</span> includes coefficients for two <strong>interaction effects</strong>, the interaction between myriosin and area at risk (<span class="math inline">\(\beta_4\)</span>) and the interaction between myriosin + DoxSa and area at risk (<span class="math inline">\(\beta_4\)</span>). The parameters <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> are <strong>additive effects</strong> because they are linear (additive) “in the <span class="math inline">\(X\)</span>” variables. The parameters <span class="math inline">\(\beta_3\)</span> and <span class="math inline">\(\beta_4\)</span> are <strong>non-additive effects</strong> because they are not linear “in the <span class="math inline">\(X\)</span>” variables – these effects are coefficients of an <span class="math inline">\(X\)</span> that is the product of two variables. You can see this in the model equation but I explain this further below.</p>
 <p>For the goals of the researchers in the heart necrosis study, we specifically would not want to model the interaction. Nevertheless, we would want to plot the interaction effect during the “Step 2: examine the data” phase of analysis to be sure that an additive model is a reasonable model given the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see working in R to understand this model formula</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fig4h_m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk<span class="sc">*</span>treatment,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see working in R to understand this model formula</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>fig4h_m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk<span class="sc">*</span>treatment,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-the-model-with-interaction-effect" class="level3" data-number="14.3.2">
@@ -672,9 +646,9 @@ area\_of\_necrosis = \beta_0 &amp;+ \beta_1 area\_at\_risk + \beta_2 treatment_{
 <section id="interpretation-of-the-model-coefficients-1" class="level3" data-number="14.3.3">
 <h3 data-number="14.3.3" class="anchored" data-anchor-id="interpretation-of-the-model-coefficients-1"><span class="header-section-number">14.3.3</span> Interpretation of the model coefficients</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fig4h_m2_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig4h_m2)),</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">confint</span>(fig4h_m2))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(fig4h_m2_coef[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)], <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig4h_m2_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig4h_m2)),</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">confint</span>(fig4h_m2))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(fig4h_m2_coef[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)], <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                       Estimate Std. Error
 (Intercept)                               -6.55       3.01
@@ -712,56 +686,56 @@ area_at_risk:treatmentMyriocin + DoxSa    -0.06       0.14</code></pre>
 <section id="importing-the-heart-necrosis-data" class="level3" data-number="14.5.1">
 <h3 data-number="14.5.1" class="anchored" data-anchor-id="importing-the-heart-necrosis-data"><span class="header-section-number">14.5.1</span> Importing the heart necrosis data</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"1-Deoxydihydroceramide causes anoxic death by impairing chaperonin-mediated protein folding"</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"42255_2019_123_MOESM7_ESM.xlsx"</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>sheet_i <span class="ot">&lt;-</span> <span class="st">"Figure 4h"</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>fig4h_1 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> sheet_i,</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"A5:B19"</span>,</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>fig4h_2 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> sheet_i,</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"D5:E17"</span>,</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>fig4h_3 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> sheet_i,</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"G5:H15"</span>,</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>fig4h <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.table</span>(<span class="at">treatment =</span> <span class="st">"Vehicle"</span>, fig4h_1),</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">data.table</span>(<span class="at">treatment =</span> <span class="st">"Myriocin"</span>, fig4h_2),</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">data.table</span>(<span class="at">treatment =</span> <span class="st">"Myriocin + DoxSa"</span>, fig4h_3))</span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"Myriocin"</span>, <span class="st">"Myriocin + DoxSa"</span>)</span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>fig4h[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> treatment_levels)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"1-Deoxydihydroceramide causes anoxic death by impairing chaperonin-mediated protein folding"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"42255_2019_123_MOESM7_ESM.xlsx"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>sheet_i <span class="ot">&lt;-</span> <span class="st">"Figure 4h"</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>fig4h_1 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> sheet_i,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"A5:B19"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>fig4h_2 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> sheet_i,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"D5:E17"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>fig4h_3 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sheet =</span> sheet_i,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">"G5:H15"</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>fig4h <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.table</span>(<span class="at">treatment =</span> <span class="st">"Vehicle"</span>, fig4h_1),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">data.table</span>(<span class="at">treatment =</span> <span class="st">"Myriocin"</span>, fig4h_2),</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">data.table</span>(<span class="at">treatment =</span> <span class="st">"Myriocin + DoxSa"</span>, fig4h_3))</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vehicle"</span>, <span class="st">"Myriocin"</span>, <span class="st">"Myriocin + DoxSa"</span>)</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>fig4h[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> treatment_levels)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="fitting-the-model" class="level3" data-number="14.5.2">
 <h3 data-number="14.5.2" class="anchored" data-anchor-id="fitting-the-model"><span class="header-section-number">14.5.2</span> Fitting the model</h3>
 <p>For an additive model, add the covariate to the model formula using the <code>+</code> operator. The order of the variables doesn’t matter (the right-hand-side of the model formula could be <code>treatment + area_at_risk</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment, <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment, <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For an nonadditive model with interactions, add the covariate to the model formula using the <code>*</code> operator. <code>~ area_at_risk * treatment</code> is a shortcut to the full model formula, which is <code>1 + area_at_risk + treatment + area_at_risk * treatment</code>. R expands the short formula to the full formula automatically. Again, the order of the variables doesn’t matter (the right-hand-side of the model formula could be <code>treatment * area_at_risk</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">*</span> treatment, <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">*</span> treatment, <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="using-the-emmeans-function" class="level3" data-number="14.5.3">
 <h3 data-number="14.5.3" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">14.5.3</span> Using the emmeans function</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>))</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> treatment        emmean    SE df lower.CL upper.CL
  Vehicle           11.98 0.839 32     10.3     13.7
@@ -772,9 +746,9 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"area_at_risk"</span>, <span class="st">"treatment"</span>))</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"area_at_risk"</span>, <span class="st">"treatment"</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> area_at_risk treatment        emmean    SE df lower.CL upper.CL
            35 Vehicle           11.98 0.839 32     10.3     13.7
@@ -785,14 +759,14 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recenter emms at the mean of the vehicle group</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>vehicle_mean_x <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig4h[treatment <span class="sc">==</span> <span class="st">"Vehicle"</span>,</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                         area_at_risk])</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>m1_emm_2 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"area_at_risk"</span>,<span class="st">"treatment"</span>),</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">at =</span> <span class="fu">list</span>(<span class="at">area_at_risk =</span> vehicle_mean_x))</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>m1_emm_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recenter emms at the mean of the vehicle group</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>vehicle_mean_x <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig4h[treatment <span class="sc">==</span> <span class="st">"Vehicle"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                         area_at_risk])</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>m1_emm_2 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"area_at_risk"</span>,<span class="st">"treatment"</span>),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">at =</span> <span class="fu">list</span>(<span class="at">area_at_risk =</span> vehicle_mean_x))</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>m1_emm_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> area_at_risk treatment        emmean    SE df lower.CL upper.CL
          33.3 Vehicle           11.21 0.833 32     9.51    12.90
@@ -803,8 +777,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fig4h[, .(<span class="at">mean =</span> <span class="fu">mean</span>(area_of_necrosis)),</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>      by <span class="ot">=</span> treatment]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fig4h[, .(<span class="at">mean =</span> <span class="fu">mean</span>(area_of_necrosis)),</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>      by <span class="ot">=</span> treatment]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          treatment      mean
              &lt;fctr&gt;     &lt;num&gt;
@@ -825,7 +799,7 @@ Confidence level used: 0.95 </code></pre>
 </ol>
 <p>For additive models, use Type II sum of squares (Type III will give same results),</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m1_aov, <span class="at">type =</span> <span class="dv">2</span>) <span class="co"># be sure to use the correct model!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m1_aov, <span class="at">type =</span> <span class="dv">2</span>) <span class="co"># be sure to use the correct model!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type II tests)
 
@@ -845,16 +819,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>Some statisticians recommend using Type III sums of squares. The effect of $treatment* has a very specific interpretation with Type III – it is the effect when the covariate = 0. This can be biologically relevant if the covariate data is re-centered.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for coefficients</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> treatment <span class="sc">*</span> area_at_risk,</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig4h)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for anova</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>m2_aov <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> treatment <span class="sc">*</span> area_at_risk,</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig4h,</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">treatment =</span> contr.sum))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for coefficients</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> treatment <span class="sc">*</span> area_at_risk,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig4h)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for anova</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>m2_aov <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> treatment <span class="sc">*</span> area_at_risk,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig4h,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">treatment =</span> contr.sum))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m2_aov, <span class="at">type =</span> <span class="dv">2</span>) <span class="co"># be sure to use the correct model!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m2_aov, <span class="at">type =</span> <span class="dv">2</span>) <span class="co"># be sure to use the correct model!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type II tests)
 
@@ -869,7 +843,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m2_aov, <span class="at">type =</span> <span class="dv">3</span>) <span class="co"># be sure to use the correct model!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m2_aov, <span class="at">type =</span> <span class="dv">3</span>) <span class="co"># be sure to use the correct model!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -891,15 +865,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h4 data-number="14.5.5.1" class="anchored" data-anchor-id="using-ggpubr"><span class="header-section-number">14.5.5.1</span> Using ggpubr</h4>
 <p>ggpubr will only plot the model with interactions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggscatter</span>(<span class="at">data =</span> fig4h,</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">x =</span> <span class="st">"area_at_risk"</span>,</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">y =</span> <span class="st">"area_of_necrosis"</span>,</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"treatment"</span>,</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">add =</span> <span class="st">"reg.line"</span>,</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">ylab =</span> <span class="st">"Area of necrosis (mg)"</span>,</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">xlab =</span> <span class="st">"Area at risk (mg)"</span>,</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> pal_okabe_ito</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggscatter</span>(<span class="at">data =</span> fig4h,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">x =</span> <span class="st">"area_at_risk"</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">y =</span> <span class="st">"area_of_necrosis"</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"treatment"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">add =</span> <span class="st">"reg.line"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">ylab =</span> <span class="st">"Area of necrosis (mg)"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">xlab =</span> <span class="st">"Area at risk (mg)"</span>,</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> pal_okabe_ito</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -912,28 +886,28 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="ggplot2" class="level4" data-number="14.5.5.2">
 <h4 data-number="14.5.5.2" class="anchored" data-anchor-id="ggplot2"><span class="header-section-number">14.5.5.2</span> ggplot2</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pal_batlow &lt;- scico(n, alpha = NULL, begin = 0, end = 1, direction = 1, palette = "batlow")</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig4h)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(fig4h, </span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> area_at_risk,</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> area_of_necrosis,</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>treatment)) <span class="sc">+</span></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">predict</span>(m1, fig4h))) <span class="sc">+</span></span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito,</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale_color_manual(values = pal_batlow,</span></span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   name = NULL) +</span></span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Area of necrosis (mg)"</span>) <span class="sc">+</span></span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Area at risk (mg)"</span>) <span class="sc">+</span></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pander</span>() <span class="sc">+</span></span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
-<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pal_batlow &lt;- scico(n, alpha = NULL, begin = 0, end = 1, direction = 1, palette = "batlow")</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> fig4h)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(fig4h, </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> area_at_risk,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> area_of_necrosis,</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>treatment)) <span class="sc">+</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">predict</span>(m1, fig4h))) <span class="sc">+</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito,</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale_color_manual(values = pal_batlow,</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   name = NULL) +</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Area of necrosis (mg)"</span>) <span class="sc">+</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Area at risk (mg)"</span>) <span class="sc">+</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pander</span>() <span class="sc">+</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -946,96 +920,96 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="a-response-effects-plot-using-ggplot2" class="level4" data-number="14.5.5.3">
 <h4 data-number="14.5.5.3" class="anchored" data-anchor-id="a-response-effects-plot-using-ggplot2"><span class="header-section-number">14.5.5.3</span> A response-effects plot using ggplot2</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment, <span class="at">data =</span> fig4h)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(m1)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">levels</span>(fig4h<span class="sc">$</span>treatment)</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>line_data <span class="ot">&lt;-</span> fig4h[, .(<span class="at">min_x =</span> <span class="fu">min</span>(area_at_risk),</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">max_x =</span> <span class="fu">max</span>(area_at_risk)), by <span class="ot">=</span> treatment]</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>line_data[, dummy1 <span class="sc">:</span><span class="er">=</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="st">"Myriocin"</span>, <span class="dv">1</span>, <span class="dv">0</span>)]</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>line_data[, dummy2 <span class="sc">:</span><span class="er">=</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="st">"Myriocin + DoxSa"</span>, <span class="dv">1</span>, <span class="dv">0</span>)]</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>line_data[, y_min <span class="sc">:</span><span class="er">=</span> b[<span class="dv">1</span>] <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>min_x <span class="sc">+</span> b[<span class="dv">3</span>]<span class="sc">*</span>dummy1 <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>dummy2]</span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>line_data[, y_max <span class="sc">:</span><span class="er">=</span> b[<span class="dv">1</span>] <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>max_x <span class="sc">+</span> b[<span class="dv">3</span>]<span class="sc">*</span>dummy1 <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>dummy2]</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>gg_response <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> fig4h,</span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">aes</span>(<span class="at">x =</span> area_at_risk,</span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">y =</span> area_of_necrosis,</span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">color =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># points</span></span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> line_data,</span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x =</span> min_x,</span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> y_min,</span>
-<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend =</span> max_x,</span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend =</span> y_max)) <span class="sc">+</span></span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito,</span>
-<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Area of necrosis (mg)"</span>) <span class="sc">+</span></span>
-<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Area at risk (mg)"</span>) <span class="sc">+</span></span>
-<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
-<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
-<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a><span class="co">#gg_response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment, <span class="at">data =</span> fig4h)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(m1)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">levels</span>(fig4h<span class="sc">$</span>treatment)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>line_data <span class="ot">&lt;-</span> fig4h[, .(<span class="at">min_x =</span> <span class="fu">min</span>(area_at_risk),</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">max_x =</span> <span class="fu">max</span>(area_at_risk)), by <span class="ot">=</span> treatment]</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>line_data[, dummy1 <span class="sc">:</span><span class="er">=</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="st">"Myriocin"</span>, <span class="dv">1</span>, <span class="dv">0</span>)]</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>line_data[, dummy2 <span class="sc">:</span><span class="er">=</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="st">"Myriocin + DoxSa"</span>, <span class="dv">1</span>, <span class="dv">0</span>)]</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>line_data[, y_min <span class="sc">:</span><span class="er">=</span> b[<span class="dv">1</span>] <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>min_x <span class="sc">+</span> b[<span class="dv">3</span>]<span class="sc">*</span>dummy1 <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>dummy2]</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>line_data[, y_max <span class="sc">:</span><span class="er">=</span> b[<span class="dv">1</span>] <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>max_x <span class="sc">+</span> b[<span class="dv">3</span>]<span class="sc">*</span>dummy1 <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>dummy2]</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>gg_response <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> fig4h,</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">aes</span>(<span class="at">x =</span> area_at_risk,</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">y =</span> area_of_necrosis,</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">color =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># points</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> line_data,</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x =</span> min_x,</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> y_min,</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend =</span> max_x,</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend =</span> y_max)) <span class="sc">+</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_okabe_ito,</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Area of necrosis (mg)"</span>) <span class="sc">+</span></span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Area at risk (mg)"</span>) <span class="sc">+</span></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a><span class="co">#gg_response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># pvalString is from package lazyWeave</span></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>m1_pairs[ , p_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">pvalString</span>(p.value)]</span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co"># also create a column with "p-val: "</span></span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>m1_pairs[ , pval_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">paste</span>(<span class="st">"p = "</span>, p_pretty)]</span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>contrast_order <span class="ot">&lt;-</span> m1_pairs[, contrast]</span>
-<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>m1_pairs[, contrast <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(contrast, contrast_order)]</span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>gg_effect <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> m1_pairs, </span>
-<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">y =</span> contrast,</span>
-<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x =</span> estimate)) <span class="sc">+</span></span>
-<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># confidence level of effect</span></span>
-<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> lower.CL, </span>
-<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmax =</span> upper.CL),</span>
-<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="dv">0</span>, </span>
-<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate of effect</span></span>
-<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># draw a line at effect = 0</span></span>
-<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># p-value. The y coordinates are set by eye</span></span>
-<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
-<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> m1_pairs<span class="sc">$</span>pval_pretty,</span>
-<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,</span>
-<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="fl">4.5</span>) <span class="sc">+</span></span>
-<span id="cb47-34"><a href="#cb47-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb47-35"><a href="#cb47-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># x-axis label and aesthetics</span></span>
-<span id="cb47-36"><a href="#cb47-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Effect (mg)"</span>) <span class="sc">+</span></span>
-<span id="cb47-37"><a href="#cb47-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Contrast"</span>) <span class="sc">+</span></span>
-<span id="cb47-38"><a href="#cb47-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">8</span>,<span class="fl">5.5</span>)) <span class="sc">+</span></span>
-<span id="cb47-39"><a href="#cb47-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">position=</span><span class="st">"top"</span>) <span class="sc">+</span></span>
-<span id="cb47-40"><a href="#cb47-40" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb47-41"><a href="#cb47-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
-<span id="cb47-42"><a href="#cb47-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># theme(axis.title.x = element_blank()) +</span></span>
-<span id="cb47-43"><a href="#cb47-43" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb47-44"><a href="#cb47-44" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
-<span id="cb47-45"><a href="#cb47-45" aria-hidden="true" tabindex="-1"></a><span class="co"># gg_effect</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(m1_emm,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">adjust =</span> <span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co"># pvalString is from package lazyWeave</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>m1_pairs[ , p_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">pvalString</span>(p.value)]</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co"># also create a column with "p-val: "</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>m1_pairs[ , pval_pretty <span class="sc">:</span><span class="er">=</span> <span class="fu">paste</span>(<span class="st">"p = "</span>, p_pretty)]</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>contrast_order <span class="ot">&lt;-</span> m1_pairs[, contrast]</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>m1_pairs[, contrast <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(contrast, contrast_order)]</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>gg_effect <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> m1_pairs, </span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">y =</span> contrast,</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># confidence level of effect</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> lower.CL, </span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">xmax =</span> upper.CL),</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="dv">0</span>, </span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate of effect</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># draw a line at effect = 0</span></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># p-value. The y coordinates are set by eye</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> m1_pairs<span class="sc">$</span>pval_pretty,</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="fl">4.5</span>) <span class="sc">+</span></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># x-axis label and aesthetics</span></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Effect (mg)"</span>) <span class="sc">+</span></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Contrast"</span>) <span class="sc">+</span></span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">8</span>,<span class="fl">5.5</span>)) <span class="sc">+</span></span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">position=</span><span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># theme(axis.title.x = element_blank()) +</span></span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a><span class="co"># gg_effect</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(gg_effect,</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                gg_response,</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">nrow=</span><span class="dv">2</span>,</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">align =</span> <span class="st">"v"</span>,</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">axis =</span> <span class="st">"rl"</span>,</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="dv">1</span>)</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(gg_effect,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                gg_response,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">nrow=</span><span class="dv">2</span>,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">align =</span> <span class="st">"v"</span>,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">axis =</span> <span class="st">"rl"</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="dv">1</span>)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

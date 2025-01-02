@@ -1,6 +1,6 @@
 # Linear models with added covariates ("ANCOVA") {#sec-ancova}
 
-```{r setup-ancova, echo=FALSE, warnng=FALSE, message=FALSE}
+```{r setup-ancova, echo=FALSE, warning=FALSE, message=FALSE}
 library(here)
 library(janitor)
 library(readxl)

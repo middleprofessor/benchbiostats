@@ -1,6 +1,6 @@
 # Errors in inference
 
-```{r error-setup, echo=FALSE, message=FALSE}
+```{r error-setup, echo=FALSE, message=FALSE, warning=FALSE}
 # wrangling packages
 library(here)
 library(janitor)

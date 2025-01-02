@@ -204,7 +204,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Variability and Uncertainty (Standard Deviations, Standard Errors, and Confidence Intervals)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -329,20 +329,6 @@ window.Quarto = {
 </header>
 
 
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'data.table' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'emmeans' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'mvtnorm' was built under R version 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'knitr' was built under R version 4.4.1</code></pre>
-</div>
-</div>
 <section id="classical-nhst-concepts-of-wrong" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="classical-nhst-concepts-of-wrong"><span class="header-section-number">7.1</span> Classical NHST concepts of wrong</h2>
 <p>As described in chapter (p-values), two types of error occur in classical Neyman-Pearson hypothesis testing, and in the NHST version that dominates modern practice. <strong>Type I</strong> error occurs when the null hypothesis is true but the <em>p</em>-value of the test is less than <span class="math inline">\(\alpha\)</span>. This is a <em>false positive</em>, where a <em>positive</em> is a test that rejects the null. <strong>Type II</strong> error occurs when the null hypothesis is false but the <em>p</em>-value of the test is greater than <span class="math inline">\(\alpha\)</span>. This is a <em>false negative</em>, where a <em>negative</em> is a test that accepts (or fails to reject) the null. <strong>Power</strong> is not an error but the frequency of true, positive tests (or the frequency of avoiding Type II error). <span class="math inline">\(\alpha\)</span> is not an error but the rate of Type I error that a researcher is willing to accept. Ideally, a researcher sets <span class="math inline">\(\alpha\)</span> based on an evaluation of the pros and cons of Type I and Type II error for the specific experiment. In practice, researchers follow the completely arbitary practice of setting <span class="math inline">\(\alpha = 0.05\)</span>.</p>
@@ -354,45 +340,45 @@ window.Quarto = {
 <section id="size-example-1-the-size-of-a-t-test-vs.-a-permutation-test-when-the-data-meet-the-assumptions" class="level4" data-number="7.1.1.1">
 <h4 data-number="7.1.1.1" class="anchored" data-anchor-id="size-example-1-the-size-of-a-t-test-vs.-a-permutation-test-when-the-data-meet-the-assumptions"><span class="header-section-number">7.1.1.1</span> Size example 1: the size of a <em>t</em>-test vs.&nbsp;a permutation test, when the data meet the assumptions</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_infer_error-p_data_1.Rds"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to the output folder</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    sample_1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    sample_2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  p_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> p_t,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">perm =</span> p_perm</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(p_data, out_path)</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> p_data[, t]</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> p_data[, perm]</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>size_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>size_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>size_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"Permutation test"</span>),</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Size =</span> <span class="fu">c</span>(size_t, size_perm))</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>size_table <span class="sc">|&gt;</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_infer_error-p_data_1.Rds"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to the output folder</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    sample_1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    sample_2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  p_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> p_t,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">perm =</span> p_perm</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(p_data, out_path)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> p_data[, t]</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> p_data[, perm]</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>size_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>size_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>size_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"Permutation test"</span>),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Size =</span> <span class="fu">c</span>(size_t, size_perm))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>size_table <span class="sc">|&gt;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -420,47 +406,47 @@ window.Quarto = {
 <section id="size-example-2-the-size-of-a-t-test-vs.-a-permutation-test-when-the-data-have-a-right-skewed-distribution" class="level4" data-number="7.1.1.2">
 <h4 data-number="7.1.1.2" class="anchored" data-anchor-id="size-example-2-the-size-of-a-t-test-vs.-a-permutation-test-when-the-data-have-a-right-skewed-distribution"><span class="header-section-number">7.1.1.2</span> Size example 2: the size of a <em>t</em>-test vs.&nbsp;a permutation test, when the data have a right skewed distribution</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_infer_error-p_data_2.Rds"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to the output folder</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    sample_1 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">100</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    sample_2 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">100</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># qplot(x=treatment, y = y)</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  p_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> p_t,</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">perm =</span> p_perm</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(p_data, out_path)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> p_data[, t]</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> p_data[, perm]</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>size_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>size_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>size_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"Permutation test"</span>),</span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Size =</span> <span class="fu">c</span>(size_t, size_perm))</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>size_table <span class="sc">|&gt;</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_infer_error-p_data_2.Rds"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to the output folder</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    sample_1 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">100</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    sample_2 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">100</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># qplot(x=treatment, y = y)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  p_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> p_t,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">perm =</span> p_perm</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(p_data, out_path)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> p_data[, t]</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> p_data[, perm]</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>size_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>size_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>size_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"Permutation test"</span>),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Size =</span> <span class="fu">c</span>(size_t, size_perm))</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>size_table <span class="sc">|&gt;</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -488,58 +474,58 @@ window.Quarto = {
 <section id="size-example-3-the-size-of-a-t-test-vs.-a-permutation-test-when-the-data-have-heterogenous-variance-and-the-sample-size-is-unequal" class="level4" data-number="7.1.1.3">
 <h4 data-number="7.1.1.3" class="anchored" data-anchor-id="size-example-3-the-size-of-a-t-test-vs.-a-permutation-test-when-the-data-have-heterogenous-variance-and-the-sample-size-is-unequal"><span class="header-section-number">7.1.1.3</span> Size example 3: the size of a <em>t</em>-test vs.&nbsp;a permutation test, when the data have heterogenous variance and the sample size is unequal</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_infer_error-p_data_3.Rds"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to the output folder</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  n2 <span class="ot">&lt;-</span> n1<span class="sc">/</span><span class="dv">2</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  n_perm <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># for the manual permutation test, otherwise, not used</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  t_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_perm)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">times =</span> <span class="fu">c</span>(n1, n2))</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    sample_1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    sample_2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># qplot(x=treatment, y = y)</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># manual permutation test -- this is slooooo!</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># y_samp &lt;- y</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for(perm_iter in 1:n_perm){</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   m2 &lt;- lm(y_samp ~ treatment)</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   t_perm[perm_iter] &lt;- coef(summary(m2))[2, "t value"]</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   y_samp &lt;- sample(y_samp, )</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># }</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># p_perm[iter] &lt;- sum(abs(t_perm) &gt;= abs(t_perm[1]))/n_perm</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>              <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>              <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  p_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> p_t,</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">perm =</span> p_perm</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(p_data, out_path)</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> p_data[, t]</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> p_data[, perm]</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>size_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>size_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>size_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"Permutation test"</span>),</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Size =</span> <span class="fu">c</span>(size_t, size_perm))</span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>size_table <span class="sc">|&gt;</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"chap_infer_error-p_data_3.Rds"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>do_it <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># set this to TRUE to run and save to the output folder</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(do_it){</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  n2 <span class="ot">&lt;-</span> n1<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  n_perm <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># for the manual permutation test, otherwise, not used</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  t_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_perm)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">times =</span> <span class="fu">c</span>(n1, n2))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    sample_1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    sample_2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># qplot(x=treatment, y = y)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># manual permutation test -- this is slooooo!</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># y_samp &lt;- y</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for(perm_iter in 1:n_perm){</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   m2 &lt;- lm(y_samp ~ treatment)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   t_perm[perm_iter] &lt;- coef(summary(m2))[2, "t value"]</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   y_samp &lt;- sample(y_samp, )</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># }</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># p_perm[iter] &lt;- sum(abs(t_perm) &gt;= abs(t_perm[1]))/n_perm</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>              <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>              <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  p_data <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> p_t,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">perm =</span> p_perm</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(p_data, out_path)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(out_path)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> p_data[, t]</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> p_data[, perm]</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>size_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>size_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>size_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"Permutation test"</span>),</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Size =</span> <span class="fu">c</span>(size_t, size_perm))</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>size_table <span class="sc">|&gt;</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -571,30 +557,30 @@ window.Quarto = {
 <section id="power-example-1-the-power-of-a-t-test-vs.-a-permutation-test-when-the-data-meet-the-assumptions" class="level4" data-number="7.1.2.1">
 <h4 data-number="7.1.2.1" class="anchored" data-anchor-id="power-example-1-the-power-of-a-t-test-vs.-a-permutation-test-when-the-data-meet-the-assumptions"><span class="header-section-number">7.1.2.1</span> Power example 1: the power of a <em>t</em>-test vs.&nbsp;a permutation test, when the data meet the assumptions</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  sample_1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  sample_2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">11</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>power_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>power_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>power_table_normal <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"lm"</span>, <span class="st">"perm"</span>),</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Power =</span> <span class="fu">c</span>(power_t, power_perm))</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(power_table_normal, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  sample_1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  sample_2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">11</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>power_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>power_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>power_table_normal <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"lm"</span>, <span class="st">"perm"</span>),</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Power =</span> <span class="fu">c</span>(power_t, power_perm))</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(power_table_normal, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -620,33 +606,33 @@ window.Quarto = {
 <section id="power-example-2-the-power-of-a-t-test-vs.-a-permutation-test-when-the-data-look-like-typical-count-data" class="level4" data-number="7.1.2.2">
 <h4 data-number="7.1.2.2" class="anchored" data-anchor-id="power-example-2-the-power-of-a-t-test-vs.-a-permutation-test-when-the-data-look-like-typical-count-data"><span class="header-section-number">7.1.2.2</span> Power example 2: the power of a <em>t</em>-test vs.&nbsp;a permutation test, when the data look like typical count data</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  sample_1 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">100</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  sample_2 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">300</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># qplot(x=treatment, y = y)</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>power_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>power_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>power_table_count <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"lm"</span>, <span class="st">"perm"</span>),</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Power =</span> <span class="fu">c</span>(power_t, power_perm))</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(power_table_count, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p_t <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"cn"</span>, <span class="st">"tr"</span>), <span class="at">each =</span> n)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter){</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  qplot(rnegbin(n = 10^4, mu = 100, theta = 1))</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  sample_1 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">100</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  sample_2 <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">300</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">c</span>(sample_1, sample_2)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># qplot(x=treatment, y = y)</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> treatment) <span class="co"># no data statement necessary because both variables in workspace</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  p_t[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m1))[<span class="st">"treatmenttr"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  m2 <span class="ot">&lt;-</span> <span class="fu">lmp</span>(y <span class="sc">~</span> treatment,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">perm =</span> <span class="st">"Prob"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">settings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  p_perm[iter] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"treatment1"</span>, <span class="st">"Pr(Prob)"</span>]</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>power_t <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_t <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>power_perm <span class="ot">&lt;-</span> <span class="fu">sum</span>(p_perm <span class="sc">&lt;</span> <span class="fl">0.05</span>)<span class="sc">/</span>n_iter</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>power_table_count <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"lm"</span>, <span class="st">"perm"</span>),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Power =</span> <span class="fu">c</span>(power_t, power_perm))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(power_table_count, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -676,14 +662,14 @@ window.Quarto = {
 <p>Size and power are concepts specific to the Neyman-Pearson hypothesis testing framework. Size and power also have limited (or no) use in a research program in which the null hypothesis is never (or rarely) strictly true. That said, the concept of size and power are useful. For example, what if we framed power as the distribution of <em>p</em>-values instead of the frequency of <em>p</em>-values less than <span class="math inline">\(\alpha\)</span>.</p>
 <p>Table @ref(tab:error-power-dis) shows the <em>p</em>-value at the 10th, 25th, 50th, 75th, and 90th percentile of the set of <em>p</em>-values computed in Power Example 2 above (count data). The <em>n</em>th percentile is the value in an ordered set of numbers in which <em>n</em> % are less than the value and 100 - <em>n</em>% are greater than the value. The 50th percentile is the median. The table shows that at all percentiles except the 90th, the permutation <em>p</em>-value is smaller than the <em>t</em>-test <em>p</em>-value. And, importantly, the value at 75% for both is ~ 0.12. This means that for experiments that generate data something like the fake data generated in Power Example 2, the permutation test is more sensistive to the incompatibility between the null model and the data than the <em>t</em>-test, except in the random samples when both methods fail.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>quantile_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>percentiles_t <span class="ot">&lt;-</span> <span class="fu">quantile</span>(p_t, quantile_list)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>percentiles_perm <span class="ot">&lt;-</span> <span class="fu">quantile</span>(p_perm, quantile_list)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>alt_power_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"permutation"</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                              (<span class="fu">rbind</span>(percentiles_t,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                     percentiles_perm)))</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(alt_power_table, <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>quantile_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>percentiles_t <span class="ot">&lt;-</span> <span class="fu">quantile</span>(p_t, quantile_list)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>percentiles_perm <span class="ot">&lt;-</span> <span class="fu">quantile</span>(p_perm, quantile_list)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>alt_power_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="at">method =</span> <span class="fu">c</span>(<span class="st">"t-test"</span>, <span class="st">"permutation"</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                              (<span class="fu">rbind</span>(percentiles_t,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                                     percentiles_perm)))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(alt_power_table, <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>

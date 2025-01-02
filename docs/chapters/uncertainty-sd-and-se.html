@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals – Statistics for the Experimental Bench Biologist</title>
+<title>5&nbsp; Variability and Uncertainty (Standard Deviations, Standard Errors, and Confidence Intervals) – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -68,6 +102,8 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -110,7 +146,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/uncertainty-sd-and-se.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/uncertainty-sd-and-se.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Variability and Uncertainty (Standard Deviations, Standard Errors, and Confidence Intervals)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -168,7 +204,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/uncertainty-sd-and-se.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Variability and Uncertainty (Standard Deviations, Standard Errors, and Confidence Intervals)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -242,15 +278,76 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#standard-errors-are-used-to-compute-p-values-and-confidence-intervals" id="toc-standard-errors-are-used-to-compute-p-values-and-confidence-intervals" class="nav-link active" data-scroll-target="#standard-errors-are-used-to-compute-p-values-and-confidence-intervals"><span class="header-section-number">5.1</span> Standard errors are used to compute <em>p</em>-values and confidence intervals</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">5.2</span> Background</a>
+  <ul>
+  <li><a href="#sample-standard-deviation" id="toc-sample-standard-deviation" class="nav-link" data-scroll-target="#sample-standard-deviation"><span class="header-section-number">5.2.1</span> Sample standard deviation</a>
+  <ul class="collapse">
+  <li><a href="#notes-on-the-variance-and-standard-deviation" id="toc-notes-on-the-variance-and-standard-deviation" class="nav-link" data-scroll-target="#notes-on-the-variance-and-standard-deviation"><span class="header-section-number">5.2.1.1</span> Notes on the variance and standard deviation</a></li>
+  </ul></li>
+  <li><a href="#standard-error-of-the-mean" id="toc-standard-error-of-the-mean" class="nav-link" data-scroll-target="#standard-error-of-the-mean"><span class="header-section-number">5.2.2</span> Standard error of the mean</a>
+  <ul class="collapse">
+  <li><a href="#the-standard-error-of-the-mean-can-be-thought-of-as-a-standard-deviation-of-an-infinitely-long-column-of-re-sampled-means" id="toc-the-standard-error-of-the-mean-can-be-thought-of-as-a-standard-deviation-of-an-infinitely-long-column-of-re-sampled-means" class="nav-link" data-scroll-target="#the-standard-error-of-the-mean-can-be-thought-of-as-a-standard-deviation-of-an-infinitely-long-column-of-re-sampled-means"><span class="header-section-number">5.2.2.1</span> The standard error of the mean can be thought of as a standard deviation of an infinitely long column of re-sampled means</a></li>
+  <li><a href="#a-standard-deviation-can-be-computed-for-any-statistic-these-are-all-standard-errors." id="toc-a-standard-deviation-can-be-computed-for-any-statistic-these-are-all-standard-errors." class="nav-link" data-scroll-target="#a-standard-deviation-can-be-computed-for-any-statistic-these-are-all-standard-errors."><span class="header-section-number">5.2.2.2</span> A standard deviation can be computed for any statistic – these are all standard errors.</a></li>
+  <li><a href="#notes-on-standard-errors" id="toc-notes-on-standard-errors" class="nav-link" data-scroll-target="#notes-on-standard-errors"><span class="header-section-number">5.2.2.3</span> Notes on standard errors</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#simulations-using-fake-data-as-an-intuition-pump" id="toc-simulations-using-fake-data-as-an-intuition-pump" class="nav-link" data-scroll-target="#simulations-using-fake-data-as-an-intuition-pump"><span class="header-section-number">5.3</span> Simulations – using fake data as an intuition pump</a>
+  <ul>
+  <li><a href="#using-google-sheets-to-generate-fake-data-to-explore-the-standard-error" id="toc-using-google-sheets-to-generate-fake-data-to-explore-the-standard-error" class="nav-link" data-scroll-target="#using-google-sheets-to-generate-fake-data-to-explore-the-standard-error"><span class="header-section-number">5.3.1</span> Using Google Sheets to generate fake data to explore the standard error</a>
+  <ul class="collapse">
+  <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps"><span class="header-section-number">5.3.1.1</span> Steps</a></li>
+  </ul></li>
+  <li><a href="#using-r-to-generate-fake-data-to-explore-the-standard-error" id="toc-using-r-to-generate-fake-data-to-explore-the-standard-error" class="nav-link" data-scroll-target="#using-r-to-generate-fake-data-to-explore-the-standard-error"><span class="header-section-number">5.3.2</span> Using R to generate fake data to explore the standard error</a>
+  <ul class="collapse">
+  <li><a href="#part-i" id="toc-part-i" class="nav-link" data-scroll-target="#part-i"><span class="header-section-number">5.3.2.1</span> part I</a></li>
+  <li><a href="#part-ii---means" id="toc-part-ii---means" class="nav-link" data-scroll-target="#part-ii---means"><span class="header-section-number">5.3.2.2</span> part II - means</a></li>
+  <li><a href="#part-iii---how-do-sd-and-se-change-as-sample-size-n-increases" id="toc-part-iii---how-do-sd-and-se-change-as-sample-size-n-increases" class="nav-link" data-scroll-target="#part-iii---how-do-sd-and-se-change-as-sample-size-n-increases"><span class="header-section-number">5.3.2.3</span> part III - how do SD and SE change as sample size (n) increases?</a></li>
+  <li><a href="#part-iv-generating-fake-data-with-for-loops" id="toc-part-iv-generating-fake-data-with-for-loops" class="nav-link" data-scroll-target="#part-iv-generating-fake-data-with-for-loops"><span class="header-section-number">5.3.2.4</span> Part IV – Generating fake data with for-loops</a></li>
+  <li><a href="#part-v-the-sampling-distribution-of-means-is-asymptotically-normal-wait-what" id="toc-part-v-the-sampling-distribution-of-means-is-asymptotically-normal-wait-what" class="nav-link" data-scroll-target="#part-v-the-sampling-distribution-of-means-is-asymptotically-normal-wait-what"><span class="header-section-number">5.3.2.5</span> Part V – the sampling distribution of means is asymptotically Normal (wait, what?)</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bootstrap" id="toc-bootstrap" class="nav-link" data-scroll-target="#bootstrap"><span class="header-section-number">5.4</span> Bootstrapped standard errors</a>
+  <ul>
+  <li><a href="#an-example-of-bootstrapped-standard-errors" id="toc-an-example-of-bootstrapped-standard-errors" class="nav-link" data-scroll-target="#an-example-of-bootstrapped-standard-errors"><span class="header-section-number">5.4.1</span> An example of bootstrapped standard errors</a>
+  <ul class="collapse">
+  <li><a href="#parametric-bootstrap" id="toc-parametric-bootstrap" class="nav-link" data-scroll-target="#parametric-bootstrap"><span class="header-section-number">5.4.1.1</span> parametric bootstrap</a></li>
+  <li><a href="#non-parametric-bootstrap" id="toc-non-parametric-bootstrap" class="nav-link" data-scroll-target="#non-parametric-bootstrap"><span class="header-section-number">5.4.1.2</span> non-parametric bootstrap</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals"><span class="header-section-number">5.5</span> Confidence Intervals</a>
+  <ul>
+  <li><a href="#just-the-math" id="toc-just-the-math" class="nav-link" data-scroll-target="#just-the-math"><span class="header-section-number">5.5.1</span> Just the math</a></li>
+  <li><a href="#interpretation-of-a-confidence-interval" id="toc-interpretation-of-a-confidence-interval" class="nav-link" data-scroll-target="#interpretation-of-a-confidence-interval"><span class="header-section-number">5.5.2</span> Interpretation of a confidence interval</a></li>
+  <li><a href="#bootstrap-confidence-interval" id="toc-bootstrap-confidence-interval" class="nav-link" data-scroll-target="#bootstrap-confidence-interval"><span class="header-section-number">5.5.3</span> Bootstrap confidence interval</a></li>
+  <li><a href="#a-plot-of-a-parametric-ci-vs.-bootstrap-ci-of-the-means" id="toc-a-plot-of-a-parametric-ci-vs.-bootstrap-ci-of-the-means" class="nav-link" data-scroll-target="#a-plot-of-a-parametric-ci-vs.-bootstrap-ci-of-the-means"><span class="header-section-number">5.5.4</span> A plot of a “parametric” CI vs.&nbsp;bootstrap CI of the means</a></li>
+  </ul></li>
+  <li><a href="#standard-error-of-a-difference-between-means" id="toc-standard-error-of-a-difference-between-means" class="nav-link" data-scroll-target="#standard-error-of-a-difference-between-means"><span class="header-section-number">5.6</span> Standard error of a difference between means</a>
+  <ul>
+  <li><a href="#the-standard-error-of-a-difference-between-means-is-the-standard-deviation-of-the-sampling-distribution-of-the-difference" id="toc-the-standard-error-of-a-difference-between-means-is-the-standard-deviation-of-the-sampling-distribution-of-the-difference" class="nav-link" data-scroll-target="#the-standard-error-of-a-difference-between-means-is-the-standard-deviation-of-the-sampling-distribution-of-the-difference"><span class="header-section-number">5.6.1</span> The standard error of a difference between means is the standard deviation of the sampling distribution of the difference</a></li>
+  </ul></li>
+  <li><a href="#confidence-limits-of-a-difference-between-means" id="toc-confidence-limits-of-a-difference-between-means" class="nav-link" data-scroll-target="#confidence-limits-of-a-difference-between-means"><span class="header-section-number">5.7</span> Confidence limits of a difference between means</a>
+  <ul>
+  <li><a href="#of-95-cis-of-the-difference-include-the-true-difference" id="toc-of-95-cis-of-the-difference-include-the-true-difference" class="nav-link" data-scroll-target="#of-95-cis-of-the-difference-include-the-true-difference"><span class="header-section-number">5.7.1</span> 95% of 95% CIs of the difference include the true difference</a></li>
+  </ul></li>
+  <li><a href="#hidden-code" id="toc-hidden-code" class="nav-link" data-scroll-target="#hidden-code"><span class="header-section-number">5.8</span> Hidden code</a>
+  <ul>
+  <li><a href="#import-exp3b" id="toc-import-exp3b" class="nav-link" data-scroll-target="#import-exp3b"><span class="header-section-number">5.8.1</span> Import exp3b</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Uncertainty – Standard Deviations, Standard Errors, and Confidence Intervals</span></h1>
+<h1 class="title"><span id="sec-uncertainty" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Variability and Uncertainty (Standard Deviations, Standard Errors, and Confidence Intervals)</span></span></h1>
 </div>
 
 
@@ -267,8 +364,892 @@ window.Quarto = {
 </header>
 
 
+<p><strong>Uncertainty</strong> is the stuff of science. What do we mean by uncertainty in statistics? Uncertainty is the error in estimating a parameter, such as the mean of a sample, or the difference in means between two experimental treatments, or the predicted response given a certain change in conditions. Uncertainty emerges because of variability and is measured with a <strong>variance</strong> or its square root, which is a <strong>standard deviation</strong>. The standard deviation of a statistic is called a <strong>standard error</strong> of the statistic. Standard errors are to statistics of experimental data as atoms are to matter – everything is built from them.</p>
+<section id="standard-errors-are-used-to-compute-p-values-and-confidence-intervals" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="standard-errors-are-used-to-compute-p-values-and-confidence-intervals"><span class="header-section-number">5.1</span> Standard errors are used to compute <em>p</em>-values and confidence intervals</h2>
+<p>Let’s revisit <a href="../intro.html#tbl-intro-fig2i-m1-pairs" class="quarto-xref">Table&nbsp;<span>1.1</span></a> from the experiment presented in the introductory chapter <a href="@sec-intro">Analyzing experimental data with a linear model</a>.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast               estimate   SE df lower.CL upper.CL t.ratio p.value
+ ASK1Δadipo - (ASK1F/F)    -21.6 7.05 10    -37.3     -5.9  -3.066  0.0119
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>The contrast table gives the inferential statistics for the estimate of the treatment effect. The estimated effect (difference in means) is in the column “estimate”. To guide our inference about this value, we use the standard error of the estimate in the column “SE”. We use this standard error to compute a <em>t</em>-value, which is given in the column “t.ratio” and, from this, we can compute a <em>p</em>-value, which is in the column “p.value”. This is the classic “t-test” that all experimental biology researchers are familiar with, although computed using the linear model and not the way presented in most introductory statistics textbooks (the two ways give numerically equivalent results). We also use the standard error to compute the boundaries of the 95% confidence interval of the estimate, which are given in the “lower.CL” and “upper.CL” columns. The importance of confidence intervals in statistical inference is less well appreciated among researchers in experimental biology. A <em>p</em>-value is a tool to help us infer <em>if</em> there is an effect. A confidence interval is a tool to help us infer the range of effects that are compatible with the data.</p>
+<p>This chapter uses simulation to pump our intuition of standard errors and confidence intervals. We wait until the next chapter to focus on <em>p</em>-values.</p>
+</section>
+<section id="background" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="background"><span class="header-section-number">5.2</span> Background</h2>
+<p>In any introductory statistics class, students are introduced to two measures of variability, the “standard deviation” and the “standard error.” These terms are absolutely fundamental to statistics. Yet, many biology researchers confuse these terms and certainly, introductory students do too.</p>
+<p>When a research biologist uses the term “standard deviation,” they are probably referring to the sample standard deviation which is a measure of the variability of a sample. When a research biologist uses the term “standard error,” they are probably referring to the standard error of a mean, but it could be the standard error of another statistic, such as a difference between means or a regression slope. An important point to remember and understand is that all standard errors <em>are</em> standard deviations. This will make more sense soon.</p>
+<section id="sample-standard-deviation" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="sample-standard-deviation"><span class="header-section-number">5.2.1</span> Sample standard deviation</h3>
+<p>The sample standard deviation is a measure of the variability of a sample. For example, were we to look at a histological section of skeletal muscle we would see that the diameter of the fibers (the muscle cells) is variable. We could use imaging software to measure the diameter of a sample of 100 cells and get a <strong>distribution</strong> like this</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/histogram-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The mean of this sample is 69.4µm and the standard deviation is 2.8 µm. The standard deviation is the square root of the variance, and so computed by</p>
+<p><span class="math display">\[\begin{equation}
+s_y = \sqrt{\frac{\sum_{i=1}^n{(y_i - \overline{y})^2}}{n-1}}
+(\#eq:variance)
+\end{equation}\]</span></p>
+<p>Memorize this equation. To understand the logic of this measure of variability, note that <span class="math inline">\(y_i - \overline{y}\)</span> is the <strong>deviation</strong> of the <span class="math inline">\(i\)</span>th value from the sample mean, so the numerator is the sum of squared deviations. The numerator is a sum over <span class="math inline">\(n\)</span> items and the denominator is <span class="math inline">\(n-1\)</span> so the variance is (almost!) an averaged squared deviation. More variable samples will have bigger deviations and, therefore, bigger average squared deviations. Since the standard deviation is the square root of the variance, a standard deviation is the square root of an average squared deviation. This makes it similar in value to the averaged deviation (or average of the absolute values of the deviations since the average deviation is, by definition of a mean, zero).</p>
+<section id="notes-on-the-variance-and-standard-deviation" class="level4" data-number="5.2.1.1">
+<h4 data-number="5.2.1.1" class="anchored" data-anchor-id="notes-on-the-variance-and-standard-deviation"><span class="header-section-number">5.2.1.1</span> Notes on the variance and standard deviation</h4>
+<ol type="1">
+<li>Variances are additive but standard deviations are not. This means that the variance of the sum of two independent (uncorrelated) random variables is simply the sum of the variances of each of the variables. This is important for many statistical analyses.</li>
+<li>The units of variance are the square of the original units, which is awkward for interpretation. The units of a standard deviation is the same as that of the original variable, and so is much easier to interpet.</li>
+<li>For variables that are approximately normally distributed, we can map the standard deviation to the quantiles of the distribution. For example, 68% of the values are within one standard deviation of the mean, 95% of the values are within two standard deviations, and 99% of the values are within three standard deviations.</li>
+</ol>
+</section>
+</section>
+<section id="standard-error-of-the-mean" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="standard-error-of-the-mean"><span class="header-section-number">5.2.2</span> Standard error of the mean</h3>
+<p>A standard error of a statistic is a measure of the precision of the statistic. The standard error of the mean is a measure of the precision of the estimate of the mean. The standard error of a difference in means is a measure of the precision of the estimate of the difference in means. The smaller the standard error, the more precise the estimate.</p>
+<p>The standard error of the mean (SEM) is computed as</p>
+<p><span class="math display">\[\begin{equation}
+SEM = \frac{s_y}{\sqrt{n}}
+(\#eq:se)
+\end{equation}\]</span></p>
+<p>The SEM is often denoted <span class="math inline">\(s_{\bar{y}}\)</span> to indicate that it is a standard deviation of the mean (<span class="math inline">\(\bar{y}\)</span>).</p>
+<section id="the-standard-error-of-the-mean-can-be-thought-of-as-a-standard-deviation-of-an-infinitely-long-column-of-re-sampled-means" class="level4" data-number="5.2.2.1">
+<h4 data-number="5.2.2.1" class="anchored" data-anchor-id="the-standard-error-of-the-mean-can-be-thought-of-as-a-standard-deviation-of-an-infinitely-long-column-of-re-sampled-means"><span class="header-section-number">5.2.2.1</span> The standard error of the mean can be thought of as a standard deviation of an infinitely long column of re-sampled means</h4>
+<p>In what sense is a standard error a standard deviation? This is kinda weird. If we sample 100 cells in the slide of muscle tissue and compute the mean diameter, how can the mean have a standard deviation? There is only one mean!</p>
+<p>To understand how the SEM is a standard deviation, imagine that we sample <span class="math inline">\(n\)</span> values from <span class="math inline">\(N(\mu, \sigma^2)\)</span> (a normal distribution with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>. The mean of our sample is an estimate of <span class="math inline">\(\mu\)</span> and the standard deviation of sample is an estimate of <span class="math inline">\(\sigma\)</span>) an infinite number of times and each time, we write down the mean of the new sample. This infinitely large sample of means is the <strong>sampling distribution of the mean</strong>. The standard deviation of the sampling distribution of the mean is the standard error of the mean. Our observed SEM is an estimate of this true value because our observed standard deviation is an estimate of <span class="math inline">\(\sigma\)</span>.</p>
+</section>
+<section id="a-standard-deviation-can-be-computed-for-any-statistic-these-are-all-standard-errors." class="level4" data-number="5.2.2.2">
+<h4 data-number="5.2.2.2" class="anchored" data-anchor-id="a-standard-deviation-can-be-computed-for-any-statistic-these-are-all-standard-errors."><span class="header-section-number">5.2.2.2</span> A standard deviation can be computed for any statistic – these are all standard errors.</h4>
+<p>The SEM is only one kind of standard error. A standard deviation can be computed for any statistic – these are all standard errors. For some statistics, such as the mean, the standard error can be computed directly using an equation, such as that for the SEM (equation @ref(eq:se)). For other statistics, there is no equation, and we need to use a computer intensive method known as the <strong>bootstrap</strong> to compute a standard error. We will return to the bootstrap in Section @ref(bootstrap).</p>
+</section>
+<section id="notes-on-standard-errors" class="level4" data-number="5.2.2.3">
+<h4 data-number="5.2.2.3" class="anchored" data-anchor-id="notes-on-standard-errors"><span class="header-section-number">5.2.2.3</span> Notes on standard errors</h4>
+<ol type="1">
+<li>The units of a standard error are the units of the measured variable.</li>
+<li>A standard error is proportional to sample variability (the sample standard deviation, <span class="math inline">\(s_y\)</span>) and inversely proportional to sample size (<span class="math inline">\(n\)</span>). Sample variability is a function of both natural variation (there really is variation in diameter among fibers in the quadriceps muscle) and measurement error (imaging software with higher resolution can measure a diameter with less error). Since the SEM is a measure of the precision of estimating a mean, this means this precision will increase (or the SEM will decrease) if 1) an investigator uses methods that reduce measurement error and 2) an investigator computes the mean from a larger sample.</li>
+<li>This last point (the SEM decreases with sample size) seems obvious when looking at equation @ref(eq:se), since <span class="math inline">\(n\)</span> is in the denominator. Of course <span class="math inline">\(n\)</span> is also in the denominator of equation @ref(eq:variance) for the sample standard deviation but the standard deviation does not decrease as sample size increases. First this wouldn’t make any sense – variability is variability. A sample of 10,000 cell diameters should be no more variable than a sample of 100 cell diameters (think about if you agree with this or not). Second, this should also be obvious from equation @ref(eq:variance). The standard deviation is the square root of an average and averages don’t increase with the number of things summed since both the the numerator (a sum) and denominator increase with <span class="math inline">\(n\)</span>.</li>
+</ol>
+</section>
+</section>
+</section>
+<section id="simulations-using-fake-data-as-an-intuition-pump" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="simulations-using-fake-data-as-an-intuition-pump"><span class="header-section-number">5.3</span> Simulations – using fake data as an intuition pump</h2>
+<section id="using-google-sheets-to-generate-fake-data-to-explore-the-standard-error" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="using-google-sheets-to-generate-fake-data-to-explore-the-standard-error"><span class="header-section-number">5.3.1</span> Using Google Sheets to generate fake data to explore the standard error</h3>
+<p>In statistics we are interested in estimated parameters of a <strong>population</strong> using measures from a <strong>sample</strong>. The goal in this section is to use Google Sheets (or Microsoft Excel) to use fake data to discover the behavior of sampling and to gain some intuition about uncertainty using standard errors.</p>
+<section id="steps" class="level4" data-number="5.3.1.1">
+<h4 data-number="5.3.1.1" class="anchored" data-anchor-id="steps"><span class="header-section-number">5.3.1.1</span> Steps</h4>
+<ol type="1">
+<li>Open Google Sheets</li>
+<li>In cell A1 type “mu”. mu is the greek letter <span class="math inline">\(\mu\)</span> and is very common notation for the poplation value (the TRUE value!) of the mean of some hypothetical measure. In cell B1, insert some number as the value of <span class="math inline">\(\mu\)</span>. Any number! It can be negative or positive.</li>
+<li>In cell A2 type “sigma”. sigma is the greek letter <span class="math inline">\(\sigma\)</span>. <span class="math inline">\(\sigma^2\)</span> is very common (universal!) notation for the population (TRUE) variance of some measure or parameter. Notice that the true (population) values of the mean and variance are greek letters. This is pretty standard in statistics. In cell B2, insert some positive number (standard deviations are the positive square roots of the variance).</li>
+<li>In cell A8 type the number 1</li>
+<li>In cell A9 insert the equation “=A8 + 1”. What is this equation doing? It is adding the number 1 to to the value in the cell above, so the resulting value should be 2.</li>
+<li>In Cell B8, insert the equation “=normsinv(rand())*$B$2 + $B$1”. The first part of the equation creates a random normal variable with mean 0 and standard deviation 1. multiplication and addition transform this to a random normal variable with mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span> (the values you set in cells B1 and B2).</li>
+<li>copy cell B8 and paste into cell B9. Now Highlight cells A9:B9 and copy the equations down to row 107. You now have 100 random variables sampled from a infinite population with mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>.</li>
+<li>In cell A4 write “mean 10”. In cell B4 insert the equation “=average(B8:B17)”. The resulting value is the <strong>sample mean</strong> of the first 10 random variables you created. Is the mean close to <span class="math inline">\(\mu\)</span>?</li>
+<li>In cell A5 write “sd 10”. In cell B5 insert the equation “stdev(B8:B17)”. The result is the <strong>sample standard deviation</strong> of the first 10 random variables. Is this close to <span class="math inline">\(\sigma\)</span>?</li>
+<li>In cell A6 write “mean 100”. In cell B6 insert the equation “=average(B8:B107)”. The resulting value is the <strong>sample mean</strong> of the all 100 random variables you created. Is this mean closer to <span class="math inline">\(\mu\)</span> than mean 10?</li>
+<li>In cell A7 write “sd 100”. In cell B7 insert the equation “=stdev(B8:B107)”. The resulting value is the <strong>sample standard deviation</strong> of the all 100 random variables you created. Is this SD closer to <span class="math inline">\(\sigma\)</span> than sd 10?</li>
+</ol>
+<p>The sample standard deviation is a measure of the variability of the sample. The more spread out the sample (the further each value is from the mean), the bigger the sample standard deviation. The sample standard deviation is most often simply known as “The” standard deviation, which is a bit misleading since there are many kinds of standard deviations!</p>
+<p>Remember that your computed mean and standard deviations are estimates computed from a sample. They are estimates of the true values <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>. Explore the behavior of the sample mean and standard deviation by re-calculating the spreadsheet. In Excel, a spreadsheet is re-calculated by simultaneously pressing the command and equal key. In Google, command-R recalculates but is painfully slow. Instead, if using Google Sheets, just type the number 1 into a blank cell, and the sheet recalculates quickly. Do it again. And again.</p>
+<p>Each time you re-calculate, a new set of random numbers are generated and the new means and standard deviations are computed. Compare mean 10 and mean 100 each re-calculation. Notice that these estimates are variable. They change with each re-calculation. How variable is mean 10 compared to mean 100? The variability of the estimate of the mean is a measure of <strong>uncertainty</strong> in the estimate. Are we more uncertain with mean 10 or with mean 100? This variability is measured by a standard deviation. This <strong>standard deviation of the mean</strong> is also called the <strong>standard error of the mean</strong>. Many researchers are loose with terms and use “The” standard error to mean the standard error of the mean, even though there are many kinds of standard errors. In general, “standard error”” is abbreviated as “SE.” Sometimes “standard error of the mean” is specifically abbreviated to “SEM.”</p>
+<p>The standard error of the mean is a measure of the precision in estimating the mean. The smaller the value the more precise the estimate. The standard error of the mean <em>is</em> a standard deviation of the mean. This is kinda weird. If we sample a population one time and compute a mean, how can the mean have a standard deviation? There is only one value! And we compute this value using the sample standard deviation: <span class="math inline">\(SEM = \frac{SD}{\sqrt{N}}\)</span>. To understand how the SEM is a standard deviation, Imagine recalculating the spread sheet an infinite number of times and each time, you write down the newly computed mean. The standard error of the mean is the standard deviation of this infinitely long column of means.</p>
+</section>
+</section>
+<section id="using-r-to-generate-fake-data-to-explore-the-standard-error" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="using-r-to-generate-fake-data-to-explore-the-standard-error"><span class="header-section-number">5.3.2</span> Using R to generate fake data to explore the standard error</h3>
+<p>note that I use “standard deviation” to refer to the sample standard deviation and “standard error” to refer to the standard error of the mean (again, we can compute standard errors as a standard deviation of any kind of estimate)</p>
+<section id="part-i" class="level4" data-number="5.3.2.1">
+<h4 data-number="5.3.2.1" class="anchored" data-anchor-id="part-i"><span class="header-section-number">5.3.2.1</span> part I</h4>
+<p>In the exercise above, you used Google Sheets to generate <span class="math inline">\(p\)</span> columns of fake data. Each column had <span class="math inline">\(n\)</span> elements, so the matrix of fake data was <span class="math inline">\(n \times p\)</span> (it is standard in most fields to specify a matrix as rows by columns). This is <em>much</em> easier to do in R and how much grows exponentially as the size of the matrix grows.</p>
+<p>To start, we just generate a <span class="math inline">\(n \times p\)</span> matrix of normal random numbers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># so everyone gets the same result!</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># R script to gain some intuition about standard deviation (sd) and standard error (se)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># you will probably need to install ggplot2 using library(ggplot2) </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="co"># sample size</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="co"># number of columns of fake data to generate</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># this is a step-by-step method for constructing the matrix</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> n <span class="sc">*</span> p <span class="co"># the total number of fake values to draw from a random distribution</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fake_data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="co"># create a vector of N fake values</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>fake_data <span class="ot">&lt;-</span> <span class="fu">matrix</span>(fake_data, <span class="at">nrow =</span> n, <span class="at">ncol =</span> p) <span class="co"># put into a matrix object</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># the three step-by-step lines above can be replaced</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># with a more compact code using the pipe operator</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>fake_data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> p, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="at">nrow =</span> n, <span class="at">ncol =</span> p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The compacted code (the last line of code, which is wrapped and so looks like two lines) is the cool thing about R. In one line I’m creating a dataset with <span class="math inline">\(n\)</span> rows and <span class="math inline">\(p\)</span> columns. Each column is a sample of the standard normal distribution which by definition has mean zero and standard deviation of 1. But, and this is important, any sample from this distribution will not have exactly mean zero and standard deviation of 1, because it’s a sample – the mean and standard deviation will have some small error from the truth. The line has two parts to it (connected by the magritter pipe operator): first I’m using the function <code>rnorm()</code> (for random normal) to create a vector of <span class="math inline">\(n \times p\)</span> random, normal deviates (draws from the random normal distribution) and then I’m organizing these into a matrix using the function <code>matrix()</code>.</p>
+<p>To compute the vector of means, standard deviations, and standard errors for each column of <code>fake_data</code>, use the <code>apply()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">apply</span>(fake_data,<span class="dv">2</span>,mean) <span class="co"># the apply function is super useful</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sds <span class="ot">&lt;-</span> <span class="fu">apply</span>(fake_data,<span class="dv">2</span>,sd)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sems <span class="ot">&lt;-</span> sds<span class="sc">/</span><span class="fu">sqrt</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>apply()</code> is a workhorse in many R scripts and is often used in R scripts in place of a for-loop (see below) because it takes fewer lines of code.</p>
+<p>The SEM is the standard deviation of the mean, so let’s see if the standard deviation of the means is close to the true standard error. We sampled from a normal distribution with SD=1 so the true standard is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">sqrt</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4082483</code></pre>
+</div>
+</div>
+<p>and the standard deviation of the <span class="math inline">\(p\)</span> means is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(means)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4150002</code></pre>
+</div>
+</div>
+<p>Questions</p>
+<ol type="1">
+<li>how close is <code>sd(means)</code> to the true SE?</li>
+<li>change p above to 1000. Now how close is sd(means) to the true SE?</li>
+<li>change p above to 10,000. Now how close is sd(means) to the true SE?</li>
+</ol>
+</section>
+<section id="part-ii---means" class="level4" data-number="5.3.2.2">
+<h4 data-number="5.3.2.2" class="anchored" data-anchor-id="part-ii---means"><span class="header-section-number">5.3.2.2</span> part II - means</h4>
+<p>This is a visualization of the spread, or variability, of the sampled means, which is the <strong>sampling distribution of the means</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(means, <span class="at">bins =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Compute the mean of the means</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(means)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.05790466</code></pre>
+</div>
+</div>
+<p>Questions</p>
+<ol type="1">
+<li>Remember that the true mean is zero. How close, in general, are the sampled means to the true mean. How variable are the means? How is this quantified?</li>
+<li>change n to 100, then replot. Are the means, in general, closer to the true mean? How variable are the means now?</li>
+<li>Is the mean estimated with <span class="math inline">\(n=100\)</span> closer to the truth, in general, then the mean estimated with <span class="math inline">\(n=6\)</span>?</li>
+<li>Redo with <span class="math inline">\(n=10000\)</span></li>
+</ol>
+</section>
+<section id="part-iii---how-do-sd-and-se-change-as-sample-size-n-increases" class="level4" data-number="5.3.2.3">
+<h4 data-number="5.3.2.3" class="anchored" data-anchor-id="part-iii---how-do-sd-and-se-change-as-sample-size-n-increases"><span class="header-section-number">5.3.2.3</span> part III - how do SD and SE change as sample size (n) increases?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.025274</code></pre>
+</div>
+</div>
+<p>Questions</p>
+<ol type="1">
+<li>what is the mean of the standard deviations when n=6 (set p=1000)</li>
+<li>what is the mean of the standard deviations when n=100 (set p=1000)</li>
+<li>when n = 1000? (set p=1000)</li>
+<li>when n = 10000? (set p=1000)</li>
+<li>how does the mean of the standard deviations change as n increases (does it get smaller? or stay about the same size)</li>
+<li>repeat the above with SEM</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4185663</code></pre>
+</div>
+</div>
+<p>Congratulations, you have just done a Monte Carlo simulation!</p>
+</section>
+<section id="part-iv-generating-fake-data-with-for-loops" class="level4" data-number="5.3.2.4">
+<h4 data-number="5.3.2.4" class="anchored" data-anchor-id="part-iv-generating-fake-data-with-for-loops"><span class="header-section-number">5.3.2.4</span> Part IV – Generating fake data with for-loops</h4>
+<p>A <strong>for-loop</strong> is used to iterate a computation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="co"># sample size</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>n_sim <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">5</span> <span class="co"># number of iterations of loop (equivalent to p)</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>sds <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>sems <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sim){</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n) <span class="co"># mean=0 and sd=1 are default so not necessary to specify</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  means[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(y)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  sds[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(y)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  sems[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(y)<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(means)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4077471</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3887001</code></pre>
+</div>
+</div>
+<p>Questions</p>
+<ol type="1">
+<li>What do <code>sd(means)</code> and <code>mean(sems)</code> converge to as <code>n_sim</code> is increased from 100 to 1000 to 10,000?</li>
+<li>Do they converge to the same number?</li>
+<li>Should they?</li>
+<li>What is the correct number?</li>
+</ol>
+<p>Question number 4 is asking what is E[SEM], the “expected standard error of the mean”. There is a very easy formula to compute this. What is it?</p>
+</section>
+<section id="part-v-the-sampling-distribution-of-means-is-asymptotically-normal-wait-what" class="level4" data-number="5.3.2.5">
+<h4 data-number="5.3.2.5" class="anchored" data-anchor-id="part-v-the-sampling-distribution-of-means-is-asymptotically-normal-wait-what"><span class="header-section-number">5.3.2.5</span> Part V – the sampling distribution of means is asymptotically Normal (wait, what?)</h4>
+<p>let’s review a standard error. The standard error of a mean is the standard deviation of the sampling distribution of the mean – that is, the standard deviation of the means taken from an infinite number of samples. A fascinating result in statistics is the sampling distribution of a mean is <strong>asymptotically Normal</strong> regardless of the distribution of the sample. What do I mean by this? Let’s take a positively skewed distribution, say the counts of marked cells. The data are generated by a negative binomial distribution.</p>
+<p><span class="math display">\[ counts \sim NB(\mu, \theta) \]</span></p>
+<p>Fig. @ref(fig:sd-skew) is a fakesample of cell counts from 10,000 fake mice.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(counts, <span class="at">bins =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/sd-skew-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Positively skewed distribution of cell counts.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s use a for-loop to sample this distribution (the NB distribution, not the sample from this distribution above) 1000 times and plot the distribution of the 1000 means. But here, we will simulate a more realistic experiment by using <span class="math inline">\(n=10\)</span> as our sample size.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>n_sim <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sim){</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  counts <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  means[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(counts)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(means, <span class="at">bins =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/sd-skew-means-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Distribution of 1000 means of samples from a non-normal distribution with n = 10.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The distribution of count means in Fig. @ref(fig:sd-skew-means) is still positively skewed but less than the distribution of counts in Fig. @ref(fig:sd-skew). Let’s repeat this with a bigger sample size (<span class="math inline">\(n = 1000\)</span>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>n_sim <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sim){</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  counts <span class="ot">&lt;-</span> <span class="fu">rnegbin</span>(n, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">theta =</span> <span class="dv">1</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  means[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(counts)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(means, <span class="at">bins =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/sd-skew-means-bign-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Distribution of 1000 means of samples from a non-normal distribution with n = 1000.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The distribution of count means in Fig. @ref(fig:sd-skew-means-bign) looks Normal-ish. What Figures @ref(fig:sd-skew-means) and @ref(fig:sd-skew-means-bign) demo is that, as the sample size increases, the sampling distribution gets closer and closer to Normal. The “approach” to Normal is rapid when we go from really small samples (<span class="math inline">\(n=5\)</span>) to small samples (<span class="math inline">\(n=30\)</span>) but slows as we go from big samples (<span class="math inline">\(n=100\)</span>) to really big samples (<span class="math inline">\(n=1000\)</span>). That is, the approach is asymptotic. The rate of the approach depends on the sampling distribution of the sample – the more non-normal the sampling distribution of the sample, the higher the sample size needed for the sampling distribution of means to be nearly-normal.</p>
+<p>This result, that the sampling distribution of means from <em>any</em> distribution is asymptotically normal, is the <strong>Central Limit Theorem</strong> and the consequences of this are huge. Confidence intervals and <em>p</em>-values are functions of sampling distributions of means (or differences in means) and when we say that a <em>p</em>-value assumes Normality, it is really the Normality of the sampling distribution of the means and not the sampling distribution of the data that matters. But, because the sampling distribution of means is dependent on sampling size, it means that inference assuming Normality will be less-correct if our sample size is small. And sample sizes in experimental biology tend to be very small.</p>
+</section>
+</section>
+</section>
+<section id="bootstrap" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="bootstrap"><span class="header-section-number">5.4</span> Bootstrapped standard errors</h2>
+<p>The bootstrap is certainly one of the most valuable tools invented in modern statistics. But, it’s not only a useful tool for applied statistics, it’s a useful tool for understanding statistics. Playing with a parametric bootstrap will almost certainly induce an “aha, so that’s what statisticians mean by …” moment.</p>
+<p>A bootstrapped standard error of a statistic is the <strong>empirical</strong> standard deviation of the statistic from a finite number of <em>samples</em>. The basic algorithm for a bootstrap is (here “the statistic” is the mean of the sample)</p>
+<ol type="1">
+<li>sample <span class="math inline">\(n\)</span> values from a probability distribution</li>
+<li>compute the mean</li>
+<li>repeat step 1 and 2 many times</li>
+<li>for a bootstrapped standard error, compute the standard deviation of the set of means saved from each iteration of steps 1 and 2.</li>
+</ol>
+<p>The probability distribution can come from two sources:</p>
+<ol type="1">
+<li>A <strong>parametric bootstrap</strong> uses samples from a parametric probability distribution, such as a Normal distribution or a poisson distribution (remember, these are “parametric” because the distribution is completely described by a set of parameters). A good question is why bother? In general, one would use a parametric bootstrap for a statistic for which there is no formula for the standard error, but the underlying data come from a parametric probability distribution.</li>
+<li>A <strong>non-parametric</strong> bootstrap uses <em>resamples from the data</em>. The data are resampled <em>with replacement</em>. “Resample with replacement” means to sample <span class="math inline">\(n\)</span> times from the full set of observed values. If we were to do this manually, we would i) write down each value of the original sample on its own piece of paper and throw all pieces into a hat. ii) pick a paper from the hat, add its value to sample <span class="math inline">\(i\)</span>, and return the paper to the hat. iii) repeat step ii <span class="math inline">\(n\)</span> times, where <span class="math inline">\(n\)</span> is the original sample size. The new sample contains some values multiple times (papers that were picked out of the hat more than once) and is missing some values (papers that were not picked out in any of the <span class="math inline">\(n\)</span> picks). A good question is, why bother? A non-parametric bootstrap assumes no specific <em>parametric</em> probability distribution but it does assume the distributio of the observed sample is a good approximation of the true population distribution (in which case, the probability of picking a certain value is a good approximation to the true probability).</li>
+</ol>
+<section id="an-example-of-bootstrapped-standard-errors" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="an-example-of-bootstrapped-standard-errors"><span class="header-section-number">5.4.1</span> An example of bootstrapped standard errors</h3>
+<p>Data from: <a href="https://www.nature.com/articles/s41586-018-0162-7" target="_blank">Fernández, Álvaro F., et al.&nbsp;“Disruption of the beclin 1–BCL2 autophagy regulatory complex promotes longevity in mice.” Nature 558.7708 (2018): 136-140.</a></p>
+<p>Experiment: Figure 3b</p>
+<p>data file name: 41586_2018_162_MOESM5_ESM.xlsx</p>
+<p>See Hidden Code for the chunk to import the exp3b dataset.</p>
+<p>Let’s compute the standard error of the mean of <span class="math inline">\(\texttt{positive_nuclei_per_area}\)</span> for the WT group using both a parametric and a nonparametric bootstrap. To implement the algorithm above using easy-to-understand code, I’ll first extract the set of <span class="math inline">\(\texttt{positive_nuclei_per_area}\)</span> values for the WT group and assign it to its own variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>wt_nuclei <span class="ot">&lt;-</span> exp3b[genotype <span class="sc">==</span> <span class="st">"WT"</span>, positive_nuclei_per_area]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I outlined the data.table way to subset data in <a href="reading-writing-wrangling.html#data-subset">Subsetting data</a> but here I review what the line of code above does. <code>exp3b[genotype == "WT", ]</code> indexes the rows (that is, returns the row numbers) that satisfy the condtion genotype = “WT”. Or, put another way, it selects the <strong>subset</strong> of rows that contain the value “WT” in the column “genotype”. <code>exp3b[, positive_nuclei_per_area]</code> indexes the column labeled “positive_nuclei_per_area”. Combined, these two indices extract the values of the column “positive_nuclei_per_area” in the subset of rows that contain the value “WT” in the column “genotype”. The resulting vector of values is assigned to the variable “wt_nuclei”.</p>
+<section id="parametric-bootstrap" class="level4" data-number="5.4.1.1">
+<h4 data-number="5.4.1.1" class="anchored" data-anchor-id="parametric-bootstrap"><span class="header-section-number">5.4.1.1</span> parametric bootstrap</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># so we all get the same results!</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we'll use these as parameters for parametric bootstrap</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(wt_nuclei)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(wt_nuclei)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(wt_nuclei)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>n_boot <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of bootstrap iterations, or p</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_boot) <span class="co"># we will save the means each iteration to this</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_boot){ <span class="co"># this line sets up the number of iterations, p</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  fake_sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  means[iter] <span class="ot">&lt;-</span> <span class="fu">mean</span>(fake_sample)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>se_para_boot <span class="ot">&lt;-</span> <span class="fu">sd</span>(means)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>se_para_boot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.504529</code></pre>
+</div>
+</div>
+</section>
+<section id="non-parametric-bootstrap" class="level4" data-number="5.4.1.2">
+<h4 data-number="5.4.1.2" class="anchored" data-anchor-id="non-parametric-bootstrap"><span class="header-section-number">5.4.1.2</span> non-parametric bootstrap</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># so we all get the same results!</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>n_boot <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of bootstrap iterations, or p</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_boot) <span class="co"># we will save the means each iteration to this</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># inc indexes the elements to sample. By setting inc to 1:n prior to the loop, the first mean that is computed is the observed mean</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>inc <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_boot){</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inc is the set of rows to include in the computation of the mean.</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  means[iter] <span class="ot">&lt;-</span> <span class="fu">mean</span>(wt_nuclei[inc])</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># re-sample 1:n to construct inc for the next iteration</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  inc <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>se_np_boot <span class="ot">&lt;-</span> <span class="fu">sd</span>(means)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>se_np_boot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5102687</code></pre>
+</div>
+</div>
+<p>The parametric bootstrapped SEM is 0.5. The non-parametric bootstrapped SEM is 0.51. Run these several times to get a sense how much variation there is in the bootstrapped estimate of the SEM given the number of iterations. Compute the <strong>parametric</strong> standard error using equation @ref(eq:se) and compare to the bootstrapped values.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5235885</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="confidence-intervals" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="confidence-intervals"><span class="header-section-number">5.5</span> Confidence Intervals</h2>
+<section id="just-the-math" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="just-the-math"><span class="header-section-number">5.5.1</span> Just the math</h3>
+<p>Here I introduce a <strong>confidence interval</strong> (or CI) of a sample mean but the concept is easily generalized to any statistic. A 95% confidence interval of the mean has a 95% probability of including the true mean, that is, the value of true mean is between the lower and upper bounds of the interval. This probability is a long-run frequency in the sense that if a population is sampled many times, and the 95% CIs are constructed for each sample, 95% of the CIs will contain the mean. A longer outline of the interpretation of a confidence interval is in the next section.</p>
+<p>The SE of a statistic is used to construct the lower and upper boundary of a confidence interval. For the CI of a mean, the formula is</p>
+<p><span class="math display">\[
+CI = \overline{y} + t^*SE
+\]</span></p>
+<p>where <span class="math inline">\(t^*\)</span> (or critical value) is a quantile of the t-distribution with <span class="math inline">\(n-1\)</span> degrees of freedom. For the lower bound of the 95% CI, we want the quantile at 0.025 (2.5%). For the upper bound of the 95% CI, we want the quantile at 0.975 (97.5%). For the wt_nuclei sample, with <span class="math inline">\(n = 20\)</span>, the lower and upper <span class="math inline">\(t^*\)</span> are</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>t_lower <span class="ot">=</span> <span class="fu">qt</span>(<span class="fl">0.025</span>, <span class="at">df =</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>t_upper <span class="ot">=</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  t_lower   t_upper 
+-2.093024  2.093024 </code></pre>
+</div>
+</div>
+<p>And, the lower and upper 95% CIs of the mean of <code>wt_nuclei</code> are</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>se_wt <span class="ot">&lt;-</span> <span class="fu">sd</span>(wt_nuclei)<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># CIs</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>lower <span class="ot">&lt;-</span> <span class="fu">mean</span>(wt_nuclei) <span class="sc">+</span> t_lower <span class="sc">*</span> se_wt</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>upper <span class="ot">&lt;-</span> <span class="fu">mean</span>(wt_nuclei) <span class="sc">+</span> t_upper <span class="sc">*</span> se_wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>    2.5%    97.5% 
+1.106817 3.298584 </code></pre>
+</div>
+</div>
+<p>The function <code>qt</code> maps a probability to a <em>t</em>-value – this is the opposite of a <em>t</em> test, which maps a <em>t</em>-value to a probability. Sending <span class="math inline">\(\alpha/2\)</span> and <span class="math inline">\(1 - \alpha/2\)</span> to <code>qt</code> returns the bounds of the confidence interval on a standardized scale. Multiplying these bounds by the standard error o <code>wt_nuclei</code> transforms the standardized bounds onto the scale of the wt_nuclei counts.</p>
+<p>We can check our manual computation with the linear model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(<span class="fu">lm</span>(wt_nuclei <span class="sc">~</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               2.5 %   97.5 %
+(Intercept) 1.106817 3.298584</code></pre>
+</div>
+</div>
+</section>
+<section id="interpretation-of-a-confidence-interval" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="interpretation-of-a-confidence-interval"><span class="header-section-number">5.5.2</span> Interpretation of a confidence interval</h3>
+<p>Okay, so what <em>is</em> a confidence interval? A confidence interval of the mean is a measure of the uncertainty in the estimate of the mean. A 95% confidence interval has a 95% probability (in the sense of long-run frequency) of containing the true mean. It is not correct to state that “there is a 95% probability that the true mean lies within the interval”. These sound the same but they are two different probabilities. The first (correct interpretation) is a probability of a procedure – if we re-do this procedure (sample data, compute the mean, and compute a 95% CI), 95% of these CIs will contain the true mean. The second (incorrect interpretation) is a probability that a parameter (<span class="math inline">\(\mu\)</span>, the true mean) lies within some range. The second (incorrect) interepretation of the CI is correct only if we also assume that <em>any</em> value of the mean is equally probable (Greenland xxx), an assumption that is absurd for almost any data.</p>
+<p>Perhaps a more useful interpretation of a confidence interval is, a confidence interval contains the range of true means that are compatible with the data, in the sense that a <span class="math inline">\(t\)</span>-test would not reject the null hypothesis of a difference between the estimate and any value within the interval (this interpretation does not imply anything about the true value) (Greenland xxx). The “compatibility” interpretation is very useful because it implies that values outside of the interval are less compatible with the data.</p>
+</section>
+<section id="bootstrap-confidence-interval" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="bootstrap-confidence-interval"><span class="header-section-number">5.5.3</span> Bootstrap confidence interval</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># so we all get the same results!</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>n_boot <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of bootstrap iterations, or p</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_boot) <span class="co"># we will save the means each iteration to this</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># inc indexes the elements to sample. By setting inc to 1:n prior to the loop, the first mean that is computed is the observed mean</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>inc <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_boot){</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inc is the set of rows to include in the computation of the mean.</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  means[iter] <span class="ot">&lt;-</span> <span class="fu">mean</span>(wt_nuclei[inc])</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># re-sample 1:n to construct inc for the next iteration</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  inc <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>ci_boot_wt <span class="ot">&lt;-</span> <span class="fu">quantile</span>(means, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>ci_boot_wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    2.5%    97.5% 
+1.287197 3.306559 </code></pre>
+</div>
+</div>
+</section>
+<section id="a-plot-of-a-parametric-ci-vs.-bootstrap-ci-of-the-means" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="a-plot-of-a-parametric-ci-vs.-bootstrap-ci-of-the-means"><span class="header-section-number">5.5.4</span> A plot of a “parametric” CI vs.&nbsp;bootstrap CI of the means</h3>
+<p>The dataset in exp3b was specifically chosen to highlight differences between a bootstrap CI and a CI computed using Eq. @ref(eq:se) for the standard error of a mean. I’ll refer to this latter CI as a “parametric” CI – It’s the CI one gets if we fit a linear model to just the treatment group.</p>
+<p>See if you can follow what’s going on here.</p>
+<ol type="1">
+<li>Create a function to compute the 95% parametric CI of a mean. By “parametric” CI, I mean the CI using Eq. @ref(eq:se) for the SEM.</li>
+</ol>
+<p>I create a function because anytime we recycle code to compute something with a different input, it is best practice to create a function to compute this something.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a simple ci function, that can't handle missing</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>ci_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(y,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">alpha =</span> <span class="fl">0.05</span>){</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  ci <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2.5%"</span> <span class="ot">=</span> <span class="fu">mean</span>(y) <span class="sc">+</span> <span class="fu">qt</span>(alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> (n <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">sd</span>(y)<span class="sc">/</span><span class="fu">sqrt</span>(n),</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"97.5%"</span> <span class="ot">=</span> <span class="fu">mean</span>(y) <span class="sc">+</span> <span class="fu">qt</span>((<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>), <span class="at">df =</span> (n <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">sd</span>(y)<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ci)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Create a function to compute the 95% non-parametric bootstrap CI of a mean</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a simple bootstrap function</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>boot_ci_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(y,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">n_boot =</span> <span class="dv">1000</span>,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">seed =</span> <span class="dv">1</span>){</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  n_boot <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># number of bootstrap iterations</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_boot) <span class="co"># we will save the means each iteration to this</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inc indexes the elements to sample. By setting inc to 1:n prior to the loop, the first mean that is computed is the observed mean</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  inc <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_boot){</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># inc is the set of rows to include in the computation of the mean.</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    means[iter] <span class="ot">&lt;-</span> <span class="fu">mean</span>(y[inc])</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># re-sample 1:n to construct inc for the next iteration</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    inc <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  ci_boot <span class="ot">&lt;-</span> <span class="fu">quantile</span>(means, <span class="fu">c</span>(alpha<span class="sc">/</span><span class="dv">2</span>, (<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)))</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ci_boot)</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Create a table of the parametric and bootstrap CIs of the mean of the WT and KI groups</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>wt_nuclei <span class="ot">&lt;-</span> exp3b[genotype <span class="sc">==</span> <span class="st">"WT"</span>, positive_nuclei_per_area]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>ki_nuclei <span class="ot">&lt;-</span> exp3b[genotype <span class="sc">==</span> <span class="st">"KI"</span>, positive_nuclei_per_area]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>exp3b_ci <span class="ot">&lt;-</span> exp3b[, .(<span class="at">positive_nuclei_per_area =</span> <span class="fu">mean</span>(positive_nuclei_per_area),</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ci =</span> <span class="fu">ci_mean</span>(positive_nuclei_per_area),</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ci_boot =</span> <span class="fu">boot_ci_mean</span>(positive_nuclei_per_area)),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                  by <span class="ot">=</span> genotype]</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>exp3b_ci[, boundary <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"lower"</span>, <span class="st">"upper"</span>), <span class="dv">2</span>)]</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>exp3b_ci_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(exp3b_ci,</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>                       genotype <span class="sc">+</span> positive_nuclei_per_area <span class="sc">~</span> boundary,</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">value.var =</span> <span class="fu">c</span>(<span class="st">"ci"</span>, <span class="st">"ci_boot"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Plot</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>gg1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> exp3b,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> genotype,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> positive_nuclei_per_area)) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span>),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> exp3b_ci_wide,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> positive_nuclei_per_area),</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> exp3b_ci_wide,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">ymin =</span> ci_lower,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> ci_upper),</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Positive nuclei per area"</span>) <span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Parametric CI"</span>) <span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>()</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>gg2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> exp3b,</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> genotype,</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> positive_nuclei_per_area)) <span class="sc">+</span></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>,</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span>),</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> exp3b_ci_wide,</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> positive_nuclei_per_area),</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> exp3b_ci_wide,</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">ymin =</span> ci_boot_lower,</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> ci_boot_upper),</span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Positive nuclei per area"</span>) <span class="sc">+</span></span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Bootstrap CI"</span>) <span class="sc">+</span></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>()</span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(gg1, gg2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The difference between the parametric and bootstrap CI is most easily seen by comparing the CIs in the KI treatment group. The parametric CI is symmetric about the mean. This <em>has</em> to be true because of how it is computed. The non-parametric bootstrap CI is asymmetric about the mean – it is longer on the more positive side and shorter on the less positive side. This asymmetry reflects the positive-skew of the underlying distribution. A nice feature of a bootstrap CI compared to a parametric CI computed as the sample CI is that the bootstrap CI will never contain impossible values. A parametric CI fit by a linear model might have a negative lower bound, which would be imply that negative counts are consistent with the data. Negative counts aren’t really consistent with anything because negative counts are impossible.</p>
+</section>
+</section>
+<section id="standard-error-of-a-difference-between-means" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="standard-error-of-a-difference-between-means"><span class="header-section-number">5.6</span> Standard error of a difference between means</h2>
+<p>Let’s apply the concepts of standard error and confidence interval to a more important statistic for experimental biologists – the difference between the means of two groups.</p>
+<p>The standard error of the difference between the means of two groups is</p>
+<p><span class="math display">\[
+s_{\bar{y}_2 - \bar{y}_1} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
+\]</span></p>
+<p>The standard error of the difference between means is the square root of the sum of the squared standard errors of the mean of each variable. To understand this, recall that when we add two, independent, random variables, the variance of the summed variable is the sum of the variances of the independent variables (okay, but what is the variance of the difference between two random variables? This is no different because a difference is just the addition of the negative of the second variable).</p>
+<section id="the-standard-error-of-a-difference-between-means-is-the-standard-deviation-of-the-sampling-distribution-of-the-difference" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="the-standard-error-of-a-difference-between-means-is-the-standard-deviation-of-the-sampling-distribution-of-the-difference"><span class="header-section-number">5.6.1</span> The standard error of a difference between means is the standard deviation of the sampling distribution of the difference</h3>
+<p>Let’s peak at a sampling distribution of the difference in means of simulated control (“Cn”) and treated (“Tr”) groups. The fake data are simulated to look like those in fig2i, introduced in the introductory chapter <a href="#ask1-intro">Analyzing experimental data with a linear model</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># so we all get the same result!</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>n_sim <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set mean, sd and difference to look like fig2i from ch. 1</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(liver_tg <span class="sc">~</span> treatment, <span class="at">data =</span> fig2i)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>s_obs <span class="ot">&lt;-</span> <span class="fu">summary</span>(m1)<span class="sc">$</span>sigma</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> s_obs <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> s_obs<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">12</span>))</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>b_obs <span class="ot">&lt;-</span> <span class="fu">coef</span>(m1)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>mu_1 <span class="ot">&lt;-</span> b_obs[<span class="dv">1</span>] <span class="sc">+</span> </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">12</span>)) <span class="co"># cn mean = b0</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>mu_2 <span class="ot">&lt;-</span> b_obs[<span class="dv">1</span>] <span class="sc">+</span> b_obs[<span class="dv">2</span>] <span class="sc">+</span> </span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fu">sqrt</span>(<span class="dv">2</span><span class="sc">*</span>sigma<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>)) <span class="co"># tr mean = b0 + b1</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> mu_2 <span class="sc">-</span> mu_1</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(fig2i)<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>diff <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>sed <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sim)</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>diff_obs <span class="ot">&lt;-</span> b_obs[<span class="dv">2</span>]          <span class="co"># observed value</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>sed_obs <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span><span class="sc">*</span>s_obs<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n)  <span class="co"># observed value</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(sim_i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sim){</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  Cn <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu_1, <span class="at">sd =</span> sigma)</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  Tr <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu_2, <span class="at">sd =</span> sigma)</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  diff[sim_i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(Tr) <span class="sc">-</span> <span class="fu">mean</span>(Cn)</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>  sed[sim_i] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sd</span>(Cn)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n <span class="sc">+</span> <span class="fu">sd</span>(Tr)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n)</span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(diff, <span class="at">bins =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/sd-fig2i-sampling-dist-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Sampling distribution of the difference in means for fake data modeled to look like the data in fig2i from Chapter 1.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Fig. @ref(fig:sd-fig2i-sampling-dist) is a sample (N = <span class="math inline">\(10^4\)</span>) from the sampling distribution of the difference in means for fake data modeled to look like the data in fig2i from Chapter 1.The standard deviation of this sample is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.761664</code></pre>
+</div>
+</div>
+<p>This is pretty close to the true standard deviation of the distribution, which is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(sigma<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n <span class="sc">+</span> sigma<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.77137</code></pre>
+</div>
+</div>
+<p>This is the expected standard error of the difference in means if we were to sample <span class="math inline">\(n = 6\)</span> individuals from the “Cn” population (<span class="math inline">\(\mu=\)</span> 61.9966034, <span class="math inline">\(\sigma=\)</span> 9.9963055 and <span class="math inline">\(n = 6\)</span> individuals from the “Tr” population (<span class="math inline">\(\mu=\)</span> 35.043945, <span class="math inline">\(\sigma=\)</span> 9.9963055. The observed difference and standard error and the first ten fake differences and standard errors from the <span class="math inline">\(10^4\)</span> fake data sets are..</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">SE</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-21.60000</td>
+<td style="text-align: right;">7.045487</td>
+<td style="text-align: left;">(obs)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-31.98518</td>
+<td style="text-align: right;">6.353331</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-33.51950</td>
+<td style="text-align: right;">4.447695</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-29.13858</td>
+<td style="text-align: right;">5.087926</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-25.81587</td>
+<td style="text-align: right;">3.440894</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-25.62529</td>
+<td style="text-align: right;">6.855294</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-25.16365</td>
+<td style="text-align: right;">6.872344</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-22.38114</td>
+<td style="text-align: right;">4.336371</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-30.93056</td>
+<td style="text-align: right;">5.593599</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-14.81727</td>
+<td style="text-align: right;">4.020610</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-24.85262</td>
+<td style="text-align: right;">4.207291</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
 
 
+</div>
+</div>
+</section>
+</section>
+<section id="confidence-limits-of-a-difference-between-means" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="confidence-limits-of-a-difference-between-means"><span class="header-section-number">5.7</span> Confidence limits of a difference between means</h2>
+<p>Let’s compute the 95% confidence interval of the difference in means of the fig2i data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Cn <span class="ot">&lt;-</span> fig2i[treatment <span class="sc">==</span> <span class="st">"ASK1F/F"</span>, liver_tg]</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>Tr <span class="ot">&lt;-</span> fig2i[treatment <span class="sc">==</span> <span class="st">"ASK1Δadipo"</span>, liver_tg]</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>diff_1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Tr) <span class="sc">-</span> <span class="fu">mean</span>(Cn)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>s_1 <span class="ot">&lt;-</span> <span class="fu">sd</span>(Tr)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>s_2 <span class="ot">&lt;-</span> <span class="fu">sd</span>(Cn)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(s_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n <span class="sc">+</span> s_2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n)</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2n - 2 df because there are 2n values and </span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 parameters fit (a df is lost for each fit parameter)</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>t_lower <span class="ot">=</span> <span class="fu">qt</span>(<span class="fl">0.025</span>, <span class="at">df =</span> (<span class="dv">2</span><span class="sc">*</span>n <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>t_upper <span class="ot">=</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> (<span class="dv">2</span><span class="sc">*</span>n <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>lower <span class="ot">&lt;-</span> diff_1 <span class="sc">+</span> t_lower <span class="sc">*</span> se</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>upper <span class="ot">&lt;-</span> diff_1 <span class="sc">+</span> t_upper <span class="sc">*</span> se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5 %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-21.6</td>
+<td style="text-align: right;">7.045487</td>
+<td style="text-align: right;">-37.29832</td>
+<td style="text-align: right;">-5.901676</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Now compare these values to the “treatmentASK1Δadipo” row of the coefficient table of the linear model fit to the fig2i data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(liver_tg <span class="sc">~</span> treatment, <span class="at">data =</span> fig2i)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># output table</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>model_table <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(m1)),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">confint</span>(m1))</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>model_table <span class="sc">%&gt;%</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;&amp;#124;t&amp;#124;)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5 %</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">61.46667</td>
+<td style="text-align: right;">4.981912</td>
+<td style="text-align: right;">12.337968</td>
+<td style="text-align: right;">0.0000002</td>
+<td style="text-align: right;">50.36628</td>
+<td style="text-align: right;">72.567058</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">treatmentASK1Δadipo</td>
+<td style="text-align: right;">-21.60000</td>
+<td style="text-align: right;">7.045487</td>
+<td style="text-align: right;">-3.065792</td>
+<td style="text-align: right;">0.0119261</td>
+<td style="text-align: right;">-37.29832</td>
+<td style="text-align: right;">-5.901676</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<section id="of-95-cis-of-the-difference-include-the-true-difference" class="level3" data-number="5.7.1">
+<h3 data-number="5.7.1" class="anchored" data-anchor-id="of-95-cis-of-the-difference-include-the-true-difference"><span class="header-section-number">5.7.1</span> 95% of 95% CIs of the difference include the true difference</h3>
+<p>A 95% CI of the difference (the estimate of the true effect) has a 95% probability of “covering the true effect”, where the probability is in the sense of long-term frequency – if we repeated an experiment 1000 times, we would expect 950 of the measured 95% CIs to include the true effect. Let’s check the frequency of 95% CIs that cover the true effect in the <span class="math inline">\(10^4\)</span> fake data sets generated above.</p>
+<ol type="1">
+<li>First, compute the CIs for each data set.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>lower <span class="ot">&lt;-</span> diff <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.025</span>, <span class="at">df =</span> (<span class="dv">2</span><span class="sc">*</span>n <span class="sc">-</span> <span class="dv">2</span>)) <span class="sc">*</span> sed</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>upper <span class="ot">&lt;-</span> diff <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> (<span class="dv">2</span><span class="sc">*</span>n <span class="sc">-</span> <span class="dv">2</span>)) <span class="sc">*</span> sed</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>ci_table <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sim =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>n_sim),</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> diff,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lower"</span> <span class="ot">=</span> lower,</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"upper"</span> <span class="ot">=</span> upper</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As a check, let’s plot the first 10 estimates of the true effect and the CI of the estimate from the fake data simulation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> ci_table[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,],</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span> (<span class="at">x =</span> estimate,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> sim)) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> delta), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> lower,</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xend =</span> upper,</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> sim,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">yend =</span> sim)) <span class="sc">+</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>()</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="uncertainty-sd-and-se_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="1">
+<li>The frequency of CIs that cover the true effect is</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">sum</span>(delta <span class="sc">&gt;</span> lower <span class="sc">&amp;</span> delta <span class="sc">&lt;</span> upper))<span class="sc">/</span>n_sim <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 95.1</code></pre>
+</div>
+</div>
+<p>Pretty good!</p>
+</section>
+</section>
+<section id="hidden-code" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="hidden-code"><span class="header-section-number">5.8</span> Hidden code</h2>
+<section id="import-exp3b" class="level3" data-number="5.8.1">
+<h3 data-number="5.8.1" class="anchored" data-anchor-id="import-exp3b"><span class="header-section-number">5.8.1</span> Import exp3b</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"Disruption of the beclin 1–BCL2 autophagy regulatory complex promotes longevity in mice"</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>file_name <span class="ot">&lt;-</span> <span class="st">"41586_2018_162_MOESM5_ESM.xlsx"</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="fu">here</span>(data_folder, data_from, file_name)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>exp3b <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path,</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sheet =</span> <span class="st">"Fig. 3b"</span>,</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">range =</span> <span class="st">"I4:K50"</span>,</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(exp3b, <span class="at">old =</span> <span class="st">"area_mm2"</span>, <span class="at">new =</span> <span class="st">"area"</span>)</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>genotype_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KI"</span>)</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>exp3b[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(genotype_levels, <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">26</span>))]</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>exp3b[, genotype <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(genotype,</span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> genotype_levels)]</span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>exp3b[, positive_nuclei_per_area <span class="sc">:</span><span class="er">=</span> positive_nuclei<span class="sc">/</span>area]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
