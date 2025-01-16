@@ -9,6 +9,10 @@ output: html_document
 library(data.table)
 library(MASS)
 library(glmmTMB)
+library(gamlss)
+library(moments) # skewness
+library(performance) # model checks
+library(DHARMa)
 library(AICcmodavg) # qaic
 library(knitr)
 library(kableExtra)
@@ -49,7 +53,7 @@ fqaic <- function(model) {
 
 ```{r simulation-3x, fig.width=8, fig.height = 4, warning=FALSE}
 # https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
-n_iter <- 2000
+n_iter <- 500
 set.seed(3)
 file_path <- "glm_3x_results_new_lrt_out.Rds"
 do_it <- TRUE
@@ -69,14 +73,21 @@ if(do_it){
   mu_ref <- 10 # mu[3] is modified in the loop
   k <- 3
   
+  model_summary_matrix_labels <- c("skew_lm1", "aic_lm", "aic_nb1", "aic_nb2", "aic_nb1_pw", "aic_nb2_pw")
+  model_summary_matrix <- matrix(nrow = n_iter,
+                         ncol = length(model_summary_matrix_labels))
+  colnames(model_summary_matrix) <- model_summary_matrix_labels
   
   stats_labels <- c("lm_mu1", "lm_mu2", "lm_b1", "lm_p",
+                    "gls_mu1", "gls_mu2", "gls_b1", "gls_p",
                     "lm_log_mu1", "lm_log_mu2", "lm_log_b1", "lm_log_p",
                     "qp_mu1", "qp_mu2", "qp_b1", "qp_p",
                     "nb1_mu1", "nb1_mu2", "nb1_b1", "nb1_p",# "nb1_lrt_p",
                     "nb2_mu1", "nb2_mu2", "nb2_b1", "nb2_p",# "nb2_lrt_p",
                     "nb1_pw_mu1", "nb1_pw_mu2", "nb1_pw_b1", "nb1_pw_p", "nb1_pw_lrt_p",
                     "nb2_pw_mu1", "nb2_pw_mu2", "nb2_pw_b1", "nb2_pw_p", "nb2_pw_lrt_p",
+                    "nb1b_mu1", "nb1b_mu2", "nb1b_b1", "nb1b_p",
+                    "nb2b_mu1", "nb2b_mu2", "nb2b_b1", "nb2b_p",
                     "mw")
   
   type1_matrix <- matrix(nrow = n_iter,
@@ -101,9 +112,11 @@ if(do_it){
     if(unbalanced == TRUE){
       if(n == 6){
         n_vec <- c(4,6,8)
+        n_vec <- c(8,6,4)
       }
       if(n == 20){
         n_vec <- c(14,20,26)
+        n_vec <- c(26,20,14)
       }
     }else{
       n_vec <- c(n, n, n)
@@ -122,7 +135,7 @@ if(do_it){
     # if nb = 0.5 qp and mu = 10 then qp = 21
     # if nb = 2 qp and mu = 10 then qp = 6
     theta_nb <- gen_theta
-    theta_qp <- 1 + mu_sim/theta_nb # for generating data each group has its own theta
+    theta_qp <- 1 + mu_sim/theta_nb
     if(gen_model == "qp"){
       y_qp <- rqpois(n * k * n_iter,
                      mu = rep(mu_sim, n_vec),
@@ -144,6 +157,12 @@ if(do_it){
                 data = fd)
       lm1_log <- lm(log(tumors + 1) ~ genotype,
                     data = fd)
+      gls1 <- gls(tumors ~ genotype,
+                weights = varIdent(form = ~ 1 | genotype),
+                data = fd)
+      pois1 <- glm(tumors ~ genotype,
+                 family = poisson(link = "log"),
+                 data = fd)
       qp1 <- glm(tumors ~ genotype,
                  family = quasipoisson(link = "log"),
                  data = fd)
@@ -153,6 +172,30 @@ if(do_it){
       nb2 <- glmmTMB(tumors ~ genotype,
                      family = nbinom2(link = "log"),
                      data = fd)
+      nb1b <- try(gamlss(tumors ~ genotype, 
+                         sigma.formula = ~ genotype, 
+                         family = NBII, 
+                         mu.link = "log", 
+                         sigma.link = "log",
+                         data = fd,
+                         trace=FALSE),
+                  silent = TRUE)
+      if(inherits(nb1b, "try-error") == TRUE){
+        nb1b <- nb1
+      }
+
+      nb2b <- try(gamlss(tumors ~ genotype, 
+                         sigma.formula = ~ genotype, 
+                         family = NBII, 
+                         mu.link = "log", 
+                         sigma.link = "log",
+                         data = fd,
+                         trace=FALSE),
+                  silent = TRUE)
+      if(inherits(nb2b, "try-error") == TRUE){
+        nb2b <- nb2
+      }
+
       # pairwise models
       nb1_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
                           family = nbinom1(link = "log"),
@@ -172,12 +215,27 @@ if(do_it){
       mww2 <- wilcox.test(tumors ~ genotype,
                           data = fd[genotype %in% c("WT", "TR"),])$p.value
       
+      # statistics
+      model_summary_matrix[iter, "skew_lm1"] <- skewness(residuals(lm1))
+      model_summary_matrix[iter, "aic_lm"] <- AIC(lm1)
+      model_summary_matrix[iter, "aic_nb1"] <- AIC(nb1)
+      model_summary_matrix[iter, "aic_nb2"] <- AIC(nb2)
+      model_summary_matrix[iter, "aic_nb1_pw"] <- AIC(nb1_pw_2)
+      model_summary_matrix[iter, "aic_nb2_pw"] <- AIC(nb2_pw_2)
+      
       # type 1
       nonref <- 2
       type1_matrix[iter, "lm_mu1"] <- coef(lm1)[1]
       type1_matrix[iter, "lm_mu2"] <- coef(lm1)[1] + coef(lm1)[nonref]
       type1_matrix[iter, "lm_b1"] <- coef(lm1)[nonref]
       type1_matrix[iter, "lm_p"] <- summary(contrast(emmeans(lm1, specs = "genotype"),
+                                                     method = "revpairwise",
+                                                     adjust = "none"))[nonref-1,"p.value"]
+      
+      type1_matrix[iter, "gls_mu1"] <- coef(gls1)[1]
+      type1_matrix[iter, "gls_mu2"] <- coef(gls1)[1] + coef(gls1)[nonref]
+      type1_matrix[iter, "gls_b1"] <- coef(gls1)[nonref]
+      type1_matrix[iter, "gls_p"] <- summary(contrast(emmeans(gls1, specs = "genotype"),
                                                      method = "revpairwise",
                                                      adjust = "none"))[nonref-1,"p.value"]
       
@@ -245,6 +303,13 @@ if(do_it){
                                                      method = "revpairwise",
                                                      adjust = "none"))[nonref-1,"p.value"]
       
+      power_matrix[iter, "gls_mu1"] <- coef(gls1)[1]
+      power_matrix[iter, "gls_mu2"] <- coef(gls1)[1] + coef(gls1)[nonref]
+      power_matrix[iter, "gls_b1"] <- coef(gls1)[nonref]
+      power_matrix[iter, "gls_p"] <- summary(contrast(emmeans(gls1, specs = "genotype"),
+                                                     method = "revpairwise",
+                                                     adjust = "none"))[nonref-1,"p.value"]
+      
       power_matrix[iter, "lm_log_mu1"] <- coef(lm1_log)[1]
       power_matrix[iter, "lm_log_mu2"] <- coef(lm1_log)[1] + coef(lm1_log)[nonref]
       power_matrix[iter, "lm_log_b1"] <- coef(lm1_log)[nonref]
@@ -296,10 +361,64 @@ if(do_it){
         adjust = "none"))[1,"p.value"]
       power_matrix[iter, "nb2_pw_lrt_p"] <- drop1(nb2_pw_2,
                                                   test="Chisq")$"Pr(>Chi)"[2]
-      
+    
       power_matrix[iter, "mw"] <- mww2
 
+      # gamlss type 1 and power
+      nb1b_emm <- try(emmeans(nb1b, specs = "genotype"),
+                      silent = TRUE)
+      if(inherits(nb1b_emm, "try-error") == TRUE){
+        nonref <- 2
+        type1_matrix[iter, "nb1b_mu1"] <- type1_matrix[iter, "nb1_mu1"]
+        type1_matrix[iter, "nb1b_mu2"] <- type1_matrix[iter, "nb1_mu2"]
+        type1_matrix[iter, "nb1b_b1"] <- type1_matrix[iter, "nb1_b1"]
+        type1_matrix[iter, "nb1b_p"] <- type1_matrix[iter, "nb1_p"]
+        nonref <- 3
+        power_matrix[iter, "nb1b_mu1"] <- power_matrix[iter, "nb1_mu1"]
+        power_matrix[iter, "nb1b_mu2"] <- power_matrix[iter, "nb1_mu2"]
+        power_matrix[iter, "nb1b_b1"] <- power_matrix[iter, "nb1_b1"]
+        power_matrix[iter, "nb1b_p"] <- power_matrix[iter, "nb1_p"]
+      }else{
+        nb1b_pairs <- contrast(nb1b_emm, method = "revpairwise", adjust = "none")
+        nonref <- 2
+        type1_matrix[iter, "nb1b_mu1"] <- summary(nb1b_emm)[1,"emmean"]
+        type1_matrix[iter, "nb1b_mu2"] <- summary(nb1b_emm)[nonref,"emmean"]
+        type1_matrix[iter, "nb1b_b1"] <- summary(nb1b_pairs)[nonref-1, "estimate"]
+        type1_matrix[iter, "nb1b_p"] <- summary(nb1b_pairs)[nonref-1, "p.value"]
+        nonref <- 3
+        power_matrix[iter, "nb1b_mu1"] <- summary(nb1b_emm)[1,"emmean"]
+        power_matrix[iter, "nb1b_mu2"] <- summary(nb1b_emm)[nonref,"emmean"]
+        power_matrix[iter, "nb1b_b1"] <- summary(nb1b_pairs)[nonref-1, "estimate"]
+        power_matrix[iter, "nb1b_p"] <- summary(nb1b_pairs)[nonref-1, "p.value"]
+      }
       
+      nb2b_emm <- try(emmeans(nb2b, specs = "genotype"),
+                      silent = TRUE)
+      if(inherits(nb2b_emm, "try-error") == TRUE){
+        nonref <- 2
+        type1_matrix[iter, "nb2b_mu1"] <- type1_matrix[iter, "nb2_mu1"]
+        type1_matrix[iter, "nb2b_mu2"] <- type1_matrix[iter, "nb2_mu2"]
+        type1_matrix[iter, "nb2b_b1"] <- type1_matrix[iter, "nb2_b1"]
+        type1_matrix[iter, "nb2b_p"] <- type1_matrix[iter, "nb2_p"]
+        nonref <- 3
+        power_matrix[iter, "nb2b_mu1"] <- power_matrix[iter, "nb2_mu1"]
+        power_matrix[iter, "nb2b_mu2"] <- power_matrix[iter, "nb2_mu2"]
+        power_matrix[iter, "nb2b_b1"] <- power_matrix[iter, "nb2_b1"]
+        power_matrix[iter, "nb2b_p"] <- power_matrix[iter, "nb2_p"]
+      }else{
+        nb2b_pairs <- contrast(nb2b_emm, method = "revpairwise", adjust = "none")
+        nonref <- 2
+        type1_matrix[iter, "nb2b_mu1"] <- summary(nb2b_emm)[1,"emmean"]
+        type1_matrix[iter, "nb2b_mu2"] <- summary(nb2b_emm)[nonref,"emmean"]
+        type1_matrix[iter, "nb2b_b1"] <- summary(nb2b_pairs)[nonref-1, "estimate"]
+        type1_matrix[iter, "nb2b_p"] <- summary(nb2b_pairs)[nonref-1, "p.value"]
+        nonref <- 3
+        power_matrix[iter, "nb2b_mu1"] <- summary(nb2b_emm)[1,"emmean"]
+        power_matrix[iter, "nb2b_mu2"] <- summary(nb2b_emm)[nonref,"emmean"]
+        power_matrix[iter, "nb2b_b1"] <- summary(nb2b_pairs)[nonref-1, "estimate"]
+        power_matrix[iter, "nb2b_p"] <- summary(nb2b_pairs)[nonref-1, "p.value"]
+      }
+
     }
     results_out <- rbind(
       results_out,
@@ -308,14 +427,16 @@ if(do_it){
         model = gen_model,
         sample_size = n,
         type = "type1",
-        type1_matrix
+        type1_matrix,
+        model_summary_matrix
       ),
       data.table(
         theta = gen_theta,
         model = gen_model,
         sample_size = n,
         type = "power",
-        power_matrix
+        power_matrix,
+        model_summary_matrix
       )
     )
   }
@@ -341,12 +462,15 @@ parameter_matrix <- expand.grid(theta = theta_list,
                                 sim_type = type_list)
 
 stats_labels <- c("lm_mu1", "lm_mu2", "lm_b1", "lm_p",
+                  "gls_mu1", "gls_mu2", "gls_b1", "gls_p",
                   "lm_log_mu1", "lm_log_mu2", "lm_log_b1", "lm_log_p",
                   "qp_mu1", "qp_mu2", "qp_b1", "qp_p",
                   "nb1_mu1", "nb1_mu2", "nb1_b1", "nb1_p",# "nb1_lrt_p",
                   "nb2_mu1", "nb2_mu2", "nb2_b1", "nb2_p",# "nb2_lrt_p",
                   "nb1_pw_mu1", "nb1_pw_mu2", "nb1_pw_b1", "nb1_pw_p", "nb1_pw_lrt_p",
                   "nb2_pw_mu1", "nb2_pw_mu2", "nb2_pw_b1", "nb2_pw_p", "nb2_pw_lrt_p",
+                  "nb1b_mu1", "nb1b_mu2", "nb1b_b1", "nb1b_p",
+                  "nb2b_mu1", "nb2b_mu2", "nb2b_b1", "nb2b_p",
                   "mw")
 stats_matrix <- matrix(nrow = n_iter,
                        ncol = length(stats_labels))
@@ -365,20 +489,25 @@ for(parameter_set in 1:nrow(parameter_matrix)){
                               .SD,
                               .SDcols = stats_labels] |>
     as.matrix()
-    stats_matrix <- results_out[theta == gen_theta & 
+  model_summary_matrix <- results_out[theta == gen_theta & 
                                 model == gen_model &
                                 type == sim_type &
                                 sample_size == n,
                               .SD,
-                              .SDcols = stats_labels] |>
+                              .SDcols = model_summary_matrix_labels] |>
     as.matrix()
-
   
   lm_mu1 <- mean(stats_matrix[, "lm_mu1"])
   lm_mu2 <- mean(stats_matrix[, "lm_mu2"])
   lm_effect <- mean(stats_matrix[, "lm_b1"])
   lm_sd_b1 <- sd(stats_matrix[, "lm_b1"])
   lm_pless <- pless(stats_matrix[, "lm_p"])
+  
+  gls_mu1 <- mean(stats_matrix[, "gls_mu1"])
+  gls_mu2 <- mean(stats_matrix[, "gls_mu2"])
+  gls_effect <- mean(stats_matrix[, "gls_b1"])
+  gls_sd_b1 <- sd(stats_matrix[, "gls_b1"])
+  gls_pless <- pless(stats_matrix[, "gls_p"])
   
   lm_log_mu1 <- mean(exp(stats_matrix[, "lm_log_mu1"]))
   lm_log_mu2 <- mean(exp(stats_matrix[, "lm_log_mu2"]))
@@ -398,24 +527,12 @@ for(parameter_set in 1:nrow(parameter_matrix)){
   nb1_sd_b1 <- sd(stats_matrix[, "nb1_b1"])
   nb1_pless <- pless(stats_matrix[, "nb1_p"])
 
-  # nb1_lrt_mu1 <- nb1_mu1
-  # nb1_lrt_mu2 <- nb1_mu2
-  # nb1_lrt_effect <- nb1_effect
-  # nb1_lrt_sd_b1 <- nb1_sd_b1
-  # nb1_lrt_pless <- pless(stats_matrix[, "nb1_lrt_p"])
-  
   nb2_mu1 <- mean(exp(stats_matrix[, "nb2_mu1"]))
   nb2_mu2 <- mean(exp(stats_matrix[, "nb2_mu2"]))
   nb2_effect <- mean(exp(stats_matrix[, "nb2_b1"]))
   nb2_sd_b1 <- sd(stats_matrix[, "nb2_b1"])
   nb2_pless <- pless(stats_matrix[, "nb2_p"])
   
-  # nb2_lrt_mu1 <- nb2_mu1
-  # nb2_lrt_mu2 <- nb2_mu2
-  # nb2_lrt_effect <- nb2_effect
-  # nb2_lrt_sd_b1 <- nb2_sd_b1
-  # nb2_lrt_pless <- pless(stats_matrix[, "nb2_lrt_p"])
-
   nb1_pw_mu1 <- mean(exp(stats_matrix[, "nb1_pw_mu1"]))
   nb1_pw_mu2 <- mean(exp(stats_matrix[, "nb1_pw_mu2"]))
   nb1_pw_effect <- mean(exp(stats_matrix[, "nb1_pw_b1"]))
@@ -440,14 +557,48 @@ for(parameter_set in 1:nrow(parameter_matrix)){
   nb2_pw_lrt_sd_b1 <- nb2_pw_sd_b1
   nb2_pw_lrt_pless <- pless(stats_matrix[, "nb2_pw_lrt_p"])
 
+  nb1b_mu1 <- mean(exp(stats_matrix[, "nb1b_mu1"]))
+  nb1b_mu2 <- mean(exp(stats_matrix[, "nb1b_mu2"]))
+  nb1b_effect <- mean(exp(stats_matrix[, "nb1b_b1"]))
+  nb1b_sd_b1 <- sd(stats_matrix[, "nb1b_b1"])
+  nb1b_pless <- pless(stats_matrix[, "nb1b_p"])
+
+  nb2b_mu1 <- mean(exp(stats_matrix[, "nb2b_mu1"]))
+  nb2b_mu2 <- mean(exp(stats_matrix[, "nb2b_mu2"]))
+  nb2b_effect <- mean(exp(stats_matrix[, "nb2b_b1"]))
+  nb2b_sd_b1 <- sd(stats_matrix[, "nb2b_b1"])
+  nb2b_pless <- pless(stats_matrix[, "nb2b_p"])
+
   mw_mu1 <- NA
   mw_mu2 <- NA
   mw_effect <- NA
   mw_sd_b1 <- NA
   mw_pless <- pless(stats_matrix[, "mw"])
   
-  fit_models <- c("lm", "lm_log", "qp", "nb1", "nb2", # "nb1_lrt", "nb2_lrt",
-                  "nb1_pw", "nb2_pw", "nb1_pw_lrt", "nb2_pw_lrt", "mw")
+  glm_p <- numeric(nrow(model_summary_matrix))
+  glm_pw_p <- numeric(nrow(model_summary_matrix))
+  for(j in 1:nrow(model_summary_matrix)){
+    glm_p[j] <- ifelse(model_summary_matrix[j, "aic_nb1"] < model_summary_matrix[j, "aic_nb2"], 
+                    stats_matrix[j, "nb1_p"],
+                    stats_matrix[j, "nb2_p"])
+    glm_pw_p[j] <- ifelse(model_summary_matrix[j, "aic_nb1_pw"] < model_summary_matrix[j, "aic_nb2_pw"], 
+                    stats_matrix[j, "nb1_pw_p"],
+                    stats_matrix[j, "nb2_pw_p"])
+  }
+  nb1_nb2_pless <- pless(glm_p)
+  nb1_nb2_pw_pless <- pless(glm_pw_p)
+    nb1_nb2_mu1 <- NA
+    
+  nb1_nb2_mu2 <- NA
+  nb1_nb2_effect <- NA
+  nb1_nb2_sd_b1 <- NA
+  nb1_nb2_pw_mu1 <- NA
+  nb1_nb2_pw_mu2 <- NA
+  nb1_nb2_pw_effect <- NA
+  nb1_nb2_pw_sd_b1 <- NA
+
+  fit_models <- c("lm", "gls", "lm_log", "qp", "nb1", "nb2", "nb1_nb2",
+                  "nb1_pw", "nb2_pw", "nb1_pw_lrt", "nb2_pw_lrt", "nb1b", "nb2b", "mw")
   summary_table <- rbind(
     summary_table,
     data.table(
@@ -456,31 +607,40 @@ for(parameter_set in 1:nrow(parameter_matrix)){
       "n" = n,
       type = sim_type,
       "fit_model" = fit_models,
-      "mu1" = c(lm_mu1, lm_log_mu1, qp_mu1,
-                nb1_mu1, nb2_mu1, #nb1_lrt_mu1, nb2_lrt_mu1,
+      "mu1" = c(lm_mu1, gls_mu1, lm_log_mu1, qp_mu1,
+                nb1_mu1, nb2_mu1, nb1_nb2_mu1,
                 nb1_pw_mu1, nb2_pw_mu1,
-                nb1_pw_lrt_mu1, nb2_pw_lrt_mu1, mw_mu1),
-      "mu2" = c(lm_mu2, lm_log_mu2, qp_mu2,
-                nb1_mu2, nb2_mu2,#$nb1_lrt_mu2, nb2_lrt_mu2, 
+                nb1_pw_lrt_mu1, nb2_pw_lrt_mu1,
+                nb1b_mu1, nb2b_mu1, mw_mu1),
+      "mu2" = c(lm_mu2, gls_mu2, lm_log_mu2, qp_mu2,
+                nb1_mu2, nb2_mu2, nb1_nb2_mu2,
                 nb1_pw_mu2, nb2_pw_mu2,
-                nb1_pw_lrt_mu2, nb2_pw_lrt_mu2, mw_mu2),
-      "effect" = c(lm_effect, lm_log_effect, qp_effect,
-                nb1_effect, nb2_effect, #nb1_lrt_effect, nb2_lrt_effect, 
+                nb1_pw_lrt_mu2, nb2_pw_lrt_mu2,
+                nb1b_mu2, nb2b_mu2, mw_mu2),
+      "effect" = c(lm_effect, gls_effect, lm_log_effect, qp_effect,
+                nb1_effect, nb2_effect, nb1_nb2_effect,
                 nb1_pw_effect, nb2_pw_effect,
-                nb1_pw_lrt_effect, nb2_pw_lrt_effect, mw_effect),
-      "sd(b1)" = c(lm_sd_b1, lm_log_sd_b1, qp_sd_b1,
-                nb1_sd_b1, nb2_sd_b1, #nb1_lrt_sd_b1, nb2_lrt_sd_b1, 
+                nb1_pw_lrt_effect, nb2_pw_lrt_effect,
+                nb1b_effect, nb2b_effect, mw_effect),
+      "sd(b1)" = c(lm_sd_b1, gls_sd_b1, lm_log_sd_b1, qp_sd_b1,
+                nb1_sd_b1, nb2_sd_b1, nb1_nb2_sd_b1,
                 nb1_pw_sd_b1, nb2_pw_sd_b1,
-                nb1_pw_lrt_sd_b1, nb2_pw_lrt_sd_b1, mw_sd_b1),
-      "p < 0.05" = c(lm_pless, lm_log_pless, qp_pless,
-                nb1_pless, nb2_pless, #nb1_lrt_pless, nb2_lrt_pless, 
+                nb1_pw_lrt_sd_b1, nb2_pw_lrt_sd_b1,
+                nb1b_sd_b1, nb2b_sd_b1, mw_sd_b1),
+      "p < 0.05" = c(lm_pless, gls_pless, lm_log_pless, qp_pless,
+                nb1_pless, nb2_pless, nb1_nb2_pless, 
                 nb1_pw_pless, nb2_pw_pless,
-                nb1_pw_lrt_pless, nb2_pw_lrt_pless, mw_pless)
+                nb1_pw_lrt_pless, nb2_pw_lrt_pless,
+                nb1b_pless, nb2b_pless, mw_pless)
     )
   )
   
 }
 
+summary_table_wide <- dcast(summary_table,
+                            theta + gen_model + n + fit_model ~ type,
+                            value.var = "p < 0.05")
+summary_table_wide[type1 > 0.05, penalized_power := (1 - (1 - power))/sqrt(1 + abs(1 - type1/0.05))]
 
 summary_table |>
   kable(digits = c(1,1,1,1,1,3,3,3,3,3,3)) |>
@@ -566,7 +726,7 @@ saveRDS(results_out, file_save)
 
 ```{r nb1-nb2-check}
 # https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
-n_iter <- 10
+n_iter <- 50
 set.seed(1)
 file_path <- "glm_3x_nb1-nb2-check.Rds"
 # variable parameters
@@ -613,7 +773,7 @@ for(parameter_set in 1:nrow(parameter_matrix)){
   # if nb = 0.5 qp and mu = 10 then qp = 21
   # if nb = 2 qp and mu = 10 then qp = 6
   theta_nb <- gen_theta
-  theta_qp <- 1 + mu_sim/theta_nb # for generating data each group has its own theta
+  theta_qp <- 1 + mu_sim/theta_nb
   if(gen_model == "qp"){
     y_qp <- rqpois(n * k * n_iter,
                    mu = rep(mu_sim, each = n),
@@ -638,28 +798,12 @@ for(parameter_set in 1:nrow(parameter_matrix)){
     nb2 <- glmmTMB(tumors ~ genotype,
                   family = nbinom2(link = "log"),
                   data = fd)
-    # pairwise
-    nb1_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
-                             family = nbinom1(link = "log"),
-                             data = fd[genotype != "TR",])
-    nb1_pw_2 <- glmmTMB(tumors ~ genotype,  # the power pair
-                             family = nbinom1(link = "log"),
-                             data = fd[genotype != "KO",])
-    nb2_pw_1 <- glmmTMB(tumors ~ genotype,  # the type 1 pair
-                             family = nbinom2(link = "log"),
-                             data = fd[genotype != "TR",])
-    nb2_pw_2 <- glmmTMB(tumors ~ genotype,  # the power pair
-                             family = nbinom2(link = "log"),
-                             data = fd[genotype != "KO",])
     aic_vals <- AIC(nb1, nb2)
     stats_matrix[iter, "nb1_aic"] <- aic_vals[1,2]
-    stats_matrix[iter, "nb2_aic"] <- aic_vals[1,2]
+    stats_matrix[iter, "nb2_aic"] <- aic_vals[2,2]
     qp1_check <- ggcheck_the_glm(qp1, n_sim = 500)
     nb1_check <- ggcheck_the_glm(nb1, n_sim = 500)
     nb2_check <- ggcheck_the_glm(nb2, n_sim = 500)
-    plot(qp1_check)
-    plot(nb1_check)
-    plot(nb2_check)
     stats_matrix[iter, "qp_unif"] <- testUniformity(qp1_check)$statistic
     stats_matrix[iter, "nb1_unif"] <- testUniformity(nb1_check)$statistic
     stats_matrix[iter, "nb2_unif"] <- testUniformity(nb2_check)$statistic
@@ -686,27 +830,31 @@ results_out[, aic_nb2_nb1 := nb2_aic - nb1_aic] # if nb1 better, than this will 
 results_out[, unif_nb2_nb1 := nb2_unif - nb1_unif] # if nb1 better, than this will be positive
 results_out[, unif_nb2_qp1 := nb2_unif - qp_unif] # if qp better, than this will be positive
 results_out[, unif_nb1_qp1 := nb1_unif - qp_unif] # if qp better, than this will be positive
-results_out[, disp_nb2_qp1 := nb2_disp - nb1_disp] # if nb1 better, than this will be positive
-ggplot(data = results_out[sample_size == 20],
+results_out[, disp_nb2_nb1 := nb2_disp - nb1_disp] # if nb1 better, than this will be positive
+ggplot(data = results_out, # if nb1 better, than this will be positive
        aes(x = model,
            y = aic_nb2_nb1)) +
-  geom_jitter(width = 0.2)
-ggplot(data = results_out[sample_size == 20],
+  geom_jitter(width = 0.2) +
+  facet_grid(sample_size ~ theta)
+ggplot(data = results_out, # if nb1 better, than this will be positive
        aes(x = model,
            y = unif_nb2_nb1)) +
-  geom_jitter(width = 0.2)
-ggplot(data = results_out[sample_size == 20],
+  geom_jitter(width = 0.2) +
+  facet_grid(sample_size ~ theta)
+ggplot(data = results_out[sample_size == 20 & theta == 1], # if qp better, than this will be positive
        aes(x = model,
            y = unif_nb2_qp1)) +
   geom_jitter(width = 0.2)
-ggplot(data = results_out[sample_size == 20],
+ggplot(data = results_out[sample_size == 20 & theta == 1],
        aes(x = model,
            y = unif_nb1_qp1)) +
   geom_jitter(width = 0.2)
-ggplot(data = results_out[sample_size == 20],
+ggplot(data = results_out[sample_size == 20 & theta == 1], # if nb1 better, than this will be positive
        aes(x = model,
-           y = disp_nb2_qp1)) +
+           y = disp_nb2_nb1)) +
   geom_jitter(width = 0.2)
+
+results_out[, sim_id := .I]
 
 ```
 

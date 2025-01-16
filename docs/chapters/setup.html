@@ -433,7 +433,6 @@ window.Quarto = {
 <li>ggthemes – we use this for the colorblind palette</li>
 <li>ggpubr – we use this to make ggplots a bit easier</li>
 <li>ggforce – we use this for improved jitter plots</li>
-<li>dabestr – we use this to make several plot types</li>
 <li>cowplot – we use this to combine plots</li>
 <li>knitr – we use this to make kable tables</li>
 <li>kableExtra – we use this to improve kable tables</li>
@@ -722,7 +721,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/middleprofessor\.github\.io\/benchbiostats\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

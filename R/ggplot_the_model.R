@@ -768,7 +768,6 @@ ggcheck_the_qq = function(m1,
   robust_slope <- coef(m2)[2]
   
   # re-sample ribbon
-  set.seed(1)
   resample_qq_model <- numeric(n_boot*n)
   Y <- simulate(m1, n_boot)
   fd <- model.frame(m1) %>%

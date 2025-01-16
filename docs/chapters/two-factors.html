@@ -2290,6 +2290,8 @@ Table&nbsp;13.8: Marginal means of the lesian area data computed from the additi
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_model</span>(exp1c_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :
+'rlm' failed to converge in 20 steps
+Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :
 'rlm' failed to converge in 20 steps</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -2966,7 +2968,7 @@ Table&nbsp;13.9: P-values from seven different methods of adjustment. The Tukey-
 <td style="text-align: right;">0.382</td>
 <td style="text-align: right;">0.331</td>
 <td style="text-align: right;">0.191</td>
-<td style="text-align: right;">0.275</td>
+<td style="text-align: right;">0.276</td>
 <td style="text-align: right;">0.127</td>
 </tr>
 <tr class="odd">
@@ -2986,7 +2988,7 @@ Table&nbsp;13.9: P-values from seven different methods of adjustment. The Tukey-
 <td style="text-align: right; background-color: rgba(230, 159, 0, 255) !important;">0.079</td>
 <td style="text-align: right; background-color: rgba(230, 159, 0, 255) !important;">0.076</td>
 <td style="text-align: right; background-color: rgba(230, 159, 0, 255) !important;">0.059</td>
-<td style="text-align: right; background-color: rgba(230, 159, 0, 255) !important;">0.066</td>
+<td style="text-align: right; background-color: rgba(230, 159, 0, 255) !important;">0.065</td>
 <td style="text-align: right; background-color: rgba(230, 159, 0, 255) !important;">0.039</td>
 </tr>
 </tbody>
@@ -4181,7 +4183,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/middleprofessor\.github\.io\/benchbiostats\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

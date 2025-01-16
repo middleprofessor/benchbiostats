@@ -1,0 +1,63 @@
+---
+title: "Untitled"
+author: "Jeffrey Walker"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+n_iter <- 10^4
+p.shite <- as.numeric(n_iter)
+p.okay <- as.numeric(n_iter)
+var_vec <- as.numeric(n_iter)
+n_mice <- 10
+n_cells <- 35
+for(iter in 1:n_iter){
+  y <- rbinom(n_mice, n_cells, 0.5)/n_cells * 100
+  var_vec[iter] <- var(y)
+  p.shite[iter] <- t.test(y, 100-y, var.equal = TRUE)$p.value
+  p.okay[iter] <- t.test(y, mu = 50)$p.value
+}
+
+mean(p.shite < 0.05)
+mean(p.okay < 0.05)
+mean(var_vec)
+
+```
+
+```{r}
+n <- 10
+fake_data <- data.table(
+  genotype = factor(rep(c("WT", "KO"), each = n), levels = c("WT", "KO")),
+  count = rnegbin(n*2, mu = rep(c(10^4, 10 * 10^4), each = n), theta = 1)
+)
+fake_data[1:5,]
+
+ggplot(data = fake_data,
+       aes(x = genotype,
+           y = log10(count))) +
+  geom_point() +
+  theme_pubr()
+
+fake_data[, log10_count := log10(count)]
+
+m1 <- lm(count ~ genotype, data = fake_data)
+m1_emm <- emmeans(m1, specs = "genotype")
+m1_pairs <- contrast(m1_emm, method = "revpairwise") |> summary(infer = TRUE)
+gg1 <- ggcheck_the_model(m1)
+gg1_ptm <- ggplot_the_response(m1, m1_emm, m1_pairs)
+
+m2 <- lm(log10_count ~ genotype, data = fake_data)
+m2_emm <- emmeans(m2, specs = "genotype", type = "response")
+m2_pairs <- contrast(m2_emm, method = "revpairwise") |> summary(infer = TRUE)
+gg2 <- ggcheck_the_model(m2)
+gg2_ptm <- ggplot_the_response(m2, m2_emm, m2_pairs)
+
+plot_grid(gg1, gg2, nrow = 2)
+plot_grid(gg1_ptm, gg2_ptm, nrow = 1)
+
+```
+
+
+
+

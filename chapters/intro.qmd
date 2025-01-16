@@ -171,7 +171,7 @@ The measured means in each group are computed from a random **sample** of mice. 
 What is a population? In the experimental biology examples in this text, we might consider the population as a very idealized, infinitely large set of mice, or fish, or fruit flies, or communities from which our sample is a reasonably representative subset. For the experiments in the ASK1Δadipo study, the population might be conceived of as the hypothetical, infinitely large set of floxed ASK1 C57BL/6 mice bred in the mouse facility of the researchers under the same rearing conditions. By infinitely large, I mean something like all possible phenotypes that could be born from the nearly-infinite combination of meiosis, gene-gene interactions, genotype-environment interactions, and maternal effects.
 :::
 
-## An wee introduction to fitting a model to data
+## A wee introduction to fitting a model to data
 
 The model we are going to fit to the Figure 2i data is
 

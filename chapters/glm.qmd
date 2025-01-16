@@ -66,9 +66,17 @@ out.width_small <- paste0(small_width/full_width*100, "%")
 
 ```
 
+## TL;DR
+
+Generalized Linear Models are the modern alternative to non-parametric tests (Mann-Whitney, Kruskal-Wallis, Dunn, etc.)
+
 ## Introducing Generalized Linear Models using count data examples {#glm-counts}
 
-Biologists frequently count stuff, and design experiments to estimate the effects of different factors on these counts. Count data can cause numerous problems with linear models that assume a normal, conditional distribution, including 1) counts are discrete, and can be zero or positive integers only, 2) counts tend to bunch up on the small side of the range and spread thinly on the large side of the range, creating a distribution with a positive skew, 3) the variance of counts increases with the mean (see @fig-glm-fig3a-histogram for some of these properties).
+Biologists frequently count stuff, and design experiments to estimate the effects of different factors on these counts. Count data can cause numerous problems with linear models that assume a normal, conditional distribution, including
+
+1. counts are discrete, and can be zero or positive integers only
+2. counts tend to bunch up on the lower side of the range and spread thinly on the higher side of the range, creating a distribution with a positive skew
+3. the variance of counts increases with the mean (see @fig-glm-fig3a-histogram for some of these properties).
 
 Some count data can be approximated by and reasonably modeled with a normal distribution. More often, count data are better approximated with a [Quasipoisson distribution](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/07-0043.1){target="_blank"} or [Negative Binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution){target="_blank"} and modeled with a [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model (GLM)){target="_blank"}. Quasipoisson and Negative Binomial distributions are **discrete probability distributions** with two important properties: 1) the distribution contains only non-negative integers and 2) the variance is a function of the mean.
 
@@ -86,7 +94,7 @@ What I don't recommend
 3. A negative binomial GLM for small samples (< ~20). Almost all sources of guidance recommend a a negative binomial (NB) GLM for count data, but a NB GLM has non-trivially inflated type I error with the small sample sizes (n ~ 6) typical of experimental bench biology (but much better control at n > 20).
 
 ::: {.callout-warning title="GLMM blues"}
-Generalized linear mixed models (GLMMs) have frequent convergence issues. If this happen, use a linear mixed model of the untransformed data instead of a GLM of a reduced model as the pseudoreplication of a reduced model is (generally) a massively larger problem than data that aren't approximately normal.
+Generalized linear mixed models (GLMMs) have frequent convergence issues. If this happens, use a linear mixed model of the untransformed data instead of a GLM of a reduced model as the pseudoreplication of a reduced model is (generally) a massively larger problem than that from data that aren't approximately normal.
 :::
 
 ```{r glm-fig3a-import, echo=FALSE, message=FALSE}
@@ -184,7 +192,7 @@ plot_grid(gg1, gg2, labels = "AUTO")
 As outlined in [Two specifications of a linear model](#lm-specifications), a common way that biological researchers are taught to think about a response variable is
 
 $$
-response = expected + error
+response = expectation + error
 $$
 
 or, using the notation of this text,
@@ -226,6 +234,7 @@ That is, a response is a random draw from a normal distribution with mean $mu$ (
 The specification of a generalized linear model has both stochastic and systematic parts but adds a third part, which is a **link function** connecting the stochastic and systematic parts.
 
 1. **The stochastic part**, which is a probability distribution from the exponential family (this is sometimes called the "random part")
+
 $$
 \begin{equation}
 y \sim \operatorname{Prob}(\mu_{treatment})
@@ -273,14 +282,15 @@ Importantly, **in a GLM, the individual data values are not transformed**. A GLM
 
 When modeling counts using the Quasipoisson or Negative Binomial distributions with a log link, the link scale is linear, and so the effects are additive on the link scale, while the response scale is nonlinear (it is the exponent of the link scale), and so the *effects are multiplicative on the response scale*. If this doesn't make sense now, an example is worked out below. The inverse of the link function backtransforms the parameters from the link scale back to the response scale. So, for example, a prediction on the response sale is $\mathrm{exp}(\hat{\eta})$ and a coefficient on the response scale is $\mathrm{exp}(b_j)$.
 
+
 ## Kinds of data that are modeled by a GLM
 
 1. If a response is a count then use a Quasipoisson or Negative Binomial family with a log link. 
-2. If a response is binary response, for example, presence/absence or success/failure or survive/die, then use the binomial family with a logistic link (other link functions are also useful). This is classically known as **logistic regression**.
-3. If a response is a fraction that is a ratio of counts, for example the fraction of total cells that express some marker, then use the binomial family with a logistic link. Think of each numerator count as a "success".
-4. If a response is a fraction of counts per "effort" (cells per area or volume or time), then use a Poisson, quasi-Poisson or Negative Binomial family with a log link on the raw count and include the log of the measure of effort as an offset.
-5. If a response is continuous but the variance increases with mean then use the gamma family
-6. If a response is a fraction of a continuous measure per "effort" (tumor area per total area or volume or time), then use a gamma family on the raw measure and include the log of the measure of effort as an offset.
+2. If a response is binary response, for example, presence/absence or success/failure or survive/die, then use the Binomial family with a logistic link (other link functions are also useful). This is classically known as **logistic regression**.
+3. If a response is a fraction that is a ratio of counts, for example the fraction of total cells that express some marker, then use a Quasi-binomial family with a logistic link. Think of each numerator count as a "success".
+4. If a response is a fraction of counts per "effort" (cells per area or volume or time), then use a Quasi-Poisson or Negative Binomial family with a log link on the raw count and include the log of the measure of effort as an offset.
+5. If a response is continuous but the variance increases with mean then use the Gamma family
+6. If a response is a fraction of a continuous measure per "effort" (tumor area per total area or volume or time), then use a Gamma family on the raw measure and include the log of the measure of effort as an offset.
 
 ## Which model and why
 ### Count data

@@ -34,7 +34,8 @@ book:
     - chapters/ancova.qmd
     - chapters/lmm.qmd
     - chapters/glm.qmd
-
+  site-url: "https://middleprofessor.github.io/benchbiostats/"
+  
 bibliography: references.bib
 
 format:
