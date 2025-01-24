@@ -43,9 +43,28 @@ fqaic <- function(model) {
 
 
 ```{r pless, echo=FALSE}
-  pless <- function(x){
-    value <- sum(x < 0.05, na.rm=TRUE)/length(na.omit(x))
+  pless <- function(x, alpha = 0.05){
+    value <- sum(x < alpha, na.rm = TRUE) / length(na.omit(x))
     return(value)
+  }
+
+  pless_equiv <- function(x){
+    alpha_list <- c(seq(0.0001, 0.001, by = 0.0002),
+                    seq(0.001, 0.01, by = 0.002),
+                    seq(0.01, 0.1, by = 0.02),
+                    seq(0.1, 0.3, by = 0.05))
+    value <- numeric(length(alpha_list))
+    for(j in 1:length(alpha_list)){
+      value[j] <- sum(x < alpha_list[j], na.rm = TRUE) / length(na.omit(x))
+    }
+    data.table(
+      alpha = alpha_list,
+      type1 = value
+    )
+    
+    f <- splinefun(value, alpha_list)
+    adj_alpha <- f(0.05)
+    return(adj_alpha)
   }
 
 ```
@@ -178,7 +197,7 @@ if(do_it){
                          mu.link = "log", 
                          sigma.link = "log",
                          data = fd,
-                         trace=FALSE),
+                         trace = FALSE),
                   silent = TRUE)
       if(inherits(nb1b, "try-error") == TRUE){
         nb1b <- nb1
@@ -190,7 +209,7 @@ if(do_it){
                          mu.link = "log", 
                          sigma.link = "log",
                          data = fd,
-                         trace=FALSE),
+                         trace = ),
                   silent = TRUE)
       if(inherits(nb2b, "try-error") == TRUE){
         nb2b <- nb2
@@ -722,6 +741,210 @@ if(unbalanced){
 # resave
 saveRDS(results_out, file_save)
 
+```
+
+
+```{r adjusted-power}
+results_out <- readRDS(file_path)
+# results_out <- readRDS("glm_3x_results_balanced.Rds")
+
+theta_list <- unique(results_out$theta)
+model_list <- unique(results_out$model)
+n_list <- unique(results_out$sample_size)
+type_list <- unique(results_out$type)
+
+n_iter <- results_out[, .(N = .N), by = .(theta, model, sample_size, type)][1, N]
+
+parameter_matrix <- expand.grid(theta = theta_list,
+                                model = model_list,
+                                sample_size = n_list)
+
+stats_labels <- c("lm_p", "gls_p", "lm_log_p", "qp_p",
+                  "nb1_p", "nb2_p", "nb1_pw_p", "nb1_pw_lrt_p",
+                  "nb2_pw_p", "nb2_pw_lrt_p", "nb1b_p", "nb2b_p",
+                  "mw")
+
+model_summary_matrix_labels <- c("skew_lm1", "aic_lm", "aic_nb1", "aic_nb2", "aic_nb1_pw", "aic_nb2_pw")
+
+
+summary_table <- data.table(NULL)
+for(parameter_set in 1:nrow(parameter_matrix)){
+  gen_theta <- parameter_matrix[parameter_set, "theta"]
+  gen_model <- parameter_matrix[parameter_set, "model"]
+  sim_type <- parameter_matrix[parameter_set, "sim_type"]
+  n <- parameter_matrix[parameter_set, "sample_size"] 
+  # these matrices have the p-values for the type1 simulations and the power simulations
+  type1_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                type == "type1" &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = stats_labels] |>
+    as.matrix()
+  power_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                type == "power" &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = stats_labels] |>
+    as.matrix()
+  
+  type1_summary_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                type == "type1" &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = model_summary_matrix_labels] |>
+    as.matrix()
+  power_summary_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                type == "power" &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = model_summary_matrix_labels] |>
+    as.matrix()
+
+
+  lm_pless_t1 <- pless_equiv(type1_matrix[, "lm_p"])
+  gls_pless_t1 <- pless_equiv(type1_matrix[, "gls_p"])
+  lm_log_pless_t1 <- pless_equiv(type1_matrix[, "lm_log_p"])
+  qp_pless_t1 <- pless_equiv(type1_matrix[, "qp_p"])
+  nb1_pless_t1 <- pless_equiv(type1_matrix[, "nb1_p"])
+  nb2_pless_t1 <- pless_equiv(type1_matrix[, "nb2_p"])
+  nb1_pw_pless_t1 <- pless_equiv(type1_matrix[, "nb1_pw_p"])
+  nb2_pw_pless_t1 <- pless_equiv(type1_matrix[, "nb2_pw_p"])
+  nb1_pw_lrt_pless_t1 <- pless_equiv(type1_matrix[, "nb1_pw_lrt_p"])
+  nb2_pw_lrt_pless_t1 <- pless_equiv(type1_matrix[, "nb2_pw_lrt_p"])
+  nb1b_pless_t1 <- pless_equiv(type1_matrix[, "nb1b_p"])
+  nb2b_pless_t1 <- pless_equiv(type1_matrix[, "nb2b_p"])
+  mw_pless_t1 <- pless_equiv(type1_matrix[, "mw"])
+  
+  glm_p <- numeric(nrow(type1_summary_matrix))
+  glm_pw_p <- numeric(nrow(type1_summary_matrix))
+  for(j in 1:nrow(type1_summary_matrix)){
+    glm_p[j] <- ifelse(type1_summary_matrix[j, "aic_nb1"] < type1_summary_matrix[j, "aic_nb2"], 
+                    type1_matrix[j, "nb1_p"],
+                    type1_matrix[j, "nb2_p"])
+    glm_pw_p[j] <- ifelse(type1_summary_matrix[j, "aic_nb1_pw"] < type1_summary_matrix[j, "aic_nb2_pw"], 
+                    type1_matrix[j, "nb1_pw_p"],
+                    type1_matrix[j, "nb2_pw_p"])
+  }
+  nb1_nb2_pless_t1 <- pless_equiv(glm_p)
+  nb1_nb2_pw_pless_t1 <- pless_equiv(glm_pw_p)
+
+  lm_pless_t2 <- pless(power_matrix[, "lm_p"], alpha = lm_pless_t1)
+  gls_pless_t2 <- pless(power_matrix[, "gls_p"], alpha = gls_pless_t1)
+  lm_log_pless_t2 <- pless(power_matrix[, "lm_log_p"], alpha = lm_log_pless_t1)
+  qp_pless_t2 <- pless(power_matrix[, "qp_p"], alpha = qp_pless_t1)
+  nb1_pless_t2 <- pless(power_matrix[, "nb1_p"], alpha = nb1_pless_t1)
+  nb2_pless_t2 <- pless(power_matrix[, "nb2_p"], alpha = nb2_pless_t1)
+  nb1_pw_pless_t2 <- pless(power_matrix[, "nb1_pw_p"], alpha = nb1_pw_pless_t1)
+  nb2_pw_pless_t2 <- pless(power_matrix[, "nb2_pw_p"], alpha = nb2_pw_pless_t1)
+  nb1_pw_lrt_pless_t2 <- pless(power_matrix[, "nb1_pw_lrt_p"], alpha = nb1_pw_lrt_pless_t1)
+  nb2_pw_lrt_pless_t2 <- pless(power_matrix[, "nb2_pw_lrt_p"], alpha = nb2_pw_lrt_pless_t1)
+  nb1b_pless_t2 <- pless(power_matrix[, "nb1b_p"], alpha = nb1b_pless_t1)
+  nb2b_pless_t2 <- pless(power_matrix[, "nb2b_p"], alpha = nb2b_pless_t1)
+  mw_pless_t2 <- pless(power_matrix[, "mw"], alpha = mw_pless_t1)
+
+  glm_p <- numeric(nrow(type1_summary_matrix))
+  glm_pw_p <- numeric(nrow(type1_summary_matrix))
+  for(j in 1:nrow(type1_summary_matrix)){
+    glm_p[j] <- ifelse(power_summary_matrix[j, "aic_nb1"] < power_summary_matrix[j, "aic_nb2"], 
+                    type1_matrix[j, "nb1_p"],
+                    type1_matrix[j, "nb2_p"])
+    glm_pw_p[j] <- ifelse(power_summary_matrix[j, "aic_nb1_pw"] < power_summary_matrix[j, "aic_nb2_pw"], 
+                    type1_matrix[j, "nb1_pw_p"],
+                    type1_matrix[j, "nb2_pw_p"])
+  }
+  nb1_nb2_pless_t2 <- pless(glm_p)
+  nb1_nb2_pw_pless_t2 <- pless(glm_pw_p)
+
+  fit_models <- c("lm", "gls", "lm_log", "qp", "nb1", "nb2", "nb1_nb2",
+                  "nb1_pw", "nb2_pw", "nb1_pw_lrt", "nb2_pw_lrt", "nb1b", "nb2b", "mw")
+  summary_table <- rbind(
+    summary_table,
+    data.table(
+      "theta" = gen_theta,
+      "gen_model" = gen_model,
+      "n" = n,
+      type = "type1",
+      "fit_model" = fit_models,
+      "p < 0.05" = c(lm_pless_t1, gls_pless_t1, lm_log_pless_t1, qp_pless_t1,
+                nb1_pless_t1, nb2_pless_t1, nb1_nb2_pless_t1, 
+                nb1_pw_pless_t1, nb2_pw_pless_t1,
+                nb1_pw_lrt_pless_t1, nb2_pw_lrt_pless_t1,
+                nb1b_pless_t1, nb2b_pless_t1, mw_pless_t1)
+    )
+  )
+  summary_table <- rbind(
+    summary_table,
+    data.table(
+      "theta" = gen_theta,
+      "gen_model" = gen_model,
+      "n" = n,
+      type = "power",
+      "fit_model" = fit_models,
+      "p < 0.05" = c(lm_pless_t2, gls_pless_t2, lm_log_pless_t2, qp_pless_t2,
+                nb1_pless_t2, nb2_pless_t2, nb1_nb2_pless_t2, 
+                nb1_pw_pless_t2, nb2_pw_pless_t2,
+                nb1_pw_lrt_pless_t2, nb2_pw_lrt_pless_t2,
+                nb1b_pless_t2, nb2b_pless_t2, mw_pless_t2)
+    )
+  )
+  
+}
+
+summary_table |>
+  kable(digits = c(1,1,1,1,1,3,3,3,3,3,3)) |>
+  kable_styling()
+
+summary_table[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+
+heatmap_type1 <- summary_table[type == "type1"]
+setnames(heatmap_type1, "p < 0.05", "type1")
+heatmap_type1[, sim := paste(theta, gen_model, n, sep = "\n")]
+heatmap_type1[, sim := factor(sim,
+                                    levels = unique(sim))]
+heatmap_type1[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+
+heatmap_power <- summary_table[type == "power"]
+setnames(heatmap_power, "p < 0.05", "power")
+heatmap_power[, sim := paste(theta, gen_model, n, sep = "\n")]
+heatmap_power[, sim := factor(sim,
+                                    levels = unique(sim))]
+heatmap_power[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+sim_levels <- levels(heatmap_power$sim)
+
+
+gg1 <- ggplot(data = heatmap_type1,
+              aes(x = sim, y = fit_model, fill = type1)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(type1,3)), color = "black", size = 2) +
+  labs(title = "Type 1",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg2 <- ggplot(data = heatmap_power,
+              aes(x = sim, y = fit_model, fill = power)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "#e5f5e0", # "#fee5d9"
+                       high = "#238b45",
+                       midpoint = median(heatmap_power[, power])) +
+  geom_text(aes(label = round(power, 2)), color = "black", size = 2) +
+  labs(title = "Power",
+       x = "Parameters",
+       y = "Fit Model")
+
+# gg1
+# gg2
+plot_grid(gg1, gg2)
 ```
 
 ```{r nb1-nb2-check}
