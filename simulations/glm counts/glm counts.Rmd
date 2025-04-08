@@ -73,9 +73,9 @@ fqaic <- function(model) {
 ```{r simulation-3x, fig.width=8, fig.height = 4, warning=FALSE}
 # https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
 n_iter <- 500
-set.seed(3)
+set.seed(1)
 file_path <- "glm_3x_results_new_lrt_out.Rds"
-do_it <- TRUE
+do_it <- FALSE
 if(do_it){
   
   # variable parameters
@@ -209,7 +209,7 @@ if(do_it){
                          mu.link = "log", 
                          sigma.link = "log",
                          data = fd,
-                         trace = ),
+                         trace = FALSE),
                   silent = TRUE)
       if(inherits(nb2b, "try-error") == TRUE){
         nb2b <- nb2
@@ -714,6 +714,623 @@ gg2 <- ggplot(data = heatmap_power,
 plot_grid(gg1, gg2)
 ```
 
+
+```{r simulation-2x2, fig.width=8, fig.height = 10, warning=FALSE}
+# https://stats.stackexchange.com/questions/71519/when-do-poisson-and-negative-binomial-regressions-fit-the-same-coefficients
+n_iter <- 500
+set.seed(3)
+file_path <- "glm_2x2_results_new_lrt_out.Rds"
+
+do_it <- TRUE
+if(do_it){
+  
+  # variable parameters
+  model_list <- c("qp", "nb") # generating model for count data
+  theta_list <- c(1, 5)
+  mu_mag_list <- c(1, 1.5, 2)
+  ref_bigger <- FALSE # make reference the higher or lower count
+  balance_type <- "balanced" # balanced, unbalanced correlated, unbalanced orthogonal
+  if(balance_type == "correlated"){
+    base_n <- c(1, 3, 9, 3) # X1: n = 4, X2: n = 8, X5: n = 20
+  }
+  if(balance_type == "correlated_sm"){
+    base_n <- c(3, 4, 5, 4) # X1: n = 4, X2: n = 8, X5: n = 20
+  }
+  if(balance_type == "balanced"){
+    base_n <- c(4, 4, 4, 4) # X1: n = 2, X2: n = 8, X5: n = 20
+  }
+  n_list <- c(8, 20) # multipled by base to get n
+  
+  parameter_matrix <- expand.grid(theta = theta_list,
+                                  model = model_list,
+                                  mu_mag = mu_mag_list,
+                                  sample_size = n_list)
+  results_out <- data.table(NULL)
+  
+  mu_ref <- 10 # mu[3] is modified in the loop
+  k <- 4 # number of groups. This is 2 x 2 not 4 x 1
+  
+  model_summary_matrix_labels <- c("skew_lm1", "aic_lm", "aic_nb1", "aic_nb2", "aic_nb1_pw", "aic_nb2_pw")
+  model_summary_matrix <- matrix(nrow = n_iter,
+                         ncol = length(model_summary_matrix_labels))
+  colnames(model_summary_matrix) <- model_summary_matrix_labels
+  
+stats_labels <- c("lm_p", "lm_pw_p", "gls_p", "lm_log_p", "qp_p",
+                  "nb1_p", "nb2_p", "nb1_pw_p", "nb1_pw_lrt_p",
+                  "nb2_pw_p", "nb2_pw_lrt_p", "nb1b_p", "nb2b_p",
+                  "mw")
+stats_labels_long <- apply(expand.grid(stats_labels, 1:4), 1, paste, collapse=".")
+p_matrix <- matrix(nrow = n_iter,
+                   ncol = length(stats_labels_long))
+colnames(p_matrix) <- stats_labels_long
+
+  for(parameter_set in 1:nrow(parameter_matrix)){
+    # if(parameter_set %in% c(1:4,6:8)){
+    #   next()
+    # }
+    gen_theta <- parameter_matrix[parameter_set, "theta"]
+    gen_model <- parameter_matrix[parameter_set, "model"]
+    mu_mag <- parameter_matrix[parameter_set, "mu_mag"]
+    n <- parameter_matrix[parameter_set, "sample_size"]
+    mu_sim <- rep(mu_ref, 4)
+    row_i <- row.names(parameter_matrix)[parameter_set]
+    
+    # replicate Warton KO_TR - KO is the test contrast and KO - WT != 0
+    # or, test factor two when effect in factor 1 (very anova-like so make additive)
+    # effect of factor 1
+    # wt ko tr ko+tr
+    # no tr effect: 1 2 1 2
+    # if "ref_bigger"
+    if(ref_bigger == TRUE){
+      mu_sim[1] <- mu_mag * mu_ref # set mu of group 
+      mu_sim[3] <- mu_mag * mu_ref # set mu of group 
+    }
+    if(ref_bigger == FALSE){
+      mu_sim[2] <- mu_mag * mu_ref # set mu of group 
+      mu_sim[4] <- mu_mag * mu_ref # set mu of group 
+    }
+    # tr effect: 1 2 2 3
+    # mu_sim[3] <- mu_mag[parameter_set]/2 * mu_sim[1] # set mu of group 
+    # mu_sim[4] <- mu_mag[parameter_set]/2 * mu_sim[4] # set mu of group 
+
+ 
+    if(n == 8){
+      n_vec <- 2 * base_n
+    }
+    if(n == 20){
+      n_vec <- 5 * base_n
+    }
+
+    N <- sum(n_vec)
+    fd <- data.table(
+      group = rep(c("WT-Veh", "KO-Veh", "WT-Tr", "KO-Tr"), n_vec) |>
+        factor(levels = c("WT-Veh", "KO-Veh", "WT-Tr", "KO-Tr"))
+    )
+    fd[, c("genotype", "treatment") := tstrsplit(group, "-")]
+    fd[, genotype := factor(genotype, levels = c("WT", "KO"))]
+    fd[, treatment := factor(treatment, levels = c("Veh", "Tr"))]
+    # nb var = mu + mu^2/theta
+    # qp var = theta*mu
+    # qp*mu = mu + mu^2/nb
+    # qp = mu/mu + mu^2/nb
+    # qp = 1 + mu/nb
+    # if nb = 0.5 qp and mu = 10 then qp = 21
+    # if nb = 2 qp and mu = 10 then qp = 6
+    theta_nb <- gen_theta
+    theta_qp <- 1 + mu_sim/theta_nb
+    if(gen_model == "qp"){
+      y_qp <- rqpois(n * k * n_iter,
+                     mu = rep(mu_sim, n_vec),
+#                     theta = rep(theta_qp, n_vec),
+                     theta = theta_qp[1]
+                     )
+      y_mat <- matrix(y_qp, nrow = n * k, ncol = n_iter)
+    }
+    if(gen_model == "nb"){
+      y_nb <- rnegbin(n * k * n_iter,
+                      mu = rep(mu_sim, n_vec),
+                      theta = theta_nb)
+      y_mat <- matrix(y_nb, nrow = n * k, ncol = n_iter)
+    }
+    
+    for(iter in 1:n_iter){
+      fd[, tumors := y_mat[, iter]]
+      lm1 <- lm(tumors ~ genotype * treatment,
+                data = fd)
+      
+      # the pair with the higher means have low variance of estimate so the SE is small and the p is small. The pair with the lower means have have high variance of estimate so the SE is big and the p is big. What if we just did pairwise? Surprised that GLS/Welch also high type I for pair 2 (the higher mean pair)
+      # emmeans(lm1, specs = c("genotype", "treatment"))
+      # contrast(emmeans(lm1, specs = c("genotype", "treatment")),
+      #          method = "revpairwise", simple = "each", combine = TRUE, adjust = "none")
+      # iter <- iter + 1
+      
+      lm1_log <- lm(log(tumors + 1) ~ genotype * treatment,
+                    data = fd)
+      # gls1 <- gls(tumors ~ genotype * treatment,
+      #           weights = varIdent(form = ~ 1 | group),
+      #           data = fd)
+      pois1 <- glm(tumors ~ genotype * treatment,
+                 family = poisson(link = "log"),
+                 data = fd)
+      qp1 <- glm(tumors ~ genotype * treatment,
+                 family = quasipoisson(link = "log"),
+                 data = fd)
+      nb1 <- glmmTMB(tumors ~ genotype * treatment,
+                     family = nbinom1(link = "log"),
+                     data = fd)
+      nb2 <- glmmTMB(tumors ~ genotype * treatment,
+                     family = nbinom2(link = "log"),
+                     data = fd)
+      nb1b <- try(gamlss(tumors ~ genotype * treatment, 
+                         sigma.formula = ~ genotype * treatment, 
+                         family = NBII, 
+                         mu.link = "log", 
+                         sigma.link = "log",
+                         data = fd,
+                         trace = FALSE),
+                  silent = TRUE)
+      if(inherits(nb1b, "try-error") == TRUE){
+        nb1b <- nb1
+      }
+
+      nb2b <- try(gamlss(tumors ~ genotype * treatment, 
+                         sigma.formula = ~ genotype * treatment, 
+                         family = NBII, 
+                         mu.link = "log", 
+                         sigma.link = "log",
+                         data = fd,
+                         trace = FALSE),
+                  silent = TRUE)
+      if(inherits(nb2b, "try-error") == TRUE){
+        nb2b <- nb2
+      }
+      
+      # main effect of factor 2 given effect of factor 1
+
+      # pairwise models
+      nb1_pw.1 <- glmmTMB(tumors ~ group,  
+                          family = nbinom1(link = "log"),
+                          data = fd[group %in% c("WT-Veh", "KO-Veh"),])
+      nb1_pw.2 <- glmmTMB(tumors ~ group,  
+                          family = nbinom1(link = "log"),
+                          data = fd[group %in% c("WT-Tr", "KO-Tr"),])
+      nb1_pw.3 <- glmmTMB(tumors ~ group, 
+                          family = nbinom1(link = "log"),
+                          data = fd[group %in% c("WT-Veh", "WT-Tr"),])
+      nb1_pw.4 <- glmmTMB(tumors ~ group, 
+                          family = nbinom1(link = "log"),
+                          data = fd[group %in% c("KO-Veh", "KO-Tr"),])
+      nb2_pw.1 <- glmmTMB(tumors ~ group,  # the type 1 pair
+                          family = nbinom2(link = "log"),
+                          data = fd[group %in% c("WT-Veh", "KO-Veh"),])
+      nb2_pw.2 <- glmmTMB(tumors ~ group,  # the type 1 pair
+                          family = nbinom2(link = "log"),
+                          data = fd[group %in% c("WT-Tr", "KO-Tr"),])
+      nb2_pw.3 <- glmmTMB(tumors ~ group,  # the type 1 pair
+                          family = nbinom2(link = "log"),
+                          data = fd[group %in% c("WT-Veh", "WT-Tr"),])
+      nb2_pw.4 <- glmmTMB(tumors ~ group,  # the type 1 pair
+                          family = nbinom2(link = "log"),
+                          data = fd[group %in% c("KO-Veh", "KO-Tr"),])
+      # lm pairwise
+      lm_pw.1 <- t.test(tumors ~ group, var.equal = TRUE,
+                          data = fd[group %in% c("WT-Veh", "KO-Veh"),])$p.value
+      lm_pw.2 <- t.test(tumors ~ group, var.equal = TRUE,
+                          data = fd[group %in% c("WT-Tr", "KO-Tr"),])$p.value
+      lm_pw.3 <- t.test(tumors ~ group, var.equal = TRUE,
+                          data = fd[group %in% c("WT-Veh", "WT-Tr"),])$p.value
+      lm_pw.4 <- t.test(tumors ~ group, var.equal = TRUE,
+                          data = fd[group %in% c("KO-Veh", "KO-Tr"),])$p.value
+      # GLS/Welch
+      gls.1 <- t.test(tumors ~ group,
+                          data = fd[group %in% c("WT-Veh", "KO-Veh"),])$p.value
+      gls.2 <- t.test(tumors ~ group,
+                          data = fd[group %in% c("WT-Tr", "KO-Tr"),])$p.value
+      gls.3 <- t.test(tumors ~ group,
+                          data = fd[group %in% c("WT-Veh", "WT-Tr"),])$p.value
+      gls.4 <- t.test(tumors ~ group,
+                          data = fd[group %in% c("KO-Veh", "KO-Tr"),])$p.value
+      # Mann-Whitney-Wilcoxan
+      mww.1 <- wilcox.test(tumors ~ group,
+                          data = fd[group %in% c("WT-Veh", "KO-Veh"),])$p.value
+      mww.2 <- wilcox.test(tumors ~ group,
+                          data = fd[group %in% c("WT-Tr", "KO-Tr"),])$p.value
+      mww.3 <- wilcox.test(tumors ~ group,
+                          data = fd[group %in% c("WT-Veh", "WT-Tr"),])$p.value
+      mww.4 <- wilcox.test(tumors ~ group,
+                          data = fd[group %in% c("KO-Veh", "KO-Tr"),])$p.value
+      
+      # statistics
+      model_summary_matrix[iter, "skew_lm1"] <- skewness(residuals(lm1))
+      model_summary_matrix[iter, "aic_lm"] <- AIC(lm1)
+      model_summary_matrix[iter, "aic_nb1"] <- AIC(nb1)
+      model_summary_matrix[iter, "aic_nb2"] <- AIC(nb2)
+      model_summary_matrix[iter, "aic_nb1_pw"] <- NA
+      model_summary_matrix[iter, "aic_nb2_pw"] <- NA
+      
+      # expectation is
+      # p < 0.05 contrasts 1, 2
+      # p > 0.05 contrasts 3, 4
+      p_matrix[iter, c("lm_p.1", "lm_p.2", "lm_p.3", "lm_p.4")] <-
+        summary(contrast(emmeans(lm1, specs = c("genotype", "treatment")),
+                         method = "revpairwise",
+                         simple = "each",
+                         combine = TRUE,
+                         adjust = "none"))[,"p.value"]
+      
+      p_matrix[iter, "lm_pw_p.1"] <- lm_pw.1
+      p_matrix[iter, "lm_pw_p.2"] <- lm_pw.2
+      p_matrix[iter, "lm_pw_p.3"] <- lm_pw.3
+      p_matrix[iter, "lm_pw_p.4"] <- lm_pw.4
+
+      p_matrix[iter, "gls_p.1"] <- gls.1
+      p_matrix[iter, "gls_p.2"] <- gls.2
+      p_matrix[iter, "gls_p.3"] <- gls.3
+      p_matrix[iter, "gls_p.4"] <- gls.4
+
+      p_matrix[iter, c("lm_log_p.1", "lm_log_p.2", "lm_log_p.3", "lm_log_p.4")] <-
+        summary(contrast(emmeans(lm1_log, specs = c("genotype", "treatment")),
+                         method = "revpairwise",
+                         simple = "each",
+                         combine = TRUE,
+                         adjust = "none"))[,"p.value"]
+      
+      p_matrix[iter, c("qp_p.1", "qp_p.2", "qp_p.3", "qp_p.4")] <-
+        summary(contrast(emmeans(qp1, specs = c("genotype", "treatment")),
+                         method = "revpairwise",
+                         simple = "each",
+                         combine = TRUE,
+                         adjust = "none"))[,"p.value"]
+      
+      p_matrix[iter, c("nb1_p.1", "nb1_p.2", "nb1_p.3", "nb1_p.4")] <-
+        summary(contrast(emmeans(nb1, specs = c("genotype", "treatment")),
+                         method = "revpairwise",
+                         simple = "each",
+                         combine = TRUE,
+                         adjust = "none"))[,"p.value"]
+      
+      p_matrix[iter, c("nb2_p.1", "nb2_p.2", "nb2_p.3", "nb2_p.4")] <-
+        summary(contrast(emmeans(nb2, specs = c("genotype", "treatment")),
+                         method = "revpairwise",
+                         simple = "each",
+                         combine = TRUE,
+                         adjust = "none"))[,"p.value"]
+      
+      p_matrix[iter, c("nb1_pw_p.1")] <-
+        summary(contrast(emmeans(nb1_pw.1, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb1_pw_p.2")] <-
+        summary(contrast(emmeans(nb1_pw.2, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb1_pw_p.3")] <-
+        summary(contrast(emmeans(nb1_pw.3, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb1_pw_p.4")] <-
+        summary(contrast(emmeans(nb1_pw.4, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb2_pw_p.1")] <-
+        summary(contrast(emmeans(nb2_pw.1, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb2_pw_p.2")] <-
+        summary(contrast(emmeans(nb2_pw.2, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb2_pw_p.3")] <-
+        summary(contrast(emmeans(nb2_pw.3, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+      p_matrix[iter, c("nb2_pw_p.4")] <-
+        summary(contrast(emmeans(nb2_pw.4, specs = c("group")),
+                         method = "revpairwise",
+                         adjust = "none"))[1,"p.value"]
+     
+
+      p_matrix[iter, c("nb1_pw_lrt_p.1")] <- drop1(nb1_pw.1, test="Chisq")$"Pr(>Chi)"[2]
+      p_matrix[iter, c("nb1_pw_lrt_p.2")] <- drop1(nb1_pw.2, test="Chisq")$"Pr(>Chi)"[2]
+      p_matrix[iter, c("nb1_pw_lrt_p.3")] <- drop1(nb1_pw.3, test="Chisq")$"Pr(>Chi)"[2]
+      p_matrix[iter, c("nb1_pw_lrt_p.4")] <- drop1(nb1_pw.4, test="Chisq")$"Pr(>Chi)"[2]
+      
+      p_matrix[iter, c("nb2_pw_lrt_p.1")] <- drop1(nb2_pw.1, test="Chisq")$"Pr(>Chi)"[2]
+      p_matrix[iter, c("nb2_pw_lrt_p.2")] <- drop1(nb2_pw.2, test="Chisq")$"Pr(>Chi)"[2]
+      p_matrix[iter, c("nb2_pw_lrt_p.3")] <- drop1(nb2_pw.3, test="Chisq")$"Pr(>Chi)"[2]
+      p_matrix[iter, c("nb2_pw_lrt_p.4")] <- drop1(nb2_pw.4, test="Chisq")$"Pr(>Chi)"[2]
+      
+      p_matrix[iter, "mw.1"] <- mww.1
+      p_matrix[iter, "mw.2"] <- mww.2
+      p_matrix[iter, "mw.3"] <- mww.3
+      p_matrix[iter, "mw.4"] <- mww.4
+
+      # gamlss type 1 and power
+      nb1b_emm <- try(emmeans(nb1b, specs = c("genotype", "treatment")),
+                      silent = TRUE)
+      if(inherits(nb1b_emm, "try-error") == TRUE){
+        p_matrix[iter, c("nb1b_p.1", "nb1b_p.2", "nb1b_p.3", "nb1b_p.4")] <- 
+          p_matrix[iter, c("nb1_p.1", "nb1_p.2", "nb1_p.3", "nb1_p.4")] 
+      }else{
+        nb1b_pairs <- contrast(nb1b_emm, method = "revpairwise",
+                               simple = "each", combine = TRUE, adjust = "none")
+        p_matrix[iter, c("nb1b_p.1", "nb1b_p.2", "nb1b_p.3", "nb1b_p.4")] <- 
+          summary(nb1b_pairs)[, "p.value"]
+      }
+      
+      nb2b_emm <- try(emmeans(nb2b, specs = c("genotype", "treatment")),
+                      silent = TRUE)
+      if(inherits(nb2b_emm, "try-error") == TRUE){
+        p_matrix[iter, c("nb2b_p.1", "nb2b_p.2", "nb2b_p.3", "nb2b_p.4")] <- 
+          p_matrix[iter, c("nb2_p.1", "nb2_p.2", "nb2_p.3", "nb2_p.4")] 
+      }else{
+        nb2b_pairs <- contrast(nb2b_emm, method = "revpairwise",
+                               simple = "each", combine = TRUE, adjust = "none")
+        p_matrix[iter, c("nb2b_p.1", "nb2b_p.2", "nb2b_p.3", "nb2b_p.4")] <- 
+          summary(nb2b_pairs)[, "p.value"]
+      }
+
+    }
+    results_out <- rbind(
+      results_out,
+      data.table(
+        theta = gen_theta,
+        model = gen_model,
+        sample_size = n,
+        balance = balance_type,
+        "ref_bigger" = ref_bigger,
+        "mu_mag" = mu_mag,
+        p_matrix,
+        model_summary_matrix
+      )
+    )
+  }
+  
+  saveRDS(results_out, file_path)
+  
+}
+
+
+results_out <- readRDS(file_path)
+
+results_out <- readRDS("glm_2x2_results_ref-smaller-balanced.Rds")
+
+theta_list <- unique(results_out$theta)
+model_list <- unique(results_out$model)
+mu_mag_list <- unique(results_out$mu_mag)
+n_list <- unique(results_out$sample_size)
+parameter_matrix <- expand.grid(theta = theta_list,
+                                model = model_list,
+                                mu_mag = mu_mag_list,
+                                sample_size = n_list)
+
+n_iter <- results_out[, .(N = .N), by = .(theta, model, mu_mag, sample_size)][1, N]
+
+stats_labels <- c("lm_p", "lm_pw_p", "gls_p", "lm_log_p", "qp_p",
+                  "nb1_p", "nb2_p", "nb1_pw_p", "nb1_pw_lrt_p",
+                  "nb2_pw_p", "nb2_pw_lrt_p", "nb1b_p", "nb2b_p",
+                  "mw")
+stats_labels_long <- apply(expand.grid(stats_labels, 1:4), 1, paste, collapse=".")
+
+summary_table <- data.table(NULL)
+for(parameter_set in 1:nrow(parameter_matrix)){
+  gen_theta <- parameter_matrix[parameter_set, "theta"]
+  gen_model <- parameter_matrix[parameter_set, "model"]
+  mu_mag_sim <- parameter_matrix[parameter_set, "mu_mag"]
+  n <- parameter_matrix[parameter_set, "sample_size"] 
+  stats_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                mu_mag == mu_mag_sim &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = stats_labels_long] |>
+    as.matrix()
+  model_summary_matrix <- results_out[theta == gen_theta & 
+                                model == gen_model &
+                                mu_mag == mu_mag_sim &
+                                sample_size == n,
+                              .SD,
+                              .SDcols = model_summary_matrix_labels] |>
+    as.matrix()
+  
+  pless_vec <- apply(stats_matrix, 2, pless)
+  n_models <- length(pless_vec)/k
+
+  fit_models <- c("lm", "lm_pw", "gls", "lm_log", "qp", "nb1", "nb2",
+                  "nb1_pw", "nb2_pw", "nb1_pw_lrt", "nb2_pw_lrt", "nb1b", "nb2b", "mw")
+  for(pair_j in 1:k){
+    summary_table <- rbind(
+      summary_table,
+      data.table(
+        "theta" = gen_theta,
+        "gen_model" = gen_model,
+        "mu_mag" = mu_mag_sim,
+        "n" = n,
+        pair = paste0("pair_", pair_j),
+        "fit_model" = fit_models,
+        "p < 0.05" = pless_vec[((pair_j - 1)*n_models + 1):(pair_j*n_models)]
+      )
+    )
+  }
+  
+}
+
+summary_table_wide <- dcast(summary_table,
+                            theta + gen_model + mu_mag + n + fit_model ~ pair,
+                            value.var = "p < 0.05")
+summary_table |>
+  kable(digits = c(1,1,1,1,1,3,3,3,3,3,3)) |>
+  kable_styling()
+
+summary_table[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+
+# make heatmap data tables
+# no tr effect: 1 2 1 2
+mu_mag_list <- unique(summary_table[, mu_mag])
+setnames(summary_table, "p < 0.05", "pless")
+summary_table[, sim := paste(theta, gen_model, mu_mag, n, sep = "\n")]
+summary_table[, sim := factor(sim,
+                                    levels = unique(sim))]
+summary_table[, fit_model := factor(fit_model,
+                                    levels = fit_models)]
+
+sim_levels <- levels(summary_table$sim)
+
+gg1a <- ggplot(data = summary_table[pair == "pair_1" & mu_mag == mu_mag_list[1]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 1",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg2a <- ggplot(data = summary_table[pair == "pair_2" & mu_mag == mu_mag_list[1]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 2",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg1b <- ggplot(data = summary_table[pair == "pair_1" & mu_mag == mu_mag_list[2]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 1",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg2b <- ggplot(data = summary_table[pair == "pair_2" & mu_mag == mu_mag_list[2]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 2",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg1c <- ggplot(data = summary_table[pair == "pair_1" & mu_mag == mu_mag_list[3]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 1",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg2c <- ggplot(data = summary_table[pair == "pair_2" & mu_mag == mu_mag_list[3]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 2",
+       x = "Parameters",
+       y = "Fit Model")
+
+
+## Type I matrices only
+gg3a <- ggplot(data = summary_table[pair == "pair_3" & mu_mag == mu_mag_list[1]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 3",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg4a <- ggplot(data = summary_table[pair == "pair_4" & mu_mag == mu_mag_list[1]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 4",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg3b <- ggplot(data = summary_table[pair == "pair_3" & mu_mag == mu_mag_list[2]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 3",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg4b <- ggplot(data = summary_table[pair == "pair_4" & mu_mag == mu_mag_list[2]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 4",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg3c <- ggplot(data = summary_table[pair == "pair_3" & mu_mag == mu_mag_list[3]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 3",
+       x = "Parameters",
+       y = "Fit Model")
+
+gg4c <- ggplot(data = summary_table[pair == "pair_4" & mu_mag == mu_mag_list[3]],
+              aes(x = sim, y = fit_model, fill = pless)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       midpoint = 0.05) +
+  geom_text(aes(label = round(pless, 3)), color = "black", size = 2) +
+  labs(title = "Pair 4",
+       x = "Parameters",
+       y = "Fit Model")
+
+plot_grid(gg1a, gg2a, gg1b, gg2b, gg1c, gg2c, ncol = 2)
+
+plot_grid(gg3a, gg4a, gg3b, gg4b, gg3c, gg4c, ncol = 2)
+
+```
+
+the pair with the higher means have low variance of estimate so the SE is small and the p is small. The pair with the lower means have have high variance of estimate so the SE is big and the p is big. What if we just did pairwise? Surprised that GLS/Welch also high type I for pair 2 (the higher mean pair)
+
 ```{r combine-results_out}
 balanced <- TRUE
 if(balanced){
@@ -743,10 +1360,26 @@ saveRDS(results_out, file_save)
 
 ```
 
+```{r combine-new-results}
+file1_name <- "glm_2x2_results_ref-smaller-balanced-250-seed 1.Rds"
+file2_name <- "glm_2x2_results_ref-smaller-balanced-250-seed 2.Rds"
+file3_name <- "glm_2x2_results_ref-smaller-balanced-500-seed 3.Rds"
 
-```{r adjusted-power}
+file1 <- readRDS(file1_name)
+file2 <- readRDS(file2_name)
+file3 <- readRDS(file3_name)
+results_out <- rbind(file1, file2, file3)
+file_save <- "glm_2x2_results_ref-smaller-balanced.Rds"
+
+# resave
+saveRDS(results_out, file_save)
+
+```
+
+
+```{r adjusted-power, fig.width=8, fig.height = 4, warning=FALSE}
+file_path <- "glm_3x_results_balanced_new.Rds"
 results_out <- readRDS(file_path)
-# results_out <- readRDS("glm_3x_results_balanced.Rds")
 
 theta_list <- unique(results_out$theta)
 model_list <- unique(results_out$model)
