@@ -57,6 +57,10 @@
     <lastmod>2024-10-18T17:10:18.657Z</lastmod>
   </url>
   <url>
+    <loc>https://middleprofessor.github.io/benchbiostats/chapters/inference-issues.html</loc>
+    <lastmod>2025-09-03T11:53:02.304Z</lastmod>
+  </url>
+  <url>
     <loc>https://middleprofessor.github.io/benchbiostats/chapters/two-factors.html</loc>
     <lastmod>2024-11-19T13:16:08.526Z</lastmod>
   </url>
@@ -71,5 +75,9 @@
   <url>
     <loc>https://middleprofessor.github.io/benchbiostats/chapters/glm.html</loc>
     <lastmod>2025-01-03T13:36:29.732Z</lastmod>
+  </url>
+  <url>
+    <loc>https://middleprofessor.github.io/benchbiostats/chapters/longitudinal.html</loc>
+    <lastmod>2025-09-03T11:56:19.583Z</lastmod>
   </url>
 </urlset>

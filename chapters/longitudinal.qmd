@@ -1,0 +1,33 @@
+# Linear models for longitudinal experiments
+
+```{r longitudinal-setup, echo=FALSE, message=FALSE, warning=FALSE}
+# wrangling packages
+library(here)
+library(janitor)
+library(readxl)
+library(data.table)
+library(stringr)
+
+# analysis packages
+library(emmeans)
+library(mvtnorm)
+library(lmPerm)
+library(MASS)
+
+# graphing packages
+library(ggsci)
+library(ggpubr)
+library(ggforce)
+library(cowplot)
+library(knitr)
+library(kableExtra)
+
+
+here <- here::here
+data_path <- "data"
+
+
+```
+
+
+

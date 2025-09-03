@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>14&nbsp; Linear models with added covariates (“ANCOVA”) – Statistics for the Experimental Bench Biologist</title>
+<title>15&nbsp; Linear models with added covariates (“ANCOVA”) – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/ancova.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/ancova.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -255,26 +255,38 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../chapters/inference-issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Issues in inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../chapters/two-factors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ancova.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/lmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for non-independence – linear mixed models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Models for non-independence – linear mixed models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/glm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Models for counts, binary responses, skewed responses, and proportions – Generalized Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Models for counts, binary responses, skewed responses, and proportions – Generalized Linear Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/longitudinal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Linear models for longitudinal experiments</span></span></a>
   </div>
 </li>
     </ul>
@@ -287,43 +299,43 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#adding-covariates-can-increases-the-precision-of-the-effect-of-interest" id="toc-adding-covariates-can-increases-the-precision-of-the-effect-of-interest" class="nav-link active" data-scroll-target="#adding-covariates-can-increases-the-precision-of-the-effect-of-interest"><span class="header-section-number">14.1</span> Adding covariates can increases the precision of the effect of interest</a></li>
-  <li><a href="#understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data" id="toc-understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data" class="nav-link" data-scroll-target="#understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data"><span class="header-section-number">14.2</span> Understanding a linear model with an added covariate – heart necrosis data</a>
+  <li><a href="#adding-covariates-can-increases-the-precision-of-the-effect-of-interest" id="toc-adding-covariates-can-increases-the-precision-of-the-effect-of-interest" class="nav-link active" data-scroll-target="#adding-covariates-can-increases-the-precision-of-the-effect-of-interest"><span class="header-section-number">15.1</span> Adding covariates can increases the precision of the effect of interest</a></li>
+  <li><a href="#understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data" id="toc-understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data" class="nav-link" data-scroll-target="#understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data"><span class="header-section-number">15.2</span> Understanding a linear model with an added covariate – heart necrosis data</a>
   <ul>
-  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">14.2.1</span> Fit the model</a></li>
-  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">14.2.2</span> Plot the model</a></li>
-  <li><a href="#interpretation-of-the-model-coefficients" id="toc-interpretation-of-the-model-coefficients" class="nav-link" data-scroll-target="#interpretation-of-the-model-coefficients"><span class="header-section-number">14.2.3</span> Interpretation of the model coefficients</a></li>
-  <li><a href="#everything-adds-up" id="toc-everything-adds-up" class="nav-link" data-scroll-target="#everything-adds-up"><span class="header-section-number">14.2.4</span> Everything adds up</a></li>
-  <li><a href="#interpretation-of-the-estimated-marginal-means" id="toc-interpretation-of-the-estimated-marginal-means" class="nav-link" data-scroll-target="#interpretation-of-the-estimated-marginal-means"><span class="header-section-number">14.2.5</span> Interpretation of the estimated marginal means</a></li>
-  <li><a href="#interpretation-of-the-contrasts" id="toc-interpretation-of-the-contrasts" class="nav-link" data-scroll-target="#interpretation-of-the-contrasts"><span class="header-section-number">14.2.6</span> Interpretation of the contrasts</a></li>
-  <li><a href="#adding-the-covariate-improves-inference" id="toc-adding-the-covariate-improves-inference" class="nav-link" data-scroll-target="#adding-the-covariate-improves-inference"><span class="header-section-number">14.2.7</span> Adding the covariate improves inference</a></li>
+  <li><a href="#fit-the-model" id="toc-fit-the-model" class="nav-link" data-scroll-target="#fit-the-model"><span class="header-section-number">15.2.1</span> Fit the model</a></li>
+  <li><a href="#plot-the-model" id="toc-plot-the-model" class="nav-link" data-scroll-target="#plot-the-model"><span class="header-section-number">15.2.2</span> Plot the model</a></li>
+  <li><a href="#interpretation-of-the-model-coefficients" id="toc-interpretation-of-the-model-coefficients" class="nav-link" data-scroll-target="#interpretation-of-the-model-coefficients"><span class="header-section-number">15.2.3</span> Interpretation of the model coefficients</a></li>
+  <li><a href="#everything-adds-up" id="toc-everything-adds-up" class="nav-link" data-scroll-target="#everything-adds-up"><span class="header-section-number">15.2.4</span> Everything adds up</a></li>
+  <li><a href="#interpretation-of-the-estimated-marginal-means" id="toc-interpretation-of-the-estimated-marginal-means" class="nav-link" data-scroll-target="#interpretation-of-the-estimated-marginal-means"><span class="header-section-number">15.2.5</span> Interpretation of the estimated marginal means</a></li>
+  <li><a href="#interpretation-of-the-contrasts" id="toc-interpretation-of-the-contrasts" class="nav-link" data-scroll-target="#interpretation-of-the-contrasts"><span class="header-section-number">15.2.6</span> Interpretation of the contrasts</a></li>
+  <li><a href="#adding-the-covariate-improves-inference" id="toc-adding-the-covariate-improves-inference" class="nav-link" data-scroll-target="#adding-the-covariate-improves-inference"><span class="header-section-number">15.2.7</span> Adding the covariate improves inference</a></li>
   </ul></li>
-  <li><a href="#understanding-interaction-effects-with-covariates" id="toc-understanding-interaction-effects-with-covariates" class="nav-link" data-scroll-target="#understanding-interaction-effects-with-covariates"><span class="header-section-number">14.3</span> Understanding interaction effects with covariates</a>
+  <li><a href="#understanding-interaction-effects-with-covariates" id="toc-understanding-interaction-effects-with-covariates" class="nav-link" data-scroll-target="#understanding-interaction-effects-with-covariates"><span class="header-section-number">15.3</span> Understanding interaction effects with covariates</a>
   <ul>
-  <li><a href="#fit-the-model-1" id="toc-fit-the-model-1" class="nav-link" data-scroll-target="#fit-the-model-1"><span class="header-section-number">14.3.1</span> Fit the model</a></li>
-  <li><a href="#plot-the-model-with-interaction-effect" id="toc-plot-the-model-with-interaction-effect" class="nav-link" data-scroll-target="#plot-the-model-with-interaction-effect"><span class="header-section-number">14.3.2</span> Plot the model with interaction effect</a></li>
-  <li><a href="#interpretation-of-the-model-coefficients-1" id="toc-interpretation-of-the-model-coefficients-1" class="nav-link" data-scroll-target="#interpretation-of-the-model-coefficients-1"><span class="header-section-number">14.3.3</span> Interpretation of the model coefficients</a></li>
-  <li><a href="#what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends." id="toc-what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends." class="nav-link" data-scroll-target="#what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends."><span class="header-section-number">14.3.4</span> What is the effect of a treatment, if interactions are modeled? – it depends.</a></li>
-  <li><a href="#which-model-do-we-use-mathcalm_1-or-mathcalm_2" id="toc-which-model-do-we-use-mathcalm_1-or-mathcalm_2" class="nav-link" data-scroll-target="#which-model-do-we-use-mathcalm_1-or-mathcalm_2"><span class="header-section-number">14.3.5</span> Which model do we use, <span class="math inline">\(\mathcal{M}_1\)</span> or <span class="math inline">\(\mathcal{M}_2\)</span>?</a></li>
+  <li><a href="#fit-the-model-1" id="toc-fit-the-model-1" class="nav-link" data-scroll-target="#fit-the-model-1"><span class="header-section-number">15.3.1</span> Fit the model</a></li>
+  <li><a href="#plot-the-model-with-interaction-effect" id="toc-plot-the-model-with-interaction-effect" class="nav-link" data-scroll-target="#plot-the-model-with-interaction-effect"><span class="header-section-number">15.3.2</span> Plot the model with interaction effect</a></li>
+  <li><a href="#interpretation-of-the-model-coefficients-1" id="toc-interpretation-of-the-model-coefficients-1" class="nav-link" data-scroll-target="#interpretation-of-the-model-coefficients-1"><span class="header-section-number">15.3.3</span> Interpretation of the model coefficients</a></li>
+  <li><a href="#what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends." id="toc-what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends." class="nav-link" data-scroll-target="#what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends."><span class="header-section-number">15.3.4</span> What is the effect of a treatment, if interactions are modeled? – it depends.</a></li>
+  <li><a href="#which-model-do-we-use-mathcalm_1-or-mathcalm_2" id="toc-which-model-do-we-use-mathcalm_1-or-mathcalm_2" class="nav-link" data-scroll-target="#which-model-do-we-use-mathcalm_1-or-mathcalm_2"><span class="header-section-number">15.3.5</span> Which model do we use, <span class="math inline">\(\mathcal{M}_1\)</span> or <span class="math inline">\(\mathcal{M}_2\)</span>?</a></li>
   </ul></li>
-  <li><a href="#understanding-ancova-tables" id="toc-understanding-ancova-tables" class="nav-link" data-scroll-target="#understanding-ancova-tables"><span class="header-section-number">14.4</span> Understanding ANCOVA tables</a></li>
-  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">14.5</span> Working in R</a>
+  <li><a href="#understanding-ancova-tables" id="toc-understanding-ancova-tables" class="nav-link" data-scroll-target="#understanding-ancova-tables"><span class="header-section-number">15.4</span> Understanding ANCOVA tables</a></li>
+  <li><a href="#working-in-r" id="toc-working-in-r" class="nav-link" data-scroll-target="#working-in-r"><span class="header-section-number">15.5</span> Working in R</a>
   <ul>
-  <li><a href="#importing-the-heart-necrosis-data" id="toc-importing-the-heart-necrosis-data" class="nav-link" data-scroll-target="#importing-the-heart-necrosis-data"><span class="header-section-number">14.5.1</span> Importing the heart necrosis data</a></li>
-  <li><a href="#fitting-the-model" id="toc-fitting-the-model" class="nav-link" data-scroll-target="#fitting-the-model"><span class="header-section-number">14.5.2</span> Fitting the model</a></li>
-  <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">14.5.3</span> Using the emmeans function</a></li>
-  <li><a href="#ancova-tables" id="toc-ancova-tables" class="nav-link" data-scroll-target="#ancova-tables"><span class="header-section-number">14.5.4</span> ANCOVA tables</a></li>
-  <li><a href="#plotting-the-model" id="toc-plotting-the-model" class="nav-link" data-scroll-target="#plotting-the-model"><span class="header-section-number">14.5.5</span> Plotting the model</a>
+  <li><a href="#importing-the-heart-necrosis-data" id="toc-importing-the-heart-necrosis-data" class="nav-link" data-scroll-target="#importing-the-heart-necrosis-data"><span class="header-section-number">15.5.1</span> Importing the heart necrosis data</a></li>
+  <li><a href="#fitting-the-model" id="toc-fitting-the-model" class="nav-link" data-scroll-target="#fitting-the-model"><span class="header-section-number">15.5.2</span> Fitting the model</a></li>
+  <li><a href="#using-the-emmeans-function" id="toc-using-the-emmeans-function" class="nav-link" data-scroll-target="#using-the-emmeans-function"><span class="header-section-number">15.5.3</span> Using the emmeans function</a></li>
+  <li><a href="#ancova-tables" id="toc-ancova-tables" class="nav-link" data-scroll-target="#ancova-tables"><span class="header-section-number">15.5.4</span> ANCOVA tables</a></li>
+  <li><a href="#plotting-the-model" id="toc-plotting-the-model" class="nav-link" data-scroll-target="#plotting-the-model"><span class="header-section-number">15.5.5</span> Plotting the model</a>
   <ul class="collapse">
-  <li><a href="#using-ggpubr" id="toc-using-ggpubr" class="nav-link" data-scroll-target="#using-ggpubr"><span class="header-section-number">14.5.5.1</span> Using ggpubr</a></li>
-  <li><a href="#ggplot2" id="toc-ggplot2" class="nav-link" data-scroll-target="#ggplot2"><span class="header-section-number">14.5.5.2</span> ggplot2</a></li>
-  <li><a href="#a-response-effects-plot-using-ggplot2" id="toc-a-response-effects-plot-using-ggplot2" class="nav-link" data-scroll-target="#a-response-effects-plot-using-ggplot2"><span class="header-section-number">14.5.5.3</span> A response-effects plot using ggplot2</a></li>
+  <li><a href="#using-ggpubr" id="toc-using-ggpubr" class="nav-link" data-scroll-target="#using-ggpubr"><span class="header-section-number">15.5.5.1</span> Using ggpubr</a></li>
+  <li><a href="#ggplot2" id="toc-ggplot2" class="nav-link" data-scroll-target="#ggplot2"><span class="header-section-number">15.5.5.2</span> ggplot2</a></li>
+  <li><a href="#a-response-effects-plot-using-ggplot2" id="toc-a-response-effects-plot-using-ggplot2" class="nav-link" data-scroll-target="#a-response-effects-plot-using-ggplot2"><span class="header-section-number">15.5.5.3</span> A response-effects plot using ggplot2</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="header-section-number">14.6</span> Best practices</a>
+  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="header-section-number">15.6</span> Best practices</a>
   <ul>
-  <li><a href="#do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate" id="toc-do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate" class="nav-link" data-scroll-target="#do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate"><span class="header-section-number">14.6.1</span> Do not use a ratio of part:whole as a response variable – instead add the denominator as a covariate</a></li>
-  <li><a href="#use-a-covariate-instead-of-normalizing-a-response" id="toc-use-a-covariate-instead-of-normalizing-a-response" class="nav-link" data-scroll-target="#use-a-covariate-instead-of-normalizing-a-response"><span class="header-section-number">14.6.2</span> Use a covariate instead of normalizing a response</a></li>
+  <li><a href="#do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate" id="toc-do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate" class="nav-link" data-scroll-target="#do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate"><span class="header-section-number">15.6.1</span> Do not use a ratio of part:whole as a response variable – instead add the denominator as a covariate</a></li>
+  <li><a href="#use-a-covariate-instead-of-normalizing-a-response" id="toc-use-a-covariate-instead-of-normalizing-a-response" class="nav-link" data-scroll-target="#use-a-covariate-instead-of-normalizing-a-response"><span class="header-section-number">15.6.2</span> Use a covariate instead of normalizing a response</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -333,7 +345,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-ancova" class="quarto-section-identifier"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></span></h1>
+<h1 class="title"><span id="sec-ancova" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></span></h1>
 </div>
 
 
@@ -351,8 +363,8 @@ window.Quarto = {
 
 
 <p>In its most general sense, <strong>Covariates</strong> are simply the <span class="math inline">\(X\)</span> variables in a statistical model. With data from experiments, “covariates” more typically refers to continuous <span class="math inline">\(X\)</span> variables that are added to a model to increase precision of the treatment effects. In observational designs, continuous and categorical covariates might be added to a model to 1) increase predictive ability, 2) because the researcher is interested in specific conditional effects, or 3) to eliminate confounding. These are discussed in later chapters. In this chapter, a single, continuous covariate is added to a linear model. Nothing is fundamentally different if the covariate added is categorical (<span class="math inline">\(Sex\)</span> is a common categorical covariate) or if multiple covariates are added.</p>
-<section id="adding-covariates-can-increases-the-precision-of-the-effect-of-interest" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="adding-covariates-can-increases-the-precision-of-the-effect-of-interest"><span class="header-section-number">14.1</span> Adding covariates can increases the precision of the effect of interest</h2>
+<section id="adding-covariates-can-increases-the-precision-of-the-effect-of-interest" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="adding-covariates-can-increases-the-precision-of-the-effect-of-interest"><span class="header-section-number">15.1</span> Adding covariates can increases the precision of the effect of interest</h2>
 <p>I use fake data to introduce the concept of <strong>statistical elimination</strong> of a <strong>covariate</strong> in a statistical model. Here I am modeling the effect of a new drug on blood LDL-C levels. LDL is a kind of lipoprotein, which are particles in the blood that transport fats and cholesterol to and from different tissues. LDL-C is cholesterol associated with LDL particles. LDL-C is considered “bad cholesterol” because LDL is believed to transport cholesterol and other lipids to arterial walls, which is the basis for atherosclerosis.</p>
 <p>Thirty applied biostats students are recruited and are randomly assigned to either the “placebo” treatment level or “drug” treatment level. The response is blood LDL-C concentration. The drug manufacturer wants a measure of the effect of the new drug on ldlc.</p>
 <div class="cell">
@@ -491,8 +503,8 @@ treatmentdrug    -1.55       1.51   -1.03 3.13e-01  -4.65   1.55</code></pre>
 </div>
 </div>
 </section>
-<section id="understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data"><span class="header-section-number">14.2</span> Understanding a linear model with an added covariate – heart necrosis data</h2>
+<section id="understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="understanding-a-linear-model-with-an-added-covariate-heart-necrosis-data"><span class="header-section-number">15.2</span> Understanding a linear model with an added covariate – heart necrosis data</h2>
 <p><a href="https://www.nature.com/articles/s42255-019-0123-y">1-Deoxydihydroceramide causes anoxic death by impairing chaperonin-mediated protein folding</a></p>
 <p><a href="https://www.nature.com/articles/s42255-019-0123-y#Sec38">Source data</a></p>
 <p>In this article, the researchers are investigating the effects of specific sphingolipids on hypoxia (low O2) in the heart. This hypoxia results in necrosis (death) of heart tissue. The researchers are specifically looking at the sphingolipid 1-deoxydihydroceramide (DoxDHCer), which is derived from 1-deoxysphinganine6 (DoxSa).</p>
@@ -502,8 +514,8 @@ treatmentdrug    -1.55       1.51   -1.03 3.13e-01  -4.65   1.55</code></pre>
 <li>Myriocin + DoxSa – DoxSa is the specific sphingolipid that the researchers believe cause the hypoxia/necrosis. The drug should inhibit the production of sphingolipids but the added DoxSa should reverses the protective effect of the drug. If there is a reversal of the protection, then this supports the hypothesis that DoxSa is the sphingolipid causing the hypoxia/necrosis.</li>
 </ol>
 <p>The response (<span class="math inline">\(Y\)</span>) variable is <span class="math inline">\(area\_of\_necrosis\)</span> – the measured “area” of the necrotic tissue (area is used here in the sense of “region” and not in the sense of length times width). The covariate is <span class="math inline">\(area\_at\_risk\)</span> – the area of heart tissue that is susceptible to necrosis.</p>
-<section id="fit-the-model" class="level3" data-number="14.2.1">
-<h3 data-number="14.2.1" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">14.2.1</span> Fit the model</h3>
+<section id="fit-the-model" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">15.2.1</span> Fit the model</h3>
 <p>The verbal model with added covariate is</p>
 <p><span class="math inline">\(area\_of\_necrosis \sim area\_at\_risk + treatment\;\;\;(\mathcal{M}_1)\)</span>.</p>
 <p>which I’ll name model <span class="math inline">\(\mathcal{M}_1\)</span>. To understand the model coefficients, it helps to expand model <span class="math inline">\(\mathcal{M}_1\)</span> into the full linear model.</p>
@@ -517,8 +529,8 @@ area\_of\_necrosis = \beta_0 + \beta_1 area\_at\_risk + \beta_2 treatment_{myrio
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot-the-model" class="level3" data-number="14.2.2">
-<h3 data-number="14.2.2" class="anchored" data-anchor-id="plot-the-model"><span class="header-section-number">14.2.2</span> Plot the model</h3>
+<section id="plot-the-model" class="level3" data-number="15.2.2">
+<h3 data-number="15.2.2" class="anchored" data-anchor-id="plot-the-model"><span class="header-section-number">15.2.2</span> Plot the model</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -530,8 +542,8 @@ area\_of\_necrosis = \beta_0 + \beta_1 area\_at\_risk + \beta_2 treatment_{myrio
 </div>
 </div>
 </section>
-<section id="interpretation-of-the-model-coefficients" class="level3" data-number="14.2.3">
-<h3 data-number="14.2.3" class="anchored" data-anchor-id="interpretation-of-the-model-coefficients"><span class="header-section-number">14.2.3</span> Interpretation of the model coefficients</h3>
+<section id="interpretation-of-the-model-coefficients" class="level3" data-number="15.2.3">
+<h3 data-number="15.2.3" class="anchored" data-anchor-id="interpretation-of-the-model-coefficients"><span class="header-section-number">15.2.3</span> Interpretation of the model coefficients</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig4h_m1)),</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">confint</span>(fig4h_m1))</span>
@@ -557,12 +569,12 @@ b_2 = \mathrm{E}(area\_of\_necrosis|treatment = "Myriocin", X = x) - \mathrm{E}(
 </ol>
 <p>How do we summarize these interpretations given the motivating hypothesis? The results do not support the hypothesis. If DoxSa is one of the sphingolipids inducing hypoxia/necrosis, then we’d expect the Myriocin + DoxSa line to be elevated above the Myriocin line. But the coefficient table “tests” this prediction only indirectly. The explicit statistic for this prediction is the (Myriocin + DoxSa) - Myriocin contrast in the contrast table below.</p>
 </section>
-<section id="everything-adds-up" class="level3" data-number="14.2.4">
-<h3 data-number="14.2.4" class="anchored" data-anchor-id="everything-adds-up"><span class="header-section-number">14.2.4</span> Everything adds up</h3>
+<section id="everything-adds-up" class="level3" data-number="15.2.4">
+<h3 data-number="15.2.4" class="anchored" data-anchor-id="everything-adds-up"><span class="header-section-number">15.2.4</span> Everything adds up</h3>
 <p>Remember that everything adds up in a linear model. A regression line is a line of expected values (the expectation of <span class="math inline">\(Y\)</span> conditional on <span class="math inline">\(X\)</span>). The point on the Vehicle line at <span class="math inline">\(area\_of\_risk = 30\)</span> is <span class="math inline">\(b_0 + b_1 \cdot 30\)</span>. The point on the “Myriocin” line at <span class="math inline">\(area\_of\_risk = 30\)</span> is <span class="math inline">\(b_0 + b_1 \cdot 30 + b_2\)</span>. And, the point on the “Myriocin + DoxSa” line at <span class="math inline">\(area\_of\_risk = 30\)</span> is <span class="math inline">\(b_0 + b_1 \cdot 30 + b_3\)</span>. Understanding how the components of the linear model add up gives you phenomenonal cosmic power in statistical analysis.</p>
 </section>
-<section id="interpretation-of-the-estimated-marginal-means" class="level3" data-number="14.2.5">
-<h3 data-number="14.2.5" class="anchored" data-anchor-id="interpretation-of-the-estimated-marginal-means"><span class="header-section-number">14.2.5</span> Interpretation of the estimated marginal means</h3>
+<section id="interpretation-of-the-estimated-marginal-means" class="level3" data-number="15.2.5">
+<h3 data-number="15.2.5" class="anchored" data-anchor-id="interpretation-of-the-estimated-marginal-means"><span class="header-section-number">15.2.5</span> Interpretation of the estimated marginal means</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(fig4h_m1, <span class="at">specs =</span> <span class="st">"treatment"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig4h_m1_emm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -577,8 +589,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 <p>The values in the column “emmean” are the expected values of each group when (“conditional on”) <span class="math inline">\(area\_at\_risk\)</span> is equal to the mean <span class="math inline">\(area\_at\_risk\)</span>.</p>
 </section>
-<section id="interpretation-of-the-contrasts" class="level3" data-number="14.2.6">
-<h3 data-number="14.2.6" class="anchored" data-anchor-id="interpretation-of-the-contrasts"><span class="header-section-number">14.2.6</span> Interpretation of the contrasts</h3>
+<section id="interpretation-of-the-contrasts" class="level3" data-number="15.2.6">
+<h3 data-number="15.2.6" class="anchored" data-anchor-id="interpretation-of-the-contrasts"><span class="header-section-number">15.2.6</span> Interpretation of the contrasts</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig4h_m1_pairs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(fig4h_m1_emm,</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"revpairwise"</span>,</span>
@@ -600,8 +612,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 <p>The values in the column “estimate” are the differences between the estimated marginal means in the estimated marginal means table. The first two contrasts are equal to the coefficients <span class="math inline">\(b_2\)</span> and <span class="math inline">\(b_3\)</span> in the coefficient table.</p>
 </section>
-<section id="adding-the-covariate-improves-inference" class="level3" data-number="14.2.7">
-<h3 data-number="14.2.7" class="anchored" data-anchor-id="adding-the-covariate-improves-inference"><span class="header-section-number">14.2.7</span> Adding the covariate improves inference</h3>
+<section id="adding-the-covariate-improves-inference" class="level3" data-number="15.2.7">
+<h3 data-number="15.2.7" class="anchored" data-anchor-id="adding-the-covariate-improves-inference"><span class="header-section-number">15.2.7</span> Adding the covariate improves inference</h3>
 <p>Compare the effects in Model <span class="math inline">\(\mathcal{M}_1\)</span> (with the added covariate) to the effects in a linear model without the added covariate.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -614,10 +626,10 @@ treatmentMyriocin + DoxSa    0.293       2.15   0.136 8.93e-01 -4.09  4.670</cod
 <p>Inference from these two models is very different. From the model adjusting for area at risk (Model <span class="math inline">\(\mathcal{M}_1\)</span>), we would conclude “Unexpectedly, the estimated Myriocin + DoxSa effect (-3.2 mg, 95% CI: -5.9, -0.4) is effectively as big as the Myriocin alone effect.” By contrast, using the model without the covariate, we would conclude “Relative to the Myriocin effect, the estimated Myriocin + DoxSa effect is small (.29 mg), and there is large uncertainty in its direction and magnitude (95% CI: -4.1, 4.7).” (Note that the authors published a different conclusion to either of these. I cannot recover the results leading to their conclusion using the methods published by the authors.)</p>
 </section>
 </section>
-<section id="understanding-interaction-effects-with-covariates" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="understanding-interaction-effects-with-covariates"><span class="header-section-number">14.3</span> Understanding interaction effects with covariates</h2>
-<section id="fit-the-model-1" class="level3" data-number="14.3.1">
-<h3 data-number="14.3.1" class="anchored" data-anchor-id="fit-the-model-1"><span class="header-section-number">14.3.1</span> Fit the model</h3>
+<section id="understanding-interaction-effects-with-covariates" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="understanding-interaction-effects-with-covariates"><span class="header-section-number">15.3</span> Understanding interaction effects with covariates</h2>
+<section id="fit-the-model-1" class="level3" data-number="15.3.1">
+<h3 data-number="15.3.1" class="anchored" data-anchor-id="fit-the-model-1"><span class="header-section-number">15.3.1</span> Fit the model</h3>
 <p>When we add a continuous covariate to a model we sometimes want to model the <strong>interaction</strong> with the categorical factor variable. An interaction effect represents how the effect of one variable changes given the level of a second variable. The verbal model with an added interaction effect is</p>
 <p><span class="math inline">\(area\_of\_necrosis \sim area\_at\_risk + treatment + area\_at\_risk \times treatment\;\;\;(\mathcal{M}_2)\)</span></p>
 <p>which I’ll refer to as Model <span class="math inline">\(\mathcal{M}_2\)</span>. To understand the model coefficients, it helps to expand this into the full linear model.</p>
@@ -636,8 +648,8 @@ area\_of\_necrosis = \beta_0 &amp;+ \beta_1 area\_at\_risk + \beta_2 treatment_{
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot-the-model-with-interaction-effect" class="level3" data-number="14.3.2">
-<h3 data-number="14.3.2" class="anchored" data-anchor-id="plot-the-model-with-interaction-effect"><span class="header-section-number">14.3.2</span> Plot the model with interaction effect</h3>
+<section id="plot-the-model-with-interaction-effect" class="level3" data-number="15.3.2">
+<h3 data-number="15.3.2" class="anchored" data-anchor-id="plot-the-model-with-interaction-effect"><span class="header-section-number">15.3.2</span> Plot the model with interaction effect</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -649,8 +661,8 @@ area\_of\_necrosis = \beta_0 &amp;+ \beta_1 area\_at\_risk + \beta_2 treatment_{
 </div>
 </div>
 </section>
-<section id="interpretation-of-the-model-coefficients-1" class="level3" data-number="14.3.3">
-<h3 data-number="14.3.3" class="anchored" data-anchor-id="interpretation-of-the-model-coefficients-1"><span class="header-section-number">14.3.3</span> Interpretation of the model coefficients</h3>
+<section id="interpretation-of-the-model-coefficients-1" class="level3" data-number="15.3.3">
+<h3 data-number="15.3.3" class="anchored" data-anchor-id="interpretation-of-the-model-coefficients-1"><span class="header-section-number">15.3.3</span> Interpretation of the model coefficients</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig4h_m2_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig4h_m2)),</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">confint</span>(fig4h_m2))</span>
@@ -675,22 +687,22 @@ area_at_risk:treatmentMyriocin + DoxSa    -0.06       0.14</code></pre>
 </ol>
 <p>Interaction effects are <em>differences in slopes</em> (this is also true with interactions between two factor variables, even though we usually describe this as “differences in differences”) and these difference are easily seen by inspection of a plot similar to that in Figure @ref(fig:fig4h-m2-plot-model). The bigger the interaction, the less parallel the regression line.</p>
 </section>
-<section id="what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends." class="level3" data-number="14.3.4">
-<h3 data-number="14.3.4" class="anchored" data-anchor-id="what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends."><span class="header-section-number">14.3.4</span> What is the effect of a treatment, if interactions are modeled? – it depends.</h3>
+<section id="what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends." class="level3" data-number="15.3.4">
+<h3 data-number="15.3.4" class="anchored" data-anchor-id="what-is-the-effect-of-a-treatment-if-interactions-are-modeled-it-depends."><span class="header-section-number">15.3.4</span> What is the effect of a treatment, if interactions are modeled? – it depends.</h3>
 <p>A very useful way to remember what an interaction <em>is</em> is “it depends”. What is the effect of Myriocin on area at risk? With an interaction term in the linear model, the answer is “it depends”. It depends on the level of <span class="math inline">\(area\_at\_risk\)</span>. At small values of area at risk, the effect of Myriocin is very small. At large values of area at risk, the effect of Myriocin is large. Likewise, what is the effect of area at risk on necrosis? It depends (if interactions are modeled). It depends on the level of treatment, for example the effect in the Myriocin group is smaller (a smaller slope) than the effect in the Vehicle group. “It depends” is the hallmark of interactions – the effect of one variable on the outcome depends on the level of a second variable.</p>
 </section>
-<section id="which-model-do-we-use-mathcalm_1-or-mathcalm_2" class="level3" data-number="14.3.5">
-<h3 data-number="14.3.5" class="anchored" data-anchor-id="which-model-do-we-use-mathcalm_1-or-mathcalm_2"><span class="header-section-number">14.3.5</span> Which model do we use, <span class="math inline">\(\mathcal{M}_1\)</span> or <span class="math inline">\(\mathcal{M}_2\)</span>?</h3>
+<section id="which-model-do-we-use-mathcalm_1-or-mathcalm_2" class="level3" data-number="15.3.5">
+<h3 data-number="15.3.5" class="anchored" data-anchor-id="which-model-do-we-use-mathcalm_1-or-mathcalm_2"><span class="header-section-number">15.3.5</span> Which model do we use, <span class="math inline">\(\mathcal{M}_1\)</span> or <span class="math inline">\(\mathcal{M}_2\)</span>?</h3>
 <p>The answer to this question depends partly on our goals. If we are explicitly interested in measuring an interaction effect (perhaps some theory predicts an positive interaction) then we would necesarily add interaction effects to the model. But if we are interested in estimating a treatment effect conditional on a covariate, then we don’t include the interaction. Remember that a purpose of initial explorations of data (“Step 2 – examine the data”) is to help decide which model to specify in the model formula. If an initial plot shows large interactions between treatment levels and the covariate, then adjusting for the covariate won’t work, or at least won’t work without additional complexity to the interpretation. “Large interactions” of course raises the question, how large is too large to ignore interactions? Many textbooks in biostatistics recommend using an interaction <em>p</em>-value to make this decision. I disagree. There is no objective answer to the question. We lose information with all models – that is what we do in science. It is up to the researcher to be transparent with all decisions. If an additive (no interactions) model is used to condition on (adjust for) a covariate, the researcher should use the supplement to plot the model with interactions as evidence of why this decision is reasonable.</p>
 </section>
 </section>
-<section id="understanding-ancova-tables" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="understanding-ancova-tables"><span class="header-section-number">14.4</span> Understanding ANCOVA tables</h2>
+<section id="understanding-ancova-tables" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="understanding-ancova-tables"><span class="header-section-number">15.4</span> Understanding ANCOVA tables</h2>
 </section>
-<section id="working-in-r" class="level2" data-number="14.5">
-<h2 data-number="14.5" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">14.5</span> Working in R</h2>
-<section id="importing-the-heart-necrosis-data" class="level3" data-number="14.5.1">
-<h3 data-number="14.5.1" class="anchored" data-anchor-id="importing-the-heart-necrosis-data"><span class="header-section-number">14.5.1</span> Importing the heart necrosis data</h3>
+<section id="working-in-r" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="working-in-r"><span class="header-section-number">15.5</span> Working in R</h2>
+<section id="importing-the-heart-necrosis-data" class="level3" data-number="15.5.1">
+<h3 data-number="15.5.1" class="anchored" data-anchor-id="importing-the-heart-necrosis-data"><span class="header-section-number">15.5.1</span> Importing the heart necrosis data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_folder <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data_from <span class="ot">&lt;-</span> <span class="st">"1-Deoxydihydroceramide causes anoxic death by impairing chaperonin-mediated protein folding"</span></span>
@@ -725,8 +737,8 @@ area_at_risk:treatmentMyriocin + DoxSa    -0.06       0.14</code></pre>
 <span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>fig4h[, treatment <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> treatment_levels)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fitting-the-model" class="level3" data-number="14.5.2">
-<h3 data-number="14.5.2" class="anchored" data-anchor-id="fitting-the-model"><span class="header-section-number">14.5.2</span> Fitting the model</h3>
+<section id="fitting-the-model" class="level3" data-number="15.5.2">
+<h3 data-number="15.5.2" class="anchored" data-anchor-id="fitting-the-model"><span class="header-section-number">15.5.2</span> Fitting the model</h3>
 <p>For an additive model, add the covariate to the model formula using the <code>+</code> operator. The order of the variables doesn’t matter (the right-hand-side of the model formula could be <code>treatment + area_at_risk</code>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment, <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -736,8 +748,8 @@ area_at_risk:treatmentMyriocin + DoxSa    -0.06       0.14</code></pre>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">*</span> treatment, <span class="at">data =</span> fig4h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="using-the-emmeans-function" class="level3" data-number="14.5.3">
-<h3 data-number="14.5.3" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">14.5.3</span> Using the emmeans function</h3>
+<section id="using-the-emmeans-function" class="level3" data-number="15.5.3">
+<h3 data-number="15.5.3" class="anchored" data-anchor-id="using-the-emmeans-function"><span class="header-section-number">15.5.3</span> Using the emmeans function</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m1_emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1,</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">specs =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>))</span>
@@ -794,8 +806,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 </section>
-<section id="ancova-tables" class="level3" data-number="14.5.4">
-<h3 data-number="14.5.4" class="anchored" data-anchor-id="ancova-tables"><span class="header-section-number">14.5.4</span> ANCOVA tables</h3>
+<section id="ancova-tables" class="level3" data-number="15.5.4">
+<h3 data-number="15.5.4" class="anchored" data-anchor-id="ancova-tables"><span class="header-section-number">15.5.4</span> ANCOVA tables</h3>
 <p>If you are going to report statistics from an ANCOVA table, be sure that what you report is what you think you are reporting – it is very easy to get this wrong in R. One way to easily get a table using Type II or III sums of squares is to set the contrast option of the factor variable to <code>contr.sum</code> (this tells R to use deviation coding to form the model matrix for the linear model) and then use the function <code>Anova</code> from the car package (not base R <code>anova</code>).</p>
 <ol type="1">
 <li>It is safest to set this with the <code>lm</code> function itself.</li>
@@ -865,10 +877,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </section>
-<section id="plotting-the-model" class="level3" data-number="14.5.5">
-<h3 data-number="14.5.5" class="anchored" data-anchor-id="plotting-the-model"><span class="header-section-number">14.5.5</span> Plotting the model</h3>
-<section id="using-ggpubr" class="level4" data-number="14.5.5.1">
-<h4 data-number="14.5.5.1" class="anchored" data-anchor-id="using-ggpubr"><span class="header-section-number">14.5.5.1</span> Using ggpubr</h4>
+<section id="plotting-the-model" class="level3" data-number="15.5.5">
+<h3 data-number="15.5.5" class="anchored" data-anchor-id="plotting-the-model"><span class="header-section-number">15.5.5</span> Plotting the model</h3>
+<section id="using-ggpubr" class="level4" data-number="15.5.5.1">
+<h4 data-number="15.5.5.1" class="anchored" data-anchor-id="using-ggpubr"><span class="header-section-number">15.5.5.1</span> Using ggpubr</h4>
 <p>ggpubr will only plot the model with interactions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggscatter</span>(<span class="at">data =</span> fig4h,</span>
@@ -889,8 +901,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </section>
-<section id="ggplot2" class="level4" data-number="14.5.5.2">
-<h4 data-number="14.5.5.2" class="anchored" data-anchor-id="ggplot2"><span class="header-section-number">14.5.5.2</span> ggplot2</h4>
+<section id="ggplot2" class="level4" data-number="15.5.5.2">
+<h4 data-number="15.5.5.2" class="anchored" data-anchor-id="ggplot2"><span class="header-section-number">15.5.5.2</span> ggplot2</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pal_batlow &lt;- scico(n, alpha = NULL, begin = 0, end = 1, direction = 1, palette = "batlow")</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -923,8 +935,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </section>
-<section id="a-response-effects-plot-using-ggplot2" class="level4" data-number="14.5.5.3">
-<h4 data-number="14.5.5.3" class="anchored" data-anchor-id="a-response-effects-plot-using-ggplot2"><span class="header-section-number">14.5.5.3</span> A response-effects plot using ggplot2</h4>
+<section id="a-response-effects-plot-using-ggplot2" class="level4" data-number="15.5.5.3">
+<h4 data-number="15.5.5.3" class="anchored" data-anchor-id="a-response-effects-plot-using-ggplot2"><span class="header-section-number">15.5.5.3</span> A response-effects plot using ggplot2</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(area_of_necrosis <span class="sc">~</span> area_at_risk <span class="sc">+</span> treatment, <span class="at">data =</span> fig4h)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(m1)</span>
@@ -1027,13 +1039,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 </section>
 </section>
-<section id="best-practices" class="level2" data-number="14.6">
-<h2 data-number="14.6" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">14.6</span> Best practices</h2>
-<section id="do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate" class="level3" data-number="14.6.1">
-<h3 data-number="14.6.1" class="anchored" data-anchor-id="do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate"><span class="header-section-number">14.6.1</span> Do not use a ratio of part:whole as a response variable – instead add the denominator as a covariate</h3>
+<section id="best-practices" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">15.6</span> Best practices</h2>
+<section id="do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate" class="level3" data-number="15.6.1">
+<h3 data-number="15.6.1" class="anchored" data-anchor-id="do-not-use-a-ratio-of-partwhole-as-a-response-variable-instead-add-the-denominator-as-a-covariate"><span class="header-section-number">15.6.1</span> Do not use a ratio of part:whole as a response variable – instead add the denominator as a covariate</h3>
 </section>
-<section id="use-a-covariate-instead-of-normalizing-a-response" class="level3" data-number="14.6.2">
-<h3 data-number="14.6.2" class="anchored" data-anchor-id="use-a-covariate-instead-of-normalizing-a-response"><span class="header-section-number">14.6.2</span> Use a covariate instead of normalizing a response</h3>
+<section id="use-a-covariate-instead-of-normalizing-a-response" class="level3" data-number="15.6.2">
+<h3 data-number="15.6.2" class="anchored" data-anchor-id="use-a-covariate-instead-of-normalizing-a-response"><span class="header-section-number">15.6.2</span> Use a covariate instead of normalizing a response</h3>
 
 
 </section>
@@ -1463,12 +1475,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/two-factors.html" class="pagination-link" aria-label="Linear models with two categorical $X$ -- Factorial linear models (&quot;two-way ANOVA&quot;)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../chapters/lmm.html" class="pagination-link" aria-label="Models for non-independence -- linear mixed models">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for non-independence – linear mixed models</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Models for non-independence – linear mixed models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

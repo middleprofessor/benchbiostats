@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Analyzing experimental data with a linear model – Statistics for the Experimental Bench Biologist</title>
+<title>18&nbsp; Linear models for longitudinal experiments – Statistics for the Experimental Bench Biologist</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,8 +30,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/setup.html" rel="next">
-<link href="../chapters/preface.html" rel="prev">
+<link href="../chapters/glm.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -144,7 +109,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/longitudinal.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Linear models for longitudinal experiments</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -183,7 +148,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/intro.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></a>
   </div>
 </li>
@@ -285,7 +250,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/longitudinal.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/longitudinal.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Linear models for longitudinal experiments</span></span></a>
   </div>
 </li>
@@ -294,23 +259,15 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#this-text-is-about-using-linear-models-to-estimate-treatment-effects-and-the-uncertainty-in-our-estimates.-this-raises-the-question-what-is-an-effect" id="toc-this-text-is-about-using-linear-models-to-estimate-treatment-effects-and-the-uncertainty-in-our-estimates.-this-raises-the-question-what-is-an-effect" class="nav-link active" data-scroll-target="#this-text-is-about-using-linear-models-to-estimate-treatment-effects-and-the-uncertainty-in-our-estimates.-this-raises-the-question-what-is-an-effect"><span class="header-section-number">1.1</span> This text is about using linear models to estimate treatment effects and the uncertainty in our estimates. This, raises the question, what is “an effect”?</a></li>
-  <li><a href="#more-on-uncertainty" id="toc-more-on-uncertainty" class="nav-link" data-scroll-target="#more-on-uncertainty"><span class="header-section-number">1.2</span> More on uncertainty</a></li>
-  <li><a href="#a-wee-introduction-to-fitting-a-model-to-data" id="toc-a-wee-introduction-to-fitting-a-model-to-data" class="nav-link" data-scroll-target="#a-wee-introduction-to-fitting-a-model-to-data"><span class="header-section-number">1.3</span> A wee introduction to fitting a model to data</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-intro" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analyzing experimental data with a linear model</span></span></h1>
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Linear models for longitudinal experiments</span></h1>
 </div>
 
 
@@ -327,170 +284,8 @@ window.Quarto = {
 </header>
 
 
-<section id="this-text-is-about-using-linear-models-to-estimate-treatment-effects-and-the-uncertainty-in-our-estimates.-this-raises-the-question-what-is-an-effect" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="this-text-is-about-using-linear-models-to-estimate-treatment-effects-and-the-uncertainty-in-our-estimates.-this-raises-the-question-what-is-an-effect"><span class="header-section-number">1.1</span> This text is about using linear models to estimate treatment effects and the uncertainty in our estimates. This, raises the question, what is “an effect”?</h2>
-<p><a href="#ask1-report">At the end of this text</a>, I provide an example set of analyses for multiple, related experiments. This example is a goal or target; it’s what you will be working towards as you learn from this text. The data for the analysis come from multiple experiments presented in Figure 2 in the article <a href="https://www.nature.com/articles/s41467-020-15483-7" target="_blank">ASK1 inhibits browning of white adipose tissue in obesity</a>. The chapter preceding the analysis is <a href="#ask1-bio">just enough biology</a> to help you understand the biological importance of each experiment. The data for Figure 2 is from a set of experiments exploring the consequences of adipose-tissue specific deletion of the ASK1 signaling protein on multiple, adverse effects of a high-fat diet in mice, including weight gain, glucose intolerance, and increased liver triacylglycerol levels. I chose the data in Figure 2 of this paper because of the diversity of analyses and plot types. My analyses and plots differ slightly from those of the researchers because I implemented better practices – the stuff of this text.</p>
-<p>Here, I use one panel from Figure 2 to outline what the statistical analysis of experimental data is all about. Much of this outline will be repeated in “An introduction to linear models” chapter.</p>
-<p>For the experiment in Figure 2i, the researchers want to know if <a href="https://en.wikipedia.org/wiki/Gene_knockout" target="_blank">knocking out</a> the ASK1 gene in adipose tissue cells lowers the liver triglyceride (TG) level in mice fed a high-fat diet. To investigate this, the researchers measured the TG levels in a group of knockout mice (“ASK1Δadipo” – Δ is the del operator and refers to a deletion in genetics) and in a group of control mice (“ASK1F/F”).The goal of the experiment is to <strong>estimate</strong> the <strong>effect</strong> of the adipose-specific ASK1 deletion on TG level.</p>
-<p>To understand what I mean by “an effect”, and to understand how we can estimate an effect by <strong>fiting a linear model</strong> to data, let’s frist peek at the results of the fit linear model.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-intro-ask1-fig2i-ggplot-the-model" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-intro-ask1-fig2i-ggplot-the-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="intro_files/figure-html/fig-intro-ask1-fig2i-ggplot-the-model-1.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-intro-ask1-fig2i-ggplot-the-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1.1: The effect of adipose-specific ASK1 knockout on liver triglyceride (TG).
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>The <strong>estimate</strong> of the effect of adipose-specific ASK1 deletion on liver TG levels is the <em>difference</em> in the mean TG of the control group from the mean TG of the knockout group.</p>
-<p><span class="math display">\[
-\overline{\texttt{TG}}_\texttt{ASK1Δadipo} - \overline{\texttt{TG}}_\texttt{ASK1F/F}
-\]</span></p>
-<p>This estimate is -21.6 µmol per g liver. An effect has the same units as the variable compared (µmol per g liver), a magnitude (21.6 units), and a direction (negative).</p>
-<p>The direction and magnitude of the estimated effect can be mentally reconstructed by comparing the position of the two group means in the lower part of <a href="#fig-intro-ask1-fig2i-ggplot-the-model" class="quarto-xref">Figure&nbsp;<span>1.1</span></a>. The upper part of <a href="#fig-intro-ask1-fig2i-ggplot-the-model" class="quarto-xref">Figure&nbsp;<span>1.1</span></a> explicitly shows the estimate <em>and</em> shows the the uncertainty in the estimate using <strong>95% confidence intervals</strong>. I show how to make these plots in <a href="plotting-models.html" class="quarto-xref"><span>Chapter 4</span></a>.</p>
-<p>The values of the estimated effect and its 95% confidence interval in the upper part come from the <strong>contrasts table</strong>.</p>
-<div id="tbl-intro-fig2i-m1-pairs" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-intro-fig2i-m1-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1.1: Contrast table for the experiment in Figure 2i.
-</figcaption>
-<div aria-describedby="tbl-intro-fig2i-m1-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-stdout">
-<pre><code> contrast               estimate   SE df lower.CL upper.CL t.ratio p.value
- ASK1Δadipo - (ASK1F/F)    -21.6 7.05 10    -37.3     -5.9  -3.066  0.0119
-
-Confidence level used: 0.95 </code></pre>
-</div>
-</div>
-</figure>
-</div>
-<p>The first column of the table gives the direction of the contrast between the two treatment levels. The value in the “estimate” column is the estimated effect (the measured difference in means). The value in the “SE” column is the <strong>standard error of the difference in means</strong> (SE), a measure of uncertainty of the estimate. We use the SE to compute the test statistic for a <em>t</em>-test (“t.ratio” column), from which we get the <em>p</em>-value (“p.value” column), the probability of observing a <em>t</em>-value as large or larger than our observed value, if the <strong>null were true</strong>. The “null is true” not only means the true effect is zero but also assumes a long list of conditions, such as normality, homogenity, and independence (<a href="intro-stat-modeling.html" class="quarto-xref"><span>Chapter 8</span></a>).</p>
-<p>We also use the SE to compute the 95% confidence intervals of the estimated effect, whose lower and upper limits are in the “lower.CL” and “upper.CL” columns. The lower bound of the CI of the effect is -37.3 µmol/g and the upper bound is -5.9 µmol/g. A confidence interval is another way of communicating uncertainty (in addition to the SE), and the way advocated in this text. In a 95% confidence interval, 95% of similarly constructed intervals (from hypothetical sampling of six mice from the ASK1 normal population and six mice from the ASK1 knockout population) will contain the true mean. Another way to think about a confidence interval is, it is the range of true differences that are compatible with the data, where compatible means “not rejected” by a <em>t</em>-test (a <em>t</em>-test between the estimated effect and any number inside the interval would return a <em>p</em>-value greater than 0.05).</p>
-<p>Understanding what a standard error is and how to interpret confidence intervals is paramount to practicing good statistics and is covered in <a href="uncertainty-sd-and-se.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
-<p>The modeled means and error intervals in the lower part of <a href="#fig-intro-ask1-fig2i-ggplot-the-model" class="quarto-xref">Figure&nbsp;<span>1.1</span></a> come from the table of estimated marginal means, which I call the <strong>modeled means table</strong>.</p>
-<div id="tbl-intro-fig2i-m1-emm" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-intro-fig2i-m1-emm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1.2: Modeled means of the two treatment levels in the data from the experiment in Figure 2i.
-</figcaption>
-<div aria-describedby="tbl-intro-fig2i-m1-emm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-stdout">
-<pre><code> treatment  emmean   SE df lower.CL upper.CL
- ASK1F/F      61.5 4.98 10     50.4     72.6
- ASK1Δadipo   39.9 4.98 10     28.8     51.0
-
-Confidence level used: 0.95 </code></pre>
-</div>
-</div>
-</figure>
-</div>
-<p>The value in the “emmean” column is the modeled mean of the treatment level given in the column “treatment”. The value in the “SE” column is the <strong>standard error of the mean</strong>, a measure of uncertainty of the estimate. We use the SE to compute the 95% confidence interval of the mean. The lower and upper limits of this interval are in the columns “lower.CL” and “upper.CL”.</p>
-</section>
-<section id="more-on-uncertainty" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="more-on-uncertainty"><span class="header-section-number">1.2</span> More on uncertainty</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Repeat after me: estimated effects">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Repeat after me: estimated effects
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>It is hard to overemphasize that what we measure in experiments are <strong>estimated effects</strong>. The true effect may be larger, smaller, or even in the reverse direction. This text is all about what we can infer about true effects from the statistical analysis of experimental data. This inference requires that we also measure our <strong>uncertainty</strong> in our estimate of the effect.</p>
-</div>
-</div>
-<p>The measured means in each group are computed from a random <strong>sample</strong> of mice. If we only cared about the six mice in each group in this experiment, then we would not need to fit a linear model to the data to estimate the effect, we could simply compute each group’s mean and subtract the control mean from the knockout mean. But we care more about something more than these dozen mice because we are trying to discover something general about ASK1 regulation of TG levels in mice, generally (and even in mammals, and especially humans, generally). To make this leap of <strong>inference</strong>, we use a model to claim that each sample mean is an <strong>estimate</strong> of the respective <strong>population</strong> mean. Given this model, we can compute the <strong>standard error</strong> of each mean and the <strong>standard error of the difference in means</strong>. A standard error is a measure of the <strong>sampling variance of a statistic</strong> and, therefore, a measure of the precision of the estimate. The standard error, then, is a measure of <strong>uncertainty</strong> in the estimate. Here is how to think about precision and uncertainty: if we were to repeat this experiment many, many times, we would generate a long list of mean TG levels for the control mice and a long list of mean TG levels for the knockout mice. The less variable the means in each list, the more precise. By using a model, we do not need to repeat this experiment many times to get a standard error.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Better Know: Population">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Better Know: Population
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>What is a population? In the experimental biology examples in this text, we might consider the population as a very idealized, infinitely large set of mice, or fish, or fruit flies, or communities from which our sample is a reasonably representative subset. For the experiments in the ASK1Δadipo study, the population might be conceived of as the hypothetical, infinitely large set of floxed ASK1 C57BL/6 mice bred in the mouse facility of the researchers under the same rearing conditions. By infinitely large, I mean something like all possible phenotypes that could be born from the nearly-infinite combination of meiosis, gene-gene interactions, genotype-environment interactions, and maternal effects.</p>
-</div>
-</div>
-</section>
-<section id="a-wee-introduction-to-fitting-a-model-to-data" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="a-wee-introduction-to-fitting-a-model-to-data"><span class="header-section-number">1.3</span> A wee introduction to fitting a model to data</h2>
-<p>The model we are going to fit to the Figure 2i data is</p>
-<span class="math display">\[\begin{align}
-y &amp;= \beta_0 + \beta_1 x + \varepsilon\\
-\varepsilon &amp;\sim N(0, \sigma^2)
-\end{align}\]</span>
-<p>This is <em>a model</em> of how the Figure 2i data were generated. In this model, <span class="math inline">\(y\)</span> is the liver TG level for some fictional, randomly generated mouse and <span class="math inline">\(x\)</span> is a variable that indicates the condition of the ask1 gene in randomly generated mouse – a value of 0 is given to mice with a functional ASK1 gene and a value of 1 is given to mice with a knocked out gene.</p>
-<p><span class="math inline">\(\beta_0\)</span> is the “true” mean of TG in mice fed a high-fat diet and with a functional ASK1 gene. By “true”, I mean the mean that would be computed if we were to measure TG on an infinite number of these mice (exactly what “these mice” means is a good topic for a campfire discussion). The observed mean of the ASK1F/F group is an estimate of <span class="math inline">\(\beta_0\)</span>. The sum <span class="math inline">\(\beta_0\)</span> + <span class="math inline">\(\beta_1\)</span> is the true mean of TG in mice fed a high-fat diet but with a knocked out ASK1 gene. This means that <span class="math inline">\(\beta_1\)</span> is the true difference in the means, or the <strong>true effect</strong>. The observed difference in means between the ASK1Δadipo and ASK1F/F groups is an estimate of <span class="math inline">\(\beta_1\)</span>. This difference is the estimated effect.</p>
-<p>The sum <span class="math inline">\(\beta_0 + \beta_1 x\)</span> is the <strong>expectation</strong> of TG, or <strong>expected</strong> value of TG in a generated mouse given the generating model. This sum equals the true mean of the infinite set of normal mice if <span class="math inline">\(x = 0\)</span> and equals the true mean of the infinite set of ASK1 knockout mice if <span class="math inline">\(x = 1\)</span>. All generated control mice have the same expected value of TG. All generated knockout mice have the same expected value of TG.</p>
-<p><span class="math inline">\(\varepsilon\)</span> is the <strong>error</strong> for the randomly generated mouse. It is a random number sampled from a Normal distribution with a mean of zero and a variance of <span class="math inline">\(\sigma^2\)</span>. The variation in generated mice has a systematic component due to variation in <span class="math inline">\(x\)</span> and a random (or <strong>stochastic</strong>) component due to variation in <span class="math inline">\(\varepsilon\)</span>.</p>
-<p>By <strong>fitting a model to the data</strong> we estimate the parameters <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma\)</span>. It is the estimation of <span class="math inline">\(\sigma\)</span> that allows us to compute a measure of our uncertainty (a standard error) of our estimates of the means (<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_0 + \beta_1\)</span>) and of the difference in the means (<span class="math inline">\(\beta_1\)</span>).</p>
-<p>Let’s fit this model to the Figure 2i data using R.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig2i_m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(liver_tg <span class="sc">~</span> treatment, <span class="at">data =</span> fig2i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Robust inference from the model (generalizing from sample to population, including measures of the uncertainty of our estimates, requires that our data approximates the kind of data we’d expect from the data generating model specified above. All rigorous analysis should use specific <strong>model checks</strong> to evaluate a model fit. We use a <strong>quantile-quantile (QQ) plot</strong> to see if our data approximate what we’d see if we sampled from a normal distribution and a <strong>spread-level plot</strong> to see if our data approximate what we’d see if we sampled from distributions that do not differ in their variance.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcheck_the_model</span>(fig2i_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intro_files/figure-html/ask1-fig2i-check-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Our data look like they were sampled from a normal distribution because the points lie within the shaded boundary of the QQ plot (left panel). Our data look like they were sampled from distributions with the same variance because of the small tilt of the blue line in the Spread-Level plot (right panel). How to read these plots is covered in <a href="model-checking.html" class="quarto-xref"><span>Chapter 11</span></a>.</p>
-<p>Given these checks, lets move on and look at the table of model coefficients.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig2i_m1_coef <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fig2i_m1)),</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">confint</span>(fig2i_m1))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fig2i_m1_coef</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                     Estimate Std. Error   t value     Pr(&gt;|t|)     2.5 %
-(Intercept)          61.46667   4.981912 12.337968 2.248902e-07  50.36628
-treatmentASK1Δadipo -21.60000   7.045487 -3.065792 1.192608e-02 -37.29832
-                       97.5 %
-(Intercept)         72.567058
-treatmentASK1Δadipo -5.901676</code></pre>
-</div>
-</div>
-<ol type="1">
-<li>The two values in the column “Estimate” are the estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</li>
-<li>The top value (61.467 µmol/g), the intercept of the model (<span class="math inline">\(\beta_0\)</span>), is the mean of the wildtype (“ASK1F/F”) mice!</li>
-<li>The second value (-21.6 µmol/g), the slope of the model (<span class="math inline">\(\beta_1\)</span>) is the effect of ASK1 deletion on TG levels!</li>
-<li>Notice the redundancy between the 2nd row of the coefficient table and the contrast table.</li>
-</ol>
-<p>Here is how we might report this result in a paper:</p>
-<p>“Mean TG level in ASK1Δadipo mice on a high-fat diet was 21.6 µmol/g less than that in ASK1F/F mice on a high-fat diet (95% CI: -37.3, -5.9, <span class="math inline">\(p = 0.012\)</span>) (<a href="#fig-intro-ask1-fig2i-ggplot-the-model" class="quarto-xref">Figure&nbsp;<span>1.1</span></a>).”</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Phenomenal cosmic power">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Phenomenal cosmic power
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Remember that <span class="math inline">\(\beta_0 + \beta_1 x\)</span> is the expecation given (or <strong>conditional</strong> on) <em>x</em>.</p>
-<ol type="1">
-<li>For the reference group, which is the ASK1F/F genotype, <span class="math inline">\(x = 0\)</span>, so the estimated mean TG level is <span class="math inline">\(61.46667 + -21.60000 \cdot 0\)</span>, which is 61.46667. Compare this value to the modeled mean in <a href="#tbl-intro-fig2i-m1-emm" class="quarto-xref">Table&nbsp;<span>1.2</span></a>.</li>
-<li>For the non-reference group, which is the ASK1Δadipo genotype, <span class="math inline">\(x = 1\)</span>, so the estimated mean TG level is <span class="math inline">\(61.46667 + -21.60000 \cdot 1\)</span>, which is 39.86667. Compare this value to the modeled mean in <a href="#tbl-intro-fig2i-m1-emm" class="quarto-xref">Table&nbsp;<span>1.2</span></a>.</li>
-</ol>
-</div>
-</div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -915,14 +710,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/preface.html" class="pagination-link" aria-label="Preface">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="../chapters/glm.html" class="pagination-link" aria-label="Models for counts, binary responses, skewed responses, and proportions -- Generalized Linear Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Models for counts, binary responses, skewed responses, and proportions – Generalized Linear Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/setup.html" class="pagination-link" aria-label="Getting Started -- R Projects and R Markdown">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Getting Started – R Projects and R Markdown</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

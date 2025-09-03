@@ -255,26 +255,38 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../chapters/inference-issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Issues in inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../chapters/two-factors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with two categorical <span class="math inline">\(X\)</span> – Factorial linear models (“two-way ANOVA”)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ancova.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models with added covariates (“ANCOVA”)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/lmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Models for non-independence – linear mixed models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Models for non-independence – linear mixed models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/glm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Models for counts, binary responses, skewed responses, and proportions – Generalized Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Models for counts, binary responses, skewed responses, and proportions – Generalized Linear Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/longitudinal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Linear models for longitudinal experiments</span></span></a>
   </div>
 </li>
     </ul>
@@ -589,7 +601,7 @@ y_i = b_0 + b_1 x_i + e_i
 <ol start="2" type="1">
 <li>The draws from the probability distribution are <strong>independent</strong>. Independence implies <strong>uncorrelated</strong> <span class="math inline">\(Y\)</span> conditional on the <span class="math inline">\(X\)</span>, that is, for any two <span class="math inline">\(Y\)</span> with the same value of <span class="math inline">\(X\)</span>, we cannot predict the value of one given the value of the other. For example, in the ASK1 data above, “uncorrelated” implies that we cannot predict the glucose level of one mouse within a specific treatment combination given the glucose level of another mouse in that combination. For linear models, this assumption is often stated as “independent errors” (the <span class="math inline">\(\varepsilon\)</span> in model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>8.2</span></a>)) instead of independent observations.</li>
 </ol>
-<p>There are lots of reasons that conditional responses might be correlated. In the mouse example, correlation within treatment group could arise if subsets of mice in a treatment group are siblings or are housed in the same cage. More generally, if there are measures both within and among experimental units (field sites or humans or rats) then we’d expect the measures within the same unit to err from the model in the same direction. Multiple measures within experimental units (a site or individual) creates “clustered” observations. Lack of independence or clustered observations can be modeled using models with <strong>random effects</strong>. These models go by many names including linear mixed models (common in Ecology), hierarchical models, multilevel models, and random effects models. A linear mixed model is a variation of model <a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>8.2</span></a>. This text introduces linear mixed models in <a href="lmm.html" class="quarto-xref"><span>Chapter 15</span></a>.</p>
+<p>There are lots of reasons that conditional responses might be correlated. In the mouse example, correlation within treatment group could arise if subsets of mice in a treatment group are siblings or are housed in the same cage. More generally, if there are measures both within and among experimental units (field sites or humans or rats) then we’d expect the measures within the same unit to err from the model in the same direction. Multiple measures within experimental units (a site or individual) creates “clustered” observations. Lack of independence or clustered observations can be modeled using models with <strong>random effects</strong>. These models go by many names including linear mixed models (common in Ecology), hierarchical models, multilevel models, and random effects models. A linear mixed model is a variation of model <a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>8.2</span></a>. This text introduces linear mixed models in <a href="lmm.html" class="quarto-xref"><span>Chapter 16</span></a>.</p>
 <p>Measures that are taken from sites that are closer together or measures taken closer in time or measures from more closely related biological species will tend to have more similar values than measures taken from sites that are further apart or from times that are further apart or from species that are less closely related. Space and time and phylogeny create <strong>spatial and temporal and phylogenetic autocorrelation</strong>. Correlated error due to space or time or phylogeny can be modeled with <strong>Generalized Least Squares</strong> (GLS) models. A GLS model is a variation of model (<a href="#eq-error-spec" class="quarto-xref">Equation&nbsp;<span>8.2</span></a>).</p>
 </section>
 <section id="specific-assumptions-for-inference-with-a-linear-model" class="level3" data-number="8.8.2">
