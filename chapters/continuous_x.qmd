@@ -1,6 +1,6 @@
 # Linear models with a single, continuous *X* ("linear regression") {#regression}
 
-```{r continuous-x-setup, echo=FALSE, message=FALSE}
+```{r continuous-x-setup, echo=FALSE, message=FALSE, warning=FALSE}
 # packages specific to this chapter
 # library(Metrics)
 

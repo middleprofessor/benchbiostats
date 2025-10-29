@@ -3626,7 +3626,7 @@ exp1g_plot_b <- factor_wrap(exp1g_plot_b)
 plot_grid(exp1g_plot_a, exp1g_plot_b, ncol=2)
 ```
 
-### Repeated measures ANOVA (randomized complete block with no subsampling)
+### Repeated measures ANOVA (randomized complete block with no subsampling) {#sec-lmm-rmanova}
 
 ```{r, eval = FALSE}
 # this is the rm-ANOVA
