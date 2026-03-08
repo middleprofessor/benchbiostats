@@ -1,10 +1,13 @@
 project:
   type: book
   output-dir: docs
+  resources: 
+    - CNAME
 
 book:
   title: "Statistics for the Experimental Bench Biologist"
   subtitle: "Best practice workflows using R"
+  site-url: https://benchbiostats.com
   date: last-modified
   author:
     - name: "Jeffrey A. Walker"
@@ -36,8 +39,7 @@ book:
     - chapters/lmm.qmd
     - chapters/glm.qmd
     - chapters/longitudinal.qmd
-  site-url: "https://middleprofessor.github.io/benchbiostats/"
-  
+
 bibliography: references.bib
 
 format:

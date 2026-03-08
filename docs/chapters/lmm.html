@@ -418,7 +418,7 @@ window.Quarto = {
   <li><a href="#models-without-subsampling---example-3-experiment-2c-right-panel" id="toc-models-without-subsampling---example-3-experiment-2c-right-panel" class="nav-link" data-scroll-target="#models-without-subsampling---example-3-experiment-2c-right-panel"><span class="header-section-number">16.15.1.1</span> Models without subsampling - Example 3 (Experiment 2c right panel)</a></li>
   <li><a href="#models-with-subsampling---experiment-1g" id="toc-models-with-subsampling---experiment-1g" class="nav-link" data-scroll-target="#models-with-subsampling---experiment-1g"><span class="header-section-number">16.15.1.2</span> Models with subsampling - Experiment 1g</a></li>
   </ul></li>
-  <li><a href="#repeated-measures-anova-randomized-complete-block-with-no-subsampling" id="toc-repeated-measures-anova-randomized-complete-block-with-no-subsampling" class="nav-link" data-scroll-target="#repeated-measures-anova-randomized-complete-block-with-no-subsampling"><span class="header-section-number">16.15.2</span> Repeated measures ANOVA (randomized complete block with no subsampling)</a>
+  <li><a href="#sec-lmm-rmanova" id="toc-sec-lmm-rmanova" class="nav-link" data-scroll-target="#sec-lmm-rmanova"><span class="header-section-number">16.15.2</span> Repeated measures ANOVA (randomized complete block with no subsampling)</a>
   <ul class="collapse">
   <li><a href="#univariate-vs.-multivariate-repeated-measures-anova" id="toc-univariate-vs.-multivariate-repeated-measures-anova" class="nav-link" data-scroll-target="#univariate-vs.-multivariate-repeated-measures-anova"><span class="header-section-number">16.15.2.1</span> univariate vs.&nbsp;multivariate repeated measures ANOVA</a></li>
   <li><a href="#the-anova-table" id="toc-the-anova-table" class="nav-link" data-scroll-target="#the-anova-table"><span class="header-section-number">16.15.2.2</span> The ANOVA table</a></li>
@@ -4477,8 +4477,8 @@ Table&nbsp;16.5: Type I error rate the RCBD statistical models under different l
 </div>
 </section>
 </section>
-<section id="repeated-measures-anova-randomized-complete-block-with-no-subsampling" class="level3" data-number="16.15.2">
-<h3 data-number="16.15.2" class="anchored" data-anchor-id="repeated-measures-anova-randomized-complete-block-with-no-subsampling"><span class="header-section-number">16.15.2</span> Repeated measures ANOVA (randomized complete block with no subsampling)</h3>
+<section id="sec-lmm-rmanova" class="level3" data-number="16.15.2">
+<h3 data-number="16.15.2" class="anchored" data-anchor-id="sec-lmm-rmanova"><span class="header-section-number">16.15.2</span> Repeated measures ANOVA (randomized complete block with no subsampling)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the rm-ANOVA</span></span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">aov_4</span>(glucose_uptake <span class="sc">~</span> treatment <span class="sc">*</span> activity <span class="sc">+</span></span>
@@ -4997,7 +4997,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/middleprofessor\.github\.io\/benchbiostats\/");
+      var filterRegex = new RegExp("https:\/\/benchbiostats\.com");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
